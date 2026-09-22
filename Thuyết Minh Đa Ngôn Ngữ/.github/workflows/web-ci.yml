@@ -1,0 +1,26 @@
+﻿# web-ci.yml
+# Tu dong chay lint + build cho web moi khi push hoac tao Pull Request
+name: Web CI
+
+on:
+  push:
+    paths:
+      - 'apps/web/**'
+  pull_request:
+    paths:
+      - 'apps/web/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build

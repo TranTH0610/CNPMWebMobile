@@ -1,0 +1,25 @@
+﻿# mobile-ci.yml
+# Tu dong chay lint + kiem tra build cho mobile (React Native / Expo)
+name: Mobile CI
+
+on:
+  push:
+    paths:
+      - 'apps/mobile/**'
+  pull_request:
+    paths:
+      - 'apps/mobile/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm run lint

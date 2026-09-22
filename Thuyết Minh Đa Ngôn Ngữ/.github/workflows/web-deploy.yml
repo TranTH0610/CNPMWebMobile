@@ -1,0 +1,17 @@
+﻿# web-deploy.yml
+# Tu dong deploy web len Vercel/Netlify khi merge vao nhanh main
+name: Web Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/web/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy step (dien lenh deploy that o day)
+        run: echo "TODO: them buoc deploy len Vercel/Netlify"
