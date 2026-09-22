@@ -13,5 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy step (dien lenh deploy that o day)
-        run: echo "TODO: them buoc deploy len Vercel/Netlify"
+
+      - name: Deploy step placeholder
+        run: echo 'TODO - them buoc deploy len Vercel hoac Netlify o day'
