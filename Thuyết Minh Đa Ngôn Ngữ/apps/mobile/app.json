@@ -1,7 +1,12 @@
+
 {
+
   "expo": {
     "name": "ThuyetMinhTuDong",
     "slug": "thuyet-minh-tu-dong",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }
