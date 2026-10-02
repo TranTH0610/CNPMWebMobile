@@ -1,0 +1,11 @@
+{
+  "language": { "title": "Choose language", "subtitle": "Choose the language for your audio guide" },
+  "home": {
+    "title": "Places",
+    "subtitle": "Pick a place to hear the narration",
+    "autoLocation": "Auto-open places when nearby",
+    "denied": "Location permission was denied",
+    "simulate": "Simulate being at the first place (dev)"
+  },
+  "detail": { "title": "Details", "play": "Play narration", "stop": "Stop", "autoPlay": "Auto play" }
+}

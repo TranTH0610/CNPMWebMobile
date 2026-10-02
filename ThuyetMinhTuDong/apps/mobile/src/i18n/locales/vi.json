@@ -1,0 +1,11 @@
+{
+  "language": { "title": "Chọn ngôn ngữ", "subtitle": "Chọn ngôn ngữ bạn muốn nghe thuyết minh" },
+  "home": {
+    "title": "Địa điểm",
+    "subtitle": "Chọn một địa điểm để nghe thuyết minh",
+    "autoLocation": "Tự mở địa điểm khi đến gần",
+    "denied": "Chưa được cấp quyền vị trí",
+    "simulate": "Giả lập đang ở địa điểm đầu tiên (dev)"
+  },
+  "detail": { "title": "Chi tiết", "play": "Nghe thuyết minh", "stop": "Dừng", "autoPlay": "Tự động phát" }
+}

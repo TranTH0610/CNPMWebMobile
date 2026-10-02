@@ -1,5 +1,0 @@
-{
-  "language": { "title": "Choose language" },
-  "home": { "title": "Places", "subtitle": "Pick a place to hear the narration" },
-  "detail": { "title": "Details", "play": "Play narration", "stop": "Stop", "autoPlay": "Auto play" }
-}

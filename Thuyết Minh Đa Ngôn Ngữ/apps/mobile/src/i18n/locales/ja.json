@@ -1,5 +1,0 @@
-{
-  "language": { "title": "言語を選択" },
-  "home": { "title": "スポット", "subtitle": "スポットを選んで解説を聞く" },
-  "detail": { "title": "詳細", "play": "解説を再生", "stop": "停止", "autoPlay": "自動再生" }
-}

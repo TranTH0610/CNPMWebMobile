@@ -1,0 +1,11 @@
+{
+  "language": { "title": "言語を選択", "subtitle": "音声ガイドの言語を選んでください" },
+  "home": {
+    "title": "スポット",
+    "subtitle": "スポットを選んで解説を聞く",
+    "autoLocation": "近づいたら自動で開く",
+    "denied": "位置情報の許可がありません",
+    "simulate": "最初のスポットにいると仮定（開発用）"
+  },
+  "detail": { "title": "詳細", "play": "解説を再生", "stop": "停止", "autoPlay": "自動再生" }
+}
