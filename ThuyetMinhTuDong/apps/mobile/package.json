@@ -13,7 +13,7 @@
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.18",
-    "expo": "~57.0.26",
+    "expo": "~57.0.27",
     "expo-localization": "~57.0.2",
     "expo-location": "~57.0.20",
     "expo-speech": "~57.0.3",
@@ -25,8 +25,8 @@
     "react-native-screens": "~4.26.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
+    "@types/react": "~19.2.4",
     "eslint": "^8.57.0",
-    "typescript": "^5.4.0"
+    "typescript": "^6.0.3"
   }
 }

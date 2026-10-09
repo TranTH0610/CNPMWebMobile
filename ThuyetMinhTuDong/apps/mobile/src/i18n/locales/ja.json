@@ -1,11 +1,17 @@
 {
-  "language": { "title": "言語を選択", "subtitle": "音声ガイドの言語を選んでください" },
+  "language": {
+    "title": "言語を選択",
+    "subtitle": "音声ガイドの言語を選んでください",
+    "suggested": "おすすめ",
+    "saveError": "選択を保存できませんでした。今回は選んだ言語で使用します。"
+  },
   "home": {
     "title": "スポット",
     "subtitle": "スポットを選んで解説を聞く",
     "autoLocation": "近づいたら自動で開く",
     "denied": "位置情報の許可がありません",
-    "simulate": "最初のスポットにいると仮定（開発用）"
+    "simulate": "最初のスポットにいると仮定（開発用）",
+    "addPlace": "スポットを追加"
   },
-  "detail": { "title": "詳細", "play": "解説を再生", "stop": "停止", "autoPlay": "自動再生" }
+  "detail": { "title": "詳細", "play": "解説を再生", "stop": "停止", "autoPlay": "自動再生", "translateError": "翻訳できませんでした。もう一度お試しください。" }
 }

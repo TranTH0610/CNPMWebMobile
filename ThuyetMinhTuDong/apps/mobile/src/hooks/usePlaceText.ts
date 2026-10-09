@@ -3,7 +3,8 @@ import type { Place } from '../services/places'
 import type { LangCode } from '../i18n'
 import { translateLong } from '../services/translate'
 import { getSavedTranslation, saveTranslation } from '../services/placeStore'
-
+//Dùng để lấy mô tả địa điểm theo ngôn ngữ mà người dùng chọn
+//Khai báo Custom Hook
 export function usePlaceText(place: Place | undefined, lang: LangCode) {
   const [text, setText] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)

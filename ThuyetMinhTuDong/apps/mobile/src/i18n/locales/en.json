@@ -1,11 +1,17 @@
 {
-  "language": { "title": "Choose language", "subtitle": "Choose the language for your audio guide" },
+  "language": {
+    "title": "Choose language",
+    "subtitle": "Choose the language for your audio guide",
+    "suggested": "Suggested",
+    "saveError": "Could not save your choice. The app will keep using this language for now."
+  },
   "home": {
     "title": "Places",
     "subtitle": "Pick a place to hear the narration",
     "autoLocation": "Auto-open places when nearby",
     "denied": "Location permission was denied",
-    "simulate": "Simulate being at the first place (dev)"
+    "simulate": "Simulate being at the first place (dev)",
+    "addPlace": "Add place"
   },
-  "detail": { "title": "Details", "play": "Play narration", "stop": "Stop", "autoPlay": "Auto play" }
+  "detail": { "title": "Details", "play": "Play narration", "stop": "Stop", "autoPlay": "Auto play", "translateError": "Could not translate the content. Please try again." }
 }
