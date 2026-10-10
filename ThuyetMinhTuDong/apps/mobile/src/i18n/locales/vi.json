@@ -13,5 +13,11 @@
     "simulate": "Giả lập đang ở địa điểm đầu tiên (dev)",
     "addPlace": "Thêm địa điểm"
   },
-  "detail": { "title": "Chi tiết", "play": "Nghe thuyết minh", "stop": "Dừng", "autoPlay": "Tự động phát", "translateError": "Không dịch được nội dung. Vui lòng thử lại." }
+  "detail": {
+    "title": "Chi tiết",
+    "play": "Nghe thuyết minh",
+    "stop": "Dừng",
+    "autoPlay": "Tự động phát",
+    "translateError": "Không dịch được nội dung. Vui lòng thử lại."
+  }
 }

@@ -13,5 +13,11 @@
     "simulate": "Simulate being at the first place (dev)",
     "addPlace": "Add place"
   },
-  "detail": { "title": "Details", "play": "Play narration", "stop": "Stop", "autoPlay": "Auto play", "translateError": "Could not translate the content. Please try again." }
+  "detail": {
+    "title": "Details",
+    "play": "Play narration",
+    "stop": "Stop",
+    "autoPlay": "Auto play",
+    "translateError": "Could not translate the content. Please try again."
+  }
 }

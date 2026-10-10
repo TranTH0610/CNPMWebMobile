@@ -8,6 +8,7 @@ import DetailScreen from '../screens/DetailScreen'
 import AddPlaceScreen from '../screens/AddPlaceScreen'
 import { getSavedLanguage } from '../i18n/storage'
 import type { RootStackParamList } from './types'
+import SettingsScreen from '../screens/SettingsScreen'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
@@ -58,6 +59,7 @@ export default function RootNavigator() {
       <Stack.Screen name="Home" component={HomeScreen} options={{ title: t('home.title') }} />
       <Stack.Screen name="Detail" component={DetailScreen} options={{ title: t('detail.title') }} />
       <Stack.Screen name="AddPlace" component={AddPlaceScreen} options={{ title: t('home.addPlace') }} />
+      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: t('settings.title') }} />
     </Stack.Navigator>
   )
 }

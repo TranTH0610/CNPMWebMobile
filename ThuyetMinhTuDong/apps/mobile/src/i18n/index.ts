@@ -4,7 +4,8 @@ import { getLocales } from 'expo-localization'
 import vi from './locales/vi.json'
 import en from './locales/en.json'
 import ja from './locales/ja.json'
-
+import cn from './locales/cn.json'
+import pt from './locales/pt.json'
 // CHỨC NĂNG: danh sách ngôn ngữ app hỗ trợ (nguồn dữ liệu duy nhất).
 //  - code:  mã dùng trong code
 //  - label: tên viết bằng CHÍNH ngôn ngữ đó để người dùng nhận ra
@@ -14,6 +15,8 @@ export const LANGUAGES = [
   { code: 'vi', label: 'Tiếng Việt', speech: 'vi-VN' },
   { code: 'en', label: 'English', speech: 'en-US' },
   { code: 'ja', label: '日本語', speech: 'ja-JP' },
+  { code: 'cn', label: '中文', speech: 'cn-CN' },
+  { code: 'pt', label: 'Português', speech: 'pt-PT' },
 ] as const
 
 // CHỨC NĂNG: kiểu 'vi' | 'en' | 'ja', tự cập nhật khi thêm dòng vào LANGUAGES.
@@ -34,6 +37,8 @@ i18n.use(initReactI18next).init({
     vi: { translation: vi },
     en: { translation: en },
     ja: { translation: ja },
+    cn: { translation: cn },
+    pt: { translation: pt },
   },
   lng: DEVICE_LANG ?? 'vi',
   fallbackLng: 'vi',

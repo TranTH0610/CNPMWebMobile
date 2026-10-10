@@ -13,5 +13,11 @@
     "simulate": "最初のスポットにいると仮定（開発用）",
     "addPlace": "スポットを追加"
   },
-  "detail": { "title": "詳細", "play": "解説を再生", "stop": "停止", "autoPlay": "自動再生", "translateError": "翻訳できませんでした。もう一度お試しください。" }
+  "detail": {
+    "title": "詳細",
+    "play": "解説を再生",
+    "stop": "停止",
+    "autoPlay": "自動再生",
+    "translateError": "翻訳できませんでした。もう一度お試しください。"
+  }
 }

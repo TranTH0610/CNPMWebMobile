@@ -1,0 +1,23 @@
+{
+"language": {
+"title": "Selecionar idioma",
+"subtitle": "Selecione o idioma em que pretende ouvir a narração",
+"suggested": "Sugerido",
+"saveError": "Não foi possível guardar a seleção. A aplicação continuará a utilizar este idioma durante a sessão atual."
+},
+"home": {
+"title": "Locais",
+"subtitle": "Selecione um local para ouvir a narração",
+"autoLocation": "Abrir automaticamente o local quando estiver por perto",
+"denied": "Permissão de localização não concedida",
+"simulate": "Simular presença no primeiro local (dev)",
+"addPlace": "Adicionar local"
+},
+"detail": {
+"title": "Detalhes",
+"play": "Ouvir a narração",
+"stop": "Parar",
+"autoPlay": "Reprodução automática",
+"translateError": "Não foi possível traduzir o conteúdo. Tente novamente."
+}
+}

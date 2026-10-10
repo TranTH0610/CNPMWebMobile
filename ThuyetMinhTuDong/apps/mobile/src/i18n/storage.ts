@@ -29,3 +29,28 @@ export async function saveLanguage(code: LangCode): Promise<boolean> {
     return false
   }
 }
+const NARRATION_KEY = 'narration_lang'
+
+// CHỨC NĂNG: đọc ngôn ngữ thuyết minh đã lưu.
+// XỬ LÝ: trả null nghĩa là "theo giao diện" (chưa đặt riêng, giá trị lạ, hoặc đọc lỗi).
+export async function getSavedNarration(): Promise<LangCode | null> {
+  try {
+    const saved = await AsyncStorage.getItem(NARRATION_KEY)
+    return LANGUAGES.find((l) => l.code === saved)?.code ?? null
+  } catch {
+    return null
+  }
+}
+
+// CHỨC NĂNG: lưu ngôn ngữ thuyết minh.
+// XỬ LÝ: truyền null = chọn "Theo giao diện" → XÓA khóa đi (không lưu chữ "null").
+// Trả true/false để màn hình báo người dùng nếu lưu lỗi.
+export async function saveNarration(code: LangCode | null): Promise<boolean> {
+  try {
+    if (code === null) await AsyncStorage.removeItem(NARRATION_KEY)
+    else await AsyncStorage.setItem(NARRATION_KEY, code)
+    return true
+  } catch {
+    return false
+  }
+}

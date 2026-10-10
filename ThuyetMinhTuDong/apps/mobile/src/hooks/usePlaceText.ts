@@ -3,12 +3,16 @@ import type { Place } from '../services/places'
 import type { LangCode } from '../i18n'
 import { translateLong } from '../services/translate'
 import { getSavedTranslation, saveTranslation } from '../services/placeStore'
-//Dùng để lấy mô tả địa điểm theo ngôn ngữ mà người dùng chọn
-//Khai báo Custom Hook
+
+// CHỨC NĂNG: lấy văn bản mô tả địa điểm theo ngôn ngữ cho trước.
+// Có sẵn bản dịch thì dùng; chưa có thì tự dịch từ tiếng Việt và lưu cache.
 export function usePlaceText(place: Place | undefined, lang: LangCode) {
   const [text, setText] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  // CHỨC NĂNG: đếm số lần "Thử lại". Đưa vào danh sách phụ thuộc của useEffect,
+  // nên mỗi lần bấm Thử lại là effect chạy lại từ đầu.
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     if (!place) return
@@ -18,7 +22,7 @@ export function usePlaceText(place: Place | undefined, lang: LangCode) {
       setError(false)
       return
     }
-    let cancelled = false
+    let cancelled = false // XỬ LÝ: đổi ngôn ngữ giữa chừng thì bỏ kết quả của lần dịch cũ
     setLoading(true)
     setError(false)
     setText(null)
@@ -44,7 +48,7 @@ export function usePlaceText(place: Place | undefined, lang: LangCode) {
     return () => {
       cancelled = true
     }
-  }, [place, lang])
+  }, [place, lang, attempt])
 
-  return { text, loading, error }
+  return { text, loading, error, retry: () => setAttempt((a) => a + 1) }
 }

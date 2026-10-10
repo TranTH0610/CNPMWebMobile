@@ -26,13 +26,14 @@ export default function HomeScreen({ navigation }: Props) {
     }, [])
   )
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Button title="🌐" onPress={() => navigation.navigate('Language', { change: true })} />
-      ),
-    })
-  }, [navigation])
+ useLayoutEffect(() => {
+  navigation.setOptions({
+    headerRight: () => (
+      // CHỨC NĂNG: nút ⚙️ mở màn Cài đặt (thay cho nút 🌐 cũ chỉ đổi 1 ngôn ngữ).
+      <Button title="⚙️" accessibilityLabel={t('settings.title')} onPress={() => navigation.navigate('Settings')} />
+    ),
+  })
+}, [navigation, t])
 
   // Đến gần địa điểm nào thì tự mở địa điểm đó, mỗi lần đến chỉ mở một lần
   useEffect(() => {
