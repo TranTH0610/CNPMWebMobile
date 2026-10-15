@@ -1,87 +1,493 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Button, FlatList, Pressable, Switch, Text, View } from 'react-native'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+/**
+ * FILE NÀY LÀM GÌ:
+ * Màn Khám phá: header, tìm kiếm, danh mục, carousel và danh sách.
+ * ExploreNavigator mở màn này; phụ thuộc components và hooks M3.
+ * Giữ geofencing, nút thêm và Detail. Liên quan UC03, FR-41.
+ */
+
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Switch,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native'
+
+import {
+  SafeAreaView,
+} from 'react-native-safe-area-context'
+
+import {
+  useFocusEffect,
+  useIsFocused,
+} from '@react-navigation/native'
+
+import { Ionicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import type { RootStackParamList } from '../navigation/types'
+import { sortPlaces } from '@travelguide/place-core'
+
 import type { LangCode } from '../i18n'
-import type { Place } from '../services/places'
-import { loadAllPlaces } from '../services/placeStore'
+import type { ExploreScreenProps } from '../navigation/types'
+
+import { usePlaceSearch } from '../hooks/usePlaceSearch'
 import { useNearbyPlace } from '../hooks/useNearbyPlace'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
+import SearchBar from '../components/SearchBar'
+import CategoryChips from '../components/CategoryChips'
+import PlaceCard from '../components/PlaceCard'
+import SortDropdown from '../components/SortDropdown'
+import EmptyState from '../components/EmptyState'
+import ErrorState from '../components/ErrorState'
 
-export default function HomeScreen({ navigation }: Props) {
-  const { t, i18n } = useTranslation()
-  const lang = i18n.language as LangCode
-  const isFocused = useIsFocused()
-  const [places, setPlaces] = useState<Place[]>([])
+import {
+  colors,
+  spacing,
+  radii,
+  sizes,
+  ui,
+} from '../theme'
+
+type Props = ExploreScreenProps<'ExploreHome'>
+
+export default function HomeScreen({
+  navigation,
+}: Props) {
+  const { t } = useTranslation()
+
+  const search = usePlaceSearch()
+  const { width } = useWindowDimensions()
+
+  const [sortOpen, setSortOpen] = useState(false)
+  const [featuredIndex, setFeaturedIndex] = useState(0)
   const [autoLocation, setAutoLocation] = useState(false)
-  const { nearby, denied, simulate } = useNearbyPlace(places, autoLocation)
-  const visited = useRef(new Set<string>())
 
+  const isFocused = useIsFocused()
+
+  // CHỨC NĂNG: giữ hook geofencing đang có.
+  // XỬ LÝ: truyền toàn bộ địa điểm, không truyền kết quả đã lọc;
+  // nếu không, chip danh mục có thể làm mất địa điểm gần người dùng.
+  const {
+    nearby,
+    denied,
+    simulate,
+  } = useNearbyPlace(search.places, autoLocation)
+
+  const visited = useRef(new Set<string>())
+  const lastFocusLanguage = useRef<LangCode | null>(null)
+
+  // CHỨC NĂNG: đọc lại dữ liệu khi quay về từ AddPlace/Detail.
+  // XỬ LÝ: lần focus đầu và đổi ngôn ngữ để provider tự tải,
+  // tránh gọi tải hai lần lúc mới mở.
   useFocusEffect(
     useCallback(() => {
-      loadAllPlaces().then(setPlaces)
-    }, [])
+      if (
+        lastFocusLanguage.current === search.language
+      ) {
+        void search.refresh()
+      }
+
+      lastFocusLanguage.current = search.language
+    }, [search.language, search.refresh]),
   )
 
- useLayoutEffect(() => {
-  navigation.setOptions({
-    headerRight: () => (
-      // CHỨC NĂNG: nút ⚙️ mở màn Cài đặt (thay cho nút 🌐 cũ chỉ đổi 1 ngôn ngữ).
-      <Button title="⚙️" accessibilityLabel={t('settings.title')} onPress={() => navigation.navigate('Settings')} />
-    ),
-  })
-}, [navigation, t])
-
-  // Đến gần địa điểm nào thì tự mở địa điểm đó, mỗi lần đến chỉ mở một lần
+  // CHỨC NĂNG: tự mở địa điểm gần trong bán kính của hook cũ.
+  // XỬ LÝ: chỉ mở khi Home đang focus; cùng địa điểm chỉ mở một lần
+  // cho đến khi đi ra khỏi vùng gần.
   useEffect(() => {
     if (!autoLocation) return
+
     if (!nearby) {
-      visited.current.clear() // đã đi xa, lần sau đến gần sẽ phát lại
+      visited.current.clear()
       return
     }
-    if (!isFocused || visited.current.has(nearby.id)) return
-    visited.current.add(nearby.id)
-    navigation.navigate('Detail', { placeId: nearby.id })
-  }, [nearby, autoLocation, isFocused, navigation])
 
-  const openPlace = (id: string) => {
-    visited.current.add(id) // mở tay thì không tự mở lại khi quay về
-    navigation.navigate('Detail', { placeId: id })
+    if (
+      !isFocused ||
+      visited.current.has(nearby.id)
+    ) {
+      return
+    }
+
+    visited.current.add(nearby.id)
+
+    navigation.navigate('Detail', {
+      placeId: nearby.id,
+    })
+  }, [
+    nearby,
+    autoLocation,
+    isFocused,
+    navigation,
+  ])
+
+  const openPlace = useCallback((id: string) => {
+    visited.current.add(id)
+
+    navigation.navigate('Detail', {
+      placeId: id,
+    })
+  }, [navigation])
+
+  const featured = useMemo(
+    () => sortPlaces(search.results, {
+      language: search.language,
+      order: 'rating',
+    }).slice(0, 5),
+    [search.results, search.language],
+  )
+
+  useEffect(() => {
+    setFeaturedIndex(0)
+  }, [featured])
+
+  const cardWidth = Math.min(
+    width - spacing.lg * 2,
+    sizes.maxFeaturedWidth,
+  )
+
+  const firstWithLocation =
+    search.places.find((place) => place.location)
+
+  const visibleResults =
+    search.error ? [] : search.results
+
+  const openSearch = (): void => {
+    navigation.navigate('SearchResults', {
+      query: '',
+      category: search.category,
+    })
   }
 
-  const firstWithLocation = places.find((p) => p.location)
-
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ marginBottom: 12, color: '#555' }}>{t('home.subtitle')}</Text>
-
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-        <Switch value={autoLocation} onValueChange={setAutoLocation} />
-        <Text style={{ marginLeft: 8, flex: 1 }}>{t('home.autoLocation')}</Text>
-      </View>
-      {denied && <Text style={{ color: 'crimson', marginBottom: 8 }}>{t('home.denied')}</Text>}
-      {__DEV__ && autoLocation && firstWithLocation?.location && (
-        <View style={{ marginBottom: 8 }}>
-          <Button title={t('home.simulate')} onPress={() => simulate(firstWithLocation.location!)} />
-        </View>
-      )}
-
+    <SafeAreaView
+      style={ui.page}
+      edges={['top', 'left', 'right']}
+    >
+      {/* CHỨC NĂNG: FlatList dọc quản lý danh sách chính.
+          XỬ LÝ: phần giới thiệu/carousel đặt trong ListHeaderComponent,
+          không bọc danh sách bằng ScrollView dọc. */}
       <FlatList
-        data={places}
-        keyExtractor={(p) => p.id}
+        data={visibleResults}
+        keyExtractor={(place) => place.id}
+        contentContainerStyle={ui.content}
+        refreshing={search.refreshing}
+        onRefresh={() => {
+          void search.refresh()
+        }}
+        extraData={search.favorites}
+        keyboardShouldPersistTaps="handled"
+        ListHeaderComponent={
+          <View>
+            <View
+              style={[
+                ui.between,
+                { marginBottom: spacing.xl },
+              ]}
+            >
+              <View style={ui.row}>
+                <View
+                  style={{
+                    width: sizes.avatar,
+                    height: sizes.avatar,
+                    borderRadius: radii.round,
+                    backgroundColor: colors.softPrimary,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: spacing.md,
+                  }}
+                >
+                  <Ionicons
+                    name="person-outline"
+                    size={sizes.icon}
+                    color={colors.primary}
+                  />
+                </View>
+
+                <View>
+                  <Text style={ui.title}>
+                    {t('explore.title')}
+                  </Text>
+                  <Text style={ui.muted}>
+                    {t('explore.subtitle')}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Chuông chỉ là giao diện trong phạm vi M3. */}
+              <View
+                style={ui.iconButton}
+                accessibilityLabel={t('explore.notifications')}
+              >
+                <Ionicons
+                  name="notifications-outline"
+                  size={sizes.icon}
+                  color={colors.text}
+                />
+              </View>
+            </View>
+
+            <SearchBar
+              value=""
+              onActivate={openSearch}
+              onFilter={() => setSortOpen(true)}
+            />
+
+            <CategoryChips
+              categories={search.categories}
+              selected={search.category}
+              onChange={search.setCategory}
+            />
+
+            <View
+              style={[
+                ui.row,
+                { marginBottom: spacing.sm },
+              ]}
+            >
+              <Switch
+                value={autoLocation}
+                onValueChange={setAutoLocation}
+                accessibilityLabel={t('home.autoLocation')}
+              />
+
+              <Text
+                style={[
+                  ui.muted,
+                  { flex: 1, marginLeft: spacing.sm },
+                ]}
+              >
+                {t('home.autoLocation')}
+              </Text>
+            </View>
+
+            {denied && (
+              <Text
+                style={[
+                  ui.muted,
+                  { color: colors.danger },
+                ]}
+              >
+                {t('home.denied')}
+              </Text>
+            )}
+
+            {__DEV__ &&
+              autoLocation &&
+              firstWithLocation?.location && (
+                <Pressable
+                  style={ui.button}
+                  onPress={() => {
+                    const location =
+                      firstWithLocation.location
+
+                    if (location) simulate(location)
+                  }}
+                >
+                  <Text style={ui.buttonText}>
+                    {t('home.simulate')}
+                  </Text>
+                </Pressable>
+              )}
+
+            {!search.origin && (
+              <View
+                style={{
+                  marginVertical: spacing.md,
+                  gap: spacing.sm,
+                }}
+              >
+                <Text style={ui.muted}>
+                  {t(
+                    search.locationFailed
+                      ? 'explore.locationFailed'
+                      : 'explore.locationHint',
+                  )}
+                </Text>
+
+                <Pressable
+                  style={ui.button}
+                  disabled={search.locationLoading}
+                  onPress={() => {
+                    void search.requestLocation()
+                  }}
+                >
+                  <Text style={ui.buttonText}>
+                    {t(
+                      search.locationLoading
+                        ? 'explore.locating'
+                        : 'explore.enableLocation',
+                    )}
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+
+            {search.translating && (
+              <Text
+                style={[
+                  ui.muted,
+                  { marginVertical: spacing.sm },
+                ]}
+              >
+                {t('explore.preparingLanguage')}
+              </Text>
+            )}
+
+            {!search.error && featured.length > 0 && (
+              <View
+                style={{ marginTop: spacing.lg }}
+              >
+                <Text
+                  style={[
+                    ui.section,
+                    { marginBottom: spacing.md },
+                  ]}
+                >
+                  {t('explore.featured')}
+                </Text>
+
+                {/* CHỨC NĂNG: carousel ngang trong header.
+                    XỬ LÝ: key là ID; snap theo chiều rộng thẻ + khoảng cách.
+                    Danh sách ngang không xung đột cuộn dọc của cha. */}
+                <FlatList
+                  horizontal
+                  data={featured}
+                  keyExtractor={(place) => place.id}
+                  showsHorizontalScrollIndicator={false}
+                  snapToInterval={
+                    cardWidth + spacing.md
+                  }
+                  decelerationRate="fast"
+                  extraData={search.favorites}
+                  ItemSeparatorComponent={() => (
+                    <View style={{ width: spacing.md }} />
+                  )}
+                  onMomentumScrollEnd={(event) => {
+                    const index = Math.round(
+                      event.nativeEvent.contentOffset.x /
+                      (cardWidth + spacing.md),
+                    )
+
+                    setFeaturedIndex(
+                      Math.max(
+                        0,
+                        Math.min(index, featured.length - 1),
+                      ),
+                    )
+                  }}
+                  renderItem={({ item }) => (
+                    <PlaceCard
+                      place={item}
+                      large
+                      width={cardWidth}
+                      favorite={search.favorites.has(item.id)}
+                      onFavorite={search.toggleFavorite}
+                      onOpen={openPlace}
+                    />
+                  )}
+                />
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    gap: spacing.xs,
+                    marginBottom: spacing.lg,
+                  }}
+                >
+                  {featured.map((place, index) => (
+                    <View
+                      key={place.id}
+                      style={{
+                        width: spacing.sm,
+                        height: spacing.sm,
+                        borderRadius: radii.round,
+                        backgroundColor:
+                          index === featuredIndex
+                            ? colors.primary
+                            : colors.border,
+                      }}
+                    />
+                  ))}
+                </View>
+              </View>
+            )}
+
+            <View
+              style={[
+                ui.between,
+                { marginVertical: spacing.md },
+              ]}
+            >
+              <Text
+                style={[ui.section, { flex: 1 }]}
+              >
+                {t('explore.allPlaces', {
+                  count: visibleResults.length,
+                })}
+              </Text>
+
+              <SortDropdown
+                value={search.effectiveOrder}
+                open={sortOpen}
+                onOpen={() => setSortOpen(true)}
+                onClose={() => setSortOpen(false)}
+                onChange={search.changeOrder}
+              />
+            </View>
+          </View>
+        }
         renderItem={({ item }) => (
-          <Pressable
-            onPress={() => openPlace(item.id)}
-            style={{ padding: 16, borderWidth: 1, borderColor: '#ddd', borderRadius: 8, marginBottom: 12 }}
-          >
-            <Text style={{ fontSize: 18 }}>{item.name[lang]}</Text>
-          </Pressable>
+          <PlaceCard
+            place={item}
+            favorite={search.favorites.has(item.id)}
+            distance={search.distances.get(item.id)}
+            onFavorite={search.toggleFavorite}
+            onOpen={openPlace}
+          />
         )}
+        ListEmptyComponent={
+          search.loading ? (
+            <View style={ui.state}>
+              <ActivityIndicator color={colors.primary} />
+              <Text style={ui.muted}>
+                {t('explore.loading')}
+              </Text>
+            </View>
+          ) : search.error ? (
+            <ErrorState
+              onRetry={() => {
+                void search.refresh()
+              }}
+            />
+          ) : (
+            <EmptyState onReset={search.reset} />
+          )
+        }
+        ListFooterComponent={
+          <Pressable
+            style={[
+              ui.button,
+              { marginVertical: spacing.lg },
+            ]}
+            onPress={() => navigation.navigate('AddPlace')}
+          >
+            <Text style={ui.buttonText}>
+              {t('home.addPlace')}
+            </Text>
+          </Pressable>
+        }
       />
-      <Button title="+ Thêm địa điểm" onPress={() => navigation.navigate('AddPlace')} />
-    </View>
+    </SafeAreaView>
   )
 }

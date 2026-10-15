@@ -31,19 +31,29 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // CHỨC NĂNG: đổi lựa chọn → cập nhật state NGAY (giao diện đổi liền) rồi mới lưu xuống máy.
-  // XỬ LÝ: trả về kết quả lưu để nơi gọi báo lỗi nếu cần.
-  const setNarrationSetting = useCallback(async (code: LangCode | null) => {
-    setSetting(code)
-    return saveNarration(code)
-  }, [])
+  // CHỨC NĂNG: cập nhật lựa chọn thuyết minh.
+  // XỬ LÝ: đổi state ngay; sau đó lưu để lần mở sau vẫn giữ chế độ.
+  const setNarrationSetting = useCallback(
+    async (
+      code: LangCode | null,
+    ): Promise<boolean> => {
+      setSetting(code)
+
+      return saveNarration(code)
+    },
+    [],
+  )
 
   // XỬ LÝ: chưa đọc xong thì chưa vẽ app, để màn Chi tiết không dùng nhầm ngôn ngữ
   // rồi mới "nhảy" sang ngôn ngữ đã lưu. (Hook ở trên đã gọi hết nên return ở đây là hợp lệ.)
   if (!loaded) return null
 
-  // CHỨC NĂNG (logic cốt lõi M2): có lựa chọn riêng thì dùng, không thì theo giao diện.
-  const narrationLang = narrationSetting ?? (i18n.language as LangCode)
+  // CHỨC NĂNG: xác định ngôn ngữ thực sự dùng để thuyết minh.
+  // XỬ LÝ:
+  // - Có lựa chọn riêng: dùng lựa chọn đó.
+  // - null: lấy ngôn ngữ giao diện hiện tại.
+  const narrationLang =
+    narrationSetting ?? (i18n.language as LangCode)
 
   return (
     <SettingsContext.Provider value={{ narrationSetting, narrationLang, setNarrationSetting }}>

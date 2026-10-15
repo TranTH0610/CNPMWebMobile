@@ -1,65 +1,123 @@
+/**
+ * FILE NÀY LÀM GÌ:
+ * Giữ luồng chọn ngôn ngữ lần đầu và các route Detail/AddPlace/Settings.
+ * App.tsx dùng; Home giờ mở MainTabs.
+ * Phụ thuộc storage ngôn ngữ và native-stack v6.
+ */
+
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useTranslation } from 'react-i18next'
+
 import LanguageScreen from '../screens/LanguageScreen'
-import HomeScreen from '../screens/HomeScreen'
 import DetailScreen from '../screens/DetailScreen'
 import AddPlaceScreen from '../screens/AddPlaceScreen'
+import SettingsScreen from '../screens/SettingsScreen'
+import MainTabs from './MainTabs'
+
 import { getSavedLanguage } from '../i18n/storage'
 import type { RootStackParamList } from './types'
-import SettingsScreen from '../screens/SettingsScreen'
+import { ui } from '../theme'
 
-const Stack = createNativeStackNavigator<RootStackParamList>()
+const Stack =
+  createNativeStackNavigator<RootStackParamList>()
 
 export default function RootNavigator() {
   const { t, i18n } = useTranslation()
 
-  // ready = đã đọc xong bộ nhớ chưa; hasLanguage = đã từng chọn ngôn ngữ chưa.
-  // Tách 2 cờ vì hasLanguage=false có thể nghĩa "chưa đọc xong" HOẶC "lần đầu".
   const [ready, setReady] = useState(false)
   const [hasLanguage, setHasLanguage] = useState(false)
 
-  // CHỨC NĂNG: chạy 1 lần lúc khởi động, quyết định hiện màn nào đầu tiên.
   useEffect(() => {
-    let cancelled = false // tránh setState khi component đã bị hủy
-    ;(async () => {
+    let cancelled = false
+
+    const initialize = async (): Promise<void> => {
       try {
         const saved = await getSavedLanguage()
-        // Đã chọn trước đó → áp dụng NGAY, trước khi vẽ giao diện
-        if (saved) await i18n.changeLanguage(saved)
-        if (!cancelled) setHasLanguage(saved !== null)
+
+        if (saved) {
+          await i18n.changeLanguage(saved)
+        }
+
+        if (!cancelled) {
+          setHasLanguage(saved !== null)
+        }
+      } catch {
+        if (!cancelled) {
+          setHasLanguage(false)
+        }
       } finally {
-        // XỬ LÝ: dù thành công hay lỗi, luôn tắt vòng xoay.
-        // Nếu thiếu dòng này mà có lỗi, app sẽ xoay vô tận (lỗi "demo không vào được").
-        if (!cancelled) setReady(true)
+        if (!cancelled) {
+          setReady(true)
+        }
       }
-    })()
+    }
+
+    void initialize()
+
     return () => {
       cancelled = true
     }
   }, [i18n])
 
-  // CHỨC NĂNG: trong lúc đọc bộ nhớ chỉ hiện vòng xoay, CHƯA tạo navigator.
-  // XỬ LÝ: chống hiện tượng màn chọn ngôn ngữ "nháy" ở những lần mở sau.
   if (!ready) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View
+        style={[
+          ui.page,
+          {
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+        ]}
+      >
         <ActivityIndicator size="large" />
       </View>
     )
   }
 
-  // CHỨC NĂNG: logic cốt lõi của M1.
-  // Chưa chọn → 'Language'; đã chọn → vào thẳng 'Home'.
-  // Tiêu đề dùng t(...) nên đổi ngôn ngữ là header đổi theo (không hard-code).
   return (
-    <Stack.Navigator initialRouteName={hasLanguage ? 'Home' : 'Language'}>
-      <Stack.Screen name="Language" component={LanguageScreen} options={{ title: t('language.title') }} />
-      <Stack.Screen name="Home" component={HomeScreen} options={{ title: t('home.title') }} />
-      <Stack.Screen name="Detail" component={DetailScreen} options={{ title: t('detail.title') }} />
-      <Stack.Screen name="AddPlace" component={AddPlaceScreen} options={{ title: t('home.addPlace') }} />
-      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: t('settings.title') }} />
+    <Stack.Navigator
+      initialRouteName={
+        hasLanguage ? 'Home' : 'Language'
+      }
+    >
+      <Stack.Screen
+        name="Language"
+        component={LanguageScreen}
+        options={{ title: t('language.title') }}
+      />
+
+      {/* CHỨC NĂNG: đặt tên dịch cho route cha dù header của nó bị ẩn.
+    XỬ LÝ: màn con có thể dùng tiêu đề này làm nhãn quay lại,
+    thay vì hiển thị tên kỹ thuật "Home". */}
+      <Stack.Screen
+        name="Home"
+        component={MainTabs}
+        options={{
+          headerShown: false,
+          title: t('tabs.explore'),
+        }}
+      />
+
+      <Stack.Screen
+        name="Detail"
+        component={DetailScreen}
+        options={{ title: t('detail.title') }}
+      />
+
+      <Stack.Screen
+        name="AddPlace"
+        component={AddPlaceScreen}
+        options={{ title: t('home.addPlace') }}
+      />
+
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: t('settings.title') }}
+      />
     </Stack.Navigator>
   )
 }

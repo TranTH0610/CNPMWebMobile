@@ -13,11 +13,74 @@
     "simulate": "Simulate being at the first place (dev)",
     "addPlace": "Add place"
   },
-  "detail": {
-    "title": "Details",
-    "play": "Play narration",
-    "stop": "Stop",
-    "autoPlay": "Auto play",
-    "translateError": "Could not translate the content. Please try again."
+ "detail": {
+  "title": "Details",
+  "play": "Play narration",
+  "stop": "Stop",
+  "autoPlay": "Auto play",
+  "narrationLang": "Narration language",
+  "retry": "Try again",
+  "translateError": "Could not translate the content. Check your connection and try again.",
+  "missingVoice": "No voice is available for this language. Install or download a voice in your device's text-to-speech settings.",
+  "speechError": "Could not play the narration. Check the volume and speech voice, then try again."
+},
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Find your next destination",
+    "searchPlaceholder": "Search names, addresses, categories...",
+    "back": "Back",
+    "clearSearch": "Clear search",
+    "close": "Close",
+    "all": "All",
+    "featured": "Featured places",
+    "allPlaces": "All places ({{count}})",
+    "results": "Results ({{count}})",
+    "sort": "Sort",
+    "sort_nearest": "Nearest",
+    "sort_name": "Name",
+    "sort_rating": "Top rated",
+    "loading": "Loading places...",
+    "preparingLanguage": "Preparing content in your selected language...",
+    "emptyTitle": "No results",
+    "emptyBody": "Try another keyword or remove the category filter.",
+    "reset": "Clear search and filters",
+    "loadError": "Could not load or prepare the data. Please try again.",
+    "locationHint": "Allow location access to see distances and nearby places.",
+    "locationFailed": "Location is unavailable. Places are sorted by name.",
+    "enableLocation": "Get my location",
+    "locating": "Getting location...",
+    "addressMissing": "Address unavailable",
+    "imageMissing": "No image",
+    "noRating": "No ratings yet",
+    "distance": "{{value}} km",
+    "rating": "★ {{rating}} ({{count}})",
+    "openPlace": "Open {{name}}",
+    "addFavorite": "Favorite {{name}}",
+    "removeFavorite": "Unfavorite {{name}}",
+    "notifications": "Notifications",
+    "placeholder": "This feature will be implemented in a later stage.",
+    "openSettings": "Open language settings"
+  },
+  "categories": {
+    "heritage": "Heritage",
+    "landscape": "Scenic attractions",
+    "museum": "Museums",
+    "culture": "Culture",
+    "spiritual": "Spiritual sites",
+    "food": "Food",
+    "craft": "Craft villages",
+    "other": "Uncategorized"
+  },
+  "tabs": {
+    "explore": "Explore",
+    "map": "Map",
+    "favorites": "Favorites",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "interface": "Interface language",
+    "narration": "Narration language",
+    "followInterface": "Follow interface language"
   }
 }

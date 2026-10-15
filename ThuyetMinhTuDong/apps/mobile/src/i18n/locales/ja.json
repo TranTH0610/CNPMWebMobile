@@ -14,10 +14,73 @@
     "addPlace": "スポットを追加"
   },
   "detail": {
-    "title": "詳細",
-    "play": "解説を再生",
-    "stop": "停止",
-    "autoPlay": "自動再生",
-    "translateError": "翻訳できませんでした。もう一度お試しください。"
+  "title": "詳細",
+  "play": "音声ガイドを再生",
+  "stop": "停止",
+  "autoPlay": "自動再生",
+  "narrationLang": "音声ガイドの言語",
+  "retry": "再試行",
+  "translateError": "翻訳できませんでした。接続を確認して、もう一度お試しください。",
+  "missingVoice": "この言語の音声がありません。端末の読み上げ設定で音声をインストールまたはダウンロードしてください。",
+  "speechError": "音声ガイドを再生できませんでした。音量と読み上げ音声を確認してください。"
+},
+  "explore": {
+    "title": "探索",
+    "subtitle": "次の旅先を見つけましょう",
+    "searchPlaceholder": "名前、住所、カテゴリを検索...",
+    "back": "戻る",
+    "clearSearch": "検索を消去",
+    "close": "閉じる",
+    "all": "すべて",
+    "featured": "おすすめスポット",
+    "allPlaces": "すべてのスポット（{{count}}）",
+    "results": "検索結果（{{count}}）",
+    "sort": "並び替え",
+    "sort_nearest": "近い順",
+    "sort_name": "名前順",
+    "sort_rating": "評価順",
+    "loading": "読み込み中...",
+    "preparingLanguage": "選択した言語の内容を準備しています...",
+    "emptyTitle": "結果がありません",
+    "emptyBody": "別のキーワードを試すか、カテゴリの絞り込みを解除してください。",
+    "reset": "検索と絞り込みを解除",
+    "loadError": "データを準備できませんでした。再試行してください。",
+    "locationHint": "距離を表示するには位置情報を許可してください。",
+    "locationFailed": "位置情報を取得できません。名前順で表示しています。",
+    "enableLocation": "現在地を取得",
+    "locating": "現在地を取得中...",
+    "addressMissing": "住所がありません",
+    "imageMissing": "画像がありません",
+    "noRating": "評価がありません",
+    "distance": "{{value}} km",
+    "rating": "★ {{rating}}（{{count}}）",
+    "openPlace": "{{name}}を開く",
+    "addFavorite": "{{name}}をお気に入りに追加",
+    "removeFavorite": "{{name}}をお気に入りから削除",
+    "notifications": "通知",
+    "placeholder": "この機能は後の段階で実装されます。",
+    "openSettings": "言語設定を開く"
+  },
+  "categories": {
+    "heritage": "史跡",
+    "landscape": "名勝",
+    "museum": "博物館",
+    "culture": "文化",
+    "spiritual": "宗教施設",
+    "food": "グルメ",
+    "craft": "工芸村",
+    "other": "未分類"
+  },
+  "tabs": {
+    "explore": "探索",
+    "map": "地図",
+    "favorites": "お気に入り",
+    "settings": "設定"
+  },
+  "settings": {
+    "title": "設定",
+    "interface": "表示言語",
+    "narration": "音声ガイドの言語",
+    "followInterface": "表示言語に合わせる"
   }
 }

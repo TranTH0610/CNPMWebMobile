@@ -10,9 +10,13 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.18",
+    "@travelguide/place-core": "*",
+    "@travelguide/shared-types": "*",
     "expo": "~57.0.27",
     "expo-localization": "~57.0.2",
     "expo-location": "~57.0.20",

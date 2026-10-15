@@ -1,48 +1,105 @@
+/**
+ * FILE NÀY LÀM GÌ:
+ * Đăng ký đúng file dịch cho từng mã ngôn ngữ và cấu hình i18n.
+ *
+ * Được dùng bởi:
+ * - App.tsx
+ * - LanguageScreen, SettingsScreen
+ * - Các component dùng useTranslation
+ * - Các hook cần LangCode
+ *
+ * Phụ thuộc:
+ * - i18next, react-i18next, expo-localization
+ * - Các file JSON trong locales
+ *
+ * Liên quan: chọn ngôn ngữ, giao diện đa ngôn ngữ và TTS.
+ */
+
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { getLocales } from 'expo-localization'
-import vi from './locales/vi.json'
-import en from './locales/en.json'
-import ja from './locales/ja.json'
-import cn from './locales/cn.json'
-import pt from './locales/pt.json'
-// CHỨC NĂNG: danh sách ngôn ngữ app hỗ trợ (nguồn dữ liệu duy nhất).
-//  - code:  mã dùng trong code
-//  - label: tên viết bằng CHÍNH ngôn ngữ đó để người dùng nhận ra
-//  - speech: mã giọng đọc cho expo-speech
-// `as const` để TypeScript suy ra kiểu LangCode bên dưới.
+
+// CHỨC NĂNG: nhập từng file bằng tên rõ nghĩa.
+// XỬ LÝ: tránh nhầm file Trung thành biến Bồ hoặc ngược lại.
+import vietnamese from './locales/vi.json'
+import english from './locales/en.json'
+import japanese from './locales/ja.json'
+import chinese from './locales/cn.json'
+import portuguese from './locales/pt.json'
+
+// CHỨC NĂNG: cung cấp mã nội bộ và mã đọc của thiết bị.
+// XỬ LÝ: giữ cn làm mã nội bộ để không mất lựa chọn đã lưu.
+// Hệ thống TTS dùng zh-CN cho tiếng Trung.
 export const LANGUAGES = [
-  { code: 'vi', label: 'Tiếng Việt', speech: 'vi-VN' },
-  { code: 'en', label: 'English', speech: 'en-US' },
-  { code: 'ja', label: '日本語', speech: 'ja-JP' },
-  { code: 'cn', label: '中文', speech: 'cn-CN' },
-  { code: 'pt', label: 'Português', speech: 'pt-PT' },
-] as const
-
-// CHỨC NĂNG: kiểu 'vi' | 'en' | 'ja', tự cập nhật khi thêm dòng vào LANGUAGES.
-export type LangCode = (typeof LANGUAGES)[number]['code']
-
-// CHỨC NĂNG: tìm ngôn ngữ của điện thoại.
-// XỬ LÝ: nếu app KHÔNG hỗ trợ ngôn ngữ máy (vd tiếng Pháp) → null.
-// Dùng để "gợi ý" ở màn chọn ngôn ngữ (UC01 luồng thay thế).
-const deviceCode = getLocales()[0]?.languageCode ?? ''
-export const DEVICE_LANG: LangCode | null =
-  LANGUAGES.find((l) => l.code === deviceCode)?.code ?? null
-
-// CHỨC NĂNG: khởi tạo thư viện i18n, đăng ký 3 file dịch.
-// XỬ LÝ: fallbackLng 'vi' → thiếu chuỗi ở ngôn ngữ nào thì dùng tiếng Việt.
-// lng chỉ là giá trị TẠM; RootNavigator sẽ ghi đè bằng lựa chọn đã lưu.
-i18n.use(initReactI18next).init({
-  resources: {
-    vi: { translation: vi },
-    en: { translation: en },
-    ja: { translation: ja },
-    cn: { translation: cn },
-    pt: { translation: pt },
+  {
+    code: 'vi',
+    label: 'Tiếng Việt',
+    speech: 'vi-VN',
   },
-  lng: DEVICE_LANG ?? 'vi',
-  fallbackLng: 'vi',
-  interpolation: { escapeValue: false },
-})
+  {
+    code: 'en',
+    label: 'English',
+    speech: 'en-US',
+  },
+  {
+    code: 'ja',
+    label: '日本語',
+    speech: 'ja-JP',
+  },
+  {
+    code: 'cn',
+    label: '中文',
+    speech: 'zh-CN',
+  },
+  {
+    code: 'pt',
+    label: 'Português',
+    speech: 'pt-PT',
+  },
+  LANGUAGES.find(
+    (language) =>
+      language.code === internalDeviceCode,
+  )?.code ?? null
+
+// CHỨC NĂNG: khởi tạo instance dùng chung một lần.
+// XỬ LÝ:
+// - supportedLngs giới hạn vào các mã dự án đang hỗ trợ.
+// - currentOnly tra đúng mã nội bộ đã chọn.
+// - Thiếu key mới fallback sang vi.
+// - Không tự đổi ngôn ngữ theo ngôn ngữ thuyết minh.
+if (!i18n.isInitialized) {
+  void i18n
+    .use(initReactI18next)
+    .init({
+      resources,
+      supportedLngs: LANGUAGES.map(
+        (language) => language.code,
+      ),
+      load: 'currentOnly',
+      lng: DEVICE_LANG ?? 'vi',
+      fallbackLng: 'vi',
+      interpolation: {
+        escapeValue: false,
+      },
+      react: {
+        bindI18n: 'languageChanged',
+        bindI18nStore: 'added removed',
+        useSuspense: false,
+      },
+    })
+} else {
+  // CHỨC NĂNG: cập nhật nội dung khi Fast Refresh chạy lại module.
+  // XỬ LÝ: không gọi init nhiều lần trên cùng instance.
+  // deep=false thay các nhóm cấp gốc bằng nhóm trong file mới.
+  for (const [code, resource] of Object.entries(resources)) {
+    i18n.addResourceBundle(
+      code,
+      'translation',
+      resource.translation,
+      false,
+      true,
+    )
+  }
+}
 
 export default i18n
