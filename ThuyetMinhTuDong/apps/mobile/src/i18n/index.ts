@@ -56,43 +56,6 @@ export const LANGUAGES = [
     label: 'Português',
     speech: 'pt-PT',
   },
-] as const
-
-export type LangCode =
-  (typeof LANGUAGES)[number]['code']
-
-// CHỨC NĂNG: gắn mã ngôn ngữ với đúng nội dung.
-// XỬ LÝ:
-// - cn luôn đọc chinese, tức cn.json.
-// - pt luôn đọc portuguese, tức pt.json.
-// - Không dùng object spread để ghép các ngôn ngữ với nhau.
-const resources = {
-  vi: {
-    translation: vietnamese,
-  },
-  en: {
-    translation: english,
-  },
-  ja: {
-    translation: japanese,
-  },
-  cn: {
-    translation: chinese,
-  },
-  pt: {
-    translation: portuguese,
-  },
-}
-
-// CHỨC NĂNG: nhận diện ngôn ngữ thiết bị để gợi ý.
-// XỬ LÝ: hệ điều hành dùng zh, dự án dùng cn.
-const deviceCode =
-  getLocales()[0]?.languageCode ?? ''
-
-const internalDeviceCode =
-  deviceCode === 'zh' ? 'cn' : deviceCode
-
-export const DEVICE_LANG: LangCode | null =
   LANGUAGES.find(
     (language) =>
       language.code === internalDeviceCode,

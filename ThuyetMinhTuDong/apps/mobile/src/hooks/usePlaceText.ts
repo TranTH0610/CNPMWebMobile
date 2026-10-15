@@ -95,67 +95,6 @@ export function usePlaceText(
     }
 
     let cancelled = false
-
-    setState({
-      key,
-      text: null,
-      loading: true,
-      error: false,
-    })
-
-    // CHỨC NĂNG: đọc cache hoặc dịch nội dung còn thiếu.
-    // XỬ LÝ: chỉ cập nhật màn hình nếu lần xử lý vẫn còn hiệu lực.
-    const loadText = async (): Promise<void> => {
-      try {
-        const saved = await getSavedTranslation(key)
-
-        let result: string
-
-        if (saved?.trim()) {
-          result = saved
-        } else {
-          result = await translateLong(
-            source,
-            'vi',
-            lang,
-          )
-
-          if (!result.trim()) {
-            throw new Error('Empty narration')
-          }
-
-          await saveTranslation(key, result)
-        }
-
-        if (!cancelled) {
-          setState({
-            key,
-            text: result,
-            loading: false,
-            error: false,
-          })
-        }
-      } catch {
-        if (!cancelled) {
-          setState({
-            key,
-            text: null,
-            loading: false,
-            error: true,
-          })
-        }
-      }
-    }
-
-    void loadText()
-
-    // CHỨC NĂNG: bỏ kết quả của lần xử lý cũ.
-    // XỬ LÝ: đổi ngôn ngữ, đổi địa điểm hoặc rời màn hình thì
-    // kết quả cũ không được ghi đè nội dung mới.
-    // Yêu cầu mạng có thể vẫn hoàn thành, nhưng không cập nhật UI.
-    return () => {
-      cancelled = true
-    }
   }, [place, lang, key, source, attempt])
 
   // CHỨC NĂNG: chặn văn bản cũ ngay trong lần render đổi ngôn ngữ.
