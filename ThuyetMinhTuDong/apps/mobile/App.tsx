@@ -15,3 +15,12 @@ import { SettingsProvider } from './src/store/SettingsContext'
 
 export default function App() {
   return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <SettingsProvider>
+          <RootNavigator />
+        </SettingsProvider>
+      </NavigationContainer>
+    </SafeAreaProvider>
+  )
+}

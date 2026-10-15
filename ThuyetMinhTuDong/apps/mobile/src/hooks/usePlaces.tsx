@@ -25,7 +25,7 @@ import type {
     Point,
 } from '@travelguide/shared-types'
 
-import type { LangCode } from '../i18n'
+import type { LangCode } from '../i18n';
 
 import {
   createMobilePlaceCatalog,
