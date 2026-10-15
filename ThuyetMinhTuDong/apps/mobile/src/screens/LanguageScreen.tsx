@@ -42,7 +42,7 @@ export default function LanguageScreen({ navigation, route }: Props) {
       {!change && (
         <View style={{ marginTop: 8, marginBottom: 24 }}>
           <Text style={{ fontSize: 28, fontWeight: '700' }}>Welcome 👋</Text>
-          <Text style={{ fontSize: 16, color: '#555', marginTop: 4 }}>Xin chào • ようこそ</Text>
+          <Text style={{ fontSize: 16, color: '#555', marginTop: 4 }}>Xin chào • ようこそ • 你好 • Olá</Text>
           <Text style={{ marginTop: 12, color: '#555' }}>{t('language.subtitle')}</Text>
         </View>
       )}

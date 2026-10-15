@@ -1,60 +1,129 @@
+/**
+ * FILE NÀY LÀM GÌ:
+ * Theo dõi vị trí khi bật tự mở và tìm địa điểm trong bán kính 100 m.
+ * HomeScreen dùng; phụ thuộc expo-location, Place và geo.ts.
+ * Giữ luồng geofencing hiện có, bổ sung xử lý lỗi an toàn.
+ */
+
 import { useEffect, useState } from 'react'
 import * as Location from 'expo-location'
+
 import type { Place } from '../services/places'
 import { distanceMeters } from '../services/geo'
 
-const RADIUS = 100 // mét
+const RADIUS = 100
 
-type Coords = { lat: number; lng: number }
+type Coords = {
+  lat: number
+  lng: number
+}
 
-export function useNearbyPlace(places: Place[], enabled: boolean) {
-  const [coords, setCoords] = useState<Coords | null>(null)
-  const [simulated, setSimulated] = useState<Coords | null>(null)
+export function useNearbyPlace(
+  places: Place[],
+  enabled: boolean,
+) {
+  const [coords, setCoords] =
+    useState<Coords | null>(null)
+
+  const [simulated, setSimulated] =
+    useState<Coords | null>(null)
+
   const [denied, setDenied] = useState(false)
 
   useEffect(() => {
     if (!enabled) {
       setCoords(null)
+      setSimulated(null)
       setDenied(false)
       return
     }
-    let sub: Location.LocationSubscription | undefined
+
+    let subscription:
+      Location.LocationSubscription | undefined
+
     let cancelled = false
 
-    ;(async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (cancelled) return
-      if (status !== 'granted') {
-        setDenied(true)
-        return
+    const start = async (): Promise<void> => {
+      try {
+        const permission =
+          await Location.requestForegroundPermissionsAsync()
+
+        if (cancelled) return
+
+        if (permission.status !== 'granted') {
+          setDenied(true)
+          return
+        }
+
+        setDenied(false)
+
+        const watcher =
+          await Location.watchPositionAsync(
+            {
+              accuracy: Location.Accuracy.Balanced,
+              distanceInterval: 10,
+            },
+            (position) => {
+              if (!cancelled) {
+                setCoords({
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                })
+              }
+            },
+          )
+
+        // CHỨC NĂNG: không để watcher tồn tại sau khi tắt switch.
+        // XỬ LÝ: watchPositionAsync trả về bất đồng bộ; nếu đã cleanup
+        // trong lúc chờ, phải remove watcher ngay khi nó được trả về.
+        if (cancelled) {
+          watcher.remove()
+        } else {
+          subscription = watcher
+        }
+      } catch {
+        if (!cancelled) {
+          setDenied(true)
+          setCoords(null)
+        }
       }
-      setDenied(false)
-      sub = await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.Balanced, distanceInterval: 10 },
-        (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude })
-      )
-      if (cancelled) sub.remove()
-    })()
+    }
+
+    void start()
 
     return () => {
       cancelled = true
-      sub?.remove()
+      subscription?.remove()
     }
   }, [enabled])
 
   const current = simulated ?? coords
+
   let nearby: Place | null = null
+
+  // CHỨC NĂNG: giữ cách chọn địa điểm gần nhất trong bán kính.
+  // XỬ LÝ: bỏ địa điểm không có tọa độ; không đổi RADIUS=100.
   if (enabled && current) {
-    let best = RADIUS
-    for (const p of places) {
-      if (!p.location) continue
-      const d = distanceMeters(current, p.location)
-      if (d <= best) {
-        best = d
-        nearby = p
+    let bestDistance = RADIUS
+
+    for (const place of places) {
+      if (!place.location) continue
+
+      const distance = distanceMeters(
+        current,
+        place.location,
+      )
+
+      if (distance <= bestDistance) {
+        bestDistance = distance
+        nearby = place
       }
     }
   }
 
-  return { nearby, denied, simulate: setSimulated }
+  return {
+    nearby,
+    denied,
+    simulate: setSimulated,
+  }
 }
