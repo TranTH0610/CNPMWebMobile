@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": ".test-build",
+    "skipLibCheck": true,
+    "types": []
+  },
+  "include": [
+    "src/model.ts",
+    "src/catalog.ts",
+    "src/qr.ts",
+    "src/mock.ts",
+    "src/messages.ts",
+    "src/search.ts"
+  ]
+}

@@ -1,0 +1,369 @@
+/**
+ * FILE NÀY LÀM GÌ:
+ * Kiểm tra logic UC01–UC05 bằng Node, không cần điện thoại.
+ * Script test gọi sau khi TypeScript biên dịch vào .test-build.
+ * Phụ thuộc node:test, assert và code logic đã biên dịch.
+ */
+
+const { test } = require('node:test')
+const assert = require('node:assert/strict')
+
+const {
+  createCatalog,
+  publishedText,
+  availableLanguages,
+  CatalogError,
+} = require('../.test-build/catalog.js')
+
+const {
+  MOCK_PLACES,
+  loadMockCatalog,
+} = require('../.test-build/mock.js')
+
+const { languageOf } = require('../.test-build/model.js')
+
+const {
+  normalize,
+  selectPlaces,
+  paginate,
+  distanceTo,
+} = require('../.test-build/search.js')
+
+const {
+  parsePlaceQr,
+  placeUrl,
+} = require('../.test-build/qr.js')
+
+const { messages } = require('../.test-build/messages.js')
+
+const policy = {
+  allowedOrigins: ['https://hue-guide.example'],
+  allowHttp: false,
+}
+
+// CHỨC NĂNG: Kiểm tra mã ngôn ngữ và bộ khóa.
+// XỬ LÝ: Bắt nhầm cn/pt và thiếu key giữa các resource.
+test('UC01: ánh xạ mã và đủ khóa UI', () => {
+  assert.equal(languageOf('zh-Hans-CN'), 'cn')
+  assert.equal(languageOf('pt_BR'), 'pt')
+  assert.equal(languageOf('JA-jp'), 'ja')
+  assert.equal(languageOf('fr'), null)
+
+  assert.equal(
+    languageOf('en') ?? languageOf('ja') ?? 'vi',
+    'en',
+  )
+
+  for (const language of ['en', 'cn', 'pt', 'ja']) {
+    assert.deepEqual(
+      Object.keys(messages[language]).sort(),
+      Object.keys(messages.vi).sort(),
+    )
+  }
+
+  assert.equal(messages.cn.explore, '探索')
+  assert.equal(messages.pt.explore, 'Explorar')
+})
+
+// CHỨC NĂNG: Kiểm tra phạm vi và trạng thái công bố.
+// XỬ LÝ: Tạo dữ liệu ngoài phạm vi, nháp và chưa triển khai để thử loại bỏ.
+test('UC02/04: chỉ trả dữ liệu được công bố', async () => {
+  const base = MOCK_PLACES[0]
+
+  const records = [
+    base,
+    {
+      ...base,
+      id: 'outside',
+      scope: 'ha-noi',
+    },
+    {
+      ...base,
+      id: 'draft-point',
+      status: 'draft',
+    },
+    {
+      ...base,
+      id: 'unlisted',
+      inLaunchCatalog: false,
+    },
+    {
+      ...base,
+      id: 'draft-text',
+      content: {
+        vi: {
+          ...base.content.vi,
+          status: 'approved',
+        },
+      },
+    },
+    {
+      ...base,
+      id: 'mixed',
+      content: {
+        vi: base.content.vi,
+        en: {
+          ...base.content.en,
+          status: 'draft',
+        },
+      },
+    },
+  ]
+
+  const catalog = createCatalog(async () => records)
+
+  assert.deepEqual(
+    (await catalog.list()).map((place) => place.id),
+    ['ky-dai', 'mixed'],
+  )
+
+  assert.equal(
+    (await catalog.get('mixed')).content.en,
+    undefined,
+  )
+
+  await assert.rejects(
+    catalog.get('outside'),
+    (error) => error instanceof CatalogError,
+  )
+
+  const copy = await catalog.get('ky-dai')
+  copy.content.vi.title = 'changed'
+
+  assert.notEqual(base.content.vi.title, 'changed')
+
+  assert.equal(
+    publishedText({
+      ...base,
+      content: {
+        vi: {
+          ...base.content.vi,
+          approvedAt: undefined,
+        },
+      },
+    }, 'vi'),
+    undefined,
+  )
+})
+
+// CHỨC NĂNG: Phân biệt nguồn rỗng và nguồn lỗi.
+// XỬ LÝ: Không giả lỗi thành một danh sách thành công.
+test('UC02: nguồn rỗng và lỗi nguồn', async () => {
+  assert.deepEqual(
+    await createCatalog(async () => []).list(),
+    [],
+  )
+
+  await assert.rejects(
+    createCatalog(async () => {
+      throw new Error('offline')
+    }).list(),
+    /offline/,
+  )
+})
+
+// CHỨC NĂNG: Kiểm tra tìm không dấu và đúng ngôn ngữ.
+// XỬ LÝ: Từ khóa rỗng, không có kết quả và thiếu bản dịch đều được thử.
+test('UC03: tìm kiếm và lọc', () => {
+  assert.equal(
+    normalize('  ĐIỆN  Thái Hòa '),
+    'dien thai hoa',
+  )
+
+  const options = {
+    language: 'vi',
+    query: 'ngo mon',
+    zone: null,
+    order: 'name',
+  }
+
+  assert.deepEqual(
+    selectPlaces(MOCK_PLACES, options)
+      .map((place) => place.id),
+    ['ngo-mon'],
+  )
+
+  assert.equal(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      query: '   ',
+    }).length,
+    3,
+  )
+
+  assert.equal(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      query: 'zzzzz',
+    }).length,
+    0,
+  )
+
+  assert.equal(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      query: '',
+      zone: 'ceremonial',
+    }).length,
+    1,
+  )
+
+  assert.equal(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      language: 'en',
+      query: 'điện',
+    }).length,
+    0,
+  )
+
+  assert.equal(
+    publishedText(MOCK_PLACES[2], 'ja'),
+    undefined,
+  )
+
+  assert.deepEqual(
+    availableLanguages(MOCK_PLACES[2]),
+    ['vi', 'en'],
+  )
+})
+
+// CHỨC NĂNG: Kiểm tra khoảng cách và trường hợp biên.
+// XỬ LÝ: Tọa độ sau đây chỉ tồn tại trong test, không đưa vào dữ liệu du khách.
+test('UC03: tọa độ và phân trang', () => {
+  const originalIds = MOCK_PLACES.map((place) => place.id)
+
+  const a = {
+    ...MOCK_PLACES[0],
+    position: {
+      lat: 0,
+      lng: 0.001,
+      verified: true,
+    },
+  }
+
+  const b = {
+    ...MOCK_PLACES[1],
+    position: {
+      lat: 0,
+      lng: 0.01,
+      verified: true,
+    },
+  }
+
+  const origin = { lat: 0, lng: 0 }
+
+  const result = selectPlaces([b, a], {
+    language: 'vi',
+    query: '',
+    zone: null,
+    order: 'nearest',
+    origin,
+  })
+
+  assert.equal(result[0].id, a.id)
+
+  assert.equal(
+    distanceTo({
+      ...a,
+      position: {
+        ...a.position,
+        verified: false,
+      },
+    }, origin),
+    undefined,
+  )
+
+  assert.equal(
+    distanceTo(a, { lat: NaN, lng: 0 }),
+    undefined,
+  )
+
+  assert.deepEqual(
+    MOCK_PLACES.map((place) => place.id),
+    originalIds,
+  )
+
+  assert.equal(paginate([1, 2, 3], 99, 2).page, 2)
+
+  assert.deepEqual(
+    paginate([], 99, 0),
+    { page: 1, pages: 1, items: [] },
+  )
+
+  assert.equal(paginate([1], NaN, NaN).page, 1)
+})
+
+// CHỨC NĂNG: Kiểm tra QR hợp lệ.
+// XỬ LÝ: Thử custom scheme, HTTPS và HTTP phát triển được cho phép.
+test('UC05: QR hợp lệ', () => {
+  assert.equal(
+    parsePlaceQr(
+      'https://hue-guide.example/places/ngo-mon',
+      policy,
+    ),
+    'ngo-mon',
+  )
+
+  assert.equal(
+    parsePlaceQr('hueguide://places/ngo-mon', policy),
+    'ngo-mon',
+  )
+
+  assert.equal(
+    placeUrl('https://hue-guide.example', 'ngo-mon'),
+    'https://hue-guide.example/places/ngo-mon',
+  )
+
+  assert.equal(
+    parsePlaceQr(
+      'http://192.168.1.9:5173/places/ngo-mon',
+      {
+        allowedOrigins: ['http://192.168.1.9:5173'],
+        allowHttp: true,
+      },
+    ),
+    'ngo-mon',
+  )
+})
+
+// CHỨC NĂNG: Kiểm tra QR sai.
+// XỬ LÝ: Từ chối domain giả, query, credentials và đường dẫn bất thường.
+test('UC05: từ chối QR sai', () => {
+  const inputs = [
+    'ngo-mon',
+    'javascript:alert(1)',
+    'https://evil.example/places/ngo-mon',
+    'https://hue-guide.example.evil.example/places/ngo-mon',
+    'https://hue-guide.example@evil.example/places/ngo-mon',
+    'https://user:pass@hue-guide.example/places/ngo-mon',
+    'http://hue-guide.example/places/ngo-mon',
+    'https://hue-guide.example/places/ngo-mon?next=https://evil.example',
+    'https://hue-guide.example/places/ngo-mon#x',
+    'https://hue-guide.example/places/%2Fngo-mon',
+    'hueguide://places/../secret',
+    'https://hue-guide.example/places/a--b',
+    'x'.repeat(3000),
+  ]
+
+  for (const input of inputs) {
+    assert.throws(
+      () => parsePlaceQr(input, policy),
+      input,
+    )
+  }
+})
+
+// CHỨC NĂNG: Kiểm tra ID sau khi parse.
+// XỬ LÝ: Đúng định dạng không có nghĩa địa điểm tồn tại.
+test('UC04/05: từ chối ID không tồn tại', async () => {
+  const id = parsePlaceQr(
+    'hueguide://places/not-a-real-site',
+    policy,
+  )
+
+  await assert.rejects(
+    createCatalog(loadMockCatalog).get(id),
+    (error) => error instanceof CatalogError,
+  )
+})

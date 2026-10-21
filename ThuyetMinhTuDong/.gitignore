@@ -1,6 +1,14 @@
-﻿node_modules/
-dist/
-build/
+﻿# FILE NÀY LÀM GÌ:
+# Bỏ dependency, kết quả test/build và cấu hình máy cá nhân khỏi Git.
+
+# CHỨC NĂNG: Không commit thư viện cài từ npm.
+node_modules/
+
+# CHỨC NĂNG: Không commit file kiểm tra sinh tự động.
+**/.test-build/
+**/.verify-native/
+**/dist/
+
+# CHỨC NĂNG: Giữ cấu hình máy riêng ngoài Git.
 .env
-.expo/
-*.log
+.env.local

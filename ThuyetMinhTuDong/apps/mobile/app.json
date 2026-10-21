@@ -5,7 +5,15 @@
     "slug": "thuyet-minh-tu-dong",
     "version": "1.0.0",
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow camera access to scan a heritage site QR code.",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ]
     ]
   }
 }

@@ -4,5 +4,10 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "test:visitor": "npm run test --workspace=@travelguide/visitor-core",
+    "typecheck:visitor": "npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile",
+    "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile"
+  }
 }
