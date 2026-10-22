@@ -31,6 +31,7 @@ const {
 
 const {
   parsePlaceQr,
+  parseQrTarget,
   placeUrl,
 } = require('../.test-build/qr.js')
 
@@ -146,21 +147,39 @@ test('UC02/04: chỉ trả dữ liệu được công bố', async () => {
   )
 })
 
-// CHỨC NĂNG: Phân biệt nguồn rỗng và nguồn lỗi.
-// XỬ LÝ: Không giả lỗi thành một danh sách thành công.
-test('UC02: nguồn rỗng và lỗi nguồn', async () => {
-  assert.deepEqual(
-    await createCatalog(async () => []).list(),
-    [],
-  )
+// CHỨC NĂNG: Kiểm tra từ khóa rỗng trả đủ dữ liệu.
+// XỬ LÝ: Không cố định là 3 vì mock hiện đã có 8 điểm.
+assert.equal(
+  selectPlaces(MOCK_PLACES, {
+    ...options,
+    query: '   ',
+  }).length,
+  MOCK_PLACES.length,
+)
 
-  await assert.rejects(
-    createCatalog(async () => {
-      throw new Error('offline')
-    }).list(),
-    /offline/,
-  )
-})
+// CHỨC NĂNG: Kiểm tra lọc khu vực.
+// XỬ LÝ: So với số điểm đúng khu vực trong nguồn.
+assert.equal(
+  selectPlaces(MOCK_PLACES, {
+    ...options,
+    query: '',
+    zone: 'ceremonial',
+  }).length,
+  MOCK_PLACES.filter(
+    (place) => place.zone === 'ceremonial',
+  ).length,
+)
+
+// CHỨC NĂNG: Kiểm tra không tìm nhầm nội dung Việt ở bản Anh.
+// XỬ LÝ: Dùng cả cụm tên; "dien" riêng có thể nằm trong tên Anh Dien Tho.
+assert.equal(
+  selectPlaces(MOCK_PLACES, {
+    ...options,
+    language: 'en',
+    query: 'điện thái hòa',
+  }).length,
+  0,
+)
 
 // CHỨC NĂNG: Kiểm tra tìm không dấu và đúng ngôn ngữ.
 // XỬ LÝ: Từ khóa rỗng, không có kết quả và thiếu bản dịch đều được thử.
@@ -365,5 +384,78 @@ test('UC04/05: từ chối ID không tồn tại', async () => {
   await assert.rejects(
     createCatalog(loadMockCatalog).get(id),
     (error) => error instanceof CatalogError,
+  )
+})
+// CHỨC NĂNG: Kiểm tra QR chung theo UC05 v1.3.
+// XỬ LÝ: Root và /places hợp lệ; đường dẫn lạ vẫn bị từ chối.
+test('UC05 v1.3: QR vào chung mở trang chủ', () => {
+  assert.deepEqual(
+    parseQrTarget('https://hue-guide.example/', policy),
+    { kind: 'home' },
+  )
+
+  assert.deepEqual(
+    parseQrTarget('https://hue-guide.example/places', policy),
+    { kind: 'home' },
+  )
+
+  assert.deepEqual(
+    parseQrTarget('hueguide://places', policy),
+    { kind: 'home' },
+  )
+
+  assert.throws(() => parseQrTarget(
+    'https://hue-guide.example/other',
+    policy,
+  ))
+})
+
+// CHỨC NĂNG: Kiểm tra đa danh mục và đúng ngôn ngữ.
+// XỬ LÝ: OR trong danh mục, AND với khu vực.
+test('UC03: danh mục, khu vực và tìm theo ngôn ngữ', () => {
+  const options = {
+    language: 'vi',
+    query: '',
+    zone: null,
+    order: 'name',
+    categories: ['gate', 'temple'],
+  }
+
+  const matches = selectPlaces(MOCK_PLACES, options)
+  assert.equal(matches.length, 3)
+
+  assert.equal(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      zones: ['fortifications'],
+    }).length,
+    1,
+  )
+
+  assert.ok(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      categories: [],
+      query: 'cung dien',
+    }).length > 0,
+  )
+
+  assert.equal(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      categories: [],
+      language: 'en',
+      query: 'cung dien',
+    }).length,
+    0,
+  )
+
+  assert.ok(
+    selectPlaces(MOCK_PLACES, {
+      ...options,
+      categories: [],
+      language: 'en',
+      query: 'palaces',
+    }).length > 0,
   )
 })

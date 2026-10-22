@@ -1,22 +1,16 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Cung cấp dữ liệu demo cho UC02–UC04.
+ * Cung cấp tám điểm minh họa để thử giao diện UC02–UC04.
  * demoCatalog được provider dùng mặc định.
  * Phụ thuộc model.ts và catalog.ts.
  *
- * Đây là nội dung minh họa đồ án, không phải bài lịch sử đã được
- * đơn vị quản lý di tích thật duyệt. Không khai báo tọa độ suy đoán.
+ * Danh mục và bài đọc là dữ liệu demo, chưa phải dữ liệu triển khai đã chốt.
+ * Không khai báo tọa độ suy đoán.
  */
 
 import { createCatalog } from './catalog'
-import type {
-  Language,
-  PlaceRecord,
-  PublishedText,
-} from './model'
+import type { Language, PlaceRecord, PublishedText } from './model'
 
-// CHỨC NĂNG: Chuẩn bị nội dung thử nghiệm theo ngôn ngữ.
-// XỬ LÝ: Không đưa khẳng định lịch sử chưa được kiểm chứng.
 const demoBody: Record<Language, string> = {
   vi: 'Đây là nội dung minh họa để kiểm tra màn đọc thuyết minh. Trước khi phục vụ du khách, quản lý phải cung cấp, kiểm duyệt và công bố bài chính thức.',
   en: 'This is sample text for testing the reading screen. Before serving visitors, management must provide, review and publish the official narration.',
@@ -33,8 +27,8 @@ const address: Record<Language, string> = {
   ja: 'フエ京城の対象範囲、詳細位置は確認待ち',
 }
 
-// CHỨC NĂNG: Tạo trạng thái công bố giả để kiểm tra quy tắc FE.
-// XỬ LÝ: Ngày duyệt/công bố chỉ thuộc mock; UI luôn có thông báo dữ liệu demo.
+// CHỨC NĂNG: Mô phỏng một bản nội dung đã công bố.
+// XỬ LÝ: Trạng thái/ngày chỉ dùng thử quy tắc FE, UI có thông báo dữ liệu demo.
 function text(title: string, language: Language): PublishedText {
   return {
     title,
@@ -48,8 +42,8 @@ function text(title: string, language: Language): PublishedText {
   }
 }
 
-// CHỨC NĂNG: Tạo địa điểm cùng những bản ngôn ngữ được khai báo.
-// XỬ LÝ: Không tự sinh bản ngôn ngữ còn thiếu.
+// CHỨC NĂNG: Tạo địa điểm từ những bản ngôn ngữ được khai báo.
+// XỬ LÝ: Thiếu ngôn ngữ thì giữ thiếu, không tự dịch.
 function make(
   id: string,
   zone: PlaceRecord['zone'],
@@ -74,8 +68,8 @@ function make(
   }
 }
 
-// CHỨC NĂNG: Cung cấp ba điểm ví dụ thuộc phạm vi tài liệu.
-// XỬ LÝ: Điện Thái Hòa cố ý thiếu CN/PT/JA để thử trạng thái thiếu bản dịch.
+// CHỨC NĂNG: Tạo dữ liệu đủ để thử carousel, lọc và phân trang.
+// XỬ LÝ: Một số điểm chỉ có Việt/Anh để kiểm tra thiếu bản công bố.
 export const MOCK_PLACES: PlaceRecord[] = [
   make('ky-dai', 'fortifications', {
     vi: 'Kỳ Đài',
@@ -95,10 +89,69 @@ export const MOCK_PLACES: PlaceRecord[] = [
     vi: 'Điện Thái Hòa',
     en: 'Thai Hoa Palace',
   }),
+  make('the-mieu', 'ceremonial', {
+    vi: 'Thế Miếu',
+    en: 'The Mieu Temple',
+    cn: '世庙',
+    pt: 'Templo The Mieu',
+    ja: '世廟',
+  }),
+  make('cung-dien-tho', 'ceremonial', {
+    vi: 'Cung Diên Thọ',
+    en: 'Dien Tho Palace',
+    cn: '延寿宫',
+    pt: 'Palácio Dien Tho',
+    ja: '延寿宮',
+  }),
+  make('truong-sanh-cung', 'ceremonial', {
+    vi: 'Trường Sanh Cung',
+    en: 'Truong Sanh Palace',
+  }),
+  make('dien-can-chanh', 'ceremonial', {
+    vi: 'Điện Cần Chánh',
+    en: 'Can Chanh Palace',
+  }),
+  make('hien-lam-cac', 'ceremonial', {
+    vi: 'Hiển Lâm Các',
+    en: 'Hien Lam Pavilion',
+  }),
+]
+
+// CHỨC NĂNG: Gắn danh mục và trạng thái nổi bật.
+// XỬ LÝ: Kỳ Đài không bị gọi là cổng thành;
+// không thêm điểm ngoài phạm vi chỉ để đủ danh mục trong ảnh.
+for (const place of MOCK_PLACES) {
+  place.category =
+    place.id === 'ky-dai' ? 'monument'
+      : place.id === 'ngo-mon' ? 'gate'
+        : place.id === 'the-mieu' || place.id === 'hien-lam-cac'
+          ? 'temple'
+          : 'palace'
+
+  place.featured = [
+    'ngo-mon',
+    'dien-thai-hoa',
+    'the-mieu',
+    'cung-dien-tho',
+  ].includes(place.id)
+}
+
+// CHỨC NĂNG: Gắn ảnh đã có nguồn cho đúng công trình.
+// XỬ LÝ: Các điểm chưa có ảnh dùng placeholder, không mượn ảnh của điểm khác.
+MOCK_PLACES[1].images = [
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/DGJ_1178_-_Ngo_Mon_Gate_%283442074085%29.jpg/960px-DGJ_1178_-_Ngo_Mon_Gate_%283442074085%29.jpg',
+]
+
+MOCK_PLACES[2].images = [
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Thai_Hoa_palace.jpg/960px-Thai_Hoa_palace.jpg',
+]
+
+MOCK_PLACES[3].images = [
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Inside_The_Mieu_Temple%2C_Hue_20130810.jpg/960px-Inside_The_Mieu_Temple%2C_Hue_20130810.jpg',
 ]
 
 // CHỨC NĂNG: Mô phỏng nguồn API bất đồng bộ.
-// XỬ LÝ: Dữ liệu chỉ gồm giá trị JSON; trả bản sao để không sửa nguồn mock.
+// XỬ LÝ: Trả bản sao dữ liệu JSON để UI không sửa nguồn.
 export async function loadMockCatalog(): Promise<PlaceRecord[]> {
   return JSON.parse(JSON.stringify(MOCK_PLACES)) as PlaceRecord[]
 }

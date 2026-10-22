@@ -1,8 +1,8 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Kiểm tra dữ liệu QR trước khi mở địa điểm, thuộc UC05.
- * ScanScreen gọi parser; không tự mở URL ngoài ứng dụng.
- * Không phụ thuộc camera hoặc React Native.
+ * Phân biệt QR vào chung và QR một địa điểm theo UC05 v1.3.
+ * Scanner mobile và trang QR web sử dụng.
+ * Không tự mở URL ngoài hệ thống.
  */
 
 export type QrPolicy = {
@@ -10,22 +10,21 @@ export type QrPolicy = {
   allowHttp: boolean
 }
 
-// CHỨC NĂNG: Kiểm tra cấu trúc ID địa điểm.
-// XỬ LÝ: Chỉ cho chữ thường, số và gạch nối đơn; giới hạn 80 ký tự.
+export type QrTarget =
+  | { kind: 'home' }
+  | { kind: 'place'; id: string }
+
 export function validPlaceId(id: string): boolean {
   return id.length <= 80
     && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)
 }
 
-// CHỨC NĂNG: Lấy ID từ QR hợp lệ.
-// XỬ LÝ:
-// - Chỉ nhận custom scheme của app hoặc origin web được cấu hình.
-// - Kiểm tra dữ liệu thô trước URL(), vì URL có thể chuẩn hóa /../.
-// - Không nhận query, hash, tài khoản hoặc đường dẫn khác mẫu.
-export function parsePlaceQr(
+// CHỨC NĂNG: Kiểm tra payload trước khi điều hướng.
+// XỬ LÝ: Kiểm tra raw trước URL() để không bỏ qua đường dẫn /../.
+export function parseQrTarget(
   raw: string,
   policy: QrPolicy,
-): string {
+): QrTarget {
   const value = raw.trim()
 
   if (
@@ -75,6 +74,16 @@ export function parsePlaceQr(
     path = url.pathname
   }
 
+  // CHỨC NĂNG: Chấp nhận QR vào chung không có ID.
+  // XỬ LÝ: Chỉ root hoặc /places là trang vào chung hợp lệ.
+  if (
+    path === '/'
+    || path === '/places'
+    || path === '/places/'
+  ) {
+    return { kind: 'home' }
+  }
+
   const match =
     /^\/places\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/.exec(path)
 
@@ -82,11 +91,29 @@ export function parsePlaceQr(
     throw new Error('invalidQr')
   }
 
-  return match[1]
+  return {
+    kind: 'place',
+    id: match[1],
+  }
 }
 
-// CHỨC NĂNG: Tạo link web cho một địa điểm.
-// XỬ LÝ: ID phải hợp lệ trước khi ghép URL.
+// CHỨC NĂNG: Giữ API cũ cho nơi chỉ nhận QR của một điểm.
+// XỬ LÝ: Chỗ cần nhận QR chung phải dùng parseQrTarget.
+export function parsePlaceQr(
+  raw: string,
+  policy: QrPolicy,
+): string {
+  const target = parseQrTarget(raw, policy)
+
+  if (target.kind !== 'place') {
+    throw new Error('invalidQr')
+  }
+
+  return target.id
+}
+
+// CHỨC NĂNG: Tạo URL để mã hóa thành QR.
+// XỬ LÝ: ID phải đúng định dạng trước khi ghép URL.
 export function placeUrl(origin: string, id: string): string {
   if (!validPlaceId(id)) throw new Error('invalidQr')
 

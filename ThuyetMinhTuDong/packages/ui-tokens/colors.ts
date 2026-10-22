@@ -1,25 +1,26 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Khai báo màu, khoảng cách và bo góc dùng lại cho giao diện.
- * apps/mobile/src/visitor/ui.tsx sử dụng.
- * Không phụ thuộc nền tảng; phục vụ UI UC01–UC05.
+ * Khai báo màu, spacing và bo góc theo mockup UC01–UC05.
+ * UI native và CSS variables web sử dụng.
+ * Không phụ thuộc nền tảng.
  */
 
-// CHỨC NĂNG: Gom màu để các component dùng thống nhất.
-// XỬ LÝ: Đổi màu tại đây thay vì sửa từng màn hình.
+// CHỨC NĂNG: Tập trung màu để các màn hiển thị thống nhất.
+// XỬ LÝ: Giữ tên token cũ, bổ sung màu cho hero và nền.
 export const colors = {
-  primary: '#4F46E5',
+  primary: '#0875FF',
   background: '#FFFFFF',
-  text: '#182235',
-  muted: '#556174',
-  border: '#D8DFEB',
-  page: '#F5F7FB',
+  text: '#101D50',
+  muted: '#637194',
+  border: '#E4EAF5',
+  page: '#F3F6FC',
   danger: '#B42318',
-  soft: '#ECEBFF',
+  soft: '#EAF2FF',
+  overlay: 'rgba(8, 22, 34, 0.68)',
+  white: '#FFFFFF',
+  transparent: 'transparent',
 }
 
-// CHỨC NĂNG: Chuẩn hóa khoảng cách.
-// XỬ LÝ: Component dùng tên mức thay vì rải số khắp nơi.
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -30,6 +31,7 @@ export const spacing = {
 }
 
 export const radii = {
-  sm: 8,
+  sm: 10,
   md: 16,
+  lg: 24,
 }

@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": [
+      "vite/client"
+    ],
+    "noEmit": true,
+    "paths": {
+      "react": [
+        "./node_modules/@types/react",
+        "../../node_modules/@types/react"
+      ],
+      "react/*": [
+        "./node_modules/@types/react/*",
+        "../../node_modules/@types/react/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

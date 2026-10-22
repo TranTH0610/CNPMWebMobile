@@ -1,11 +1,14 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Xử lý tìm không dấu, lọc nhóm, khoảng cách và sắp xếp UC03.
- * usePlaceFilters trong react.tsx sử dụng.
- * Phụ thuộc model.ts và catalog.ts; không phụ thuộc giao diện.
+ * Tìm không dấu, lọc nhiều danh mục/khu vực và sắp xếp UC03.
+ * Hooks dùng chung gọi; phụ thuộc model, catalog và nhãn danh mục.
+ * Không phụ thuộc React hoặc API vị trí.
  */
 
 import { publishedText } from './catalog'
+import { categoryOf, type Category } from './model'
+import { uiMessages } from './uiMessages'
+
 import type {
   Language,
   PlaceRecord,
@@ -14,12 +17,8 @@ import type {
   Zone,
 } from './model'
 
-// CHỨC NĂNG: Chuẩn hóa văn bản tìm kiếm.
-// XỬ LÝ:
-// - NFD tách chữ và dấu kết hợp.
-// - Xóa dấu kết hợp.
-// - Xử lý riêng đ vì NFD không tự chuyển đ thành d.
-// - Gom khoảng trắng và bỏ khoảng trắng đầu/cuối.
+// CHỨC NĂNG: Chuẩn hóa từ khóa và nội dung.
+// XỬ LÝ: NFD bỏ dấu kết hợp; xử lý riêng đ/Đ và khoảng trắng.
 export function normalize(value: string): string {
   return value
     .toLowerCase()
@@ -30,8 +29,6 @@ export function normalize(value: string): string {
     .trim()
 }
 
-// CHỨC NĂNG: Kiểm tra tọa độ trước khi sử dụng.
-// XỬ LÝ: Loại NaN, Infinity và giá trị vượt giới hạn địa lý.
 export function validPoint(point: Point): boolean {
   return Number.isFinite(point.lat)
     && Number.isFinite(point.lng)
@@ -39,9 +36,8 @@ export function validPoint(point: Point): boolean {
     && Math.abs(point.lng) <= 180
 }
 
-// CHỨC NĂNG: Tính khoảng cách đường chim bay theo haversine.
-// XỬ LÝ: Đơn vị mét; chặn sai số số học trước khi lấy căn và arcsin.
-// Nơi gọi phải kiểm tra tọa độ bằng validPoint.
+// CHỨC NĂNG: Tính khoảng cách đường chim bay bằng haversine.
+// XỬ LÝ: Trả mét; giới hạn sai số trước căn/arcsin.
 export function distanceMeters(a: Point, b: Point): number {
   const rad = (value: number) => value * Math.PI / 180
 
@@ -56,9 +52,8 @@ export function distanceMeters(a: Point, b: Point): number {
     * Math.asin(Math.sqrt(Math.max(0, Math.min(1, h))))
 }
 
-// CHỨC NĂNG: Tính khoảng cách tới một địa điểm nếu có đủ điều kiện.
-// XỬ LÝ: Thiếu vị trí, tọa độ sai hoặc chưa xác nhận thì trả undefined.
-// Đây chỉ là sắp xếp UC03, không phải tự mở theo vị trí UC06.
+// CHỨC NĂNG: Chỉ tính khoảng cách khi dữ liệu đủ tin cậy.
+// XỬ LÝ: Không dùng tọa độ chưa xác nhận hoặc vị trí không hợp lệ.
 export function distanceTo(
   place: PlaceRecord,
   origin?: Point,
@@ -77,10 +72,10 @@ export function distanceTo(
 
 // CHỨC NĂNG: Tìm, lọc và sắp xếp danh sách.
 // XỬ LÝ:
-// - Có từ khóa thì chỉ tìm trong bản công bố đúng ngôn ngữ.
-// - Không tìm nhầm tên Việt khi đang chọn Anh.
-// - Không sửa mảng đầu vào.
-// - Không có khoảng cách hợp lệ thì sắp theo tên.
+// - Nhiều danh mục trong cùng nhóm là OR.
+// - Danh mục, khu vực và từ khóa kết hợp AND.
+// - Chỉ tìm trong bản công bố đúng ngôn ngữ.
+// - Không sửa mảng dữ liệu nguồn.
 export function selectPlaces(
   places: readonly PlaceRecord[],
   options: {
@@ -89,6 +84,8 @@ export function selectPlaces(
     zone: Zone | null
     order: SortOrder
     origin?: Point
+    categories?: readonly Category[]
+    zones?: readonly Zone[]
   },
 ): PlaceRecord[] {
   const words = normalize(options.query)
@@ -98,18 +95,36 @@ export function selectPlaces(
   const selected = places.filter((place) => {
     if (options.zone && place.zone !== options.zone) return false
 
-    // CHỨC NĂNG: Khi chưa tìm kiếm vẫn cho thấy điểm thiếu bản ngôn ngữ.
-    // XỬ LÝ: Card sẽ ghi rõ chưa có nội dung, không giả thành đã dịch.
+    if (
+      options.categories?.length
+      && !options.categories.includes(categoryOf(place))
+    ) {
+      return false
+    }
+
+    if (
+      options.zones?.length
+      && !options.zones.includes(place.zone)
+    ) {
+      return false
+    }
+
+    // CHỨC NĂNG: Khi chưa tìm, vẫn cho thấy điểm thiếu bản ngôn ngữ.
+    // XỬ LÝ: Card thông báo thiếu; không coi tên định danh là bản dịch.
     if (!words.length) return true
 
     const content = publishedText(place, options.language)
     if (!content) return false
+
+    const categoryLabel =
+      uiMessages[options.language][`category_${categoryOf(place)}`]
 
     const haystack = normalize([
       content.title,
       content.address,
       content.summary,
       content.body,
+      categoryLabel,
     ].join(' '))
 
     return words.every((word) => haystack.includes(word))
@@ -119,8 +134,6 @@ export function selectPlaces(
     publishedText(place, options.language)?.title
     ?? place.canonicalTitle
 
-  // CHỨC NĂNG: Tính khoảng cách một lần cho mỗi lần lọc.
-  // XỬ LÝ: Dùng Infinity cho điểm chưa biết khoảng cách để xếp sau.
   const distances = new Map(
     selected.map((place) => [
       place.id,
@@ -150,9 +163,8 @@ export function selectPlaces(
   })
 }
 
-// CHỨC NĂNG: Chia trang để web có thể dùng lại sau này.
-// XỬ LÝ: Giới hạn trang và kích thước; danh sách rỗng vẫn ở trang 1.
-// Mobile sử dụng FlatList, không cần gọi hàm này.
+// CHỨC NĂNG: Chia trang cho web.
+// XỬ LÝ: Chặn NaN, pageSize <= 0 và trang vượt giới hạn sau khi lọc.
 export function paginate<T>(
   items: readonly T[],
   requestedPage: number,

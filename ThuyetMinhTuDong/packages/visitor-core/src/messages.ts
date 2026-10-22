@@ -8,10 +8,12 @@
 // CHỨC NĂNG: Nhập kiểu ngôn ngữ hợp lệ.
 // XỬ LÝ: Không dùng mã ngôn ngữ tùy ý.
 import type { Language } from './model'
-
+// CHỨC NĂNG: Bổ sung nhãn UI mới.
+// XỬ LÝ: Ghép vào resource hiện tại, giữ các khóa UC01–UC05 đã có.
+import { uiMessages } from './uiMessages'
 // CHỨC NĂNG: Khai báo bộ khóa chuẩn bằng tiếng Việt.
 // XỬ LÝ: Đây là chữ UI; nội dung từng địa điểm nằm trong dữ liệu.
-const vi = {
+const vi = {  ...uiMessages.vi,
   brand: 'HueGuide',
   explore: 'Khám phá',
   intro: 'Các điểm trong danh mục tham quan Kinh thành Huế',
@@ -76,7 +78,7 @@ export type MessageKey = keyof typeof vi
 // XỬ LÝ: Thêm khóa vào vi mà quên en/cn/pt/ja sẽ bị TypeScript báo.
 type Messages = Record<MessageKey, string>
 
-const en: Messages = {
+const en: Messages = {  ...uiMessages.en,
   brand: 'HueGuide',
   explore: 'Explore',
   intro: 'Selected places in the Hue Citadel visitor catalogue',
@@ -135,7 +137,7 @@ const en: Messages = {
   close: 'Close',
 }
 
-const cn: Messages = {
+const cn: Messages = {  ...uiMessages.cn,
   brand: 'HueGuide',
   explore: '探索',
   intro: '顺化京城参观目录中的景点',
@@ -194,7 +196,7 @@ const cn: Messages = {
   close: '关闭',
 }
 
-const pt: Messages = {
+const pt: Messages = {  ...uiMessages.pt,
   brand: 'HueGuide',
   explore: 'Explorar',
   intro: 'Locais selecionados no catálogo da Cidadela de Huế',
@@ -253,7 +255,7 @@ const pt: Messages = {
   close: 'Fechar',
 }
 
-const ja: Messages = {
+const ja: Messages = {  ...uiMessages.ja,
   brand: 'HueGuide',
   explore: '探索',
   intro: 'フエ京城の参観対象スポット',

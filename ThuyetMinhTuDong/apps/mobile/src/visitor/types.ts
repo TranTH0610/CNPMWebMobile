@@ -1,14 +1,20 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Khai báo màn hình và tham số điều hướng UC01–UC05.
- * App, PlacesScreen, DetailScreen và ScanScreen sử dụng.
- * Không phụ thuộc thư viện bên ngoài.
+ * Định nghĩa route và tham số UC01–UC05.
+ * App và các màn visitor sử dụng.
+ * Phụ thuộc type Category.
  */
 
-// CHỨC NĂNG: Kiểm tra tên route và dữ liệu khi điều hướng.
-// XỬ LÝ: Detail bắt buộc có placeId; hai màn còn lại không có tham số.
+import type { Category } from '@travelguide/visitor-core'
+
+// CHỨC NĂNG: Kiểm tra tham số điều hướng.
+// XỬ LÝ: Detail bắt buộc placeId; Search nhận điều kiện ban đầu.
 export type VisitorStack = {
   Places: undefined
+  Search: {
+    query?: string
+    category?: Category
+  }
   Detail: {
     placeId: string
   }

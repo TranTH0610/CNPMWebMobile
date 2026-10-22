@@ -1,49 +1,54 @@
 ﻿/**
  * FILE NÀY LÀM GÌ:
- * Ghép provider ngôn ngữ và navigator cho mobile UC01–UC05.
- * index.js của Expo gọi file này.
- * Phụ thuộc visitor-core, adapter mobile và ba màn visitor.
- *
- * Entry này chưa ghép tab/GPS tự mở/TTS của luồng cũ.
+ * Ghép provider ngôn ngữ và điều hướng mobile UC01–UC05.
+ * index.js gọi; phụ thuộc các màn visitor.
+ * Chưa ghép GPS tự mở hoặc TTS của luồng cũ.
  */
 
 import { ActivityIndicator } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-
-import {
-  NavigationContainer,
-} from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 
 import {
   createNativeStackNavigator,
+  type NativeStackScreenProps,
 } from '@react-navigation/native-stack'
 
 import { getLocales } from 'expo-localization'
 
 import {
-  VisitorProvider,
   createVisitorI18n,
   useText,
-  useVisitor,
+  VisitorProvider,
 } from '@travelguide/visitor-core/react'
 
 import { storage } from './src/visitor/platform'
+import MainTabs from './src/visitor/MainTabs'
 import PlacesScreen from './src/visitor/PlacesScreen'
 import DetailScreen from './src/visitor/DetailScreen'
 import ScanScreen from './src/visitor/ScanScreen'
 import type { VisitorStack } from './src/visitor/types'
 
-// CHỨC NĂNG: Tạo instance ngoài component.
-// XỬ LÝ: Không khởi tạo lại mỗi lần App render.
+// CHỨC NĂNG: Khởi tạo một instance cho cả luồng.
+// XỬ LÝ: Đặt ngoài component để không tạo lại mỗi lần render.
 const boot = createVisitorI18n()
-
-const deviceLanguage =
-  getLocales()[0]?.languageTag ?? null
-
+const deviceLanguage = getLocales()[0]?.languageTag ?? null
 const Stack = createNativeStackNavigator<VisitorStack>()
 
-// CHỨC NĂNG: Đăng ký màn hình và tiêu đề theo ngôn ngữ.
-// XỬ LÝ: Hook nằm trong provider nên đổi ngôn ngữ sẽ cập nhật header.
+// CHỨC NĂNG: Dùng lại màn danh sách ở chế độ tìm kiếm.
+// XỬ LÝ: key đổi khi route params đổi để khởi tạo đúng điều kiện.
+function SearchResult({
+  route,
+}: NativeStackScreenProps<VisitorStack, 'Search'>) {
+  return (
+    <PlacesScreen
+      key={JSON.stringify(route.params)}
+      search
+      initial={route.params}
+    />
+  )
+}
+
 function Navigator() {
   const t = useText()
 
@@ -56,35 +61,37 @@ function Navigator() {
       >
         <Stack.Screen
           name="Places"
-          component={PlacesScreen}
+          component={MainTabs}
           options={{
-            title: t('brand'),
+            title: t('explore'),
+            headerShown: false,
           }}
+        />
+
+        <Stack.Screen
+          name="Search"
+          component={SearchResult}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="Detail"
           component={DetailScreen}
-          options={{
-            title: t('details'),
-          }}
+          options={{ title: t('details') }}
         />
 
         <Stack.Screen
           name="Scan"
           component={ScanScreen}
-          options={{
-            title: t('scan'),
-          }}
+          options={{ title: t('scan') }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
 
-// CHỨC NĂNG: Bọc vùng an toàn và trạng thái ngôn ngữ.
-// XỬ LÝ: Chờ đọc lựa chọn đã lưu trước khi hiện navigator.
-// Không thêm NavigationContainer thứ hai bao bên ngoài App này.
+// CHỨC NĂNG: Đọc ngôn ngữ trước khi hiển thị màn hình.
+// XỬ LÝ: Không thêm NavigationContainer thứ hai ngoài component này.
 export default function App() {
   return (
     <SafeAreaProvider>

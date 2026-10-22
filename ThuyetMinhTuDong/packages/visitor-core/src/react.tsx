@@ -41,6 +41,9 @@ import { CatalogError, type Catalog } from './catalog'
 import { demoCatalog } from './mock'
 import { messages, type MessageKey } from './messages'
 import { distanceTo, selectPlaces, validPoint } from './search'
+// CHỨC NĂNG: Sử dụng danh mục cho bộ lọc mới.
+// XỬ LÝ: categoryOf hỗ trợ cả dữ liệu chưa có category.
+import { categoryOf, type Category } from './model'
 
 // CHỨC NĂNG: Tạo instance i18n cho toàn bộ luồng visitor.
 // XỬ LÝ: UI và hook dùng cùng instance nên không bị lệch ngôn ngữ.
@@ -80,6 +83,8 @@ type VisitorState = {
   persistenceError: 'saveError' | 'readError' | null
   changeLanguage: (language: Language) => Promise<void>
   catalog: Catalog
+  favorites: ReadonlySet<string>
+  toggleFavorite: (id: string) => void
 }
 
 const Context = createContext<VisitorState | null>(null)
@@ -96,6 +101,7 @@ type ProviderProps = {
 // CHỨC NĂNG: Kết nối React với instance i18n.
 // XỬ LÝ: StateProvider nằm bên trong I18nextProvider để hook nhận đúng instance.
 export function VisitorProvider(props: ProviderProps) {
+  
   return (
     <I18nextProvider i18n={props.boot.instance}>
       <StateProvider {...props} />
@@ -121,7 +127,28 @@ function StateProvider({
 
   const [persistenceError, setPersistenceError] =
     useState<VisitorState['persistenceError']>(null)
+  // CHỨC NĂNG: Giữ dấu tim trong phiên hiện tại.
+  // XỬ LÝ: Không lưu AsyncStorage/localStorage, chưa đồng bộ tài khoản.
+  const [favorites, setFavorites] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  )
 
+  // CHỨC NĂNG: Bật hoặc tắt dấu tim của một điểm.
+  // XỬ LÝ: Tạo Set mới để React nhận ra thay đổi;
+  // không sửa trực tiếp Set của lần render trước.
+  const toggleFavorite = useCallback((id: string) => {
+    setFavorites((previous) => {
+      const next = new Set(previous)
+
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+
+      return next
+    })
+  }, [])
   const busy = useRef(false)
 
   useEffect(() => {
@@ -192,9 +219,8 @@ function StateProvider({
   const language =
     languageOf(instance.resolvedLanguage ?? instance.language)
     ?? 'vi'
-
-  // CHỨC NĂNG: Giữ ổn định giá trị context nếu dữ liệu không đổi.
-  // XỬ LÝ: Tránh tạo object context mới do render không liên quan.
+   // CHỨC NĂNG: Tạo dữ liệu context dùng chung cho các màn hình.
+  // XỬ LÝ: Chỉ tạo object mới khi một giá trị phụ thuộc thay đổi.
   const value = useMemo(
     () => ({
       language,
@@ -202,6 +228,8 @@ function StateProvider({
       persistenceError,
       changeLanguage,
       catalog,
+      favorites,
+      toggleFavorite,
     }),
     [
       language,
@@ -209,11 +237,20 @@ function StateProvider({
       persistenceError,
       changeLanguage,
       catalog,
+      favorites,
+      toggleFavorite,
     ],
   )
 
-  if (!ready) return <>{loading}</>
+  // CHỨC NĂNG: Hiển thị giao diện chờ khi chưa đọc xong ngôn ngữ.
+  // XỬ LÝ: Trả JSX thay vì để component không trả về giá trị.
+  if (!ready) {
+    return <>{loading}</>
+  }
 
+  // CHỨC NĂNG: Cung cấp trạng thái cho tất cả component con.
+  // XỬ LÝ: children được đặt bên trong Context.Provider
+  // để các hook useVisitor có thể đọc ngôn ngữ, service và dấu tim.
   return (
     <Context.Provider value={value}>
       {children}
@@ -426,9 +463,9 @@ export function usePlaceFilters(
 
   const effectiveOrder: SortOrder =
     order === 'nearest'
-    && results.some(
-      (place) => distanceTo(place, origin) !== undefined,
-    )
+      && results.some(
+        (place) => distanceTo(place, origin) !== undefined,
+      )
       ? 'nearest'
       : 'name'
 
@@ -502,5 +539,107 @@ export function useVisitorPosition(
 
   return { origin, loading, failed, request }
 }
+/**
+ * CHỨC NĂNG:
+ * Gom điều kiện tìm kiếm/lọc theo mockup UC03.
+ *
+ * XỬ LÝ:
+ * - Nhiều danh mục cùng nhóm kết hợp OR.
+ * - Từ khóa, danh mục và khu vực kết hợp AND.
+ * - initial chỉ dùng khi component được tạo.
+ * - Web đổi URL sẽ đổi key component để khởi tạo lại điều kiện.
+ */
+export function useExplore(
+  places: readonly PlaceRecord[],
+  origin?: Point,
+  initial: {
+    query?: string
+    category?: Category
+  } = {},
+) 
+{
+  const { language } = useVisitor()
 
+  const [query, setQuery] = useState(initial.query ?? '')
+  const [within, setWithin] = useState('')
+
+  const [categories, setCategories] = useState<Category[]>(
+    initial.category ? [initial.category] : [],
+  )
+
+  const [zones, setZones] = useState<Zone[]>([])
+  const [order, setOrder] = useState<SortOrder>('nearest')
+
+  // CHỨC NĂNG: Chờ lần gõ cuối trước khi tìm.
+  // XỬ LÝ: useDebounce hiện có hủy timer cũ trong cleanup.
+  const debounced = useDebounce(query + ' ' + within)
+
+  // CHỨC NĂNG: Tính kết quả khi điều kiện thực sự thay đổi.
+  // XỬ LÝ: Không lọc lại vì một render không liên quan.
+  const results = useMemo(
+    () => selectPlaces(places, {
+      language,
+      query: debounced,
+      zone: null,
+      order,
+      origin,
+      categories,
+      zones,
+    }),
+    [
+      places,
+      language,
+      debounced,
+      order,
+      origin,
+      categories,
+      zones,
+    ],
+  )
+
+  const availableCategories = useMemo(
+    () => [...new Set(places.map(categoryOf))],
+    [places],
+  )
+
+  const availableZones = useMemo(
+    () => [...new Set(places.map((place) => place.zone))],
+    [places],
+  )
+
+  // CHỨC NĂNG: Cho UI biết cách sắp xếp thực tế.
+  // XỬ LÝ: Không giả là gần nhất khi thiếu vị trí/tọa độ xác nhận.
+  const effectiveOrder: SortOrder =
+    order === 'nearest'
+      && results.some(
+        (place) => distanceTo(place, origin) !== undefined,
+      )
+      ? 'nearest'
+      : 'name'
+
+  const reset = () => {
+    setQuery('')
+    setWithin('')
+    setCategories([])
+    setZones([])
+  }
+
+  return {
+    query,
+    setQuery,
+    within,
+    setWithin,
+    categories,
+    setCategories,
+    zones,
+    setZones,
+    order,
+    setOrder,
+    results,
+    availableCategories,
+    availableZones,
+    effectiveOrder,
+    reset,
+  }
+}
 export type VisitorI18n = i18n

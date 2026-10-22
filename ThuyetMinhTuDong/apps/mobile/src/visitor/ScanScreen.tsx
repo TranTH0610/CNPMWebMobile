@@ -5,8 +5,12 @@
  * Có xử lý quyền, quét lặp, QR sai và chọn thủ công.
  */
 
+// CHỨC NĂNG: Quản lý trạng thái và vòng đời màn quét.
+// XỬ LÝ: Ref dùng khóa quét lặp; effect theo dõi trạng thái ứng dụng.
 import { useEffect, useRef, useState } from 'react'
 
+// CHỨC NĂNG: Cung cấp thành phần giao diện và API thiết bị.
+// XỬ LÝ: AppState theo dõi chạy nền; Linking mở cài đặt khi bị từ chối quyền.
 import {
   AppState,
   Linking,
@@ -20,9 +24,12 @@ import { CameraView, useCameraPermissions } from 'expo-camera'
 import { useIsFocused } from '@react-navigation/native'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
+// CHỨC NĂNG: Kiểm tra QR và phân biệt lỗi địa điểm.
+// XỬ LÝ: Chỉ import mỗi tên một lần;
+// dùng parseQrTarget để nhận cả QR chung và QR một điểm.
 import {
   CatalogError,
-  parsePlaceQr,
+  parseQrTarget,
   type MessageKey,
 } from '@travelguide/visitor-core'
 
@@ -113,8 +120,21 @@ export default function ScanScreen({
       && generation.current === request
 
     try {
-      const id = parsePlaceQr(raw, qrPolicy)
+      // CHỨC NĂNG: Phân biệt QR vào chung và QR một điểm.
+      // XỬ LÝ: QR chung không bị coi là lỗi thiếu ID.
+      const target = parseQrTarget(raw, qrPolicy)
 
+      if (target.kind === 'home') {
+        if (current()) {
+          navigation.replace('Places')
+        }
+
+        return
+      }
+
+      // CHỨC NĂNG: Kiểm tra điểm tồn tại và còn được công bố.
+      // XỬ LÝ: Đúng định dạng QR chưa đủ để cho mở địa điểm.
+      const id = target.id
       await catalog.get(id)
 
       if (current()) {

@@ -1,14 +1,12 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Định nghĩa dữ liệu và mã ngôn ngữ cho UC01–UC05.
- * Service, hook và màn hình sử dụng; không phụ thuộc React Native.
- *
- * Type PlaceRecord được dùng riêng cho luồng visitor.
- * Không yêu cầu xóa hoặc thay type Place cũ trong services/places.ts.
+ * Định nghĩa dữ liệu dùng chung cho UC01–UC05.
+ * Service, hooks và các màn mobile/web sử dụng.
+ * Không phụ thuộc React Native hoặc trình duyệt.
  */
 
-// CHỨC NĂNG: Khai báo năm ngôn ngữ hỗ trợ.
-// XỬ LÝ: Giữ cn làm mã nội bộ để tương thích dữ liệu đã lưu trước đây.
+// CHỨC NĂNG: Khai báo các ngôn ngữ được hỗ trợ.
+// XỬ LÝ: Giữ cn làm mã nội bộ để tương thích lựa chọn đã lưu.
 export const LANGUAGES = [
   { code: 'vi', label: 'Tiếng Việt' },
   { code: 'en', label: 'English' },
@@ -17,16 +15,10 @@ export const LANGUAGES = [
   { code: 'ja', label: '日本語' },
 ] as const
 
-// CHỨC NĂNG: Tạo kiểu ngôn ngữ từ danh sách phía trên.
-// XỬ LÝ: Chỉ cho phép vi, en, cn, pt hoặc ja; tránh gõ nhầm mã.
 export type Language = (typeof LANGUAGES)[number]['code']
 
-// CHỨC NĂNG: Nhận diện mã từ thiết bị hoặc bộ nhớ.
-// XỬ LÝ:
-// - pt_BR và pt-PT được nhận thành pt.
-// - zh-CN được nhận thành cn.
-// - Không hỗ trợ thì trả null để nơi gọi chọn ngôn ngữ dự phòng.
-// - Hàm này không dịch nội dung và không chọn giọng TTS.
+// CHỨC NĂNG: Nhận diện ngôn ngữ từ bộ nhớ hoặc thiết bị.
+// XỬ LÝ: zh-CN thành cn, pt_BR thành pt; không hỗ trợ trả null.
 export function languageOf(
   value: string | null | undefined,
 ): Language | null {
@@ -35,17 +27,25 @@ export function languageOf(
     .replace(/_/g, '-')
     .split('-')[0]
 
-  if (base === 'zh') return 'cn'
-
-  return LANGUAGES.find(
-    (item) => item.code === base,
-  )?.code ?? null
+  return base === 'zh'
+    ? 'cn'
+    : LANGUAGES.find((item) => item.code === base)?.code ?? null
 }
 
-// CHỨC NĂNG: Định nghĩa nhóm dùng trong bộ lọc demo.
-// XỬ LÝ: Lưu mã ổn định; tên hiển thị được lấy qua i18n.
-export type Zone = 'fortifications' | 'ceremonial'
+// CHỨC NĂNG: Khai báo mã danh mục ổn định.
+// XỬ LÝ: UI lấy tên qua i18n; không dùng tên tiếng Việt làm mã.
+export const CATEGORIES = [
+  'palace',
+  'gate',
+  'temple',
+  'tomb',
+  'museum',
+  'monument',
+] as const
 
+export type Category = (typeof CATEGORIES)[number]
+
+export type Zone = 'fortifications' | 'ceremonial'
 export type SortOrder = 'name' | 'nearest'
 
 export type Point = {
@@ -54,8 +54,7 @@ export type Point = {
 }
 
 // CHỨC NĂNG: Mô tả một bản nội dung theo ngôn ngữ.
-// XỬ LÝ: Service vẫn phải kiểm tra status và thời điểm duyệt/công bố.
-// Tên PublishedText không tự bảo đảm đối tượng đã được công bố.
+// XỬ LÝ: Service kiểm tra trạng thái duyệt/công bố trước khi trả cho khách.
 export type PublishedText = {
   title: string
   summary: string
@@ -67,8 +66,8 @@ export type PublishedText = {
   publishedAt?: string
 }
 
-// CHỨC NĂNG: Mô tả địa điểm thuộc danh mục triển khai.
-// XỬ LÝ: Tách trạng thái địa điểm khỏi trạng thái từng bản ngôn ngữ.
+// CHỨC NĂNG: Mô tả một địa điểm trong danh mục triển khai.
+// XỬ LÝ: Các trường mới optional để dữ liệu cũ vẫn dùng được.
 export type PlaceRecord = {
   id: string
   scope: string
@@ -77,24 +76,32 @@ export type PlaceRecord = {
   canonicalTitle: string
   zone: Zone
   images: string[]
+  category?: Category
+  featured?: boolean
 
-  // CHỨC NĂNG: Lưu tọa độ khi đã có dữ liệu.
-  // XỬ LÝ: Chỉ tọa độ verified=true mới được dùng tính khoảng cách.
+  // CHỨC NĂNG: Phân biệt tọa độ đã xác nhận.
+  // XỬ LÝ: Chỉ dùng verified=true để tính khoảng cách.
   position?: Point & {
     verified: boolean
   }
 
-  // CHỨC NĂNG: Cho phép mỗi địa điểm có số bản dịch khác nhau.
-  // XỬ LÝ: Partial cho phép thiếu một hoặc nhiều ngôn ngữ.
+  // CHỨC NĂNG: Cho phép thiếu một số bản ngôn ngữ.
+  // XỬ LÝ: Không tự dịch chưa duyệt để lấp bản thiếu.
   content: Partial<Record<Language, PublishedText>>
 }
 
-// CHỨC NĂNG: Định nghĩa hợp đồng nguồn dữ liệu.
-// XỬ LÝ: Có thể thay mock bằng API mà giữ cách gọi từ UI.
-export type CatalogSource = () => Promise<readonly PlaceRecord[]>
+// CHỨC NĂNG: Đọc danh mục của dữ liệu mới hoặc dữ liệu cũ.
+// XỬ LÝ: Thiếu category thì suy ra từ zone để tương thích ngược.
+export function categoryOf(place: PlaceRecord): Category {
+  return place.category
+    ?? (place.zone === 'fortifications' ? 'gate' : 'palace')
+}
 
-// CHỨC NĂNG: Định nghĩa hợp đồng lưu lựa chọn ngôn ngữ.
-// XỬ LÝ: Core không import AsyncStorage; mobile cung cấp adapter.
+export type CatalogSource =
+  () => Promise<readonly PlaceRecord[]>
+
+// CHỨC NĂNG: Tách logic ngôn ngữ khỏi công nghệ lưu trữ.
+// XỬ LÝ: Mobile cung cấp AsyncStorage, web cung cấp localStorage.
 export type StoragePort = {
   readLanguage: () => Promise<string | null>
   writeLanguage: (language: Language) => Promise<void>
