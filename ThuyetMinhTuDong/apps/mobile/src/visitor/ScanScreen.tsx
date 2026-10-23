@@ -172,6 +172,7 @@ export default function ScanScreen({
     >
       <View style={[ui.content, { flex: 1 }]}>
         <Text style={ui.text}>{t('scanHint')}</Text>
+        <Text style={ui.muted}>{t('browserOnly')}</Text>
 
         {!permission ? (
           <State message="loading" busy />

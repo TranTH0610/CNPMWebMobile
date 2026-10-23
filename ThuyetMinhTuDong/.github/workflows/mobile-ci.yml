@@ -1,25 +1,59 @@
-﻿# mobile-ci.yml
-# Tu dong chay lint + kiem tra build cho mobile (React Native / Expo)
+# FILE NÀY LÀM GÌ:
+# Kiểm tra mobile và logic dùng chung khi push hoặc tạo PR.
+# GitHub Actions đọc file này ở gốc repository.
+# Liên quan: kiểm tra UC01–UC05.
+
 name: Mobile CI
 
 on:
   push:
     paths:
-      - 'apps/mobile/**'
+      - 'ThuyetMinhTuDong/apps/mobile/**'
+      - 'ThuyetMinhTuDong/packages/**'
+      - 'ThuyetMinhTuDong/package*.json'
+      - 'ThuyetMinhTuDong/.eslintrc.cjs'
+      - 'ThuyetMinhTuDong/scripts/**'
+      - '.github/workflows/mobile-ci.yml'
+
   pull_request:
     paths:
-      - 'apps/mobile/**'
+      - 'ThuyetMinhTuDong/apps/mobile/**'
+      - 'ThuyetMinhTuDong/packages/**'
+      - 'ThuyetMinhTuDong/package*.json'
+      - 'ThuyetMinhTuDong/.eslintrc.cjs'
+      - 'ThuyetMinhTuDong/scripts/**'
+      - '.github/workflows/mobile-ci.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
+
+    # CHỨC NĂNG: Chạy npm tại đúng gốc workspaces.
     defaults:
       run:
-        working-directory: apps/mobile
+        working-directory: ThuyetMinhTuDong
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - run: npm install
-      - run: npm run lint
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ThuyetMinhTuDong/package-lock.json
+
+      # CHỨC NĂNG: Cài đúng dependency được khóa trong Git.
+      - run: npm ci
+
+      - run: npm run typecheck --workspace=mobile
+      - run: npm run typecheck --workspace=@travelguide/visitor-core
+
+      - run: npm run lint --workspace=mobile
+      - run: npm run lint --workspace=@travelguide/visitor-core
+
+      - run: npm test

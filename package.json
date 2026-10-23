@@ -1,5 +1,24 @@
 {
+  "name": "project-root",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "test:visitor": "npm run test --workspace=@travelguide/visitor-core",
+    "typecheck:visitor": "npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile",
+    "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile",
+    "lint": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile && npm run lint --workspace=web",
+    "typecheck": "npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile && npm run typecheck --workspace=web",
+    "test": "npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs",
+    "build:web": "npm run build --workspace=web",
+    "links:generate": "node scripts/generate-app-links.cjs"
+  },
   "devDependencies": {
-    "@types/node": "^26.6.2"
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "@typescript-eslint/parser": "8.46.2",
+    "eslint": "8.57.1",
+    "eslint-plugin-react-hooks": "5.2.0"
   }
 }

@@ -1,22 +1,35 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Hiển thị bài đọc đã công bố cho UC04.
- * Navigator mở từ danh sách hoặc QR.
- * Phụ thuộc service/hook chung và component UI.
+ * Hiển thị chi tiết và bài đọc theo ngôn ngữ chung của ứng dụng.
  *
- * Không gọi TTS, không tự dịch và không tự phát âm thanh.
+ * Được dùng bởi:
+ * - Navigator trong App.tsx.
+ *
+ * Phụ thuộc:
+ * - visitor-core/react.
+ * - Các component trong ui.tsx.
+ *
+ * Liên quan: UC01, UC04.
  */
 
-import { useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import {
+  ScrollView,
+  Text,
+  View,
+} from 'react-native'
+
+import {
+  SafeAreaView,
+} from 'react-native-safe-area-context'
+
+import type {
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack'
 
 import {
   availableLanguages,
   LANGUAGES,
   publishedText,
-  type Language,
 } from '@travelguide/visitor-core'
 
 import {
@@ -34,38 +47,44 @@ import {
   ui,
 } from './ui'
 
-import type { VisitorStack } from './types'
+import type {
+  VisitorStack,
+} from './types'
 
-// CHỨC NĂNG: Đọc dữ liệu theo placeId.
-// XỬ LÝ: ID sai, lỗi tải và thiếu ngôn ngữ có trạng thái riêng.
+// CHỨC NĂNG: Tải đúng địa điểm theo tham số điều hướng.
+// XỬ LÝ: ID sai, lỗi tải và thiếu bản ngôn ngữ được xử lý riêng.
 export default function DetailScreen({
   route,
   navigation,
-}: NativeStackScreenProps<VisitorStack, 'Detail'>) {
+}: NativeStackScreenProps<
+  VisitorStack,
+  'Detail'
+>) {
   const { placeId } = route.params
 
   const data = usePublishedPlace(placeId)
-  const { language } = useVisitor()
+
+  const {
+    language,
+    changeLanguage,
+    saving,
+  } = useVisitor()
+
   const t = useText()
 
-  // CHỨC NĂNG: Cho đọc bản ngôn ngữ đã có khi thiếu bản hiện tại.
-  // XỬ LÝ: Gắn lựa chọn với ID và ngôn ngữ UI;
-  // đổi điểm hoặc ngôn ngữ UI thì không dùng lựa chọn cũ.
-  const [choice, setChoice] = useState<{
-    context: string
-    language: Language
-  }>()
-
-  const context = placeId + '|' + language
-
-  const selected = choice?.context === context
-    ? choice.language
-    : language
-
-  const back = () => navigation.navigate('Places')
+  // CHỨC NĂNG: Quay về danh sách.
+  // XỬ LÝ: Hoạt động cả khi mở chi tiết từ QR.
+  const back = () => {
+    navigation.navigate('Places')
+  }
 
   if (data.loading) {
-    return <State message="loading" busy />
+    return (
+      <State
+        message="loading"
+        busy
+      />
+    )
   }
 
   if (data.error || !data.place) {
@@ -79,15 +98,25 @@ export default function DetailScreen({
   }
 
   const place = data.place
-  const content = publishedText(place, selected)
+
+  // CHỨC NĂNG: Chọn bài đọc bằng ngôn ngữ đang dùng trên giao diện.
+  // XỬ LÝ: Không giữ useState riêng cho ngôn ngữ bài đọc.
+  // Khi provider đổi language, tiêu đề/tab/bài đọc cùng render lại.
+  const content = publishedText(
+    place,
+    language,
+  )
 
   return (
     <SafeAreaView
       style={ui.page}
       edges={['bottom', 'left', 'right']}
     >
-      <ScrollView contentContainerStyle={ui.content}>
+      <ScrollView
+        contentContainerStyle={ui.content}
+      >
         <LanguageBar />
+
         <DemoNotice />
 
         <PlaceImage
@@ -99,31 +128,46 @@ export default function DetailScreen({
           {content?.title ?? place.canonicalTitle}
         </Text>
 
-        <Text style={ui.muted}>{t('available')}</Text>
+        <Text style={ui.muted}>
+          {t('available')}
+        </Text>
 
         <View style={ui.row}>
-          {availableLanguages(place).map((code) => (
-            <Action
-              key={code}
-              title={
-                LANGUAGES.find(
-                  (item) => item.code === code,
-                )?.label ?? code
-              }
-              selected={selected === code}
-              onPress={() => setChoice({
-                context,
-                language: code,
-              })}
-            />
-          ))}
+          {availableLanguages(place).map(
+            (code) => (
+              <Action
+                key={code}
+                title={
+                  LANGUAGES.find(
+                    (item) =>
+                      item.code === code,
+                  )?.label ?? code
+                }
+                selected={language === code}
+                disabled={saving}
+                onPress={() => {
+                  // CHỨC NĂNG: Đổi ngôn ngữ cho toàn ứng dụng.
+                  // XỬ LÝ: Provider cập nhật i18n và lưu AsyncStorage.
+                  void changeLanguage(code)
+                }}
+              />
+            ),
+          )}
         </View>
 
         {content ? (
           <View style={ui.card}>
-            <Text style={ui.muted}>{content.address}</Text>
-            <Text style={ui.heading}>{t('read')}</Text>
-            <Text style={ui.text}>{content.body}</Text>
+            <Text style={ui.muted}>
+              {content.address}
+            </Text>
+
+            <Text style={ui.heading}>
+              {t('read')}
+            </Text>
+
+            <Text style={ui.text}>
+              {content.body}
+            </Text>
 
             <Text style={ui.muted}>
               {t('version')}: {content.version}
@@ -135,15 +179,20 @@ export default function DetailScreen({
 
         <Text style={ui.muted}>
           {place.position?.verified
-            ? t('coordinates')
+            ? (
+              t('coordinates')
               + ': '
               + place.position.lat
               + ', '
               + place.position.lng
+            )
             : t('unverified')}
         </Text>
 
-        <Action title={t('back')} onPress={back} />
+        <Action
+          title={t('back')}
+          onPress={back}
+        />
       </ScrollView>
     </SafeAreaView>
   )

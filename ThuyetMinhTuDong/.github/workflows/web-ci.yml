@@ -1,26 +1,66 @@
-﻿# web-ci.yml
-# Tu dong chay lint + build cho web moi khi push hoac tao Pull Request
+# FILE NÀY LÀM GÌ:
+# Kiểm tra, build và lưu bản build web.
+# GitHub Actions đọc file ở gốc repository.
+# Liên quan: kiểm tra web UC01–UC05.
+
 name: Web CI
 
 on:
   push:
     paths:
-      - 'apps/web/**'
+      - 'ThuyetMinhTuDong/apps/web/**'
+      - 'ThuyetMinhTuDong/packages/**'
+      - 'ThuyetMinhTuDong/package*.json'
+      - 'ThuyetMinhTuDong/.eslintrc.cjs'
+      - 'ThuyetMinhTuDong/scripts/**'
+      - '.github/workflows/web-ci.yml'
+
   pull_request:
     paths:
-      - 'apps/web/**'
+      - 'ThuyetMinhTuDong/apps/web/**'
+      - 'ThuyetMinhTuDong/packages/**'
+      - 'ThuyetMinhTuDong/package*.json'
+      - 'ThuyetMinhTuDong/.eslintrc.cjs'
+      - 'ThuyetMinhTuDong/scripts/**'
+      - '.github/workflows/web-ci.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
+
     defaults:
       run:
-        working-directory: apps/web
+        working-directory: ThuyetMinhTuDong
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ThuyetMinhTuDong/package-lock.json
+
+      - run: npm ci
+
+      - run: npm run typecheck --workspace=web
+      - run: npm run typecheck --workspace=@travelguide/visitor-core
+
+      - run: npm run lint --workspace=web
+      - run: npm run lint --workspace=@travelguide/visitor-core
+
+      - run: npm test
+      - run: npm run build:web
+
+      # CHỨC NĂNG: Lưu thư mục dist để tải từ tab Actions.
+      # XỬ LÝ: Đây là artifact build, không giả lập deploy lên hosting.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: ThuyetMinhTuDong/apps/web/dist
+          if-no-files-found: error

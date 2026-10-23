@@ -8,13 +8,15 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 
 import { useText } from '@travelguide/visitor-core/react'
 import PlacesScreen from './PlacesScreen'
+import WebAccessCard from './WebAccessCard'
 import { colors, LanguageBar, ui } from './ui'
 
 const Tabs = createBottomTabNavigator()
+
 
 // CHỨC NĂNG: Thông báo chức năng làm sau.
 // XỬ LÝ: Không tạo nghiệp vụ bản đồ/yêu thích giả.
@@ -38,11 +40,12 @@ function Settings() {
 
   return (
     <SafeAreaView style={ui.page}>
-      <View style={ui.content}>
+      <ScrollView contentContainerStyle={ui.content}>
         <Text style={ui.title}>{t('settings')}</Text>
         <LanguageBar />
         <Text style={ui.muted}>{t('noAccount')}</Text>
-      </View>
+        <WebAccessCard />
+      </ScrollView>
     </SafeAreaView>
   )
 }

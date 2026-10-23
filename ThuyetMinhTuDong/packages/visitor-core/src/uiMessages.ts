@@ -45,10 +45,17 @@ const vi = {
   notification: 'Thông báo',
   qrAccess: 'Truy cập bằng QR',
   generalQr: 'QR vào chung khu di tích',
+  
+  browserOnly: "Quét QR bằng camera thường để mở website. Không cần cài hay đăng nhập Expo Go.",
+  openWebsite: "Mở website",
+  shareWebsite: "Chia sẻ liên kết",
+  websiteError: "Không mở được liên kết. Hãy thử lại.",
+  qrSetup: 'Chưa có địa chỉ QR dùng chung. Hãy cấu hình URL website công khai hoặc mở web bằng địa chỉ IP LAN.',
   photoCredits: 'Nguồn ảnh',
   noAccount: 'Du khách sử dụng không cần tài khoản.',
   clearSearch: 'Xóa từ khóa',
   filterHint: 'Chọn nhiều mục để mở rộng kết quả trong cùng nhóm.',
+  
 } as const
 
 type UiText = Record<keyof typeof vi, string>
@@ -94,6 +101,12 @@ export const uiMessages = {
     notification: 'Notifications',
     qrAccess: 'QR access',
     generalQr: 'General heritage entry QR',
+
+    browserOnly: "Scan the QR with your phone camera to open the website. No Expo Go installation or sign-in is required.",
+    openWebsite: "Open website",
+    shareWebsite: "Share link",
+    websiteError: "Could not open the link. Please try again.",
+    qrSetup: 'The shared QR address is unavailable. Configure a public website URL or open the site using its LAN IP address.',
     photoCredits: 'Photo credits',
     noAccount: 'Visitors do not need an account.',
     clearSearch: 'Clear search',
@@ -136,6 +149,12 @@ export const uiMessages = {
     notification: '通知',
     qrAccess: '二维码访问',
     generalQr: '遗迹通用入口二维码',
+
+    browserOnly: "使用手机相机扫描二维码即可打开网站，无需安装或登录 Expo Go。",
+    openWebsite: "打开网站",
+    shareWebsite: "分享链接",
+    websiteError: "无法打开链接，请重试。",
+    qrSetup: '共用二维码地址不可用。请配置公开网站地址，或使用局域网 IP 地址打开网站。',
     photoCredits: '图片来源',
     noAccount: '游客无需账户。',
     clearSearch: '清除关键词',
@@ -178,6 +197,12 @@ export const uiMessages = {
     notification: 'Notificações',
     qrAccess: 'Acesso por QR',
     generalQr: 'QR de entrada geral',
+
+    browserOnly: "Leia o QR com a câmara do telemóvel para abrir o website. Não é necessário instalar nem iniciar sessão no Expo Go.",
+    openWebsite: "Abrir website",
+    shareWebsite: "Partilhar ligação",
+    websiteError: "Não foi possível abrir a ligação. Tente novamente.",
+    qrSetup: 'O endereço do QR comum não está disponível. Configure o URL público ou abra o site pelo endereço IP da rede local.',
     photoCredits: 'Créditos das fotografias',
     noAccount: 'Os visitantes não precisam de conta.',
     clearSearch: 'Limpar pesquisa',
@@ -220,6 +245,12 @@ export const uiMessages = {
     notification: '通知',
     qrAccess: 'QRでアクセス',
     generalQr: '遺跡の共通入口QR',
+
+    browserOnly: "スマートフォンのカメラでQRを読み取るとサイトが開きます。Expo Goのインストールやログインは不要です。",
+    openWebsite: "サイトを開く",
+    shareWebsite: "リンクを共有",
+    websiteError: "リンクを開けませんでした。もう一度お試しください。",
+    qrSetup: '共通QRのURLがありません。公開サイトのURLを設定するか、LANのIPアドレスで開いてください。',
     photoCredits: '写真の出典',
     noAccount: '観光客のアカウントは不要です。',
     clearSearch: '検索語を消去',

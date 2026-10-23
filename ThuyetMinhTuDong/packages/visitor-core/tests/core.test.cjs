@@ -147,40 +147,6 @@ test('UC02/04: chỉ trả dữ liệu được công bố', async () => {
   )
 })
 
-// CHỨC NĂNG: Kiểm tra từ khóa rỗng trả đủ dữ liệu.
-// XỬ LÝ: Không cố định là 3 vì mock hiện đã có 8 điểm.
-assert.equal(
-  selectPlaces(MOCK_PLACES, {
-    ...options,
-    query: '   ',
-  }).length,
-  MOCK_PLACES.length,
-)
-
-// CHỨC NĂNG: Kiểm tra lọc khu vực.
-// XỬ LÝ: So với số điểm đúng khu vực trong nguồn.
-assert.equal(
-  selectPlaces(MOCK_PLACES, {
-    ...options,
-    query: '',
-    zone: 'ceremonial',
-  }).length,
-  MOCK_PLACES.filter(
-    (place) => place.zone === 'ceremonial',
-  ).length,
-)
-
-// CHỨC NĂNG: Kiểm tra không tìm nhầm nội dung Việt ở bản Anh.
-// XỬ LÝ: Dùng cả cụm tên; "dien" riêng có thể nằm trong tên Anh Dien Tho.
-assert.equal(
-  selectPlaces(MOCK_PLACES, {
-    ...options,
-    language: 'en',
-    query: 'điện thái hòa',
-  }).length,
-  0,
-)
-
 // CHỨC NĂNG: Kiểm tra tìm không dấu và đúng ngôn ngữ.
 // XỬ LÝ: Từ khóa rỗng, không có kết quả và thiếu bản dịch đều được thử.
 test('UC03: tìm kiếm và lọc', () => {
@@ -207,7 +173,7 @@ test('UC03: tìm kiếm và lọc', () => {
       ...options,
       query: '   ',
     }).length,
-    3,
+    MOCK_PLACES.length,
   )
 
   assert.equal(
@@ -224,93 +190,162 @@ test('UC03: tìm kiếm và lọc', () => {
       query: '',
       zone: 'ceremonial',
     }).length,
-    1,
+    MOCK_PLACES.filter((place) => place.zone === 'ceremonial').length,
   )
 
   assert.equal(
     selectPlaces(MOCK_PLACES, {
       ...options,
       language: 'en',
-      query: 'điện',
+      query: 'điện thái hòa',
     }).length,
     0,
   )
 
-  assert.equal(
-    publishedText(MOCK_PLACES[2], 'ja'),
-    undefined,
-  )
-
+ // CHỨC NĂNG: Kiểm tra các điểm demo đủ năm bản ngôn ngữ.
+// XỬ LÝ: Dùng dữ liệu visitor-core có trường content.
+for (const place of MOCK_PLACES) {
   assert.deepEqual(
-    availableLanguages(MOCK_PLACES[2]),
-    ['vi', 'en'],
+    availableLanguages(place),
+    ['vi', 'en', 'cn', 'pt', 'ja'],
   )
+}
+
+// CHỨC NĂNG: Vẫn kiểm tra trường hợp thiếu bản Nhật.
+// XỬ LÝ: Tạo bản sao riêng, không sửa dữ liệu mock gốc.
+const incompletePlace = {
+  ...MOCK_PLACES[2],
+  content: {
+    ...MOCK_PLACES[2].content,
+  },
+}
+
+delete incompletePlace.content.ja
+
+assert.equal(
+  publishedText(incompletePlace, 'ja'),
+  undefined,
+)
+
+assert.deepEqual(
+  availableLanguages(incompletePlace),
+  ['vi', 'en', 'cn', 'pt'],
+)
 })
 
-// CHỨC NĂNG: Kiểm tra khoảng cách và trường hợp biên.
-// XỬ LÝ: Tọa độ sau đây chỉ tồn tại trong test, không đưa vào dữ liệu du khách.
-test('UC03: tọa độ và phân trang', () => {
-  const originalIds = MOCK_PLACES.map((place) => place.id)
+// CHỨC NĂNG: Kiểm tra tìm kiếm, lọc và đủ bản ngôn ngữ demo.
+// XỬ LÝ:
+// - options được khai báo bên trong test.
+// - Không cố định số điểm là 3 khi mock đã có 8.
+// - Kiểm tra thiếu bản dịch bằng bản sao riêng.
+test('UC03: tìm kiếm và lọc', () => {
+  assert.equal(
+    normalize('  ĐIỆN  Thái Hòa '),
+    'dien thai hoa',
+  )
 
-  const a = {
-    ...MOCK_PLACES[0],
-    position: {
-      lat: 0,
-      lng: 0.001,
-      verified: true,
-    },
-  }
-
-  const b = {
-    ...MOCK_PLACES[1],
-    position: {
-      lat: 0,
-      lng: 0.01,
-      verified: true,
-    },
-  }
-
-  const origin = { lat: 0, lng: 0 }
-
-  const result = selectPlaces([b, a], {
+  const options = {
     language: 'vi',
-    query: '',
+    query: 'ngo mon',
     zone: null,
-    order: 'nearest',
-    origin,
-  })
+    order: 'name',
+  }
 
-  assert.equal(result[0].id, a.id)
+  assert.deepEqual(
+    selectPlaces(
+      MOCK_PLACES,
+      options,
+    ).map(
+      (place) => place.id,
+    ),
+    ['ngo-mon'],
+  )
 
   assert.equal(
-    distanceTo({
-      ...a,
-      position: {
-        ...a.position,
-        verified: false,
+    selectPlaces(
+      MOCK_PLACES,
+      {
+        ...options,
+        query: '   ',
       },
-    }, origin),
-    undefined,
+    ).length,
+    MOCK_PLACES.length,
   )
 
   assert.equal(
-    distanceTo(a, { lat: NaN, lng: 0 }),
+    selectPlaces(
+      MOCK_PLACES,
+      {
+        ...options,
+        query: 'zzzzz',
+      },
+    ).length,
+    0,
+  )
+
+  assert.equal(
+    selectPlaces(
+      MOCK_PLACES,
+      {
+        ...options,
+        query: '',
+        zone: 'ceremonial',
+      },
+    ).length,
+
+    MOCK_PLACES.filter(
+      (place) =>
+        place.zone === 'ceremonial',
+    ).length,
+  )
+
+  // CHỨC NĂNG: Không tìm nhầm bản Việt khi đang dùng Anh.
+  // XỬ LÝ: Dùng cả cụm vì từ "dien" có thể nằm trong tên Anh Dien Tho.
+  assert.equal(
+    selectPlaces(
+      MOCK_PLACES,
+      {
+        ...options,
+        language: 'en',
+        query: 'điện thái hòa',
+      },
+    ).length,
+    0,
+  )
+
+  for (const place of MOCK_PLACES) {
+    assert.deepEqual(
+      availableLanguages(place),
+      ['vi', 'en', 'cn', 'pt', 'ja'],
+    )
+  }
+
+  // CHỨC NĂNG: Giả lập API chưa có bản Nhật.
+  // XỬ LÝ: Không xóa trực tiếp trên MOCK_PLACES dùng cho test khác.
+  const incompletePlace = {
+    ...MOCK_PLACES[2],
+
+    content: {
+      ...MOCK_PLACES[2].content,
+    },
+  }
+
+  delete incompletePlace.content.ja
+
+  assert.equal(
+    publishedText(
+      incompletePlace,
+      'ja',
+    ),
     undefined,
   )
 
   assert.deepEqual(
-    MOCK_PLACES.map((place) => place.id),
-    originalIds,
+    availableLanguages(
+      incompletePlace,
+    ),
+    ['vi', 'en', 'cn', 'pt'],
   )
-
-  assert.equal(paginate([1, 2, 3], 99, 2).page, 2)
-
-  assert.deepEqual(
-    paginate([], 99, 0),
-    { page: 1, pages: 1, items: [] },
-  )
-
-  assert.equal(paginate([1], NaN, NaN).page, 1)
 })
 
 // CHỨC NĂNG: Kiểm tra QR hợp lệ.

@@ -12,3 +12,8 @@ node_modules/
 # CHỨC NĂNG: Giữ cấu hình máy riêng ngoài Git.
 .env
 .env.local
+# QR demo và bản sao .env chỉ dùng trên máy cá nhân.
+.qr-output/
+
+# Công cụ tunnel cục bộ, không commit binary.
+.tools/

@@ -18,9 +18,9 @@ const webRequire = createRequire(
 export default defineConfig({
   plugins: [react()],
 
-  // CHỨC NĂNG: Không sao chép public/index.html cũ đè entry mới.
-  // XỬ LÝ: Entry của Vite nằm ở apps/web/index.html.
-  publicDir: false,
+  // CHỨC NĂNG: Sao chép file xác minh App Links vào bản web triển khai.
+  // XỬ LÝ: Dùng static riêng; tránh public/index.html cũ đè entry của Vite.
+  publicDir: 'static',
 
   resolve: {
     alias: [

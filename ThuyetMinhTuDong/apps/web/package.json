@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "prebuild": "node ../../scripts/generate-app-links.cjs --if-configured",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx"

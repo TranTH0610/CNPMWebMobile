@@ -47,7 +47,9 @@ function text(title: string, language: Language): PublishedText {
 function make(
   id: string,
   zone: PlaceRecord['zone'],
-  names: Partial<Record<Language, string>>,
+  // CHỨC NĂNG: Bắt buộc dữ liệu demo khai báo đủ năm tên ngôn ngữ.
+  // XỬ LÝ: Quên cn, pt hoặc ja sẽ được TypeScript báo ngay khi viết dữ liệu.
+  names: Record<Language, string>,
 ): PlaceRecord {
   const content: PlaceRecord['content'] = {}
 
@@ -68,8 +70,9 @@ function make(
   }
 }
 
-// CHỨC NĂNG: Tạo dữ liệu đủ để thử carousel, lọc và phân trang.
-// XỬ LÝ: Một số điểm chỉ có Việt/Anh để kiểm tra thiếu bản công bố.
+// CHỨC NĂNG: Cung cấp tám điểm minh họa đủ năm ngôn ngữ.
+// XỬ LÝ: Hàm make ghép tên với nội dung demo tương ứng từng ngôn ngữ.
+// Trường hợp API thiếu bản dịch được kiểm tra bằng dữ liệu riêng trong test.
 export const MOCK_PLACES: PlaceRecord[] = [
   make('ky-dai', 'fortifications', {
     vi: 'Kỳ Đài',
@@ -78,6 +81,7 @@ export const MOCK_PLACES: PlaceRecord[] = [
     pt: 'Torre da Bandeira',
     ja: '旗台',
   }),
+
   make('ngo-mon', 'fortifications', {
     vi: 'Ngọ Môn',
     en: 'Ngo Mon Gate',
@@ -85,10 +89,15 @@ export const MOCK_PLACES: PlaceRecord[] = [
     pt: 'Porta Ngo Mon',
     ja: '午門',
   }),
+
   make('dien-thai-hoa', 'ceremonial', {
     vi: 'Điện Thái Hòa',
     en: 'Thai Hoa Palace',
+    cn: '太和殿',
+    pt: 'Palácio Thai Hoa',
+    ja: '太和殿',
   }),
+
   make('the-mieu', 'ceremonial', {
     vi: 'Thế Miếu',
     en: 'The Mieu Temple',
@@ -96,6 +105,7 @@ export const MOCK_PLACES: PlaceRecord[] = [
     pt: 'Templo The Mieu',
     ja: '世廟',
   }),
+
   make('cung-dien-tho', 'ceremonial', {
     vi: 'Cung Diên Thọ',
     en: 'Dien Tho Palace',
@@ -103,17 +113,29 @@ export const MOCK_PLACES: PlaceRecord[] = [
     pt: 'Palácio Dien Tho',
     ja: '延寿宮',
   }),
+
   make('truong-sanh-cung', 'ceremonial', {
     vi: 'Trường Sanh Cung',
     en: 'Truong Sanh Palace',
+    cn: '长生宫',
+    pt: 'Palácio Truong Sanh',
+    ja: '長生宮',
   }),
+
   make('dien-can-chanh', 'ceremonial', {
     vi: 'Điện Cần Chánh',
     en: 'Can Chanh Palace',
+    cn: '勤政殿',
+    pt: 'Palácio Can Chanh',
+    ja: '勤政殿',
   }),
+
   make('hien-lam-cac', 'ceremonial', {
     vi: 'Hiển Lâm Các',
     en: 'Hien Lam Pavilion',
+    cn: '显临阁',
+    pt: 'Pavilhão Hien Lam',
+    ja: '顕臨閣',
   }),
 ]
 

@@ -1,22 +1,31 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Kết nối bộ nhớ, vị trí thiết bị và cấu hình QR cho mobile.
- * App, PlacesScreen và ScanScreen sử dụng.
- * Phụ thuộc AsyncStorage, expo-location và kiểu dữ liệu visitor-core.
- * Liên quan UC01, UC03 và UC05.
+ * Kết nối logic chung với bộ nhớ, GPS và cấu hình QR trên mobile.
+ *
+ * Được dùng bởi:
+ * - App.tsx.
+ * - PlacesScreen.tsx.
+ * - ScanScreen.tsx.
+ * - linking.ts.
+ *
+ * Phụ thuộc:
+ * - AsyncStorage, expo-location và visitor-core.
+ *
+ * Liên quan: UC01, UC03, UC05.
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Location from 'expo-location'
 
-import type {
-  Point,
-  QrPolicy,
-  StoragePort,
+import {
+  siteOrigin,
+  type Point,
+  type QrPolicy,
+  type StoragePort,
 } from '@travelguide/visitor-core'
 
-// CHỨC NĂNG: Lưu và đọc lựa chọn ngôn ngữ.
-// XỬ LÝ: Giữ khóa lang để tương thích lựa chọn cũ.
+// CHỨC NĂNG: Đọc và lưu ngôn ngữ trên thiết bị.
+// XỬ LÝ: Giữ khóa lang để tương thích dữ liệu người dùng đã lưu trước đây.
 export const storage: StoragePort = {
   readLanguage: () => AsyncStorage.getItem('lang'),
 
@@ -25,25 +34,38 @@ export const storage: StoragePort = {
   },
 }
 
-// CHỨC NĂNG: Xác định origin web được phép trong QR.
-// XỬ LÝ: Giá trị mặc định là domain ví dụ, không phải website đang chạy.
-// File .env phải chứa URL hợp lệ nếu bạn thay cấu hình.
-export const webOrigin = new URL(
-  process.env.EXPO_PUBLIC_VISITOR_WEB_ORIGIN
-  ?? 'https://hue-guide.example',
-).origin
+// CHỨC NĂNG: Xác định website mà scanner được phép nhận.
+// XỬ LÝ:
+// - Đọc biến môi trường Expo.
+// - Thiếu hoặc sai cấu hình trả null.
+// - HTTP được cho phép khi chạy môi trường phát triển.
+export const webOrigin = (() => {
+  const value =
+    process.env.EXPO_PUBLIC_VISITOR_WEB_ORIGIN
 
+  if (!value) {
+    return null
+  }
+
+  try {
+    return siteOrigin(value, __DEV__)
+  } catch {
+    return null
+  }
+})()
+
+// CHỨC NĂNG: Giới hạn QR vào website của dự án.
+// XỬ LÝ: Không tự nhận URL của một website bất kỳ.
 export const qrPolicy: QrPolicy = {
-  allowedOrigins: [webOrigin],
+  allowedOrigins: webOrigin ? [webOrigin] : [],
   allowHttp: __DEV__,
 }
 
-// CHỨC NĂNG: Xin vị trí để sắp xếp gần nhất.
+// CHỨC NĂNG: Xin vị trí để phục vụ sắp xếp gần nhất.
 // XỬ LÝ:
-// - Bị từ chối quyền thì báo lỗi cho hook xử lý.
-// - Chờ tối đa 12 giây.
-// - Promise.race ngừng chờ sau timeout; không hủy tác vụ GPS bên dưới.
-// - Luôn dọn timer sau khi hoàn tất.
+// - Từ chối quyền sẽ ném lỗi để hook chuyển sang sắp xếp theo tên.
+// - Chờ tối đa 12 giây để UI không chờ GPS vô hạn.
+// - Dọn timer dù lấy vị trí thành công hay thất bại.
 export async function getPosition(): Promise<Point> {
   const permission =
     await Location.requestForegroundPermissionsAsync()
@@ -52,7 +74,8 @@ export async function getPosition(): Promise<Point> {
     throw new Error('Location denied')
   }
 
-  let timer: ReturnType<typeof setTimeout> | undefined
+  let timer:
+    ReturnType<typeof setTimeout> | undefined
 
   try {
     const position = await Promise.race([
@@ -62,7 +85,9 @@ export async function getPosition(): Promise<Point> {
 
       new Promise<never>((_resolve, reject) => {
         timer = setTimeout(
-          () => reject(new Error('Location timeout')),
+          () => reject(
+            new Error('Location timeout'),
+          ),
           12000,
         )
       }),
@@ -73,6 +98,8 @@ export async function getPosition(): Promise<Point> {
       lng: position.coords.longitude,
     }
   } finally {
-    if (timer) clearTimeout(timer)
+    if (timer) {
+      clearTimeout(timer)
+    }
   }
 }

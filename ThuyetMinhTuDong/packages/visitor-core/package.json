@@ -9,7 +9,7 @@
     "./react": "./src/react.tsx"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs",
+   "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx"
   },

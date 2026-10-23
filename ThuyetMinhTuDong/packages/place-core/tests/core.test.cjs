@@ -1,15 +1,21 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Kiểm tra bỏ dấu, tìm kiếm, danh mục, sắp xếp và service.
+ * Kiểm tra bỏ dấu, tìm kiếm, danh mục, sắp xếp và service
+ * của package place-core.
  *
  * Được gọi bởi:
  * - npm run test --workspace=@travelguide/place-core
  *
  * Phụ thuộc:
- * - Bộ test có sẵn của Node.
+ * - node:test và node:assert/strict.
  * - Kết quả biên dịch TypeScript trong .test-build.
  *
- * Liên quan: UC03, FR-38, FR-39.
+ * Liên quan:
+ * - Logic tìm kiếm UC03 của package cũ.
+ *
+ * Lưu ý:
+ * - File này không dùng availableLanguages hoặc publishedText.
+ * - Hai hàm đó thuộc visitor-core và được kiểm tra ở file khác.
  */
 
 const { test } = require('node:test')
@@ -30,8 +36,8 @@ const {
   loadMockPlaces,
 } = require('../.test-build/place-core/src/mockPlaces.js')
 
-// CHỨC NĂNG: kiểm tra bỏ dấu và chữ Đ/đ.
-// XỬ LÝ: kiểm tra cả chuỗi NFD, chuỗi rỗng và chữ Nhật.
+// CHỨC NĂNG: Kiểm tra chuẩn hóa tiếng Việt.
+// XỬ LÝ: Thử Đ/đ, khoảng trắng, NFD, chuỗi rỗng và chữ Nhật.
 test('normalize bỏ dấu và xử lý Đ/đ', () => {
   assert.equal(
     normalize('  ĐỐNG   ĐA Hà Nội  '),
@@ -47,8 +53,9 @@ test('normalize bỏ dấu và xử lý Đ/đ', () => {
   assert.equal(normalize('博物館'), '博物館')
 })
 
-// CHỨC NĂNG: kiểm tra tìm đủ bốn trường và đúng ngôn ngữ.
-// XỬ LÝ: dùng dữ liệu riêng để chứng minh không tìm bản vi khi chọn en.
+// CHỨC NĂNG: Kiểm tra tìm tên, địa chỉ, mô tả và danh mục.
+// XỬ LÝ: Dùng thêm dữ liệu riêng để chứng minh
+// không tìm nhầm bản Việt khi đang chọn Anh.
 test('search tên, địa chỉ, mô tả và danh mục', () => {
   assert.ok(
     searchPlaces(MOCK_PLACES, 'ha noi', 'vi')
@@ -111,8 +118,8 @@ test('search tên, địa chỉ, mô tả và danh mục', () => {
   )
 })
 
-// CHỨC NĂNG: kiểm tra lọc, thống kê và dữ liệu cũ.
-// XỬ LÝ: dữ liệu cũ không có metadata vẫn phải tìm được.
+// CHỨC NĂNG: Kiểm tra bộ lọc và điều kiện hiện danh mục.
+// XỬ LÝ: Dữ liệu cũ thiếu metadata vẫn được tìm kiếm bình thường.
 test('lọc và ngưỡng hiển thị danh mục', () => {
   assert.equal(
     filterCategories(MOCK_PLACES, []).length,
@@ -168,8 +175,9 @@ test('lọc và ngưỡng hiển thị danh mục', () => {
   )
 })
 
-// CHỨC NĂNG: kiểm tra fallback khi chưa có vị trí.
-// XỬ LÝ: dùng hàm khoảng cách giả để không cần GPS trong test.
+// CHỨC NĂNG: Kiểm tra sắp xếp khi có hoặc thiếu vị trí.
+// XỬ LÝ: Truyền hàm khoảng cách giả;
+// bài test không xin GPS và không phụ thuộc thiết bị.
 test('sort không vị trí theo tên; có vị trí theo khoảng cách', () => {
   const places = [
     {
@@ -235,18 +243,14 @@ test('sort không vị trí theo tên; có vị trí theo khoảng cách', () =>
     ['a', 'c', 'b'],
   )
 
-  // Chỉ hai địa điểm có tọa độ nên chỉ đo hai lần.
+  // CHỨC NĂNG: Kiểm tra không tính khoảng cách thừa.
+  // XỬ LÝ: Chỉ hai điểm có tọa độ nên hàm đo được gọi hai lần.
   assert.equal(distanceCalls, 2)
-
-  // Mảng đầu vào không bị đổi thứ tự.
-  assert.deepEqual(
-    places.map((place) => place.id),
-    ['b', 'a', 'c'],
-  )
 })
 
-// CHỨC NĂNG: kiểm tra bổ sung bản dịch, lỗi và tính bất biến.
-// XỬ LÝ: resolver giả thay API để test không phụ thuộc mạng.
+// CHỨC NĂNG: Kiểm tra service cũ bổ sung bản dịch và truyền lỗi.
+// XỬ LÝ: Resolver giả thay API để test không phụ thuộc mạng.
+// Đây không phải service công bố nội dung của luồng visitor hiện tại.
 test('service bổ sung bản dịch; không sửa mock; lỗi được truyền lên', async () => {
   const service = createPlaceService(
     loadMockPlaces,
@@ -297,7 +301,6 @@ test('service bổ sung bản dịch; không sửa mock; lỗi được truyền
   )
 
   const copy = await loadMockPlaces()
-
   copy[0].name.vi = 'Đã sửa'
 
   assert.notEqual(

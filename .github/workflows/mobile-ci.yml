@@ -1,0 +1,30 @@
+# FILE NÀY LÀM GÌ: Kiểm tra mobile và logic UC01–UC05 khi push/PR.
+# GitHub Actions đọc ở gốc repository; npm ci chạy tại gốc npm workspaces.
+name: Mobile CI
+on:
+  push:
+    paths: ['ThuyetMinhTuDong/apps/mobile/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/mobile-ci.yml']
+  pull_request:
+    paths: ['ThuyetMinhTuDong/apps/mobile/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/mobile-ci.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ThuyetMinhTuDong
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ThuyetMinhTuDong/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck --workspace=mobile
+      - run: npm run typecheck --workspace=@travelguide/visitor-core
+      - run: npm run lint --workspace=mobile
+      - run: npm run lint --workspace=@travelguide/visitor-core
+      - run: npm test
