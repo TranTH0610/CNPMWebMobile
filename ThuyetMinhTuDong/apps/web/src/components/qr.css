@@ -1,0 +1,11 @@
+/* FILE NÀY LÀM GÌ: Bảo vệ hình vuông và viền trắng của QR.
+ * QrImage nạp. UC05: không dùng object-fit:cover như ảnh địa điểm.
+ * CHỨC NĂNG: Mã đen/trắng, vùng bấm tách rõ, không tràn màn hình hẹp. */
+.qr-scan-panel { text-align:center; }
+.qr-frame { width:min(100%,360px); margin:20px auto; background:#fff; border:1px solid #e1e8f2; border-radius:16px; padding:8px; }
+.qr-code-image { display:block; width:100%; height:auto; aspect-ratio:1; object-fit:contain; background:#fff; image-rendering:pixelated; border-radius:0; }
+.qr-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:18px 0; }
+.qr-actions .button,.qr-actions button { min-height:44px; }
+.qr-scan-hint { max-width:520px; margin:16px auto!important; color:var(--muted); }
+.qr-url { overflow-wrap:anywhere; font-size:13px; }
+.qr-session-note { font-size:12px; color:var(--muted); padding:12px; background:#f4f7fc; border-radius:12px; }

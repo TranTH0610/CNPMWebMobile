@@ -48,6 +48,7 @@ module.exports = ({ config }) => {
 
     android: {
       ...config.android,
+      ...(process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ? { config: { ...config.android?.config, googleMaps: { ...config.android?.config?.googleMaps, apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY } } } : {}),
 
       ...(androidPackage
         ? {

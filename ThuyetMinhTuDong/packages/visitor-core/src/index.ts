@@ -25,3 +25,4 @@ export * from './presentation'
 // CHỨC NĂNG: Giữ phần React ở entry riêng.
 // XỬ LÝ: Hooks tiếp tục được import từ @travelguide/visitor-core/react;
 // không export chúng tại đây để test nghiệp vụ không phải nạp React.
+export { PLACE_PHOTOS } from './photos'

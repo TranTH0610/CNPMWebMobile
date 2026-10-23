@@ -1,28 +1,21 @@
-﻿/**
- * FILE NÀY LÀM GÌ:
- * Mount React18, BrowserRouter và provider UC01–UC05.
- * index.html gọi; phụ thuộc App, adapter browser và token.
+/**
+ * FILE NÀY LÀM GÌ: Mount React 18, BrowserRouter và các provider; giữ ngôn ngữ/tiến độ dùng chung.
+ * Vị trí: apps/web/src/main.tsx. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { boot } from './i18n'
+import { JourneyProvider } from '@travelguide/visitor-core/journey/react'
+import { journeyAdapters } from './services/journeyAdapters'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-
-import {
-  createVisitorI18n,
-  VisitorProvider,
-} from '@travelguide/visitor-core/react'
-
-import {
-  colors,
-  spacing,
-} from '../../../packages/ui-tokens/colors'
-
-import { storage } from './platform'
+import { VisitorProvider } from '@travelguide/visitor-core/react'
+import { colors, spacing } from '../../../packages/ui-tokens/colors'
+import { storage } from './services/platform'
 import App from './App'
-import './styles.css'
-
-const boot = createVisitorI18n()
+import './styles/index.css'
+import './styles/player.css'
 
 // CHỨC NĂNG: Cho CSS dùng chung token với mobile.
 // XỬ LÝ: Màu là chuỗi; spacing được đổi thành đơn vị px.
@@ -54,7 +47,7 @@ ReactDOM.createRoot(root).render(
       loading={<progress />}
     >
       <BrowserRouter>
-        <App />
+        <JourneyProvider adapters={journeyAdapters}><App /></JourneyProvider>
       </BrowserRouter>
     </VisitorProvider>
   </React.StrictMode>,

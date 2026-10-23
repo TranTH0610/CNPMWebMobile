@@ -1,83 +1,24 @@
 /**
- * FILE NÀY LÀM GÌ:
- * Màn tạm cho Bản đồ, Yêu thích và Cài đặt.
- * MainTabs dùng; phụ thuộc route tab, i18n và theme.
- * Cài đặt cũ vẫn mở được để giữ luồng đổi ngôn ngữ.
+ * FILE NÀY LÀM GÌ: Thông báo chức năng yêu thích chưa triển khai đầy đủ.
+ * Vị trí: apps/mobile/src/screens/PlaceholderScreen.tsx. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
-import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useTranslation } from 'react-i18next'
+import { Text, View } from 'react-native'
+import { useText } from '../i18n/index'
+import { ui } from '../components/index'
 
-import type {
-  BottomTabScreenProps,
-} from '@react-navigation/bottom-tabs'
-
-import type {
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack'
-
-import type {
-  MainTabParamList,
-  RootStackParamList,
-} from '../navigation/types'
-
-import { spacing, ui } from '../theme'
-
-type Props = BottomTabScreenProps<
-  MainTabParamList,
-  'Map' | 'Favorites' | 'Preferences'
->
-
-export default function PlaceholderScreen({
-  route,
-  navigation,
-}: Props) {
-  const { t } = useTranslation()
-
-  const key = {
-    Map: 'map',
-    Favorites: 'favorites',
-    Preferences: 'settings',
-  }[route.name]
+// CHỨC NĂNG: Thông báo chức năng làm sau.
+// XỬ LÝ: Không tạo nghiệp vụ bản đồ/yêu thích giả.
+export default function PlaceholderScreen() {
+  const t = useText()
 
   return (
     <SafeAreaView style={ui.page}>
-      <View style={ui.state}>
-        <Text style={ui.title}>
-          {t(`tabs.${key}`)}
-        </Text>
-
-        <Text
-          style={[
-            ui.muted,
-            {
-              marginVertical: spacing.xl,
-              textAlign: 'center',
-            },
-          ]}
-        >
-          {t('explore.placeholder')}
-        </Text>
-
-        {route.name === 'Preferences' && (
-          <Pressable
-            style={ui.button}
-            onPress={() => {
-              // CHỨC NĂNG: mở SettingsScreen hiện có ở stack cha.
-              // XỬ LÝ: dùng type cụ thể, không ép navigation thành any.
-              navigation
-                .getParent<
-                  NativeStackNavigationProp<RootStackParamList>
-                >()
-                ?.navigate('Settings')
-            }}
-          >
-            <Text style={ui.buttonText}>
-              {t('explore.openSettings')}
-            </Text>
-          </Pressable>
-        )}
+      <View style={ui.content}>
+        <Text style={ui.heading}>{t('comingSoon')}</Text>
+        <Text style={ui.text}>{t('favoritesHint')}</Text>
       </View>
     </SafeAreaView>
   )

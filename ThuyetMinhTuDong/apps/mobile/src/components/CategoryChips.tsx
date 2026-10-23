@@ -1,88 +1,74 @@
 /**
- * FILE NÀY LÀM GÌ:
- * Hiển thị danh mục bằng FlatList ngang.
- * Home/Search dùng; phụ thuộc type chung, i18n và theme.
- * Liên quan UC03, FR-39.
+ * FILE NÀY LÀM GÌ: Hiển thị các chip danh mục có dữ liệu và cập nhật mục đang chọn.
+ * Vị trí: apps/mobile/src/components/CategoryChips.tsx. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
-import { useMemo } from 'react'
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-} from 'react-native'
+import { explore } from '../styles/explore'
+import { colors, spacing } from '../theme'
+import { FlatList, Pressable, Text } from 'react-native'
+import { categoryIcons } from '@travelguide/visitor-core'
+import type { Category } from '@travelguide/visitor-core'
+import { useText } from '../i18n/index'
 
-import { useTranslation } from 'react-i18next'
-import type { CategoryId } from '@travelguide/shared-types'
-
-import {
-  colors,
-  spacing,
-  radii,
-  sizes,
-  ui,
-} from '../theme'
-
-type Chip = {
-  id: CategoryId | 'all'
-}
-
-type Props = {
-  categories: CategoryId[]
-  selected: CategoryId | null
-  onChange: (category: CategoryId | null) => void
-}
-
-export default function CategoryChips({
+// CHỨC NĂNG: Dãy chip cuộn ngang.
+// XỬ LÝ: Chỉ hiện khi có ít nhất hai danh mục, key dùng mã ổn định.
+export function CategoryChips({
   categories,
   selected,
-  onChange,
-}: Props) {
-  const { t } = useTranslation()
+  onSelect,
+}: {
+  categories: readonly Category[]
+  selected: readonly Category[]
+  onSelect: (value: Category[]) => void
+}) {
+  const t = useText()
 
-  const chips = useMemo<Chip[]>(() => [
-    { id: 'all' },
-    ...categories.map((id) => ({ id })),
-  ], [categories])
-
-  // CHỨC NĂNG: tuân thủ điều kiện hiện bộ lọc.
-  // XỬ LÝ: ít hơn hai danh mục thì không cần hàng chip.
   if (categories.length < 2) return null
 
   return (
     <FlatList
       horizontal
-      data={chips}
-      keyExtractor={(item) => item.id}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.list}
-      extraData={selected}
+      data={[null, ...categories]}
+      contentContainerStyle={{
+        gap: spacing.sm,
+        paddingVertical: spacing.md,
+      }}
+      keyExtractor={(item) => item ?? 'all'}
       renderItem={({ item }) => {
-        const value =
-          item.id === 'all' ? null : item.id
-
-        const active = selected === value
+        const active = item
+          ? selected.includes(item)
+          : selected.length === 0
 
         return (
           <Pressable
-            style={[
-              styles.chip,
-              active && styles.active,
-            ]}
-            onPress={() => onChange(value)}
             accessibilityRole="button"
             accessibilityState={{ selected: active }}
+            onPress={() => onSelect(item ? [item] : [])}
+            style={[
+              explore.chip,
+              active && {
+                backgroundColor: colors.primary,
+              },
+            ]}
           >
             <Text
               style={[
-                ui.muted,
-                active && styles.activeText,
+                explore.chipIcon,
+                active && { color: colors.white },
               ]}
             >
-              {item.id === 'all'
-                ? t('explore.all')
-                : t(`categories.${item.id}`)}
+              {item ? categoryIcons[item] : '▥'}
+            </Text>
+
+            <Text
+              style={[
+                explore.chipText,
+                active && { color: colors.white },
+              ]}
+            >
+              {t(item ? `category_${item}` : 'all')}
             </Text>
           </Pressable>
         )
@@ -90,27 +76,3 @@ export default function CategoryChips({
     />
   )
 }
-
-const styles = StyleSheet.create({
-  list: {
-    paddingVertical: spacing.md,
-    gap: spacing.sm,
-  },
-  chip: {
-    minHeight: sizes.touch,
-    paddingHorizontal: spacing.lg,
-    justifyContent: 'center',
-    borderRadius: radii.round,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
-  },
-  active: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  activeText: {
-    color: colors.background,
-    fontWeight: '600',
-  },
-})

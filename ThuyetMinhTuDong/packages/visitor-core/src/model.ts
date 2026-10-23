@@ -1,6 +1,6 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Định nghĩa dữ liệu dùng chung cho UC01–UC05.
+ * Định nghĩa dữ liệu dùng chung cho UC01–UC11.
  * Service, hooks và các màn mobile/web sử dụng.
  * Không phụ thuộc React Native hoặc trình duyệt.
  */
@@ -55,7 +55,14 @@ export type Point = {
 
 // CHỨC NĂNG: Mô tả một bản nội dung theo ngôn ngữ.
 // XỬ LÝ: Service kiểm tra trạng thái duyệt/công bố trước khi trả cho khách.
+// CHỨC NĂNG: Nguồn audio có phiên bản và trạng thái công bố riêng.
+// XỬ LÝ: Optional trong PublishedText để dữ liệu UC01–UC11 cũ vẫn dùng được.
+export type PublishedAudio = {
+  id: string; url: string; version: number
+  status: 'draft' | 'published'; approvedAt?: string; publishedAt?: string
+}
 export type PublishedText = {
+  audio?: PublishedAudio
   title: string
   summary: string
   body: string

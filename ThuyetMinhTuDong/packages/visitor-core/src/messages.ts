@@ -1,19 +1,24 @@
 /**
  * FILE NÀY LÀM GÌ:
- * Chứa chữ giao diện UC01–UC05 của năm ngôn ngữ.
+ * Chứa chữ giao diện UC01–UC11 của năm ngôn ngữ.
  * createVisitorI18n trong react.tsx dùng file này.
  * Phụ thuộc type Language trong model.ts.
  */
+import { qrMessages } from './qr-messages'
+
+import { journeyMessages } from './journey-messages'
+
 
 // CHỨC NĂNG: Nhập kiểu ngôn ngữ hợp lệ.
 // XỬ LÝ: Không dùng mã ngôn ngữ tùy ý.
 import type { Language } from './model'
 // CHỨC NĂNG: Bổ sung nhãn UI mới.
-// XỬ LÝ: Ghép vào resource hiện tại, giữ các khóa UC01–UC05 đã có.
+// XỬ LÝ: Ghép vào resource hiện tại, giữ các khóa UC01–UC11 đã có.
 import { uiMessages } from './uiMessages'
 // CHỨC NĂNG: Khai báo bộ khóa chuẩn bằng tiếng Việt.
 // XỬ LÝ: Đây là chữ UI; nội dung từng địa điểm nằm trong dữ liệu.
-const vi = {  ...uiMessages.vi,
+const vi = {
+  ...qrMessages.vi, ...journeyMessages.vi,  ...uiMessages.vi,
   brand: 'HueGuide',
   explore: 'Khám phá',
   intro: 'Các điểm trong danh mục tham quan Kinh thành Huế',
@@ -78,7 +83,8 @@ export type MessageKey = keyof typeof vi
 // XỬ LÝ: Thêm khóa vào vi mà quên en/cn/pt/ja sẽ bị TypeScript báo.
 type Messages = Record<MessageKey, string>
 
-const en: Messages = {  ...uiMessages.en,
+const en: Messages = {
+  ...qrMessages.en, ...journeyMessages.en,  ...uiMessages.en,
   brand: 'HueGuide',
   explore: 'Explore',
   intro: 'Selected places in the Hue Citadel visitor catalogue',
@@ -137,7 +143,8 @@ const en: Messages = {  ...uiMessages.en,
   close: 'Close',
 }
 
-const cn: Messages = {  ...uiMessages.cn,
+const cn: Messages = {
+  ...qrMessages.cn, ...journeyMessages.cn,  ...uiMessages.cn,
   brand: 'HueGuide',
   explore: '探索',
   intro: '顺化京城参观目录中的景点',
@@ -196,7 +203,8 @@ const cn: Messages = {  ...uiMessages.cn,
   close: '关闭',
 }
 
-const pt: Messages = {  ...uiMessages.pt,
+const pt: Messages = {
+  ...qrMessages.pt, ...journeyMessages.pt,  ...uiMessages.pt,
   brand: 'HueGuide',
   explore: 'Explorar',
   intro: 'Locais selecionados no catálogo da Cidadela de Huế',
@@ -255,7 +263,8 @@ const pt: Messages = {  ...uiMessages.pt,
   close: 'Fechar',
 }
 
-const ja: Messages = {  ...uiMessages.ja,
+const ja: Messages = {
+  ...qrMessages.ja, ...journeyMessages.ja,  ...uiMessages.ja,
   brand: 'HueGuide',
   explore: '探索',
   intro: 'フエ京城の参観対象スポット',

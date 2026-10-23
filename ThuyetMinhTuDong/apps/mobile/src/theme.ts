@@ -1,30 +1,14 @@
 /**
- * FILE NÀY LÀM GÌ:
- * Chuyển ui-tokens thành các style tái sử dụng cho mobile.
- * Các component/màn M3 gọi file này; phụ thuộc React Native và ui-tokens.
- * Liên quan giao diện UC03, FR-41.
+ * FILE NÀY LÀM GÌ: Style dùng chung của mobile, lấy màu và khoảng cách từ ui-tokens.
+ * Vị trí: apps/mobile/src/theme.ts. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
 import { StyleSheet } from 'react-native'
+import { colors, spacing, radii } from '../../../packages/ui-tokens/colors'
 
-import {
-  colors,
-  spacing,
-  radii,
-  fonts,
-  sizes,
-} from '../../../packages/ui-tokens/colors'
-
-export {
-  colors,
-  spacing,
-  radii,
-  fonts,
-  sizes,
-}
-
-// CHỨC NĂNG: cung cấp style chung.
-// XỬ LÝ: StyleSheet tạo style một lần, không tạo lại mỗi render.
+// CHỨC NĂNG: Tạo style tái sử dụng.
+// XỬ LÝ: Màu và khoảng cách lấy từ package token.
 export const ui = StyleSheet.create({
   page: {
     flex: 1,
@@ -32,69 +16,68 @@ export const ui = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
+    gap: spacing.md,
   },
   row: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-  },
-  between: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontSize: fonts.title,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  section: {
-    fontSize: fonts.section,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  body: {
-    fontSize: fonts.body,
-    color: colors.text,
-  },
-  muted: {
-    fontSize: fonts.small,
-    color: colors.muted,
-  },
-  caption: {
-    fontSize: fonts.caption,
-    color: colors.muted,
+    gap: spacing.sm,
   },
   card: {
     backgroundColor: colors.background,
+    padding: spacing.lg,
     borderRadius: radii.md,
+    borderColor: colors.border,
+    borderWidth: 1,
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  title: {
+    fontSize: 24,
+    lineHeight: 34,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  heading: {
+    fontSize: 18,
+    lineHeight: 27,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  text: {
+    fontSize: 16,
+    color: colors.text,
+    lineHeight: 24,
+  },
+  muted: {
+    fontSize: 14,
+    color: colors.muted,
+    lineHeight: 22,
+  },
+  input: {
+    minHeight: 48,
+    padding: spacing.md,
+    borderRadius: radii.sm,
+    backgroundColor: colors.background,
     borderWidth: 1,
     borderColor: colors.border,
-    overflow: 'hidden',
+    color: colors.text,
   },
   button: {
-    minHeight: sizes.touch,
+    minHeight: 44,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.primary,
     borderRadius: radii.sm,
-    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText: {
-    color: colors.background,
-    fontSize: fonts.body,
-    fontWeight: '600',
-  },
-  iconButton: {
-    width: sizes.touch,
-    height: sizes.touch,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radii.round,
-    backgroundColor: colors.background,
-  },
-  state: {
-    padding: spacing.xxl,
-    alignItems: 'center',
+  banner: {
+    backgroundColor: colors.soft,
+    padding: spacing.md,
+    borderRadius: radii.sm,
   },
 })
+export { colors, spacing, radii } from '../../../packages/ui-tokens/colors'

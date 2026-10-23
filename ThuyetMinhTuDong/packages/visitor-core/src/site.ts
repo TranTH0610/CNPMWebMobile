@@ -4,7 +4,7 @@
  *
  * Được dùng bởi:
  * - apps/web/src/platform.ts.
- * - apps/mobile/src/visitor/platform.ts.
+ * - apps/mobile/src/services/platform.ts.
  *
  * Phụ thuộc:
  * - URL chuẩn của JavaScript.

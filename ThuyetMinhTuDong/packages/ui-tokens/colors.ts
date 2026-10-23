@@ -8,7 +8,11 @@
 // CHỨC NĂNG: Tập trung màu để các màn hiển thị thống nhất.
 // XỬ LÝ: Giữ tên token cũ, bổ sung màu cho hero và nền.
 export const colors = {
-  primary: '#0875FF',
+  primary: '#1667E8',
+  playerBackground: '#102950',
+  playerMuted: '#BED0E9',
+  playerControl: '#294264',
+  playerAccent: '#8FC8FF',
   background: '#FFFFFF',
   text: '#101D50',
   muted: '#637194',

@@ -1,3 +1,5 @@
+> Ghi chú sau sắp xếp 23/10/2026: các đường dẫn src/visitor trong tài liệu lịch sử này đã đổi. Xem [cấu trúc hiện tại](CAU_TRUC_DU_AN.md) và [code hiện tại](UC06-UC11-CODE.md).
+
 # QR dùng chung không cần Expo Go
 
 Đã sửa dự án gốc tại `D:/3.HTML/Đồ án CNPM/ThuyetMinhTuDong`.
@@ -88,3 +90,23 @@ Gợi ý commit: `feat(mobile): share public QR links and configure standalone A
 - App đã cài và domain được hệ điều hành xác minh: có thể mở app; các trường hợp khác mở web. Không tự mở đồng thời cả hai cửa sổ.
 - Chưa triển khai GPS tự xác định địa điểm trong lần sửa này. Hiện có thể chọn địa điểm từ danh sách.
 - Luồng tự mở app không qua Expo Go vẫn cần app ký riêng và xác minh domain thật; đường hầm tạm hiện phục vụ mở web.
+
+
+## Cập nhật tốc độ mở QR — 23/10/2026
+
+`npm run demo:public` hiện build web rồi mở preview riêng tại 127.0.0.1:4173, sau đó tạo tunnel HTTPS tới bản đóng gói. Server phát triển ở 5173 vẫn chạy riêng. Khi sửa code, chạy lại lệnh này để cập nhật bản public; nếu phiên tunnel còn tốt, script tái sử dụng URL.
+
+QR trên trang dùng PNG 640px, margin 4, đen/trắng; có nút tải ảnh, mở website trực tiếp, cập nhật URL và tự đọc cấu hình mỗi 15 giây. Không phải mọi chậm trễ là lỗi QR: camera nhận mã và trình duyệt tải trang là hai bước khác nhau. Tunnel tạm thời vẫn phụ thuộc mạng, upload máy tính và tình trạng dịch vụ; chưa có tên miền cố định nên không bảo đảm tốc độ trên mọi điện thoại.
+
+Đã giải mã độc lập cả `.qr-output/shared-qr.png` và ảnh PNG do trang web tạo: cùng đúng URL. Bản HTTPS trả HTTP200 cho trang và bundle, có gzip và không chứa /@vite/client. Đã đạt TypeScript, lint và 44 tests. Cần kiểm tra thêm camera và kết nối 4G trên điện thoại của người dùng.
+
+| File | Vai trò |
+|---|---|
+| scripts/start-public-demo.cjs | Build và mở bản production demo ở cổng riêng, kiểm tra asset thật trước công bố QR. |
+| scripts/create-public-qr.cjs | Đồng bộ runtime config ở static và dist, tạo PNG QR mới. |
+| scripts/public-qr.test.cjs | Loại HTML fallback và bản dev khỏi kiểm tra readiness. |
+| apps/web/src/components/QrImage.tsx | QR rõ, cập nhật URL, tải ảnh và mở web trực tiếp. |
+| apps/web/src/components/qr.css | Giữ ảnh vuông, đủ viền trắng, không cắt/co sai. |
+| apps/web/src/services/platform.ts | Đọc config có timeout và kiểm tra HTTPS. |
+| packages/visitor-core/src/qr-messages.ts | Hướng dẫn QR và nhãn nút đủ năm ngôn ngữ. |
+| packages/visitor-core/src/messages.ts | Ghép bộ khóa QR vào i18n hiện có. |

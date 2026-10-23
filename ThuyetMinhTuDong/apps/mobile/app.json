@@ -1,4 +1,3 @@
-
 {
   "expo": {
     "name": "ThuyetMinhTuDong",
@@ -12,6 +11,15 @@
           "cameraPermission": "Allow camera access to scan a heritage site QR code.",
           "recordAudioAndroid": false,
           "barcodeScannerEnabled": true
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": false
         }
       ]
     ]

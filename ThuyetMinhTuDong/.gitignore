@@ -17,3 +17,9 @@ node_modules/
 
 # Công cụ tunnel cục bộ, không commit binary.
 .tools/
+
+# Cache/log Expo tự sinh khi kiểm tra Android; không phải mã nguồn.
+**/.expo/
+
+# URL tunnel demo riêng của máy, script QR sinh lại khi chạy.
+apps/web/static/visitor-config.json

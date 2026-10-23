@@ -40,6 +40,15 @@ async function main(args) {
   fs.mkdirSync(folder, { recursive: true })
 
   if (args.includes('--configure')) {
+    // CHỨC NĂNG: Web đọc URL QR ở runtime, không chờ Vite nạp lại .env.
+    // XỬ LÝ: URL public không phải bí mật; điện thoại mở HTTPS dùng chính origin đang mở.
+    fs.mkdirSync(path.join(root, 'apps/web/static'), { recursive: true })
+    fs.writeFileSync(path.join(root, 'apps/web/static/visitor-config.json'), JSON.stringify({ publicSiteOrigin: new URL(href).origin }))
+    // CHỨC NĂNG: Đồng bộ URL runtime cho preview đã build và localhost dev.
+    // XỬ LÝ: Không rebuild thêm chỉ để thay origin; hai bản luôn tạo cùng QR.
+    if (fs.existsSync(path.join(root, 'apps/web/dist'))) {
+      fs.writeFileSync(path.join(root, 'apps/web/dist/visitor-config.json'), JSON.stringify({ publicSiteOrigin: new URL(href).origin }))
+    }
     const stamp = Date.now()
     setVariable(path.join(root, 'apps/web/.env.local'), 'VITE_PUBLIC_SITE_URL', new URL(href).origin,
       path.join(folder, 'web-env-before-' + stamp + '.txt'))

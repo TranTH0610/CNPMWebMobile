@@ -1,123 +1,85 @@
 /**
- * FILE NÀY LÀM GÌ:
- * Giữ luồng chọn ngôn ngữ lần đầu và các route Detail/AddPlace/Settings.
- * App.tsx dùng; Home giờ mở MainTabs.
- * Phụ thuộc storage ngôn ngữ và native-stack v6.
+ * FILE NÀY LÀM GÌ: Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app.
+ * Vị trí: apps/mobile/src/navigation/RootNavigator.tsx. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
-import { useEffect, useState } from 'react'
-import { ActivityIndicator, View } from 'react-native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useTranslation } from 'react-i18next'
-
-import LanguageScreen from '../screens/LanguageScreen'
-import DetailScreen from '../screens/DetailScreen'
-import AddPlaceScreen from '../screens/AddPlaceScreen'
-import SettingsScreen from '../screens/SettingsScreen'
+import { useJourneyNavigation } from '../hooks/useJourneyNavigation'
+import SearchResultScreen from '../screens/SearchResultScreen'
+import { JourneyPlayer } from '../components/JourneyPlayer'
+import { JourneyScreen } from '../screens/JourneyScreen'
 import MainTabs from './MainTabs'
+import DetailScreen from '../screens/DetailScreen'
+import ScanScreen from '../screens/ScanScreen'
+import { linking } from './linking'
+import type { VisitorStack } from './types'
+import { View } from 'react-native'
+import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useText } from '../i18n/index'
 
-import { getSavedLanguage } from '../i18n/storage'
-import type { RootStackParamList } from './types'
-import { ui } from '../theme'
-
+// CHỨC NĂNG: Tạo bộ điều hướng có kiểm tra kiểu tham số.
+// XỬ LÝ: TypeScript kiểm tra tên màn hình và dữ liệu truyền giữa các màn.
 const Stack =
-  createNativeStackNavigator<RootStackParamList>()
-
+  createNativeStackNavigator<VisitorStack>()
+// CHỨC NĂNG: Hiển thị màn danh sách ở chế độ tìm kiếm.
+// XỬ LÝ: Khi tham số route thay đổi, key thay đổi để khởi tạo
+// màn tìm kiếm với đúng từ khóa và danh mục mới.
+const navigationRef = createNavigationContainerRef<VisitorStack>()
+const openSuggested = (id: string) => { if (navigationRef.isReady()) navigationRef.navigate('Detail', { placeId: id }) }
+// CHỨC NĂNG: Đăng ký các màn hình của ứng dụng.
+// XỬ LÝ:
+// - Chỉ có một NavigationContainer.
+// - linking xử lý liên kết mở app từ QR.
+// - Tiêu đề lấy qua i18n để cập nhật khi đổi ngôn ngữ.
 export default function RootNavigator() {
-  const { t, i18n } = useTranslation()
-
-  const [ready, setReady] = useState(false)
-  const [hasLanguage, setHasLanguage] = useState(false)
-
-  useEffect(() => {
-    let cancelled = false
-
-    const initialize = async (): Promise<void> => {
-      try {
-        const saved = await getSavedLanguage()
-
-        if (saved) {
-          await i18n.changeLanguage(saved)
-        }
-
-        if (!cancelled) {
-          setHasLanguage(saved !== null)
-        }
-      } catch {
-        if (!cancelled) {
-          setHasLanguage(false)
-        }
-      } finally {
-        if (!cancelled) {
-          setReady(true)
-        }
-      }
-    }
-
-    void initialize()
-
-    return () => {
-      cancelled = true
-    }
-  }, [i18n])
-
-  if (!ready) {
-    return (
-      <View
-        style={[
-          ui.page,
-          {
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-        ]}
-      >
-        <ActivityIndicator size="large" />
-      </View>
-    )
-  }
+  const t = useText()
+  useJourneyNavigation({ open: openSuggested })
 
   return (
-    <Stack.Navigator
-      initialRouteName={
-        hasLanguage ? 'Home' : 'Language'
-      }
-    >
-      <Stack.Screen
-        name="Language"
-        component={LanguageScreen}
-        options={{ title: t('language.title') }}
-      />
-
-      {/* CHỨC NĂNG: đặt tên dịch cho route cha dù header của nó bị ẩn.
-    XỬ LÝ: màn con có thể dùng tiêu đề này làm nhãn quay lại,
-    thay vì hiển thị tên kỹ thuật "Home". */}
-      <Stack.Screen
-        name="Home"
-        component={MainTabs}
-        options={{
-          headerShown: false,
-          title: t('tabs.explore'),
+    <NavigationContainer linking={linking} ref={navigationRef}>
+      <View style={{ flex: 1 }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerBackTitle: t('explore'),
         }}
-      />
+      >
+        <Stack.Screen
+          name="Places"
+          component={MainTabs}
+          options={{
+            title: t('explore'),
+            headerShown: false,
+          }}
+        />
 
-      <Stack.Screen
-        name="Detail"
-        component={DetailScreen}
-        options={{ title: t('detail.title') }}
-      />
+        <Stack.Screen
+          name="Search"
+          component={SearchResultScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
 
-      <Stack.Screen
-        name="AddPlace"
-        component={AddPlaceScreen}
-        options={{ title: t('home.addPlace') }}
-      />
+        <Stack.Screen
+          name="Detail"
+          component={DetailScreen}
+          options={{
+            title: t('details'),
+          }}
+        />
 
-      <Stack.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{ title: t('settings.title') }}
-      />
-    </Stack.Navigator>
+        <Stack.Screen
+          name="Scan"
+          component={ScanScreen}
+          options={{
+            title: t('scan'),
+          }}
+        />
+        <Stack.Screen name="Journey" component={JourneyScreen} options={{ title: t('jMap') }} />
+      </Stack.Navigator>
+      <JourneyPlayer />
+      </View>
+    </NavigationContainer>
   )
 }

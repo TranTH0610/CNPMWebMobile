@@ -1,155 +1,100 @@
 /**
- * FILE NÀY LÀM GÌ:
- * Thanh tìm kiếm có quay lại, xóa chữ và mở sắp xếp.
- * Home/Search dùng; phụ thuộc i18n, icons và theme.
- * Liên quan UC03, FR-38.
+ * FILE NÀY LÀM GÌ: Ô tìm kiếm mobile, thao tác quay lại/xóa và mở bộ lọc.
+ * Vị trí: apps/mobile/src/components/SearchBar.tsx. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native'
-
+import { explore } from '../styles/explore'
+import { colors } from '../theme'
+import { Pressable, TextInput, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useTranslation } from 'react-i18next'
+import { useText } from '../i18n/index'
 
-import {
-  colors,
-  spacing,
-  radii,
-  sizes,
-  ui,
-} from '../theme'
-
-type Props = {
-  value: string
-  onChangeText?: (value: string) => void
-  onBack?: () => void
-  onFilter: () => void
-  onActivate?: () => void
-  autoFocus?: boolean
-}
-
-export default function SearchBar({
+// CHỨC NĂNG: Ô tìm có quay lại, xóa và bộ lọc.
+// XỬ LÝ: Không debounce trong component; hook chung chịu trách nhiệm lọc.
+export function SearchBar({
   value,
-  onChangeText,
+  onChange,
   onBack,
+  onFocus,
   onFilter,
-  onActivate,
   autoFocus = false,
-}: Props) {
-  const { t } = useTranslation()
+}: {
+  value: string
+  onChange: (value: string) => void
+  onBack?: () => void
+  onFocus?: () => void
+  onFilter?: () => void
+  autoFocus?: boolean
+}) {
+  const t = useText()
 
   return (
-    <View style={styles.row}>
-      <View style={styles.inputBox}>
-        {onBack ? (
-          <Pressable
-            style={ui.iconButton}
-            onPress={onBack}
-            accessibilityRole="button"
-            accessibilityLabel={t('explore.back')}
-          >
-            <Ionicons
-              name="arrow-back"
-              size={sizes.icon}
-              color={colors.text}
-            />
-          </Pressable>
-        ) : (
-          <View style={ui.iconButton}>
-            <Ionicons
-              name="search-outline"
-              size={sizes.icon}
-              color={colors.muted}
-            />
-          </View>
-        )}
-
-        {/* CHỨC NĂNG: ở Home, chạm thanh tìm kiếm để mở màn Search.
-            XỬ LÝ: không focus TextInput của Home nên quay lại không
-            tự mở Search lần nữa do khôi phục focus. */}
-        {onActivate ? (
-          <Pressable
-            style={styles.input}
-            onPress={onActivate}
-            accessibilityRole="button"
-            accessibilityLabel={t('explore.searchPlaceholder')}
-          >
-            <Text style={ui.muted}>
-              {t('explore.searchPlaceholder')}
-            </Text>
-          </Pressable>
-        ) : (
-          <TextInput
-            style={styles.input}
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={t('explore.searchPlaceholder')}
-            placeholderTextColor={colors.muted}
-            accessibilityLabel={t('explore.searchPlaceholder')}
-            autoFocus={autoFocus}
-            autoCorrect={false}
-            returnKeyType="search"
+    <View style={explore.row}>
+      {onBack && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('back')}
+          onPress={onBack}
+          style={explore.icon}
+        >
+          <Ionicons
+            name="chevron-back"
+            size={24}
+            color={colors.text}
           />
-        )}
+        </Pressable>
+      )}
 
-        {value.length > 0 && (
+      <View style={[explore.search, { flex: 1 }]}>
+        <Ionicons
+          name="search-outline"
+          size={20}
+          color={colors.muted}
+        />
+
+        <TextInput
+          style={explore.input}
+          value={value}
+          onChangeText={onChange}
+          onFocus={onFocus}
+          autoFocus={autoFocus}
+          placeholder={t('search')}
+          placeholderTextColor={colors.muted}
+          accessibilityLabel={t('search')}
+          autoCorrect={false}
+        />
+
+        {!!value && (
           <Pressable
-            style={ui.iconButton}
-            onPress={() => onChangeText?.('')}
+            onPress={() => onChange('')}
+            accessibilityLabel={t('clearSearch')}
             accessibilityRole="button"
-            accessibilityLabel={t('explore.clearSearch')}
+            style={explore.icon}
           >
             <Ionicons
               name="close-circle"
-              size={sizes.icon}
+              size={18}
               color={colors.muted}
             />
           </Pressable>
         )}
       </View>
 
-      <Pressable
-        style={ui.iconButton}
-        onPress={onFilter}
-        accessibilityRole="button"
-        accessibilityLabel={t('explore.sort')}
-      >
-        <Ionicons
-          name="options-outline"
-          size={sizes.icon}
-          color={colors.primary}
-        />
-      </Pressable>
+      {onFilter && (
+        <Pressable
+          accessibilityLabel={t('filters')}
+          accessibilityRole="button"
+          onPress={onFilter}
+          style={explore.sort}
+        >
+          <Ionicons
+            name="options-outline"
+            size={22}
+            color={colors.text}
+          />
+        </Pressable>
+      )}
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  inputBox: {
-    flex: 1,
-    minHeight: sizes.touch,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.background,
-    borderRadius: radii.md,
-  },
-  input: {
-    flex: 1,
-    minHeight: sizes.touch,
-    justifyContent: 'center',
-    color: colors.text,
-    paddingHorizontal: spacing.xs,
-  },
-})

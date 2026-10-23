@@ -1,236 +1,139 @@
 /**
- * FILE NÀY LÀM GÌ:
- * Thẻ địa điểm có hai kiểu: lớn trong carousel và ngang trong danh sách.
- * Home/Search dùng; phụ thuộc Place, i18n, icons và theme.
- * Liên quan UC03, FR-18, FR-41.
+ * FILE NÀY LÀM GÌ: Thẻ địa điểm, ảnh dự phòng, danh mục, khoảng cách nếu có và nút tim cục bộ.
+ * Vị trí: apps/mobile/src/components/PlaceCard.tsx. Liên quan UC01–UC11.
+ * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
-import { memo, useEffect, useState } from 'react'
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
-
+import { explore } from '../styles/explore'
+import { colors, spacing } from '../theme'
+import { Cover } from './Cover'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useTranslation } from 'react-i18next'
+import { categoryOf, distanceTo, publishedText } from '@travelguide/visitor-core'
+import type { PlaceRecord, Point } from '@travelguide/visitor-core'
+import { useText } from '../i18n/index'
+import { useVisitor } from '../hooks/useVisitor'
 
-import type { Place } from '@travelguide/shared-types'
-import type { LangCode } from '../i18n'
-
-import {
-  colors,
-  fonts,
-  spacing,
-  radii,
-  sizes,
-  ui,
-} from '../theme'
-
-type Props = {
-  place: Place
-  large?: boolean
-  width?: number
-  favorite: boolean
-  distance?: number
-  onOpen: (id: string) => void
-  onFavorite: (id: string) => void
-}
-
-function PlaceCard({
+// CHỨC NĂNG: Card lớn hoặc card ngang.
+// XỬ LÝ: Nút tim độc lập nút mở bài, không bấm tim rồi mở nhầm chi tiết.
+export function PlaceCard({
   place,
-  large = false,
-  width,
-  favorite,
-  distance,
   onOpen,
-  onFavorite,
-}: Props) {
-  const { t, i18n } = useTranslation()
-  const language = i18n.language as LangCode
+  featured = false,
+  width,
+  origin,
+}: {
+  place: PlaceRecord
+  onOpen: () => void
+  featured?: boolean
+  width?: number
+  origin?: Point
+}) {
+  const {
+    language,
+    favorites,
+    toggleFavorite,
+  } = useVisitor()
 
-  const uri = place.images?.[0]
-  const [imageFailed, setImageFailed] = useState(false)
+  const t = useText()
+  const content = publishedText(place, language)
+  const title = content?.title ?? place.canonicalTitle
+  const meters = distanceTo(place, origin)
 
-  // CHỨC NĂNG: thử ảnh mới khi URL thay đổi.
-  // XỬ LÝ: lỗi URL cũ không làm ảnh mới bị giữ ở placeholder.
-  useEffect(() => {
-    setImageFailed(false)
-  }, [uri])
+  const heart = (
+    <Pressable
+      style={
+        featured
+          ? [explore.icon, explore.favorite]
+          : explore.icon
+      }
+      accessibilityRole="button"
+      accessibilityLabel={t(
+        favorites.has(place.id) ? 'unfavorite' : 'favorite',
+      )}
+      accessibilityState={{
+        selected: favorites.has(place.id),
+      }}
+      onPress={() => toggleFavorite(place.id)}
+    >
+      <Ionicons
+        name={favorites.has(place.id) ? 'heart' : 'heart-outline'}
+        size={22}
+        color={colors.primary}
+      />
+    </Pressable>
+  )
 
-  // Trong lúc dịch nền, tên còn thiếu dùng tên nguồn để thẻ không trống.
-  // Tìm kiếm vẫn chỉ dùng ngôn ngữ đang chọn trong searchPlaces.
-  const name = place.name[language] ?? place.name.vi
+  if (featured) {
+    return (
+      <View style={[explore.featured, { width }]}>
+        <Cover
+          uri={place.images[0]}
+          style={StyleSheet.absoluteFill}
+        />
 
-  const address =
-    place.address?.[language] ??
-    place.address?.vi ??
-    t('explore.addressMissing')
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={title}
+          onPress={onOpen}
+          style={explore.featuredText}
+        >
+          <Text style={explore.badge}>
+            {t(`category_${categoryOf(place)}`)}
+          </Text>
 
-  const imageStyle = large
-    ? styles.largeImage
-    : styles.smallImage
+          <Text
+            style={[
+              explore.cardTitle,
+              { color: colors.white, fontSize: 22 },
+            ]}
+          >
+            {title}
+          </Text>
 
-  const validDistance =
-    distance !== undefined &&
-    Number.isFinite(distance)
+          <Text style={{ color: colors.white, fontSize: 12 }}>
+            {content ? t('city') : t('missing')}
+          </Text>
+        </Pressable>
+
+        {heart}
+      </View>
+    )
+  }
 
   return (
-    <View
-      style={[
-        ui.card,
-        { marginBottom: spacing.md },
-        large && { width },
-      ]}
-    >
+    <View style={explore.card}>
       <Pressable
-        style={large ? undefined : ui.row}
-        onPress={() => onOpen(place.id)}
         accessibilityRole="button"
-        accessibilityLabel={t('explore.openPlace', { name })}
+        accessibilityLabel={title}
+        onPress={onOpen}
       >
-        {uri && !imageFailed ? (
-          <Image
-            source={{ uri }}
-            style={imageStyle}
-            resizeMode="cover"
-            onError={() => setImageFailed(true)}
-            accessibilityLabel={name}
-          />
-        ) : (
-          <View style={[imageStyle, styles.placeholder]}>
-            <Ionicons
-              name="image-outline"
-              size={sizes.icon}
-              color={colors.muted}
-            />
-            <Text style={ui.caption}>
-              {t('explore.imageMissing')}
-            </Text>
-          </View>
-        )}
-
-        <View style={styles.info}>
-          <Text style={styles.category}>
-            {place.category
-              ? t(`categories.${place.category}`)
-              : t('categories.other')}
-          </Text>
-
-          <Text
-            style={styles.name}
-            numberOfLines={2}
-          >
-            {name}
-          </Text>
-
-          <Text
-            style={ui.muted}
-            numberOfLines={2}
-          >
-            {address}
-          </Text>
-
-          <View style={styles.metadata}>
-            {validDistance && (
-              <Text style={ui.caption}>
-                {t('explore.distance', {
-                  value: (distance / 1000).toFixed(1),
-                })}
-              </Text>
-            )}
-
-            <Text style={ui.caption}>
-              {place.rating !== undefined
-                ? t('explore.rating', {
-                    rating: place.rating.toFixed(1),
-                    count: place.reviewCount ?? 0,
-                  })
-                : t('explore.noRating')}
-            </Text>
-          </View>
-        </View>
+        <Cover uri={place.images[0]} style={explore.image} />
       </Pressable>
 
-      {/* CHỨC NĂNG: tim là nút độc lập với nút mở địa điểm.
-          XỬ LÝ: không đặt bên trong Pressable mở Detail, tránh bấm
-          tim lại đồng thời mở màn chi tiết. */}
       <Pressable
-        style={styles.heart}
-        onPress={() => onFavorite(place.id)}
         accessibilityRole="button"
-        accessibilityState={{ selected: favorite }}
-        accessibilityLabel={t(
-          favorite
-            ? 'explore.removeFavorite'
-            : 'explore.addFavorite',
-          { name },
-        )}
+        onPress={onOpen}
+        style={{ flex: 1, gap: spacing.sm }}
       >
-        <Ionicons
-          name={favorite ? 'heart' : 'heart-outline'}
-          size={sizes.icon}
-          color={favorite ? colors.favorite : colors.muted}
-        />
+        <Text style={explore.cardTitle}>{title}</Text>
+
+        <Text style={explore.badge}>
+          {t(`category_${categoryOf(place)}`)}
+        </Text>
+
+        <Text style={explore.muted}>
+          {content ? t('city') : t('missing')}
+        </Text>
+
+        {meters !== undefined && (
+          <Text style={explore.muted}>
+            {(meters / 1000).toFixed(2)} km
+          </Text>
+        )}
       </Pressable>
+
+      {heart}
     </View>
   )
 }
-
-// CHỨC NĂNG: tránh render lại thẻ khi props không đổi.
-// XỬ LÝ: callback từ màn hình cần ổn định bằng useCallback.
-export default memo(PlaceCard)
-
-const styles = StyleSheet.create({
-  largeImage: {
-    width: '100%',
-    height: sizes.heroImage,
-  },
-  smallImage: {
-    width: sizes.thumbnail,
-    height: sizes.thumbnail,
-    margin: spacing.sm,
-    borderRadius: radii.sm,
-  },
-  placeholder: {
-    backgroundColor: colors.placeholder,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-  },
-  info: {
-    flex: 1,
-    padding: spacing.md,
-    paddingRight: sizes.touch + spacing.md,
-    gap: spacing.xs,
-  },
-  category: {
-    color: colors.primary,
-    fontSize: fonts.caption,
-    fontWeight: '600',
-  },
-  name: {
-    color: colors.text,
-    fontSize: fonts.body,
-    fontWeight: '700',
-  },
-  metadata: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  heart: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    width: sizes.touch,
-    height: sizes.touch,
-    borderRadius: radii.round,
-    backgroundColor: colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

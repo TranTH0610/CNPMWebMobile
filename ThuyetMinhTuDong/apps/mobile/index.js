@@ -2,7 +2,7 @@
  * FILE NÀY LÀM GÌ:
  * Điểm vào của Expo, đăng ký App.tsx.
  * package.json của mobile trỏ main tới file này.
- * Phụ thuộc expo và App; phục vụ toàn bộ UC01–UC05.
+ * Phụ thuộc expo và App; phục vụ toàn bộ UC01–UC11.
  */
 
 import { registerRootComponent } from 'expo'

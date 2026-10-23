@@ -1,3 +1,5 @@
+> Ghi chú sau sắp xếp 23/10/2026: các đường dẫn src/visitor trong tài liệu lịch sử này đã đổi. Xem [cấu trúc hiện tại](CAU_TRUC_DU_AN.md) và [code hiện tại](UC06-UC11-CODE.md).
+
 # Bản sửa UC01–UC05
 
 Bản sửa dựa trên commit `b6596aa16aa81af4c5799b364bdc888a72a99288` của TranTH0610/CNPMWebMobile. Giữ phần chú thích, kiểm tra tọa độ, thử lại QR và xử lý ô nhập mà bạn đã thêm trên máy.

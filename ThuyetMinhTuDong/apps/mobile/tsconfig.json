@@ -3,11 +3,17 @@
   "compilerOptions": {
     "strict": true,
     "moduleResolution": "bundler",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "expo-modules-core": [
+        "./node_modules/expo-modules-core"
+      ]
+    },
+    "jsx": "react-jsx"
   },
   "include": [
     "App.tsx",
-    "src/visitor/**/*.ts",
-    "src/visitor/**/*.tsx"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ]
 }

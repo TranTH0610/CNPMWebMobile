@@ -494,3 +494,21 @@ test('UC03: danh mục, khu vực và tìm theo ngôn ngữ', () => {
     }).length > 0,
   )
 })
+// CHỨC NĂNG: Mỗi điểm phải có đúng ảnh, nguồn/giấy phép và asset hai nền tảng.
+test('UC02/04: đủ ảnh đóng gói và nguồn cho tám địa điểm', () => {
+  const fs = require('node:fs'), path = require('node:path')
+  const { PLACE_PHOTOS } = require('../.test-build/photos.js')
+  const { MOCK_PLACES } = require('../.test-build/mock.js')
+  assert.equal(MOCK_PLACES.length, 8)
+  for (const place of MOCK_PLACES) {
+    const photo = PLACE_PHOTOS[place.id]
+    assert.deepEqual(place.images, ['photo:' + place.id])
+    assert.ok(photo.author && photo.license && photo.url.startsWith('https://commons.wikimedia.org/'))
+    const web = fs.readFileSync(path.join(__dirname, '../../../apps/web/static/images/places', place.id + '.jpg'))
+    const native = fs.readFileSync(path.join(__dirname, '../../../apps/mobile/assets/places', place.id + '.jpg'))
+    assert.deepEqual(web, native)
+    assert.ok(web.length > 1000)
+    assert.equal(web[0], 0xff); assert.equal(web[1], 0xd8)
+  }
+  assert.ok(PLACE_PHOTOS['dien-can-chanh'].note.vi.includes('2015'))
+})

@@ -35,3 +35,29 @@ test('Cập nhật URL không xóa biến khác và có bản sao cấu hình', 
     fs.rmdirSync(folder)
   }
 })
+
+// CHỨC NĂNG: Bắt lỗi đường dẫn probe cũ sau khi di chuyển file vào services.
+test('QR probe trỏ tới service hiện có, không phải src/platform.ts đã bỏ', () => {
+  const { GUIDE_MODULE_PATH } = require('./start-public-demo.cjs')
+  assert.equal(GUIDE_MODULE_PATH, '/src/services/platform.ts')
+  assert.ok(fs.existsSync(path.join(__dirname, '../apps/web', GUIDE_MODULE_PATH)))
+})
+// CHỨC NĂNG: Vite trả HTML fallback không được coi là JS module hợp lệ.
+test('QR probe phân biệt đúng ứng dụng và HTML fallback', () => {
+  const { isGuideModule, isGuidePage } = require('./start-public-demo.cjs')
+  assert.equal(isGuideModule('export const publicSiteOrigin = siteOrigin(value)'), true)
+  assert.equal(isGuideModule('<html>publicSiteOrigin siteOrigin</html>'), false)
+  assert.equal(isGuidePage('<div id="root"></div><script src="/src/main.tsx"></script>'), true)
+  assert.equal(isGuidePage('<html>Other application</html>'), false)
+})
+
+// CHỨC NĂNG: Không đưa bản dev hoặc HTML giả qua QR công khai.
+test('QR công khai nhận production bundle và loại dev/HTML fallback', () => {
+  const { isBuiltGuidePage, builtEntry } = require('./start-public-demo.cjs')
+  const html = '<title>HueGuide</title><div id="root"></div><script type="module" src="/assets/index-abc123.js"></script>'
+  assert.equal(isBuiltGuidePage(html), true)
+  assert.equal(builtEntry(html), '/assets/index-abc123.js')
+  assert.equal(isBuiltGuidePage('<title>HueGuide</title><div id="root"></div><script src="/src/main.tsx"></script>'), false)
+  assert.equal(isBuiltGuidePage(html + '<script src="/@vite/client"></script>'), false)
+  assert.equal(builtEntry('<html>fallback</html>'), null)
+})

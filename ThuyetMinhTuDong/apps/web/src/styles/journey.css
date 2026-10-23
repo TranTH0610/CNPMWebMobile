@@ -1,0 +1,52 @@
+/* FILE NÀY LÀM GÌ: Giao diện bản đồ, thẻ điểm và thứ tự tham quan.
+ * JourneyPage nạp; dùng CSS variables từ ui-tokens. UC06–UC11.
+ * CHỨC NĂNG: Tách liên kết chi tiết, nút định vị và nguồn; đủ vùng bấm cho cảm ứng.
+ * XỬ LÝ: Grid co giãn, min-width:0 và wrap để tên dài không tràn màn hình. */
+.journey-page { padding: 28px; }
+.journey-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:20px; }
+.journey-heading h1 { margin:0 0 8px; font-size:28px; line-height:1.35; }
+.journey-heading p { max-width:720px; margin:0; color:var(--muted); }
+.journey-heading > button { flex-shrink:0; }
+.journey-page svg { width:19px; height:19px; flex-shrink:0; }
+.journey-map { border:1px solid var(--border); border-radius:20px; overflow:hidden; scroll-margin-top:20px; }
+.journey-map:focus-visible { outline:3px solid var(--primary); outline-offset:3px; }
+.journey-section { margin-top:32px; }
+.journey-section-heading { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.journey-section-heading h2 { font-size:23px; line-height:1.4; margin:0; }
+.journey-count { background:#edf4ff; color:var(--primary); border-radius:20px; min-width:32px; padding:3px 10px; text-align:center; font-weight:700; }
+.journey-places { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); list-style:none; padding:0; margin:0; gap:16px; }
+.journey-place { min-width:0; border:1px solid var(--border); border-radius:18px; background:var(--white); transition:border-color .15s,box-shadow .15s; overflow:hidden; }
+.journey-place:hover { border-color:var(--primary); box-shadow:0 6px 20px #12396a0c; }
+.journey-place.is-selected { border-color:var(--primary); box-shadow:0 0 0 2px #1667e81c; }
+.journey-place-open { display:flex; gap:16px; padding:16px; color:var(--text); align-items:center; }
+.journey-place-open .place-image { width:106px; height:100px; border-radius:12px; flex-shrink:0; object-fit:cover; }
+.journey-place-copy { min-width:0; }
+.journey-category { font-size:12px; font-weight:600; color:var(--primary); }
+.journey-place h3 { margin:6px 0 10px; font-size:18px; line-height:1.4; overflow-wrap:anywhere; }
+.journey-open-label { display:inline-flex; gap:6px; align-items:center; color:var(--primary); font-size:13px; font-weight:600; }
+.journey-open-label svg { width:16px; height:16px; }
+.journey-place-tools { border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:10px 16px; background:#f8faff; }
+.journey-place-tools button { min-height:40px; font-size:13px; padding:7px 12px; }
+.journey-source { font-size:12px; color:var(--muted); }
+.journey-source summary { cursor:pointer; padding:8px 0; }
+.journey-source a { display:block; padding:6px 0; }
+.journey-route { padding:22px; border:1px solid var(--border); border-radius:18px; background:linear-gradient(115deg,#f0f6ff,var(--white)); margin-bottom:14px; }
+.journey-route.is-selected { border-color:var(--primary); }
+.journey-route-intro { display:flex; gap:14px; align-items:flex-start; }
+.journey-route-icon { display:grid; place-items:center; width:42px; height:42px; flex-shrink:0; background:#dfebff; color:var(--primary); border-radius:13px; }
+.journey-route h3 { margin:0; font-size:18px; line-height:1.5; }
+.journey-route p { margin:6px 0 0; color:var(--muted); }
+.journey-route-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:18px; }
+.journey-route-actions button { min-height:44px; border-radius:12px; }
+.journey-stops { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:10px; }
+.journey-stops li { display:flex; align-items:center; gap:12px; min-width:0; }
+.journey-step { width:28px; height:28px; border-radius:50%; display:grid; place-items:center; flex-shrink:0; background:var(--primary); color:white; font-weight:700; }
+.journey-stops a { flex:1; display:flex; align-items:center; gap:12px; padding:10px; min-width:0; border:1px solid var(--border); border-radius:12px; background:var(--white); color:var(--text); font-weight:600; }
+.journey-stops a:hover { border-color:var(--primary); }
+.journey-stops .place-image { width:56px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+.journey-stops a > span { flex:1; overflow-wrap:anywhere; }
+.journey-footnote,.journey-notice { font-size:13px; color:var(--muted); background:#f5f8fd; padding:12px 16px; border-radius:12px; }
+@media(max-width:760px) { .journey-page{padding:18px;} .journey-heading{flex-direction:column;gap:14px;} .journey-places{grid-template-columns:minmax(0,1fr);} .journey-heading h1{font-size:24px;} .journey-section-heading h2{font-size:21px;} .journey-route{padding:16px;} }
+@media(max-width:400px) { .journey-place-open{gap:12px;padding:12px;} .journey-place-open .place-image{width:84px;height:90px;} .journey-place h3{font-size:17px;} .journey-route-actions{flex-direction:column;} }
+/* CÁCH KIỂM TRA: 390/768/1280px không có cuộn ngang; focus bàn phím rõ;
+ * Xem thứ tự này và Tự khám phá có khoảng cách, không dính chồng nhau. */

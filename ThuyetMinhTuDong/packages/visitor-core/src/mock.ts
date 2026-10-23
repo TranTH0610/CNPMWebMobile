@@ -8,6 +8,7 @@
  * Không khai báo tọa độ suy đoán.
  */
 
+import { PLACE_PHOTOS } from './photos'
 import { createCatalog } from './catalog'
 import type { Language, PlaceRecord, PublishedText } from './model'
 
@@ -32,6 +33,10 @@ const address: Record<Language, string> = {
 function text(title: string, language: Language): PublishedText {
   return {
     title,
+    // CHỨC NĂNG: File giọng đọc demo đã tạo trước, có thể pause/tua thật.
+    // XỬ LÝ: Không gọi dịch/TTS lúc du khách mở bài; dữ liệu vẫn ghi nhãn demo.
+    audio: { id: 'demo-' + language, url: 'demo:' + language, version: 1,
+      status: 'published', approvedAt: '2026-10-23T00:00:00Z', publishedAt: '2026-10-23T00:00:00Z' },
     summary: demoBody[language],
     body: demoBody[language],
     address: address[language],
@@ -158,19 +163,11 @@ for (const place of MOCK_PLACES) {
   ].includes(place.id)
 }
 
-// CHỨC NĂNG: Gắn ảnh đã có nguồn cho đúng công trình.
-// XỬ LÝ: Các điểm chưa có ảnh dùng placeholder, không mượn ảnh của điểm khác.
-MOCK_PLACES[1].images = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/DGJ_1178_-_Ngo_Mon_Gate_%283442074085%29.jpg/960px-DGJ_1178_-_Ngo_Mon_Gate_%283442074085%29.jpg',
-]
-
-MOCK_PLACES[2].images = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Thai_Hoa_palace.jpg/960px-Thai_Hoa_palace.jpg',
-]
-
-MOCK_PLACES[3].images = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Inside_The_Mieu_Temple%2C_Hue_20130810.jpg/960px-Inside_The_Mieu_Temple%2C_Hue_20130810.jpg',
-]
+// CHỨC NĂNG: Mỗi địa điểm có ảnh riêng đã kiểm tra nguồn, không mượn ảnh điểm khác.
+for (const place of MOCK_PLACES) {
+  const photo = PLACE_PHOTOS[place.id]
+  place.images = photo ? [photo.image] : []
+}
 
 // CHỨC NĂNG: Mô phỏng nguồn API bất đồng bộ.
 // XỬ LÝ: Trả bản sao dữ liệu JSON để UI không sửa nguồn.
