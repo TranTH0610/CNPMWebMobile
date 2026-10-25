@@ -4,7 +4,8 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { usePresenceHeartbeat } from './hooks/usePresenceHeartbeat'
 import { AppRoutes } from './navigation/AppRoutes'
 import { useJourneyNavigation } from './hooks/useJourneyNavigation'
 
-export default function App() { useJourneyNavigation(); return <AppRoutes /> }
+export default function App() { usePresenceHeartbeat(); useJourneyNavigation(); return <AppRoutes /> }

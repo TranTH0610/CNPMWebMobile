@@ -21,7 +21,7 @@ const assert =
 
 const {
   siteOrigin,
-} = require('../.test-build/site.js')
+} = require('../.test-build/links/site.js')
 
 // CHỨC NĂNG: Kiểm tra HTTPS công khai và HTTP LAN khi chạy thử.
 // XỬ LÝ: localhost và URL không phù hợp phải bị từ chối.

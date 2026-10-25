@@ -4,13 +4,13 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { usePresenceHeartbeat } from '../hooks/usePresenceHeartbeat'
 import { useJourneyNavigation } from '../hooks/useJourneyNavigation'
 import SearchResultScreen from '../screens/SearchResultScreen'
 import { JourneyPlayer } from '../components/JourneyPlayer'
 import { JourneyScreen } from '../screens/JourneyScreen'
 import MainTabs from './MainTabs'
 import DetailScreen from '../screens/DetailScreen'
-import ScanScreen from '../screens/ScanScreen'
 import { linking } from './linking'
 import type { VisitorStack } from './types'
 import { View } from 'react-native'
@@ -34,6 +34,7 @@ const openSuggested = (id: string) => { if (navigationRef.isReady()) navigationR
 // - Tiêu đề lấy qua i18n để cập nhật khi đổi ngôn ngữ.
 export default function RootNavigator() {
   const t = useText()
+  usePresenceHeartbeat(true)
   useJourneyNavigation({ open: openSuggested })
 
   return (
@@ -69,13 +70,7 @@ export default function RootNavigator() {
           }}
         />
 
-        <Stack.Screen
-          name="Scan"
-          component={ScanScreen}
-          options={{
-            title: t('scan'),
-          }}
-        />
+
         <Stack.Screen name="Journey" component={JourneyScreen} options={{ title: t('jMap') }} />
       </Stack.Navigator>
       <JourneyPlayer />

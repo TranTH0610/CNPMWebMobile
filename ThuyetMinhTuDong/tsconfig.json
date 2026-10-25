@@ -1,4 +1,21 @@
 {
-  "compilerOptions": {},
-  "extends": "expo/tsconfig.base"
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": []
+  },
+  "include": [
+    "packages/shared-types/**/*.ts",
+    "packages/ui-tokens/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "apps",
+    "**/node_modules/**",
+    "**/.test-build/**"
+  ]
 }

@@ -11,7 +11,7 @@ import { publishedText } from '@travelguide/visitor-core'
 import { useText } from '../i18n/index'
 import { useVisitor } from '../hooks/useVisitor'
 import { useJourney } from '../hooks/useJourney'
-import { MAP_POINTS } from '@travelguide/visitor-core/journey/data'
+import { mapPointFor } from '@travelguide/visitor-core/journey/data'
 import 'leaflet/dist/leaflet.css'
 
 export function VisitorMap({ selected }: { selected: string | null }) {
@@ -29,7 +29,7 @@ export function VisitorMap({ selected }: { selected: string | null }) {
     userLayer.current = L.layerGroup().addTo(map)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors', maxZoom: 19 }).on('tileerror', () => setFailed(true)).addTo(map)
     state.places.forEach(place => {
-      const point = MAP_POINTS[place.id]
+      const point = mapPointFor(place)
       if (!point) return
       const title = publishedText(place, language)?.title ?? place.canonicalTitle
       const label = document.createElement('span'); label.textContent = title

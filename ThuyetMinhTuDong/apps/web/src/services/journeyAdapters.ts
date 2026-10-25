@@ -4,7 +4,9 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { playbackCoordinator } from '@travelguide/visitor-core'
 import type { JourneyAdapters } from '@travelguide/visitor-core/journey/react'
+import { narrationSource } from './narrationSource'
 import type { Track } from '@travelguide/visitor-core/journey'
 
 let mediaOwner: HTMLAudioElement | undefined
@@ -19,7 +21,7 @@ export const journeyAdapters: JourneyAdapters = {
     return () => navigator.geolocation.clearWatch(id)
   },
   async open(url, title): Promise<Track> {
-    const audio = new Audio(url.startsWith('demo:') ? '/demo-audio/' + url.slice(5) + '.mp3' : url)
+    const audio = new Audio(narrationSource(url))
     audio.preload = 'auto'
     try {
       // CHỨC NĂNG: Chờ metadata để thời lượng và thanh tua lấy từ file thật.
@@ -35,14 +37,19 @@ export const journeyAdapters: JourneyAdapters = {
       })
     } catch (error) { audio.removeAttribute('src'); audio.load(); throw error }
     let disposed = false
+    const owner = { pause: () => audio.pause() }
     const track: Track = {
       duration: audio.duration,
       play: async () => {
-        await audio.play()
+        if (disposed) throw new Error('Audio closed')
+        playbackCoordinator.claim(owner)
+        try { await audio.play() } catch (error) { playbackCoordinator.release(owner); throw error }
+        // XỬ LÝ: Một bài khác có thể được bật khi lời gọi play còn đang chờ.
+        if (disposed || !playbackCoordinator.owns(owner)) { audio.pause(); return }
         if ('mediaSession' in navigator) {
           mediaOwner = audio
           navigator.mediaSession.metadata = new MediaMetadata({ title })
-          navigator.mediaSession.setActionHandler('play', () => { void audio.play().catch(() => audio.dispatchEvent(new Event('error'))) })
+          navigator.mediaSession.setActionHandler('play', () => { void track.play().catch(() => audio.dispatchEvent(new Event('error'))) })
           navigator.mediaSession.setActionHandler('pause', () => audio.pause())
           navigator.mediaSession.setActionHandler('seekto', d => { if (d.seekTime !== undefined) audio.currentTime = d.seekTime })
         }
@@ -50,6 +57,7 @@ export const journeyAdapters: JourneyAdapters = {
       pause: () => audio.pause(),
       seek: async value => { audio.currentTime = value },
       rate: value => { audio.playbackRate = value },
+      volume: value => { audio.volume = value },
       listen: callback => {
         const report = () => callback({ position: audio.currentTime, duration: audio.duration, playing: !audio.paused, ended: audio.ended, error: Boolean(audio.error) })
         const events = ['timeupdate', 'play', 'pause', 'ended', 'seeked', 'error']
@@ -58,7 +66,7 @@ export const journeyAdapters: JourneyAdapters = {
       },
       dispose: () => {
         if (disposed) return
-        disposed = true; audio.pause(); audio.removeAttribute('src'); audio.load()
+        disposed = true; playbackCoordinator.release(owner); audio.pause(); audio.removeAttribute('src'); audio.load()
         if ('mediaSession' in navigator && mediaOwner === audio) for (const action of ['play', 'pause', 'seekto'] as const) navigator.mediaSession.setActionHandler(action, null)
       },
     }

@@ -6,5 +6,5 @@
 
 
 
-// CHỨC NĂNG: Lấy ngôn ngữ và dấu tim trong phiên từ cùng provider.
+// CHỨC NĂNG: Lấy ngôn ngữ và trạng thái du khách từ cùng provider.
 export { useVisitor } from '@travelguide/visitor-core/react'

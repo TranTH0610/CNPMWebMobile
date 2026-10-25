@@ -99,6 +99,7 @@ export function DetailPage() {
       </Link>
 
       <h1>{title}</h1>
+      {place.period && <p>{place.period}</p>}
 
       <PlaceImage
         uri={place.images[0]}
@@ -157,10 +158,11 @@ export function DetailPage() {
         <State message="missing" />
       )}
 
+
       <p>
-        {hasVerifiedPosition && position
+        {position && validPoint(position)
           ? (
-            t('coordinates')
+            t(hasVerifiedPosition ? 'coordinates' : 'mapCoordinates')
             + ': '
             + position.lat
             + ', '

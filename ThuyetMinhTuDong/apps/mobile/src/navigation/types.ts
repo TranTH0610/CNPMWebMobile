@@ -18,5 +18,4 @@ export type VisitorStack = {
     placeId: string
   }
   Journey: { placeId?: string } | undefined
-  Scan: undefined
 }

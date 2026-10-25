@@ -15,7 +15,7 @@
   },
   "include": [
     "src/index.ts",
-    "src/mockPlaces.ts",
+    "src/data/mockPlaces.ts",
     "../shared-types/index.ts"
   ]
 }

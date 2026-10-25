@@ -14,7 +14,7 @@ import { publishedText } from '@travelguide/visitor-core'
 import { useText } from '../i18n/index'
 import { useVisitor } from '../hooks/useVisitor'
 import { useJourney } from '../hooks/useJourney'
-import { MAP_POINTS } from '@travelguide/visitor-core/journey/data'
+import { mapPointFor } from '@travelguide/visitor-core/journey/data'
 import { routeAvailable } from '@travelguide/visitor-core/journey'
 import { Action, ui } from '../components/index'
 import type { VisitorStack } from '../navigation/types'
@@ -51,7 +51,7 @@ export function JourneyScreen() {
       </>}
       renderItem={({ item }) => <View style={ui.card}>
         <Action title={publishedText(item, language)?.title ?? item.canonicalTitle} onPress={() => open(item.id)} />
-        {MAP_POINTS[item.id] && <Action title={t('jSource')} onPress={() => { void Linking.openURL(MAP_POINTS[item.id].source) }} />}
+        {mapPointFor(item)?.source && <Action title={t('jSource')} onPress={() => { void Linking.openURL(mapPointFor(item)!.source) }} />}
       </View>} />
   </SafeAreaView>
 }

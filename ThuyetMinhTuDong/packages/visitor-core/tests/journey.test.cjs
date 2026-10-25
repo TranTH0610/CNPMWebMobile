@@ -5,10 +5,12 @@
  */
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const { JourneyController, nearest, parseSaved, clampTime, routeAvailable } = require('../.test-build/journey.js')
-const { createCatalog } = require('../.test-build/catalog.js')
-const { MOCK_PLACES } = require('../.test-build/mock.js')
+const { JourneyController, nearest, parseSaved, clampTime, routeAvailable } = require('../.test-build/journey/journey.js')
+const { createCatalog } = require('../.test-build/catalog/catalog.js')
+const { MOCK_PLACES } = require('../.test-build/data/mock.js')
 const tick = () => new Promise(resolve => setImmediate(resolve))
+// CHỨC NĂNG: Các test GPS dùng hệ tọa độ 0,0 riêng, không lẫn tọa độ Huế thật.
+const TEST_PLACES = MOCK_PLACES.map(place => ({ ...place, position: undefined }))
 
 function track() {
   const listeners = new Set()
@@ -25,7 +27,7 @@ function track() {
 function fixture(extra = {}) {
   const writes = [], tracks = []
   const ports = {
-    catalog: createCatalog(async () => MOCK_PLACES),
+    catalog: createCatalog(async () => TEST_PLACES),
     positions: { 'ngo-mon': { lat: 0, lng: 0, source: 'test', fieldVerified: true } }, routes: [],
     open: async () => { const t = track(); tracks.push(t); return t },
     watch: async () => () => {}, read: async () => null, write: async value => { writes.push(value) },
@@ -36,7 +38,7 @@ function fixture(extra = {}) {
 const fix = (lng = 0) => ({ lat: 0, lng, accuracy: 5, timestamp: Date.now() })
 
 test('UC06: chỉ chọn điểm trong 100m, dữ liệu GPS cũ/sai bị loại', () => {
-  const { engine } = fixture(), places = [MOCK_PLACES[1]], points = engine.ports.positions
+  const { engine } = fixture(), places = [TEST_PLACES[1]], points = engine.ports.positions
   assert.equal(nearest(places, points, fix()), 'ngo-mon')
   assert.equal(nearest(places, points, fix(0.00089)), 'ngo-mon')
   assert.equal(nearest(places, points, fix(0.00091)), undefined)
@@ -46,7 +48,7 @@ test('UC06: chỉ chọn điểm trong 100m, dữ liệu GPS cũ/sai bị loại
 })
 test('UC06: khoảng cách bằng nhau giữ điểm trước', () => {
   const points = { 'ngo-mon': { lat: 0, lng: 0 }, 'ky-dai': { lat: 0, lng: 0 } }
-  assert.equal(nearest(MOCK_PLACES, points, fix(), 'ngo-mon'), 'ngo-mon')
+  assert.equal(nearest(TEST_PLACES, points, fix(), 'ngo-mon'), 'ngo-mon')
 })
 test('UC06/07: đang nghe giữ bài và màn; tạm dừng được gợi ý nhưng không tự phát', async () => {
   const { engine, tracks } = fixture(); await engine.start()
@@ -91,7 +93,7 @@ test('UC08: đổi ngôn ngữ đang nghe phát bản mới từ 0; paused vẫn
 test('UC07/08: phản hồi nguồn cũ đến muộn không phát đè bản mới', async () => {
   let release
   const late = track(), recent = track()
-  const { engine } = fixture({ open: url => url === 'demo:vi' ? new Promise(resolve => { release = resolve }) : Promise.resolve(recent) })
+  const { engine } = fixture({ open: url => url === MOCK_PLACES[1].content.vi.audio.url ? new Promise(resolve => { release = resolve }) : Promise.resolve(recent) })
   await engine.start(); const first = engine.play('ngo-mon', 'vi'); await tick()
   await engine.play('ngo-mon', 'en'); release(late); await first
   assert.equal(late.plays, 0); assert.equal(late.disposed, true)
@@ -119,7 +121,7 @@ test('UC11: bản lưu hỏng bị loại; tiến độ vượt thời lượng 
   assert.equal(clampTime(-10, 30), 0); assert.equal(clampTime(NaN, 30), 0)
 })
 test('UC11: mở lại chỉ đề nghị, đúng phiên bản mới tiếp tục tại thời điểm cũ', async () => {
-  const saved = { placeId: 'ngo-mon', language: 'vi', textVersion: 1, audioId: 'demo-vi', audioVersion: 1, position: 9, duration: 30, rate: 1.25 }
+  const saved = { placeId: 'ngo-mon', language: 'vi', textVersion: MOCK_PLACES[1].content.vi.version, audioId: MOCK_PLACES[1].content.vi.audio.id, audioVersion: MOCK_PLACES[1].content.vi.audio.version, position: 9, duration: 30, rate: 1.25 }
   const { engine, tracks } = fixture({ read: async () => JSON.stringify(saved) })
   await engine.start(); assert.equal(tracks.length, 0); assert.equal(engine.snapshot().changed, false)
   await engine.restorePlay(); assert.equal(tracks[0].position, 9); assert.equal(engine.snapshot().session.rate, 1.25)
@@ -181,3 +183,39 @@ for (const initial of [true, false]) {
     engine.dispose()
   })
 }
+
+// CHỨC NĂNG: × dừng nguồn thật, xóa checkpoint và không tự mở lại khi đổi ngôn ngữ.
+test('UC07: close dừng/giải phóng nguồn, xóa phiên và checkpoint', async () => {
+  const { engine, tracks, writes } = fixture()
+  await engine.start(); await engine.play('ngo-mon', 'vi')
+  engine.close(); engine.changeLanguage('en'); engine.retry(); engine.checkpoint(); await tick()
+  assert.equal(tracks[0].playing, false); assert.equal(tracks[0].disposed, true)
+  assert.equal(engine.snapshot().status, 'idle'); assert.equal(engine.snapshot().session, undefined)
+  assert.equal(engine.snapshot().restore, undefined); assert.equal(engine.snapshot().error, undefined)
+  assert.equal(tracks.length, 1); assert.equal(writes.at(-1), null)
+  engine.dispose()
+})
+// CHỨC NĂNG: Đóng trong lúc tải không được phát lại khi request cũ trả về.
+test('UC07: close khi tải chậm loại nguồn đến muộn', async () => {
+  let release
+  const late = track()
+  const { engine } = fixture({ open: () => new Promise(resolve => { release = resolve }) })
+  await engine.start(); const loading = engine.play('ngo-mon', 'vi'); await tick()
+  engine.close(); release(late); await loading
+  assert.equal(late.plays, 0); assert.equal(late.disposed, true)
+  assert.equal(engine.snapshot().status, 'idle'); assert.equal(engine.snapshot().session, undefined)
+  engine.dispose()
+})
+// CHỨC NĂNG: Bộ nhớ bị chặn không mở lại thanh nghe vừa đóng.
+test('UC07/11: lỗi ghi đến muộn sau close không mở lại player', async () => {
+  const { engine } = fixture({ write: async () => { throw Error('blocked') } })
+  await engine.start(); await engine.play('ngo-mon', 'vi'); engine.close(); await tick()
+  assert.equal(engine.snapshot().session, undefined); assert.equal(engine.snapshot().error, undefined)
+  assert.equal(engine.snapshot().status, 'idle'); engine.dispose()
+})
+
+// CHỨC NĂNG: Tọa độ được Admin công bố phải được ưu tiên hơn marker cũ.
+test('UC06: gợi ý GPS dùng position mới công bố',()=>{
+ const place={...MOCK_PLACES[1],position:{lat:0,lng:0,verified:true}}
+ assert.equal(nearest([place],{'ngo-mon':{lat:16.4676824,lng:107.5791834}},fix()),'ngo-mon')
+})

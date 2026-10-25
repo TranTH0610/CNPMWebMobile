@@ -21,8 +21,12 @@ type Data = ReturnType<typeof usePublishedCatalog>
 export function Catalogue({
   data,
   initial,
+  categorySelection,
+  onCategorySelectionChange,
 }: {
   data: Data
+  categorySelection?: readonly Category[]
+  onCategorySelectionChange?: (value: Category[]) => void
   initial?: {
     query?: string
     category?: Category
@@ -30,6 +34,24 @@ export function Catalogue({
 }) {
   const position = useVisitorPosition(getPosition)
   const filters = useExplore(data.places, position.origin, initial)
+  // CHỨC NĂNG: Nhận thay đổi danh mục từ các chip trên trang chủ ngay lập tức.
+  // XỬ LÝ: Chỉ đồng bộ khi lựa chọn bên ngoài đổi; không remount nên giữ bố cục và vị trí.
+  const { setCategories } = filters
+  useEffect(() => {
+    if (categorySelection !== undefined) setCategories([...categorySelection])
+  }, [categorySelection, setCategories])
+
+  // CHỨC NĂNG: Checkbox và chip hero luôn thể hiện cùng một lựa chọn.
+  // XỬ LÝ: Cập nhật cha qua callback chỉ khi người dùng thao tác, tránh vòng lặp effect.
+  const changeCategories = (value: Category[]) => {
+    filters.setCategories(value)
+    onCategorySelectionChange?.(value)
+  }
+  const clearFilters = () => {
+    filters.reset()
+    onCategorySelectionChange?.([])
+  }
+
   const { language } = useVisitor()
   const t = useText()
 
@@ -45,7 +67,6 @@ export function Catalogue({
     setPage(1)
   }, [
     filters.query,
-    filters.within,
     filters.categories,
     filters.zones,
     filters.order,
@@ -131,33 +152,40 @@ export function Catalogue({
 
             <button
               className="text-button"
-              onClick={filters.reset}
+              onClick={clearFilters}
             >
               {t('clearAll')}
             </button>
           </div>
 
-          <label className="search-field">
-            <Icon name="search" />
-            <input
-              type="search"
-              aria-label={t('search')}
-              placeholder={t('search')}
-              value={filters.query}
-              onChange={(event) => filters.setQuery(event.target.value)}
-            />
-          </label>
-
-          <label className="search-field">
-            <Icon name="search" />
-            <input
-              type="search"
-              aria-label={t('searchWithin')}
-              placeholder={t('searchWithin')}
-              value={filters.within}
-              onChange={(event) => filters.setWithin(event.target.value)}
-            />
-          </label>
+          {/* CHỨC NĂNG: Một ô tìm kiếm duy nhất, có nhãn và nút xóa từ khóa.
+              XỬ LÝ: Cập nhật query của hook để lọc sau debounce; không dùng tìm trong kết quả. */}
+          <div className="filter-search-group">
+            <label className="filter-search-label" htmlFor="catalogue-search">
+              {t('searchButton')}
+            </label>
+            <div className="search-field filter-search-field">
+              <Icon name="search" />
+              <input
+                id="catalogue-search"
+                type="search"
+                placeholder={t('searchKeyword')}
+                value={filters.query}
+                onChange={(event) => filters.setQuery(event.target.value)}
+              />
+              {filters.query && (
+                <button
+                  type="button"
+                  className="filter-search-clear"
+                  aria-label={t('clearSearch')}
+                  onClick={() => filters.setQuery('')}
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              )}
+            </div>
+            <p className="filter-search-hint">{t('searchFieldsHint')}</p>
+          </div>
 
           {filters.availableCategories.length >= 2 && (
             <fieldset>
@@ -167,7 +195,7 @@ export function Catalogue({
                 <input
                   type="checkbox"
                   checked={!filters.categories.length}
-                  onChange={() => filters.setCategories([])}
+                  onChange={() => changeCategories([])}
                 />
                 {t('all')} ({data.places.length})
               </label>
@@ -177,7 +205,7 @@ export function Catalogue({
                   <input
                     type="checkbox"
                     checked={filters.categories.includes(category)}
-                    onChange={(event) => filters.setCategories(
+                    onChange={(event) => changeCategories(
                       event.target.checked
                         ? [...filters.categories, category]
                         : filters.categories.filter(
@@ -290,7 +318,7 @@ export function Catalogue({
             <div className="state">
               <h3>{t('empty')}</h3>
               <p>{t('emptyHint')}</p>
-              <button onClick={filters.reset}>
+              <button onClick={clearFilters}>
                 {t('clearAll')}
               </button>
             </div>

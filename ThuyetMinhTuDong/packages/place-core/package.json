@@ -6,8 +6,8 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./mockPlaces": "./src/mockPlaces.ts",
-    "./useDebounce": "./src/useDebounce.ts"
+    "./mockPlaces": "./src/data/mockPlaces.ts",
+    "./useDebounce": "./src/hooks/useDebounce.ts"
   },
   "scripts": {
     "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs"

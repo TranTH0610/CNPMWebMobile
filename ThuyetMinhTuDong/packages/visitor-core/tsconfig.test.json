@@ -6,17 +6,20 @@
     "moduleResolution": "Node",
     "outDir": ".test-build",
     "skipLibCheck": true,
-    "types": []
+    "types": [],
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "include": [
-    "src/model.ts",
-    "src/catalog.ts",
-    "src/qr.ts",
-    "src/mock.ts",
-    "src/messages.ts",
-    "src/search.ts",
-    "src/site.ts",
-    "src/journey.ts",
-    "src/journey-data.ts"
+    "src/domain/model.ts",
+    "src/catalog/catalog.ts",
+    "src/links/qr.ts",
+    "src/data/mock.ts",
+    "src/i18n/messages.ts",
+    "src/catalog/search.ts",
+    "src/links/site.ts",
+    "src/journey/journey.ts",
+    "src/journey/journey-data.ts",
+    "src/audio/*.ts"
   ]
 }

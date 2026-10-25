@@ -23,3 +23,12 @@ node_modules/
 
 # URL tunnel demo riêng của máy, script QR sinh lại khi chạy.
 apps/web/static/visitor-config.json
+
+# Output kiểm tra đóng gói Admin, không phải mã nguồn.
+**/.verify-admin/
+
+# Bản build quản lý độc lập với web du khách.
+**/dist-admin/
+
+# Bundle Node của mock API, sinh khi khởi động.
+.runtime/

@@ -1,5 +1,5 @@
 /**
- * FILE NÀY LÀM GÌ: Hiển thị chọn ngôn ngữ chung và liên kết truy cập website/QR.
+ * FILE NÀY LÀM GÌ: Hiển thị chọn ngôn ngữ; không cung cấp QR hoặc chia sẻ liên kết cho du khách.
  * Vị trí: apps/mobile/src/screens/SettingsScreen.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
@@ -7,7 +7,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView, Text } from 'react-native'
 import { useText } from '../i18n/index'
-import WebAccessCard from '../components/WebAccessCard'
 import { LanguageBar, ui } from '../components/index'
 
 // CHỨC NĂNG: Cho đổi ngôn ngữ.
@@ -21,7 +20,6 @@ export default function SettingsScreen() {
         <Text style={ui.title}>{t('settings')}</Text>
         <LanguageBar />
         <Text style={ui.muted}>{t('noAccount')}</Text>
-        <WebAccessCard />
       </ScrollView>
     </SafeAreaView>
   )

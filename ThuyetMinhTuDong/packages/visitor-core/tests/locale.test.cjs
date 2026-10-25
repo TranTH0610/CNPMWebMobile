@@ -11,7 +11,7 @@ const { createInstance } = require('i18next')
 
 const {
   messages,
-} = require('../.test-build/messages.js')
+} = require('../.test-build/i18n/messages.js')
 
 // CHỨC NĂNG: Chuyển lần lượt năm ngôn ngữ.
 // XỬ LÝ: Kiểm tra cả tiêu đề và chữ quay lại ở mỗi lần đổi.

@@ -4,12 +4,8 @@
     "strict": true,
     "moduleResolution": "bundler",
     "skipLibCheck": true,
-    "paths": {
-      "expo-modules-core": [
-        "./node_modules/expo-modules-core"
-      ]
-    },
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "resolveJsonModule": true
   },
   "include": [
     "App.tsx",

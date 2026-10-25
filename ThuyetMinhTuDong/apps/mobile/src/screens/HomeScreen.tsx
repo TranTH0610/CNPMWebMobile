@@ -4,14 +4,14 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
-import { useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, FlatList, Linking, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Ionicons } from '@expo/vector-icons'
-import { HERO_IMAGE, PHOTO_CREDITS } from '@travelguide/visitor-core'
-import type { Category, SortOrder } from '@travelguide/visitor-core'
+import { categoryOf, HERO_IMAGE, PHOTO_CREDITS } from '@travelguide/visitor-core'
+import type { Category, PlaceRecord, SortOrder } from '@travelguide/visitor-core'
 import { useExplore, usePublishedCatalog, useVisitorPosition } from '../hooks/usePlaces'
 import { useText } from '../i18n/index'
 import { Action, DemoNotice, State, colors, spacing, CategoryChips, Cover, PlaceCard, SearchBar, SortDropdown, explore } from '../components/index'
@@ -46,11 +46,22 @@ export default function HomeScreen({
   )
 
   const [slide, setSlide] = useState(0)
+  const [searchRequired, setSearchRequired] = useState(false)
+  const [draftQuery, setDraftQuery] = useState(initial?.query ?? '')
+  const query = search ? filters.query : draftQuery
   const list = useRef<FlatList>(null)
+  const featuredList = useRef<FlatList<PlaceRecord>>(null)
 
-  const featured = data.places.filter(
-    (place) => place.featured,
-  )
+  const featured = useMemo(() => data.places.filter(
+    (place) => place.featured && (!filters.categories.length || filters.categories.includes(categoryOf(place))),
+  ), [data.places, filters.categories])
+
+  // CHỨC NĂNG: Đổi danh mục hoặc xoay màn hình thì về thẻ đầu, tránh chấm nằm ngoài danh sách mới.
+  // XỬ LÝ: Ref chỉ cuộn khi carousel có dữ liệu và đang được gắn vào màn.
+  useEffect(() => {
+    setSlide(0)
+    if (featured.length) featuredList.current?.scrollToOffset({ offset: 0, animated: false })
+  }, [featured, cardWidth])
 
   // CHỨC NĂNG: Đổi thứ tự và xin vị trí khi người dùng yêu cầu.
   // XỬ LÝ: Chọn theo tên không xin quyền GPS.
@@ -62,9 +73,23 @@ export default function HomeScreen({
     }
   }
 
-  const openSearch = () => navigation.navigate('Search', {
-    query: filters.query,
-  })
+  // CHỨC NĂNG: Đồng nhất web: gửi rỗng báo lỗi, gửi có chữ mở kết quả cùng danh mục.
+  // XỬ LÝ: Không chuyển màn ngay lúc chạm ô nhập; trim loại từ khóa chỉ có khoảng trắng.
+  const openSearch = () => {
+    if (!query.trim()) { setSearchRequired(true); return }
+    setSearchRequired(false)
+    if (!search) navigation.navigate('Search', { query: query.trim(), category: filters.categories[0] })
+  }
+  const changeQuery = (value: string) => {
+    if (search) filters.setQuery(value)
+    else setDraftQuery(value)
+    if (value.trim()) setSearchRequired(false)
+  }
+  const changeCategories = (value: Category[]) => {
+    filters.setCategories(value)
+    setSlide(0)
+  }
+
 
   return (
     <SafeAreaView
@@ -122,21 +147,11 @@ export default function HomeScreen({
                   <View
                     style={{
                       flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      justifyContent: 'flex-end',
                       marginBottom: spacing.xl,
                     }}
                   >
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={t('scan')}
-                      onPress={() => navigation.navigate('Scan')}
-                    >
-                      <Ionicons
-                        name="qr-code-outline"
-                        size={24}
-                        color={colors.white}
-                      />
-                    </Pressable>
+
 
                     <View accessibilityLabel={t('notification')}>
                       <Ionicons
@@ -172,17 +187,20 @@ export default function HomeScreen({
                   </Text>
 
                   <SearchBar
-                    value={filters.query}
-                    onChange={filters.setQuery}
-                    onFocus={openSearch}
+                    value={query}
+                    onChange={changeQuery}
+                    onSubmit={openSearch}
                   />
+                  <Action title={t('searchButton')} icon="search-outline" variant="primary" onPress={openSearch} />
+                  {searchRequired && <Text accessibilityRole="alert" style={{ color: colors.text, backgroundColor: colors.background, padding: spacing.sm, borderRadius: 8 }}>{t('searchRequired')}</Text>}
                 </View>
               </View>
             ) : (
               <View style={explore.body}>
                 <SearchBar
-                  value={filters.query}
-                  onChange={filters.setQuery}
+                  value={query}
+                  onChange={changeQuery}
+                  onSubmit={openSearch}
                   autoFocus
                   onBack={() => navigation.goBack()}
                   onFilter={() => Alert.alert(
@@ -208,11 +226,30 @@ export default function HomeScreen({
             )}
 
             <View style={explore.body}>
+              {search && searchRequired && <Text accessibilityRole="alert" style={explore.muted}>{t('searchRequired')}</Text>}
               <CategoryChips
                 categories={filters.availableCategories}
                 selected={filters.categories}
-                onSelect={filters.setCategories}
+                onSelect={changeCategories}
               />
+
+              {/* CHỨC NĂNG: Mobile có cùng lọc khu vực và xóa lọc như sidebar web.
+                  XỬ LÝ: Bấm đổi điều kiện ngay; không đợi nút tìm kiếm. */}
+              <View style={{ gap: spacing.sm, marginBottom: spacing.md }}>
+                <Text style={explore.cardTitle}>{t('region')}</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+                  {filters.availableZones.map(zone => (
+                    <Action key={zone}
+                      title={t(zone === 'fortifications' ? 'zone_fortifications' : 'zone_ceremonial')}
+                      selected={filters.zones.includes(zone)}
+                      onPress={() => filters.setZones(filters.zones.includes(zone)
+                        ? filters.zones.filter(item => item !== zone) : [...filters.zones, zone])} />
+                  ))}
+                  <Action title={t('clearAll')} variant="ghost" onPress={() => {
+                    filters.reset(); setDraftQuery(''); setSearchRequired(false); setSlide(0)
+                  }} />
+                </View>
+              </View>
 
               {!search && (
                 <>
@@ -236,10 +273,21 @@ export default function HomeScreen({
                     </Pressable>
                   </View>
 
+                  {data.loading && !data.places.length ? <State message="loading" busy />
+                    : data.error ? <State message="loadError" retry={() => { void data.reload() }} />
+                    : !featured.length ? (
+                      // CHỨC NĂNG: Cùng empty state với web khi không có điểm nổi bật phù hợp.
+                      <View style={{ padding: spacing.md, gap: spacing.sm, backgroundColor: colors.page, borderRadius: 12 }} accessibilityRole="summary">
+                        <Text style={explore.cardTitle}>{t('featuredEmpty')}</Text>
+                        <Text style={explore.muted}>{t('featuredEmptyHint')}</Text>
+                        {!!filters.categories.length && <Action title={t('clearAll')} onPress={() => changeCategories([])} />}
+                      </View>
+                    ) : <>
                   {/* CHỨC NĂNG: Carousel ngang có snap.
                       XỬ LÝ: Chiều rộng card theo màn hình;
                       tính chấm hiện tại từ độ cuộn khi dừng. */}
                   <FlatList
+                    ref={featuredList}
                     horizontal
                     data={featured}
                     keyExtractor={(item) => item.id}
@@ -267,7 +315,7 @@ export default function HomeScreen({
                     )}
                   />
 
-                  <View
+                  {featured.length > 1 && <View
                     style={[
                       explore.row,
                       {
@@ -290,12 +338,14 @@ export default function HomeScreen({
                         }}
                       />
                     ))}
-                  </View>
+                  </View>}
+                    </>}
+
                 </>
               )}
 
               <View style={explore.row}>
-                <Text style={explore.title}>
+                <Text style={[explore.title, { minWidth: 0 }]}>
                   {t(search ? 'results' : 'allPlaces')}
                   {' '}({filters.results.length})
                 </Text>

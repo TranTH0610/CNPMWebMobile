@@ -6,7 +6,7 @@
 import { useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { categoryOf, publishedText } from '@travelguide/visitor-core'
-import { MAP_POINTS } from '@travelguide/visitor-core/journey/data'
+import { mapPointFor } from '@travelguide/visitor-core/journey/data'
 import { routeAvailable } from '@travelguide/visitor-core/journey'
 import { VisitorMap } from '../components/VisitorMap'
 import { PlaceImage } from '../components/PlaceImage'
@@ -63,7 +63,7 @@ export function JourneyPage() {
       <ul className="journey-places">
         {state.places.map(place => {
           const title = publishedText(place, language)?.title ?? place.canonicalTitle
-          const point = MAP_POINTS[place.id]
+          const point = mapPointFor(place)
           return <li key={place.id} className={'journey-place' + (selected === place.id ? ' is-selected' : '')}>
             <Link className="journey-place-open" to={'/places/' + encodeURIComponent(place.id)} aria-label={t('jOpenPlace') + ': ' + title}>
               <PlaceImage uri={place.images[0]} title={title} />
@@ -78,10 +78,10 @@ export function JourneyPage() {
                 aria-label={t('jMap') + ': ' + title} onClick={() => locate(place.id)}>
                 <Icon name="pin" />{t('jMap')}
               </button>
-              <details className="journey-source">
+              {point.source && <details className="journey-source">
                 <summary>{t('jSource')}</summary>
                 <a href={point.source} target="_blank" rel="noreferrer" aria-label={t('jSource') + ': ' + title}>OpenStreetMap ↗</a>
-              </details>
+              </details>}
             </div>}
           </li>
         })}

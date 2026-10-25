@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "outDir": ".test-build",
+    "types": []
+  },
+  "include": [
+    "src/domain/models.ts",
+    "src/domain/contracts.ts",
+    "src/services/mockService.ts",
+    "src/domain/validation.ts"
+  ]
+}

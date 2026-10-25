@@ -4,6 +4,7 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { publicCatalog } from './services/admin/services'
 import { boot } from './i18n'
 import { JourneyProvider } from '@travelguide/visitor-core/journey/react'
 import { journeyAdapters } from './services/journeyAdapters'
@@ -41,6 +42,7 @@ ReactDOM.createRoot(root).render(
     <VisitorProvider
       boot={boot}
       storage={storage}
+      catalog={publicCatalog}
       deviceLanguage={
         navigator.languages?.[0] ?? navigator.language
       }

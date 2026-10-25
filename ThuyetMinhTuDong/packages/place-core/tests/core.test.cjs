@@ -34,7 +34,7 @@ const {
 const {
   MOCK_PLACES,
   loadMockPlaces,
-} = require('../.test-build/place-core/src/mockPlaces.js')
+} = require('../.test-build/place-core/src/data/mockPlaces.js')
 
 // CHỨC NĂNG: Kiểm tra chuẩn hóa tiếng Việt.
 // XỬ LÝ: Thử Đ/đ, khoảng trắng, NFD, chuỗi rỗng và chữ Nhật.

@@ -7,6 +7,7 @@
 
 const { getDefaultConfig } = require('expo/metro-config')
 const path = require('path')
+const { createRequire } = require('node:module')
 
 const projectRoot = __dirname
 const workspaceRoot = path.resolve(projectRoot, '../..')
@@ -25,5 +26,16 @@ config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
 ]
+
+// CHỨC NĂNG: Chọn React của mobile cho cả source trong packages dùng chung.
+// XỬ LÝ: Web giữ React 18; native cần React 19.3. Chỉ khóa React ở Metro,
+// không ép web đổi phiên bản và không sửa cách phân giải các dependency khác.
+const mobileRequire = createRequire(path.join(projectRoot, 'package.json'))
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === 'react' || moduleName.startsWith('react/')) {
+    return { type: 'sourceFile', filePath: mobileRequire.resolve(moduleName) }
+  }
+  return context.resolveRequest(context, moduleName, platform)
+}
 
 module.exports = config

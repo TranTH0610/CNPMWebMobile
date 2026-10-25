@@ -6,7 +6,7 @@
 
 import { Link, NavLink } from 'react-router-dom'
 import { useText } from '../i18n/index'
-import { Icon, LanguagePicker } from './index'
+import { LanguagePicker } from './index'
 
 export function Navbar() { const t = useText(); return (<header className="navbar">
         <div className="nav-inner">
@@ -30,13 +30,7 @@ export function Navbar() { const t = useText(); return (<header className="navba
           <div className="nav-actions">
             <LanguagePicker />
 
-            <Link
-              className="icon-button"
-              to="/qr"
-              aria-label={t('qrAccess')}
-            >
-              <Icon name="qr" />
-            </Link>
+
           </div>
         </div>
       </header>) }

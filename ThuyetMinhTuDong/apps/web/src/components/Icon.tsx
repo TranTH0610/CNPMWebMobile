@@ -12,7 +12,7 @@
 export function Icon({
   name,
 }: {
-  name: 'search' | 'pin' | 'heart' | 'arrow' | 'grid' | 'list' | 'qr' | 'play' | 'pause' | 'replay' | 'backward' | 'forward' | 'headphones'
+  name: 'search' | 'pin' | 'arrow' | 'grid' | 'list' | 'qr' | 'play' | 'pause' | 'replay' | 'backward' | 'forward' | 'headphones'
 }) {
   const paths = {
     play: <path d="m9 5 11 7-11 7Z" fill="currentColor" strokeLinejoin="round" />,
@@ -32,9 +32,6 @@ export function Icon({
         <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z" />
         <circle cx="12" cy="10" r="2" />
       </>
-    ),
-    heart: (
-      <path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-5 5 8 15 8 15S25 10 20 5Z" />
     ),
     arrow: <path d="m9 5 7 7-7 7M4 12h12" />,
     grid: (

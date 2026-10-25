@@ -1,5 +1,5 @@
 /**
- * FILE NÀY LÀM GÌ: Thẻ địa điểm, ảnh dự phòng, danh mục, khoảng cách nếu có và nút tim cục bộ.
+ * FILE NÀY LÀM GÌ: Thẻ địa điểm, ảnh dự phòng, danh mục, khoảng cách nếu có đồng nhất nội dung mobile/web.
  * Vị trí: apps/web/src/components/PlaceCard.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
@@ -13,7 +13,7 @@ import { useText } from '../i18n/index'
 import { useVisitor } from '../hooks/useVisitor'
 
 // CHỨC NĂNG: Card địa điểm trong carousel/lưới/danh sách.
-// XỬ LÝ: Tim độc lập link chi tiết và lưu trong context của phiên.
+// XỬ LÝ: Thẻ chỉ mở chi tiết; không đăng ký chức năng yêu thích.
 export function PlaceCard({
   place,
   distance,
@@ -21,11 +21,7 @@ export function PlaceCard({
   place: PlaceRecord
   distance?: number
 }) {
-  const {
-    language,
-    favorites,
-    toggleFavorite,
-  } = useVisitor()
+  const { language } = useVisitor()
 
   const t = useText()
   const content = publishedText(place, language)
@@ -41,17 +37,6 @@ export function PlaceCard({
         <PlaceImage uri={place.images[0]} title={title} />
       </Link>
 
-      <button
-        className="heart icon-button"
-        aria-label={t(
-          favorites.has(place.id) ? 'unfavorite' : 'favorite',
-        )}
-        aria-pressed={favorites.has(place.id)}
-        onClick={() => toggleFavorite(place.id)}
-      >
-        <Icon name="heart" />
-      </button>
-
       <div className="card-content">
         <h3>
           <Link to={'/places/' + place.id}>{title}</Link>
@@ -63,7 +48,7 @@ export function PlaceCard({
 
         <p className="card-location">
           <Icon name="pin" />
-          {content ? t('city') : t('missing')}
+          {content ? content.address || t('city') : t('missing')}
 
           {distance !== undefined && (
             <span>{(distance / 1000).toFixed(2)} km</span>

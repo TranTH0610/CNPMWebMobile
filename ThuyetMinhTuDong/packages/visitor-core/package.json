@@ -6,13 +6,15 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./react": "./src/react.tsx",
-    "./journey": "./src/journey.ts",
-    "./journey/react": "./src/journey-react.tsx",
-    "./journey/data": "./src/journey-data.ts"
+    "./react": "./src/react/react.tsx",
+    "./journey": "./src/journey/journey.ts",
+    "./journey/react": "./src/journey/journey-react.tsx",
+    "./journey/data": "./src/journey/journey-data.ts",
+    "./presence": "./src/presence/presence.ts",
+    "./presence/react": "./src/presence/presence-react.ts"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs tests/journey.test.cjs",
+    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs tests/journey.test.cjs tests/audio.test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx"
   },

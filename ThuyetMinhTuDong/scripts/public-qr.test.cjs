@@ -61,3 +61,13 @@ test('QR công khai nhận production bundle và loại dev/HTML fallback', () =
   assert.equal(isBuiltGuidePage(html + '<script src="/@vite/client"></script>'), false)
   assert.equal(builtEntry('<html>fallback</html>'), null)
 })
+
+// CHỨC NĂNG: Website chết hoặc trả trang lỗi không được ghi thành QR mới.
+test('QR chỉ xuất khi website sẵn sàng, từ chối lỗi HTTP và HTML không đúng app', async () => {
+  const { verifyWebsite } = require('./create-public-qr.cjs')
+  const page = '<title>HueGuide</title><div id="root"></div><script src="/assets/index-new.js"></script>'
+  await verifyWebsite('https://guide.test/', async () => new Response(page))
+  await assert.rejects(verifyWebsite('https://guide.test/', async () => new Response('Tunnel unavailable', { status: 503 })), /HTTP 503/)
+  await assert.rejects(verifyWebsite('https://guide.test/', async () => new Response('<html>Error</html>')), /không trả về/)
+  await assert.rejects(verifyWebsite('https://guide.test/', async () => { throw new Error('ENOTFOUND') }), /ENOTFOUND/)
+})

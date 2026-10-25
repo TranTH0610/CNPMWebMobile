@@ -10,7 +10,7 @@ import { ListenButton } from '../components/ListenButton'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { availableLanguages, LANGUAGES, publishedText } from '@travelguide/visitor-core'
+import { availableLanguages, LANGUAGES, publishedText, validPoint } from '@travelguide/visitor-core'
 import { usePublishedPlace } from '../hooks/usePlaces'
 import { useText } from '../i18n/index'
 import { useVisitor } from '../hooks/useVisitor'
@@ -95,6 +95,7 @@ export default function DetailScreen({
         <Text style={ui.title}>
           {content?.title ?? place.canonicalTitle}
         </Text>
+        {place.period && <Text style={ui.muted}>{place.period}</Text>}
 
         <Text style={ui.muted}>
           {t('available')}
@@ -147,10 +148,11 @@ export default function DetailScreen({
           <State message="missing" />
         )}
 
+
         <Text style={ui.muted}>
-          {place.position?.verified
+          {place.position && validPoint(place.position)
             ? (
-              t('coordinates')
+              t(place.position.verified ? 'coordinates' : 'mapCoordinates')
               + ': '
               + place.position.lat
               + ', '

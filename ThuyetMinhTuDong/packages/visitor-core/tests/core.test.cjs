@@ -13,29 +13,29 @@ const {
   publishedText,
   availableLanguages,
   CatalogError,
-} = require('../.test-build/catalog.js')
+} = require('../.test-build/catalog/catalog.js')
 
 const {
   MOCK_PLACES,
   loadMockCatalog,
-} = require('../.test-build/mock.js')
+} = require('../.test-build/data/mock.js')
 
-const { languageOf } = require('../.test-build/model.js')
+const { languageOf } = require('../.test-build/domain/model.js')
 
 const {
   normalize,
   selectPlaces,
   paginate,
   distanceTo,
-} = require('../.test-build/search.js')
+} = require('../.test-build/catalog/search.js')
 
 const {
   parsePlaceQr,
   parseQrTarget,
   placeUrl,
-} = require('../.test-build/qr.js')
+} = require('../.test-build/links/qr.js')
 
-const { messages } = require('../.test-build/messages.js')
+const { messages } = require('../.test-build/i18n/messages.js')
 
 const policy = {
   allowedOrigins: ['https://hue-guide.example'],
@@ -165,7 +165,7 @@ test('UC03: tìm kiếm và lọc', () => {
   assert.deepEqual(
     selectPlaces(MOCK_PLACES, options)
       .map((place) => place.id),
-    ['ngo-mon'],
+    ['dien-thai-hoa', 'ky-dai', 'ngo-mon'],
   )
 
   assert.equal(
@@ -197,7 +197,7 @@ test('UC03: tìm kiếm và lọc', () => {
     selectPlaces(MOCK_PLACES, {
       ...options,
       language: 'en',
-      query: 'điện thái hòa',
+      query: 'lễ đăng quang',
     }).length,
     0,
   )
@@ -258,7 +258,7 @@ test('UC03: tìm kiếm và lọc', () => {
     ).map(
       (place) => place.id,
     ),
-    ['ngo-mon'],
+    ['dien-thai-hoa', 'ky-dai', 'ngo-mon'],
   )
 
   assert.equal(
@@ -300,14 +300,14 @@ test('UC03: tìm kiếm và lọc', () => {
   )
 
   // CHỨC NĂNG: Không tìm nhầm bản Việt khi đang dùng Anh.
-  // XỬ LÝ: Dùng cả cụm vì từ "dien" có thể nằm trong tên Anh Dien Tho.
+  // XỬ LÝ: Dùng cụm chỉ có trong bản Việt; phiên âm tên riêng có thể xuất hiện trong bản Anh.
   assert.equal(
     selectPlaces(
       MOCK_PLACES,
       {
         ...options,
         language: 'en',
-        query: 'điện thái hòa',
+        query: 'lễ đăng quang',
       },
     ).length,
     0,
@@ -497,8 +497,8 @@ test('UC03: danh mục, khu vực và tìm theo ngôn ngữ', () => {
 // CHỨC NĂNG: Mỗi điểm phải có đúng ảnh, nguồn/giấy phép và asset hai nền tảng.
 test('UC02/04: đủ ảnh đóng gói và nguồn cho tám địa điểm', () => {
   const fs = require('node:fs'), path = require('node:path')
-  const { PLACE_PHOTOS } = require('../.test-build/photos.js')
-  const { MOCK_PLACES } = require('../.test-build/mock.js')
+  const { PLACE_PHOTOS } = require('../.test-build/data/photos.js')
+  const { MOCK_PLACES } = require('../.test-build/data/mock.js')
   assert.equal(MOCK_PLACES.length, 8)
   for (const place of MOCK_PLACES) {
     const photo = PLACE_PHOTOS[place.id]
@@ -511,4 +511,14 @@ test('UC02/04: đủ ảnh đóng gói và nguồn cho tám địa điểm', () 
     assert.equal(web[0], 0xff); assert.equal(web[1], 0xd8)
   }
   assert.ok(PLACE_PHOTOS['dien-can-chanh'].note.vi.includes('2015'))
+})
+
+// CHỨC NĂNG: Cô lập dữ liệu ngôn ngữ, tránh phụ thuộc tên riêng trùng phiên âm.
+test('UC03: không tìm sang bản Việt khi đang chọn Anh',()=>{
+ const p=JSON.parse(JSON.stringify(MOCK_PLACES[0]))
+ p.content.vi={...p.content.vi,title:'Bí mật Việt',summary:'',address:'',body:'Mật khẩu riêng'}
+ p.content.en={...p.content.en,title:'English only',summary:'',address:'',body:'An English description'}
+ const options={language:'en',query:'bí mật',zone:null,order:'name'}
+ assert.equal(selectPlaces([p],options).length,0)
+ assert.equal(selectPlaces([p],{...options,language:'vi'}).length,1)
 })

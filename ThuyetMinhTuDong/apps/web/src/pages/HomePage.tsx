@@ -6,7 +6,7 @@
 
 import { resolvePlaceImage } from '../services/placeImages'
 import { Catalogue } from '../components/Catalogue'
-import { useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { categoryOf, HERO_IMAGE } from '@travelguide/visitor-core'
 import type { Category } from '@travelguide/visitor-core'
@@ -22,22 +22,60 @@ export function HomePage() {
   const navigate = useNavigate()
 
   const [query, setQuery] = useState('')
+  const [searchRequired, setSearchRequired] = useState(false)
+  const searchInput = useRef<HTMLInputElement>(null)
   const [selected, setSelected] = useState<Category[]>([])
   const [failedImage, setFailedImage] = useState(false)
 
   const carousel = useRef<HTMLDivElement>(null)
+  const [carouselState, setCarouselState] = useState({ overflow: false, atStart: true, atEnd: true })
 
   const categories = [
     ...new Set(data.places.map(categoryOf)),
   ]
 
-  const featured = data.places.filter(
-    (place) => place.featured,
-  )
+  // CHỨC NĂNG: Chọn danh mục cập nhật ngay cả thẻ nổi bật và danh sách bên dưới.
+  // XỬ LÝ: Không dùng từ khóa chưa gửi để tránh lọc ngoài ý muốn khi đang gõ.
+  const featured = useMemo(() => data.places.filter(
+    (place) => place.featured && (!selected.length || selected.includes(categoryOf(place))),
+  ), [data.places, selected])
+
+  // CHỨC NĂNG: Chỉ hiện mũi tên khi có nội dung thật sự tràn chiều ngang.
+  // XỬ LÝ: Đổi danh mục về đầu carousel; đo lại khi resize và khóa nút ở hai đầu.
+  useEffect(() => {
+    const node = carousel.current
+    const update = () => {
+      const end = node ? Math.max(0, node.scrollWidth - node.clientWidth) : 0
+      const next = { overflow: end > 1, atStart: !node || node.scrollLeft <= 1,
+        atEnd: !node || node.scrollLeft >= end - 1 }
+      setCarouselState(previous => previous.overflow === next.overflow && previous.atStart === next.atStart
+        && previous.atEnd === next.atEnd ? previous : next)
+    }
+    if (!node) { update(); return }
+    node.scrollLeft = 0
+    update()
+    node.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(update) : undefined
+    observer?.observe(node)
+    return () => {
+      node.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+      observer?.disconnect()
+    }
+  }, [featured, data.loading, data.error])
 
   // CHỨC NĂNG: Chuyển điều kiện tìm từ hero sang trang kết quả.
   // XỬ LÝ: URLSearchParams mã hóa từ khóa đúng, không tự ghép ký tự đặc biệt.
   const submit = () => {
+    // CHỨC NĂNG: Yêu cầu nhập từ khóa khi gửi tìm kiếm.
+    // XỬ LÝ: trim loại khoảng trắng; giữ nguyên trang và đưa con trỏ về ô nhập.
+    if (!query.trim()) {
+      setSearchRequired(true)
+      searchInput.current?.focus()
+      return
+    }
+    setSearchRequired(false)
     const params = new URLSearchParams()
 
     if (query.trim()) params.set('q', query.trim())
@@ -76,9 +114,15 @@ export function HomePage() {
             <Icon name="search" />
 
             <input
+              ref={searchInput}
               type="search"
+              aria-invalid={searchRequired}
+              aria-describedby={searchRequired ? 'hero-search-error' : undefined}
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => {
+                setQuery(event.target.value)
+                if (event.target.value.trim()) setSearchRequired(false)
+              }}
               aria-label={t('search')}
               placeholder={t('search')}
             />
@@ -88,6 +132,12 @@ export function HomePage() {
               {t('searchButton')}
             </button>
           </form>
+
+          {searchRequired && (
+            <p id="hero-search-error" className="hero-search-error" role="alert">
+              {t('searchRequired')}
+            </p>
+          )}
 
           <CategoryChips
             categories={categories}
@@ -118,6 +168,14 @@ export function HomePage() {
               void data.reload()
             }}
           />
+        ) : !featured.length ? (
+          // CHỨC NĂNG: Không để khung trắng khi danh mục có địa điểm nhưng không có điểm nổi bật.
+          // XỬ LÝ: Không tự gắn nhãn nổi bật cho điểm thường; danh sách bên dưới vẫn giữ lọc.
+          <div className="featured-empty" role="status">
+            <Icon name="search" />
+            <div><strong>{t('featuredEmpty')}</strong><p>{t('featuredEmptyHint')}</p></div>
+            {!!selected.length && <button className="secondary" onClick={() => setSelected([])}>{t('clearAll')}</button>}
+          </div>
         ) : (
           <div className="carousel-wrap">
             <div ref={carousel} className="featured-carousel">
@@ -126,10 +184,11 @@ export function HomePage() {
               ))}
             </div>
 
-            <div className="carousel-actions">
+            {carouselState.overflow && <div className="carousel-actions">
               <button
                 className="icon-button"
                 aria-label={t('previous')}
+                disabled={carouselState.atStart}
                 onClick={() => carousel.current?.scrollBy({
                   left: -280,
                   behavior: 'smooth',
@@ -141,6 +200,7 @@ export function HomePage() {
               <button
                 className="icon-button"
                 aria-label={t('next')}
+                disabled={carouselState.atEnd}
                 onClick={() => carousel.current?.scrollBy({
                   left: 280,
                   behavior: 'smooth',
@@ -148,12 +208,12 @@ export function HomePage() {
               >
                 ›
               </button>
-            </div>
+            </div>}
           </div>
         )}
       </section>
 
-      <Catalogue data={data} />
+      <Catalogue data={data} categorySelection={selected} onCategorySelectionChange={setSelected} />
     </>
   )
 }

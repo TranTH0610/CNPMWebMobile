@@ -434,18 +434,8 @@ input[type="checkbox"] {
   white-space: nowrap;
 }
 
-.heart {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .93);
-  color: var(--text);
-}
 
-.heart[aria-pressed="true"] { color: var(--primary); }
-.heart[aria-pressed="true"] svg { fill: var(--primary); }
+
 
 /* CHỨC NĂNG: Bộ lọc, lưới/danh sách và phân trang.
  * XỬ LÝ: Sidebar thu gọn bằng media query, state React vẫn được giữ. */
@@ -540,12 +530,7 @@ input[type="checkbox"] {
 .list-view .place-card { display: flex; }
 .list-view .card-photo { flex: 0 0 190px; }
 .list-view .place-image { height: 145px; }
-.list-view .heart { top: 10px; right: 10px; }
-
-.list-view .card-content {
-  padding: 22px;
-  flex: 1;
-}
+.list-view 
 
 .pagination {
   display: flex;
@@ -736,3 +721,37 @@ button:not(:disabled):active, .button:active { filter: brightness(.92); }
 .language-options { gap: 8px; }
 .language-options button { border-radius: 11px; }
 .language-options button[aria-pressed="true"] { box-shadow: 0 3px 10px #1667e822; }
+
+/* CHỨC NĂNG: Thông báo tìm kiếm rỗng dễ đọc trên ảnh nền và màn hình nhỏ.
+ * XỬ LÝ: Dùng nền sáng, chữ đậm tương phản; role alert nằm ở component. */
+.hero-content .hero-search-error {
+  color: #922d22;
+  background: #fff1ef;
+  border: 1px solid #f0bdb5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  max-width: 100%;
+  margin: 0 0 14px;
+}
+
+/* CHỨC NĂNG: Bộ lọc có một ô tìm kiếm, nhãn rõ và gợi ý nằm ngoài ô nhập.
+ * XỬ LÝ: Viền focus nằm ở khung chung để tránh viền lồng; min-width 0 chống tràn sidebar. */
+.filter-search-group { margin: 18px 0 24px; }
+.filter-search-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.filter-search-field { min-height: 48px; gap: 10px; padding: 0 12px; background: var(--background); border-radius: 12px; margin-bottom: 8px; }
+.filter-search-field:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--soft); }
+.filter-search-field input[type="search"] { flex: 1; min-width: 0; width: 100%; padding: 10px 0; border: 0; border-radius: 0; background: transparent; font-size: 14px; outline: none; box-shadow: none; }
+.filter-search-field input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.filter-search-field .filter-search-clear { flex-shrink: 0; min-height: 36px; width: 36px; padding: 0; border: 0; border-radius: 8px; background: var(--soft); color: var(--text); font-size: 22px; }
+.filter-search-hint { font-size: 12px; line-height: 1.6; color: var(--muted); }
+
+/* CHỨC NĂNG: Khối nổi bật rỗng có thông báo ngắn, không giữ vùng trắng của carousel.
+ * XỬ LÝ: Trên điện thoại nội dung/nút tự xuống dòng, không đẩy tràn ngang. */
+.featured-empty { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 18px; border: 1px dashed var(--border); border-radius: 14px; background: var(--page); }
+.featured-empty > svg { width: 26px; height: 26px; flex-shrink: 0; color: var(--primary); }
+.featured-empty > div { flex: 1; min-width: min(220px,100%); }
+.featured-empty strong { font-size: 14px; }
+.featured-empty p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* CHỨC NĂNG: Khung ghi nguồn dùng chung chi tiết và biên tập, dễ đọc trên màn nhỏ. */
+.content-sources{padding:20px;border:1px solid var(--border,#dce5f3);border-radius:18px;background:#f5f8fd;line-height:1.7;overflow-wrap:anywhere}.content-sources h3{margin:0 0 8px}.content-sources ul{padding-left:20px}.content-sources p{margin:8px 0}

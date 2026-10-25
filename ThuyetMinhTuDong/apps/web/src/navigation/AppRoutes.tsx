@@ -4,13 +4,14 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+// CHỨC NĂNG: Bản du khách chỉ đăng ký các route công khai.
+// XỬ LÝ: Không import hoặc tải cây màn hình Admin; /admin không tồn tại ở bản này.
 import { Route, Routes } from 'react-router-dom'
 import { AppLayout } from '../layouts/AppLayout'
 import { HomePage } from '../pages/HomePage'
 import { PlacesPage } from '../pages/PlacesPage'
 import { DetailPage } from '../pages/DetailPage'
 import { JourneyPage } from '../pages/JourneyPage'
-import { QrPage } from '../pages/QrPage'
 import { AboutPage } from '../pages/AboutPage'
 import { NotFoundPage } from '../pages/NotFoundPage'
 
@@ -23,7 +24,6 @@ export function AppRoutes() {
         <Route path="/places" element={<PlacesPage />} />
         <Route path="/places/:id" element={<DetailPage />} />
         <Route path="/journey" element={<JourneyPage />} />
-        <Route path="/qr" element={<QrPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

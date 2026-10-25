@@ -20,10 +20,6 @@
       "destination": "/index.html"
     },
     {
-      "source": "/qr",
-      "destination": "/index.html"
-    },
-    {
       "source": "/about",
       "destination": "/index.html"
     }

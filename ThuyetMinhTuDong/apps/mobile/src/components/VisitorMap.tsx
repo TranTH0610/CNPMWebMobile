@@ -13,16 +13,17 @@ import { publishedText } from '@travelguide/visitor-core'
 import { useText } from '../i18n/index'
 import { useVisitor } from '../hooks/useVisitor'
 import { useJourney } from '../hooks/useJourney'
-import { MAP_POINTS } from '@travelguide/visitor-core/journey/data'
+import { mapPointFor } from '@travelguide/visitor-core/journey/data'
 
 export function VisitorMap({ selected, onOpen }: { selected?: string; onOpen: (id: string) => void }) {
  const { state } = useJourney(), { language } = useVisitor(), t = useText()
- const point = selected ? MAP_POINTS[selected] : undefined
+ const selectedPlace = state.places.find(place => place.id === selected)
+ const point = selectedPlace ? mapPointFor(selectedPlace) : undefined
  const open = onOpen
  return (__DEV__ || Platform.OS === 'ios' || process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ? <MapView style={styles.map}
           key={selected ?? 'all'} initialRegion={{ latitude: point?.lat ?? 16.468, longitude: point?.lng ?? 107.578,
             latitudeDelta: point ? 0.003 : 0.012, longitudeDelta: point ? 0.003 : 0.012 }}>
-          {state.places.map(place => { const p = MAP_POINTS[place.id]; return p ? <Marker key={place.id}
+          {state.places.map(place => { const p = mapPointFor(place); return p ? <Marker key={place.id}
             coordinate={{ latitude: p.lat, longitude: p.lng }} title={publishedText(place, language)?.title ?? place.canonicalTitle}
             onPress={() => open(place.id)} /> : null })}
           {state.fix && <Marker pinColor="blue" coordinate={{ latitude: state.fix.lat, longitude: state.fix.lng }} title={t('jMyLocation')} />}

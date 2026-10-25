@@ -124,11 +124,4 @@ export const explore = StyleSheet.create({
     gap: spacing.xs,
     backgroundColor: colors.overlay,
   },
-  favorite: {
-    position: 'absolute',
-    top: spacing.sm,
-    right: spacing.sm,
-    borderRadius: 30,
-    backgroundColor: colors.background,
-  },
 })

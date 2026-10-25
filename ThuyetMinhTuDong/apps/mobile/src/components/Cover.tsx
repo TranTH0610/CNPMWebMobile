@@ -6,7 +6,7 @@
 
 import { explore } from '../styles/explore'
 import { colors } from '../theme'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -14,7 +14,7 @@ import { resolvePlaceImage } from '../services/placeImages'
 import { useText } from '../i18n/index'
 
 // CHỨC NĂNG: Hiển thị ảnh co theo khung hoặc placeholder.
-// XỬ LÝ: URL đổi thì reset lỗi; dùng absoluteFill đúng phiên bản RN hiện tại.
+// XỬ LÝ: Lỗi gắn với URI để callback ảnh cũ không làm hỏng ảnh mới; thiếu asset cũng hiện placeholder.
 export function Cover({
   uri,
   style,
@@ -22,10 +22,11 @@ export function Cover({
   uri?: string
   style?: StyleProp<ViewStyle>
 }) {
-  const [failed, setFailed] = useState(false)
+  const [failedUri, setFailedUri] = useState<string>()
+  const source = resolvePlaceImage(uri)
+  const failed = failedUri === uri
   const t = useText()
 
-  useEffect(() => setFailed(false), [uri])
 
   return (
     <View
@@ -37,11 +38,15 @@ export function Cover({
         style,
       ]}
     >
-      {uri && !failed ? (
+      {source && !failed ? (
         <Image
-          source={resolvePlaceImage(uri)}
-          onError={() => setFailed(true)}
-          style={StyleSheet.absoluteFill}
+          key={uri}
+          source={source}
+          onError={() => setFailedUri(uri)}
+          // CHỨC NĂNG: Ghi đè kích thước gốc mà RN tự thêm cho ảnh đóng gói.
+          // XỬ LÝ: absoluteFill chỉ đặt vị trí; width/height 100% buộc ảnh co đúng khung
+          // của thumbnail, ảnh hero và ảnh player. Nếu thiếu, chỉ thấy góc trời/tường của JPG.
+          style={[StyleSheet.absoluteFill, { width: '100%', height: '100%' }]}
           resizeMode="cover"
         />
       ) : (

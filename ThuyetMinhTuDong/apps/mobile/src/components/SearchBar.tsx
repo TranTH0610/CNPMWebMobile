@@ -18,6 +18,7 @@ export function SearchBar({
   onBack,
   onFocus,
   onFilter,
+  onSubmit,
   autoFocus = false,
 }: {
   value: string
@@ -25,6 +26,7 @@ export function SearchBar({
   onBack?: () => void
   onFocus?: () => void
   onFilter?: () => void
+  onSubmit?: () => void
   autoFocus?: boolean
 }) {
   const t = useText()
@@ -58,6 +60,8 @@ export function SearchBar({
           value={value}
           onChangeText={onChange}
           onFocus={onFocus}
+          returnKeyType="search"
+          onSubmitEditing={onSubmit}
           autoFocus={autoFocus}
           placeholder={t('search')}
           placeholderTextColor={colors.muted}

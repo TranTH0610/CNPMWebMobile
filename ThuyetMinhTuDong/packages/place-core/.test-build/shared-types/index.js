@@ -5,7 +5,7 @@
  *
  * Được dùng bởi:
  * - packages/place-core/src/index.ts
- * - packages/place-core/src/mockPlaces.ts
+ * - packages/place-core/src/data/mockPlaces.ts
  * - apps/mobile/src/services/places.ts
  * - Các service/hook của web ở giai đoạn 3.
  *

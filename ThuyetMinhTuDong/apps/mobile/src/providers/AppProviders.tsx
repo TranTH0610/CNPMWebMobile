@@ -4,6 +4,8 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { AdminProvider } from '@travelguide/admin-core/react'
+import { adminService, publicCatalog } from '../services/admin/services'
 import type { ReactNode } from 'react'
 import { ActivityIndicator } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -22,12 +24,13 @@ export function AppProviders({ children }: { children: ReactNode }) {
       <VisitorProvider
         boot={boot}
         storage={storage}
+        catalog={publicCatalog}
         deviceLanguage={deviceLanguage}
         loading={<ActivityIndicator />}
       >
-        <JourneyProvider adapters={journeyAdapters}>
+        <AdminProvider service={adminService}><JourneyProvider adapters={journeyAdapters}>
           {children}
-        </JourneyProvider>
+        </JourneyProvider></AdminProvider>
       </VisitorProvider>
     </SafeAreaProvider>
   )

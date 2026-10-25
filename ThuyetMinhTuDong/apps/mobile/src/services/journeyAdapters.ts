@@ -4,6 +4,8 @@
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
+import { narrationKey, playbackCoordinator } from '@travelguide/visitor-core'
+import { narrationAssets } from './narrationAssets'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AppState } from 'react-native'
 import * as Location from 'expo-location'
@@ -45,7 +47,14 @@ export const journeyAdapters: JourneyAdapters = {
   },
   async open(url, title): Promise<Track> {
     await setAudioModeAsync({ playsInSilentMode: true, shouldPlayInBackground: true, interruptionMode: 'doNotMix' })
-    const source = url.startsWith('demo:') ? demo[url.slice(5)] : url
+    // CHỨC NĂNG: Đọc asset cùng bài với web; bản Admin vừa tạo tải từ API RAM.
+    // XỬ LÝ: Không dùng localhost của điện thoại; URL lấy từ cấu hình nền tảng.
+    const key = narrationKey(url)
+    const admin = process.env.EXPO_PUBLIC_APP_TARGET === 'admin'
+    const base = admin ? process.env.EXPO_PUBLIC_ADMIN_API_URL : process.env.EXPO_PUBLIC_CATALOG_API_URL
+    if (url.startsWith('narration:') && !key) throw new Error('Invalid narration key')
+    const source = key ? narrationAssets[key] ?? (base ? base.replace(/\/$/, '') + '/audio/' + (admin ? 'preview/' : 'published/') + key + '.mp3' : undefined)
+      : url.startsWith('demo:') ? demo[url.slice(5)] : url
     if (!source) throw new Error('Missing audio')
     const player = createAudioPlayer(source, { updateInterval: 250 })
     try {
@@ -58,16 +67,31 @@ export const journeyAdapters: JourneyAdapters = {
       })
     } catch (error) { player.remove(); throw error }
     let disposed = false
+    const owner = { pause: () => { if (!disposed) player.pause() } }
     return {
       duration: player.duration,
-      play: async () => { player.setActiveForLockScreen(true, { title }); player.play() },
+      // CHỨC NĂNG: Cả preview và bài du khách tranh quyền qua cùng coordinator.
+      play: async () => {
+        if (disposed) throw new Error('Audio closed')
+        playbackCoordinator.claim(owner)
+        try { player.setActiveForLockScreen(true, { title }); player.play() }
+        catch (error) { playbackCoordinator.release(owner); throw error }
+      },
       pause: () => player.pause(), seek: seconds => player.seekTo(seconds), rate: value => player.setPlaybackRate(value),
+      volume: value => { player.volume = value },
       listen: callback => {
         const listener = player.addListener('playbackStatusUpdate', s => callback({ position: s.currentTime,
           duration: s.duration, playing: s.playing, ended: s.didJustFinish, error: Boolean(s.error) }))
         return () => listener.remove()
       },
-      dispose: () => { if (!disposed) { disposed = true; player.setActiveForLockScreen(false); player.remove() } },
+      dispose: () => {
+        if (!disposed) {
+          const owns = playbackCoordinator.owns(owner)
+          disposed = true; playbackCoordinator.release(owner)
+          if (owns) player.setActiveForLockScreen(false)
+          player.remove()
+        }
+      },
     }
   },
 }

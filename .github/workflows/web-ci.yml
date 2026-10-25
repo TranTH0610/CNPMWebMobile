@@ -27,6 +27,8 @@ jobs:
       - run: npm run typecheck --workspace=@travelguide/visitor-core
       - run: npm run lint --workspace=web
       - run: npm run lint --workspace=@travelguide/visitor-core
+      - run: npm run typecheck --workspace=@travelguide/admin-core
+      - run: npm run lint --workspace=@travelguide/admin-core
       - run: npm test
       - run: npm run build:web
       - uses: actions/upload-artifact@v4
