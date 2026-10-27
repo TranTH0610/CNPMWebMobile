@@ -8,6 +8,7 @@ import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, Sc
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { useHeaderHeight } from '@react-navigation/elements'
 import { useAdmin, useAdminText } from '@travelguide/admin-core/react'
 import type { ManagedPlace } from '@travelguide/admin-core'
 import { LANGUAGES, type Language } from '@travelguide/visitor-core'
@@ -18,7 +19,7 @@ type IconName = ComponentProps<typeof Ionicons>['name']
 // CHỨC NĂNG: Tập trung style Admin, không sửa style của app du khách.
 // XỬ LÝ: Dùng token chung; bố cục mềm và chữ có thể xuống dòng khi dịch dài.
 export const styles = StyleSheet.create({
- page:{flex:1,backgroundColor:colors.page}, content:{padding:spacing.lg,gap:20,paddingBottom:32},
+ page:{flex:1,backgroundColor:colors.page}, content:{flexGrow:1,padding:spacing.lg,gap:20,paddingBottom:32},
  card:{padding:spacing.lg,backgroundColor:colors.background,borderRadius:20,borderWidth:1,borderColor:colors.border,gap:12},
  title:{fontSize:26,lineHeight:34,fontWeight:'700',color:colors.text,letterSpacing:-0.5},
  heading:{fontSize:18,lineHeight:26,fontWeight:'700',color:colors.text},
@@ -83,8 +84,10 @@ export function LanguageTabs({value,onChange}:{value:Language;onChange:(language
 export function DemoNotice() { const t=useAdminText();return <View style={styles.notice}><Ionicons name="information-circle-outline" size={17} color={colors.primary}/><Text style={[styles.muted,{flex:1}]}>{t('demo')}</Text></View> }
 // CHỨC NĂNG: Biểu mẫu tránh bàn phím che nội dung; thông báo dữ liệu nằm cuối trang.
 export function Frame({children}:{children:ReactNode}) {
- return <SafeAreaView style={styles.page} edges={['left','right','bottom']}><KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS==='ios'?'padding':undefined} keyboardVerticalOffset={88}>
-  <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>{children}<DemoNotice/></ScrollView>
+ // Dùng chiều cao header thực tế thay vì 88 cố định khi bàn phím mở.
+ const headerHeight=useHeaderHeight()
+ return <SafeAreaView style={styles.page} edges={['left','right','bottom']}><KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS==='ios'?'padding':undefined} keyboardVerticalOffset={headerHeight}>
+  <ScrollView style={{flex:1}} contentInsetAdjustmentBehavior="automatic" automaticallyAdjustsScrollIndicatorInsets keyboardShouldPersistTaps="handled" contentContainerStyle={styles.content}>{children}<DemoNotice/></ScrollView>
  </KeyboardAvoidingView></SafeAreaView>
 }
 export function Feedback({state}:{state:ReturnType<typeof useAdmin>}) {

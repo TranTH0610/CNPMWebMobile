@@ -1,0 +1,13 @@
+cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
+npm run dev
+cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
+npm run dev:admin
+qr 
+cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
+npm run demo:public
+http://127.0.0.1:5174/admin
+http://127.0.0.1:5173/
+cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
+npm run start --workspace=mobile -- --lan --port 8081
+cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
+npm run start:admin --workspace=mobile -- --lan

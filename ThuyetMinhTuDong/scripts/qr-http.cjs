@@ -32,7 +32,7 @@ function readWithPublicDns(url) {
 async function fetchQrPage(url, options) {
   try { return await fetch(url, options) }
   catch (error) {
-    if (error.cause?.code !== 'ENOTFOUND' || !new URL(url).hostname.endsWith('.trycloudflare.com')) throw error
+    if (!['ENOTFOUND', 'EAI_AGAIN'].includes(error.cause?.code) || !new URL(url).hostname.endsWith('.trycloudflare.com')) throw error
     const body = await readWithPublicDns(url)
     if (body === null) throw error
     return new Response(body, { status: 200, headers: { 'Content-Type': 'text/html' } })

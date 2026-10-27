@@ -129,7 +129,12 @@ export class JourneyController {
   // CHỨC NĂNG: Refresh danh mục sau công bố, không dừng nguồn audio đang nghe.
   async refreshCatalog() {
     const life = this.lifecycle
-    try { const places = await this.ports.catalog.list(); if (life === this.lifecycle) this.set({ places }) }
+    try {
+      const places = await this.ports.catalog.list()
+      // CHỨC NĂNG: API phục hồi thì gỡ lỗi tải cũ, tránh player lỗi dù danh sách đã có.
+      // XỬ LÝ: Chỉ gỡ loadError; giữ lỗi audio/GPS/bộ nhớ và phiên đang nghe.
+      if (life === this.lifecycle) this.set({ places, error: this.state.error === 'loadError' ? undefined : this.state.error })
+    }
     catch { if (life === this.lifecycle) this.set({ error: 'loadError' }) }
   }
   // CHỨC NĂNG: Ghi tuần tự để phản hồi ghi cũ không đè tiến độ mới.

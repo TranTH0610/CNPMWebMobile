@@ -67,6 +67,8 @@ export default function RootNavigator() {
           component={DetailScreen}
           options={{
             title: t('details'),
+            // Header không trong suốt để nội dung và nhóm ngôn ngữ không đi dưới thanh tiêu đề.
+            headerTransparent: false,
           }}
         />
 

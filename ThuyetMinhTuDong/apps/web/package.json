@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "node ../../scripts/start-web.cjs",
     "prebuild": "node ../../scripts/generate-app-links.cjs --if-configured",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
-    "dev:admin": "vite --mode admin --host 127.0.0.1 --port 5174 --strictPort",
+    "dev:admin": "node ../../scripts/start-web.cjs --admin",
     "build:admin": "vite build --mode admin",
     "preview:admin": "vite preview --mode admin --host 127.0.0.1 --port 4174 --strictPort"
   },

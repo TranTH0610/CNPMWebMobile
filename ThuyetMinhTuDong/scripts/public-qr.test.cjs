@@ -71,3 +71,26 @@ test('QR chỉ xuất khi website sẵn sàng, từ chối lỗi HTTP và HTML k
   await assert.rejects(verifyWebsite('https://guide.test/', async () => new Response('<html>Error</html>')), /không trả về/)
   await assert.rejects(verifyWebsite('https://guide.test/', async () => { throw new Error('ENOTFOUND') }), /ENOTFOUND/)
 })
+
+// CHỨC NĂNG: QR dùng IPv4 và báo đúng lỗi kết nối edge, không xuất QR chưa kiểm tra.
+test('Tunnel dùng IPv4 và giữ HTTP/2', () => {
+  const { cloudflaredArgs } = require('./start-public-demo.cjs')
+  const args = cloudflaredArgs('http://127.0.0.1:4173')
+  assert.equal(args[args.indexOf('--edge-ip-version') + 1], '4')
+  assert.equal(args[args.indexOf('--protocol') + 1], 'http2')
+  assert.equal(args[args.indexOf('--url') + 1], 'http://127.0.0.1:4173')
+})
+test('URL được cấp chưa đủ: lỗi edge chỉ rõ TCP 7844', () => {
+  const { tunnelFailure } = require('./start-public-demo.cjs')
+  assert.match(tunnelFailure('Unable to establish connection: dial tcp 198.41.200.33:7844: i/o timeout'), /TCP 7844/)
+  assert.doesNotMatch(tunnelFailure('Unable to establish connection\nRegistered tunnel connection'), /TCP 7844/)
+})
+test('Xác minh QR thử lại lỗi kết nối tạm thời nhưng vẫn kiểm tra HTML', async () => {
+  const { verifyWebsite } = require('./create-public-qr.cjs')
+  let calls = 0
+  await verifyWebsite('https://guide.test/', async () => {
+    if (++calls === 1) throw new Error('fetch failed')
+    return new Response('<div id="root"></div><script src="/assets/index-test.js"></script>')
+  })
+  assert.equal(calls, 2)
+})

@@ -219,3 +219,21 @@ test('UC06: gợi ý GPS dùng position mới công bố',()=>{
  const place={...MOCK_PLACES[1],position:{lat:0,lng:0,verified:true}}
  assert.equal(nearest([place],{'ngo-mon':{lat:16.4676824,lng:107.5791834}},fix()),'ngo-mon')
 })
+
+
+// CHỨC NĂNG: Hồi quy lỗi player vẫn đỏ sau khi API đã kết nối lại.
+test('UC02/07: API phục hồi gỡ loadError, không tự phát audio', async () => {
+ let offline=true
+ const {engine,tracks}=fixture({catalog:createCatalog(async()=>{if(offline)throw Error('offline');return TEST_PLACES})})
+ await engine.start();assert.equal(engine.snapshot().error,'loadError')
+ offline=false;await engine.refreshCatalog()
+ assert.equal(engine.snapshot().error,undefined)
+ assert.equal(engine.snapshot().places.length,TEST_PLACES.length)
+ assert.equal(tracks.length,0);engine.dispose()
+})
+test('UC07: refresh danh mục không xóa lỗi audio thật', async () => {
+ const {engine}=fixture({open:async()=>{throw Error('audio offline')}})
+ await engine.start();await engine.play('ngo-mon','vi')
+ assert.equal(engine.snapshot().error,'audioFailed')
+ await engine.refreshCatalog();assert.equal(engine.snapshot().error,'audioFailed');engine.dispose()
+})

@@ -15,7 +15,7 @@ import { useAdmin,useAdminText } from '@travelguide/admin-core/react'
 import { Action } from '../../components/Action'
 import { DemoNotice,Feedback,Field,PageHeader,StatusBadge,LanguageTabs,SectionHeading,styles,AudioPreview } from '../../components/admin/AdminUI'
 export function ReviewsScreen(){const state=useAdmin(),t=useAdminText(),places=state.data?.places.filter(p=>['submitted','approved','changes'].includes(p.workflow))??[]
- return <SafeAreaView style={styles.page} edges={['left','right','bottom']}><FlatList data={places} keyExtractor={p=>p.id+p.revision+p.workflow} contentContainerStyle={styles.content}
+ return <SafeAreaView style={styles.page} edges={['left','right','bottom']}><FlatList style={{flex:1}} contentInsetAdjustmentBehavior="automatic" automaticallyAdjustsScrollIndicatorInsets keyboardShouldPersistTaps="handled" data={places} keyExtractor={p=>p.id+p.revision+p.workflow} contentContainerStyle={styles.content}
   ListHeaderComponent={<View style={{gap:16}}><PageHeader title={t('reviews')} description={t('reviewQueueHint')}/><Feedback state={state}/><Text style={styles.muted}>{places.length} {t('reviews')}</Text></View>}
   ListFooterComponent={<DemoNotice/>}
   ListEmptyComponent={!state.loading&&!state.error?<View style={[styles.card,{alignItems:'center',paddingVertical:32}]}><Ionicons name="shield-checkmark-outline" size={36} color={colors.primary}/><Text style={styles.muted}>{t('empty')}</Text></View>:undefined} renderItem={({item})=><Review place={item}/>}/></SafeAreaView>

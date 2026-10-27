@@ -31,7 +31,7 @@ async function read(url) {
     const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
     if (!response.ok && process.env.QR_DEBUG) console.log('HTTP', response.status, url)
     return response.ok ? await response.text() : null
-  } catch (error) { if (error.cause?.code === 'ENOTFOUND' && new URL(url).hostname.endsWith('.trycloudflare.com')) return readWithPublicDns(url); if (process.env.QR_DEBUG) console.log('NETWORK', url, error.cause?.code || error.message); return null }
+  } catch (error) { if (['ENOTFOUND', 'EAI_AGAIN'].includes(error.cause?.code) && new URL(url).hostname.endsWith('.trycloudflare.com')) return readWithPublicDns(url); if (process.env.QR_DEBUG) console.log('NETWORK', url, error.cause?.code || error.message); return null }
 }
 // CHỨC NĂNG: Kiểm tra HTML production và bundle JS thật, không nhận HTML fallback.
 // XỬ LÝ: So tên asset với dist hiện tại để không tái dùng server đang giữ bản cũ.
@@ -74,6 +74,18 @@ function publish(state) {
   console.log('SẴN SÀNG — đã kiểm tra HTTPS:', state.origin + '/')
   console.log('Ảnh QR:', path.join(folder, 'shared-qr.png'))
   console.log('Xem QR:', path.join(folder, 'index.html'))
+}
+// CHỨC NĂNG: Tránh đường IPv6 đang timeout khi máy có VPN/WARP.
+// XỬ LÝ: Giữ HTTP/2, vẫn xác minh HTTPS trước khi tạo QR; không sửa DNS/firewall.
+function cloudflaredArgs(origin) {
+  return ['tunnel', '--url', origin, '--http-host-header', 'localhost', '--protocol', 'http2', '--edge-ip-version', '4']
+}
+// CHỨC NĂNG: Phân biệt URL đã cấp với tunnel thực sự kết nối.
+// XỬ LÝ: Timeout tới edge cần kiểm tra mạng ra TCP 7844, không phát QR hỏng.
+function tunnelFailure(log) {
+  return /Unable to establish connection|dial tcp.*7844.*timeout|TLS handshake.*timeout/i.test(log) && !/Registered tunnel connection/i.test(log)
+    ? 'Cloudflare chưa kết nối được tới máy chủ tunnel (TCP 7844). Thử mạng khác hoặc kiểm tra VPN/WARP; không cần tắt firewall. Chưa tạo QR mới.'
+    : 'Website HTTPS chưa truy cập được; chưa tạo QR mới.'
 }
 async function main() {
   fs.mkdirSync(folder, { recursive: true })
@@ -129,7 +141,7 @@ async function main() {
     }
     const cloudflared = process.env.CLOUDFLARED_PATH || path.join(root, '.tools/cloudflared.exe')
     if (!fs.existsSync(cloudflared)) throw new Error('Thiếu cloudflared; đặt CLOUDFLARED_PATH trước khi chạy.')
-    tunnelProcess = launch(cloudflared, ['tunnel', '--url', local, '--http-host-header', 'localhost', '--protocol', 'http2'], root, 'cloudflared')
+    tunnelProcess = launch(cloudflared, cloudflaredArgs(local), root, 'cloudflared')
     console.log('Đang tạo địa chỉ HTTPS công khai...')
     let origin
     for (let i = 0; i < 60; i++) {
@@ -140,7 +152,7 @@ async function main() {
     if (!origin) throw new Error('Chưa nhận được URL HTTPS. Xem ' + tunnelProcess.log)
     let reachable = false
     for (let i = 0; i < 30; i++) { if (await probe(origin)) { reachable = true; break }; await delay(1000) }
-    if (!reachable) throw new Error('Website HTTPS chưa truy cập được; chưa tạo QR mới. Xem ' + tunnelProcess.log)
+    if (!reachable) throw new Error(tunnelFailure(fs.readFileSync(tunnelProcess.log, 'utf8')) + ' Xem ' + tunnelProcess.log)
     // CHỨC NĂNG: Chỉ tạo ảnh QR sau khi chính website HTTPS đã vượt kiểm tra.
     configureQr(origin)
     let configured = false
@@ -151,4 +163,4 @@ async function main() {
   } catch (error) { tunnelProcess?.child.kill(); webProcess?.child.kill(); presenceProcess?.child.kill(); throw error }
 }
 if (require.main === module) main().catch(error => { console.error(error.message); process.exitCode = 1 })
-module.exports = { GUIDE_MODULE_PATH, isGuideModule, isGuidePage, isBuiltGuidePage, builtEntry }
+module.exports = { GUIDE_MODULE_PATH, isGuideModule, isGuidePage, isBuiltGuidePage, builtEntry, cloudflaredArgs, tunnelFailure }

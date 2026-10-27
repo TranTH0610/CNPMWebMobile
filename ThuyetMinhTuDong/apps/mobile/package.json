@@ -4,9 +4,9 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "node ../../scripts/start-mobile-visitor.cjs",
+    "android": "node ../../scripts/start-mobile-visitor.cjs --android",
+    "ios": "node ../../scripts/start-mobile-visitor.cjs --ios",
     "lint": "eslint App.tsx src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
     "start:admin": "node ../../scripts/start-mobile-admin.cjs"

@@ -8,7 +8,10 @@ import { createCatalog } from '@travelguide/visitor-core'
 import { webOrigin } from '../platform'
 const base = process.env.EXPO_PUBLIC_ADMIN_API_URL || ''
 // URL public có thể đi qua web tunnel; địa chỉ quản lý LAN tách riêng.
-const publicBase = process.env.EXPO_PUBLIC_CATALOG_API_URL || (webOrigin ? webOrigin+'/api/catalog' : base)
+// CHỨC NĂNG: Bản Admin dùng cùng kho nội dung để nghe thử, không lệ thuộc tunnel du khách đã hết hạn.
+const publicBase = process.env.EXPO_PUBLIC_APP_TARGET === 'admin'
+  ? base
+  : process.env.EXPO_PUBLIC_CATALOG_API_URL || (webOrigin ? webOrigin+'/api/catalog' : base)
 export const adminService = createHttpAdminService(base)
 const publicService = createHttpAdminService(publicBase)
 export const gateClient = createGateClient(base)

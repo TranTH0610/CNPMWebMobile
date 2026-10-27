@@ -38,4 +38,19 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return context.resolveRequest(context, moduleName, platform)
 }
 
+// CHỨC NĂNG: Mỗi bản mobile dùng whitelist proxy riêng ngay trên Metro.
+// XỬ LÝ: Visitor chỉ đọc công bố/gửi heartbeat; không mở document/commands/preview admin.
+const { createAdminApiMiddleware } = require('../../scripts/metro-admin-proxy.cjs')
+const { createVisitorApiMiddleware } = require('../../scripts/metro-visitor-proxy.cjs')
+const previousMiddleware = config.server.enhanceMiddleware
+const isAdmin = process.env.EXPO_PUBLIC_APP_TARGET === 'admin'
+const adminProxy = createAdminApiMiddleware({ enabled: isAdmin, target: process.env.CATALOG_TARGET || 'http://127.0.0.1:8788' })
+const visitorProxy = createVisitorApiMiddleware({ enabled: !isAdmin,
+  catalogTarget: process.env.CATALOG_TARGET || 'http://127.0.0.1:8788',
+  presenceTarget: process.env.PRESENCE_TARGET || 'http://127.0.0.1:8787',
+})
+config.server.enhanceMiddleware = (middleware, server) => {
+  const next = previousMiddleware ? previousMiddleware(middleware, server) : middleware
+  return (req, res, fallback) => adminProxy(req, res, () => visitorProxy(req, res, () => next(req, res, fallback)))
+}
 module.exports = config

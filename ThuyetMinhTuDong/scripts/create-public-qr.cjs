@@ -34,7 +34,17 @@ function setVariable(file, key, value, backup) {
 // CHỨC NĂNG: Không tạo ảnh QR trỏ vào website đã chết hoặc trang lỗi tunnel.
 // XỬ LÝ: Timeout 10 giây, yêu cầu HTML đúng entry du khách; không bỏ kiểm tra TLS.
 async function verifyWebsite(href, fetcher = fetchQrPage) {
-  const response = await fetcher(href, { signal: AbortSignal.timeout(10000) })
+  // CHỨC NĂNG: Tunnel mới có thể chưa ổn định ở lần kết nối đầu.
+  // XỬ LÝ: Chỉ thử lại lỗi kết nối tối đa ba lần; mỗi lần có timeout riêng.
+  // HTTP lỗi hoặc HTML sai vẫn bị từ chối, không bỏ qua kiểm tra HTTPS.
+  let response
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try { response = await fetcher(href, { signal: AbortSignal.timeout(10000) }); break }
+    catch (error) {
+      if (attempt === 2) throw new Error('Không xác minh được HTTPS: ' + (error.cause?.code || error.message))
+      await new Promise(resolve => setTimeout(resolve, 750))
+    }
+  }
   if (!response.ok) throw new Error('Website QR chưa sẵn sàng (HTTP ' + response.status + '). Chạy npm run demo:public để tạo lại link.')
   const html = await response.text()
   if (!/id=["']root["']/.test(html) || !/src=["']\/(?:assets\/[^"']+\.js|src\/main\.tsx)["']/.test(html)) {

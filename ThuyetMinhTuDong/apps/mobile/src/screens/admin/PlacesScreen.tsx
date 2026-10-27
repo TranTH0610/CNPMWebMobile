@@ -20,7 +20,7 @@ export function AdminPlacesScreen({navigation}:NativeStackScreenProps<AdminStack
  const state=useAdmin(),t=useAdminText(),[query,setQuery]=useState(''),debounced=useDebounce(query)
  const places=useMemo(()=>state.data?.places.filter(p=>normalize(p.record.canonicalTitle).includes(normalize(debounced)))??[],[state.data,debounced])
  return <SafeAreaView style={styles.page} edges={['left','right','bottom']}>
-  <FlatList data={places} keyExtractor={place=>place.id} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"
+  <FlatList style={{flex:1}} contentInsetAdjustmentBehavior="automatic" automaticallyAdjustsScrollIndicatorInsets keyboardShouldPersistTaps="handled" data={places} keyExtractor={place=>place.id} contentContainerStyle={styles.content}
    ListHeaderComponent={<View style={{gap:16}}>
     <PageHeader title={t('places')} description={t('catalogHint')}/><Feedback state={state}/>
     <Action title={t('new')} icon="add-outline" variant="primary" onPress={()=>navigation.navigate('PlaceForm')}/>
