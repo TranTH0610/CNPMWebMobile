@@ -1,18 +1,39 @@
 <!--
-  FILE NÀY LÀM GÌ:
-  Entry HTML của Vite; nạp main.tsx.
-  Liên quan toàn bộ giao diện web UC01–UC05.
+  FILE NÀY LÀM GÌ
+  HTML gốc của Vite: UTF-8, viewport, nút root và script khởi động ứng dụng.
+  
+  VỊ TRÍ: apps/web/index.html
+  DÙNG BỞI: Entry hoặc nơi import module này trong ứng dụng.
 -->
+
+<!-- DÒNG BÊN DƯỚI: Khai báo HTML5 để trình duyệt dùng chế độ dựng trang chuẩn. -->
 <!doctype html>
+<!-- DÒNG BÊN DƯỚI: Mở vùng html lang="vi" của tài liệu; các phần tử con nằm trong vùng này. -->
 <html lang="vi">
+  <!-- DÒNG BÊN DƯỚI: Mở vùng head của tài liệu; các phần tử con nằm trong vùng này. -->
   <head>
+    <!-- UTF-8 giúp tiếng Việt và các ngôn ngữ không bị lỗi ký tự. -->
+    <!-- DÒNG BÊN DƯỚI: Chọn UTF-8 để tiếng Việt và các ngôn ngữ hiển thị đúng ký tự. -->
     <meta charset="UTF-8" />
+    <!-- Viewport theo thiết bị để CSS responsive hiển thị đúng trên điện thoại. -->
+    <!-- DÒNG BÊN DƯỚI: Đặt viewport theo thiết bị để CSS responsive đúng trên điện thoại. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- DÒNG BÊN DƯỚI: Đặt tên trang trên tab trình duyệt. -->
     <title>HueGuide</title>
+  <!-- DÒNG BÊN DƯỚI: Đóng vùng HTML tương ứng để cấu trúc trang đúng phân cấp. -->
   </head>
 
+  <!-- DÒNG BÊN DƯỚI: Mở vùng body của tài liệu; các phần tử con nằm trong vùng này. -->
   <body>
+    <!-- React gắn toàn bộ cây giao diện vào phần tử root này. -->
+    <!-- DÒNG BÊN DƯỚI: Tạo nút DOM gốc để React gắn toàn bộ cây giao diện vào. -->
     <div id="root"></div>
+    <!-- Vite nạp entry để khởi động website. -->
+    <!-- DÒNG BÊN DƯỚI: Nạp entry JavaScript/TypeScript dạng module; Vite xử lý và khởi động ứng dụng từ đây. -->
     <script type="module" src="/src/main.tsx"></script>
+  <!-- DÒNG BÊN DƯỚI: Đóng vùng HTML tương ứng để cấu trúc trang đúng phân cấp. -->
   </body>
+<!-- DÒNG BÊN DƯỚI: Đóng vùng HTML tương ứng để cấu trúc trang đúng phân cấp. -->
 </html>
+<!-- TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất quán
+  và dễ bảo trì. -->

@@ -1,236 +1,744 @@
-/*
- * FILE NÀY LÀM GÌ:
- * Định dạng web desktop/tablet/mobile theo mockup UC01–UC05.
- * main.tsx nạp; màu và spacing được truyền từ ui-tokens thành CSS variables.
+/**
+ * FILE NÀY LÀM GÌ
+ * CSS nền, trang chủ, danh mục và chi tiết du khách; bao gồm các quy tắc responsive của website.
+ *
+ * VỊ TRÍ: apps/web/src/styles/index.css
+ * DÙNG BỞI: apps/web/src/main-admin.tsx; apps/web/src/main.tsx.
  */
-
 /* CHỨC NĂNG: Nền, chữ và điều khiển chung.
  * XỬ LÝ: Focus rõ cho bàn phím, vùng bấm tối thiểu 40px. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector *: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * box-sizing: border-box. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 * { box-sizing: border-box; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector html: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * scroll-behavior: smooth. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 html { scroll-behavior: smooth; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector body: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 body {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * -webkit-font-smoothing: antialiased. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   -webkit-font-smoothing: antialiased;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * text-rendering: optimizeLegibility. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   text-rendering: optimizeLegibility;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--page);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--text);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font: 14px/1.55 "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans", "Noto Sans CJK SC", "Noto Sans JP", Arial, sans-serif. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   font: 14px/1.55 "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans", "Noto Sans CJK SC", "Noto Sans JP", Arial, sans-serif;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * text-decoration: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 a { color: var(--primary); text-decoration: none; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector button, input, select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font: inherit. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 button, input, select { font: inherit; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector button, .button, .secondary: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 button, .button, .secondary {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 40px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   min-height: 40px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 8px 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 8px 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 1px solid var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ */
   font-weight: 600;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * line-height: 1.5. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
   line-height: 1.5;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * transition: background-color .15s, box-shadow .15s, border-color .15s. Làm thay đổi thuộc tính diễn ra theo thời gian đã chỉ định.
+ */
   transition: background-color .15s, box-shadow .15s, border-color .15s;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * cursor: pointer. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   cursor: pointer;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: inline-flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 7px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 7px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector button, .button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 button, .button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--white);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .secondary: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .secondary {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--text);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-color: var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-color: var(--border);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector button:disabled: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * opacity: .5. Điều chỉnh độ mờ để thể hiện trạng thái.
+ * cursor: default. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 button:disabled { opacity: .5; cursor: default; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 summary:focus-visible {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * outline: 3px solid var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   outline: 3px solid var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * outline-offset: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   outline-offset: 3px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector h1, h2, h3, p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ */
 h1, h2, h3, p { margin: 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 22px. Quy định cỡ chữ.
+ * line-height: 1.3. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
 h2 { font-size: 22px; line-height: 1.3; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 15px. Quy định cỡ chữ.
+ * line-height: 1.4. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
 h3 { font-size: 15px; line-height: 1.4; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector input[type="search"],
+input[type="text"],
+select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 input[type="search"],
 input[type="text"],
 select {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 40px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   min-height: 40px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 8px 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 8px 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--text);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 1px solid var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 9px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 9px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 100%. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 100%;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector fieldset: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * margin: 20px 0. Tạo khoảng cách ngoài phần tử.
+ */
 fieldset { border: 0; padding: 0; margin: 20px 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector legend: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-weight: 700. Tạo độ nhấn chữ theo cấp thông tin.
+ * margin-bottom: 8px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 legend { font-weight: 700; margin-bottom: 8px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector input[type="checkbox"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 input[type="checkbox"] {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * accent-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   accent-color: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * height: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   height: 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex-shrink: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .container: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .container {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: min(1240px, 100%). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: min(1240px, 100%);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: auto. Tạo khoảng cách ngoài phần tử.
+ */
   margin: auto;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 16px 22px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 16px 22px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .icon-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .icon-button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 8px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 8px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-width: 40px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
   min-width: 40px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 40px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   min-height: 40px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: inline-flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 1px solid var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 10px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 10px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .muted: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .muted {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-bottom: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-bottom: 12px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .state: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 32px 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * text-align: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .state { padding: 32px 16px; text-align: center; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .state p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 8px 0. Tạo khoảng cách ngoài phần tử.
+ */
 .state p { margin: 8px 0; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .panel: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .panel {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 16px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 24px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 24px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-bottom: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-bottom: 18px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * box-shadow: 0 8px 28px rgba(25, 55, 110, .045). Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
   box-shadow: 0 8px 28px rgba(25, 55, 110, .045);
 }
 
 /* CHỨC NĂNG: Navbar và chọn ngôn ngữ.
  * XỬ LÝ: Không có cổng đăng nhập du khách. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .navbar {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-bottom: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-bottom: 1px solid var(--border);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .nav-inner: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .nav-inner {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 1240px. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 1240px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: auto. Tạo khoảng cách ngoài phần tử.
+ */
   margin: auto;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 76px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   min-height: 76px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 0 24px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 0 24px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 30px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 30px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: space-between;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .brand {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--text);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex-shrink: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand-mark: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 36px. Quy định cỡ chữ.
+ */
 .brand-mark { font-size: 36px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .brand strong {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ */
   display: block;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-family: inherit. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   font-family: inherit;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 20px. Quy định cỡ chữ.
+ */
   font-size: 20px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .brand small {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ */
   display: block;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 9px. Quy định cỡ chữ.
+ */
   font-size: 9px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * letter-spacing: 1.2px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   letter-spacing: 1.2px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar nav: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .navbar nav {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: stretch. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: stretch;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 25px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 25px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-self: stretch. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   align-self: stretch;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar nav a, .nav-disabled: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .navbar nav a, .nav-disabled {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 13px. Quy định cỡ chữ.
+ */
   font-size: 13px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--text);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 0. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-bottom: 3px solid transparent. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-bottom: 3px solid transparent;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: none. Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: none;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar nav a.active: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .navbar nav a.active {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-bottom-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-bottom-color: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ */
   font-weight: 600;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .nav-disabled: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * opacity: .5. Điều chỉnh độ mờ để thể hiện trạng thái.
+ */
 .nav-disabled { opacity: .5; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .nav-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .nav-actions {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 10px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-picker select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .language-picker select {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 150px. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 150px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 24px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 24px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-picker p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .language-picker p {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 190px. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 190px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 11px. Quy định cỡ chữ.
+ */
   font-size: 11px;
 }
 
 /* CHỨC NĂNG: Hero ảnh và thanh tìm kiếm.
  * XỬ LÝ: Lớp phủ tối bảo đảm đọc được chữ; có nền khi ảnh mạng lỗi. */
+/* CHỨC NĂNG: Ảnh bìa, nội dung giới thiệu và vùng tìm kiếm đầu trang. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 355px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   min-height: 355px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * position: relative. Chọn cách định vị trong bố cục.
+ */
   position: relative;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 16px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ */
   overflow: hidden;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * isolation: isolate. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   isolation: isolate;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: #163738. Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: #163738;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-bottom: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-bottom: 18px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: flex-end. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: flex-end;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-image, .hero-shade: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-image, .hero-shade {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * position: absolute. Chọn cách định vị trong bố cục.
+ */
   position: absolute;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * inset: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   inset: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * height: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   height: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ */
   object-fit: cover;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * z-index: -2. Quy định thứ tự chồng lớp của phần tử.
+ */
   z-index: -2;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-shade: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-shade {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * z-index: -1. Quy định thứ tự chồng lớp của phần tử.
+ */
   z-index: -1;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: linear-gradient(
+    90deg,
+    rgba(8, 22, 34, .75),
+    rgba(8, 22, 34, .12)
+  ). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: linear-gradient(
     90deg,
     rgba(8, 22, 34, .75),
@@ -238,199 +746,622 @@ input[type="checkbox"] {
   );
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-content {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 35px 46px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 35px 46px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--white);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero .eyebrow: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero .eyebrow {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-family: inherit. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   font-family: inherit;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 26px. Quy định cỡ chữ.
+ */
   font-size: 26px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * line-height: 1.1. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
   line-height: 1.1;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero h1 {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-family: inherit. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   font-family: inherit;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 46px. Quy định cỡ chữ.
+ */
   font-size: 46px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * line-height: 1.12. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
   line-height: 1.12;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 4px 0 10px. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 4px 0 10px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-content > p:not(.eyebrow): chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-content > p:not(.eyebrow) {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 490px. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 490px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 15px. Quy định cỡ chữ.
+ */
   font-size: 15px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-search {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 7px 8px 7px 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 7px 8px 7px 18px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 15px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 15px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 24px 0 14px. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 24px 0 14px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search input: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-search input {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex: 1;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
   min-width: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * outline-offset: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   outline-offset: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 140px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
 .hero-search button { min-width: 140px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .category-chips: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .category-chips {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * overflow: auto. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ */
   overflow: auto;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 4px 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 4px 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .category-chips button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .category-chips button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * white-space: nowrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   white-space: nowrap;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-color: var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-color: var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--text);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 8px 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 8px 14px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex-shrink: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .category-chips button span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .category-chips button span {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 19px. Quy định cỡ chữ.
+ */
   font-size: 19px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--primary);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .category-chips button[aria-pressed="true"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .category-chips button[aria-pressed="true"] {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--white);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-color: var(--primary);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .category-chips button[aria-pressed="true"] span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .category-chips button[aria-pressed="true"] span {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--white);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .section-title: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .section-title {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: space-between;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-bottom: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-bottom: 16px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .section-title p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .section-title p {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-top: 4px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-top: 4px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .section-title > a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .section-title > a {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * white-space: nowrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   white-space: nowrap;
 }
 
 /* CHỨC NĂNG: Card và carousel.
  * XỬ LÝ: Ảnh có cùng tỉ lệ; thiếu ảnh vẫn giữ bố cục. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .carousel-wrap: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: relative. Chọn cách định vị trong bố cục.
+ */
 .carousel-wrap { position: relative; }
 
+/* CHỨC NĂNG: Bố trí hàng thẻ nổi bật có thể cuộn ngang. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-carousel: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .featured-carousel {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 18px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 18px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * overflow: auto. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ */
   overflow: auto;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * scroll-snap-type: x proximity. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   scroll-snap-type: x proximity;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 2px 2px 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 2px 2px 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * scrollbar-width: thin. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   scrollbar-width: thin;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-carousel > .place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .featured-carousel > .place-card {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex: 0 0 calc((100% - 54px) / 4). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex: 0 0 calc((100% - 54px) / 4);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * scroll-snap-align: start. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   scroll-snap-align: start;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .carousel-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .carousel-actions {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: flex-end. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: flex-end;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 6px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-top: 8px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-top: 8px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .carousel-actions button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .carousel-actions button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 50%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 22px. Quy định cỡ chữ.
+ */
   font-size: 22px;
 }
 
+/* CHỨC NĂNG: Hình thức thẻ địa điểm và phần thông tin bên trong. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .place-card {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * position: relative. Chọn cách định vị trong bố cục.
+ */
   position: relative;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 1px solid var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ */
   overflow: hidden;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
   min-width: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-photo: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ */
 .card-photo { display: block; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .place-image {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * height: 160px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   height: 160px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ */
   display: block;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ */
   object-fit: cover;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--soft);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .placeholder: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .placeholder {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex-direction: column;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: linear-gradient(135deg, var(--soft), var(--page)). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: linear-gradient(135deg, var(--soft), var(--page));
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .placeholder > span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .placeholder > span {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 34px. Quy định cỡ chữ.
+ */
   font-size: 34px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--primary);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
 .card-content { padding: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-content h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-bottom: 7px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .card-content h3 { margin-bottom: 7px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-content h3 a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ */
 .card-content h3 a { color: var(--text); }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .badge: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .badge {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: inline-flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 11px. Quy định cỡ chữ.
+ */
   font-size: 11px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 20px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 20px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 3px 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 3px 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--soft);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .badge-temple: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: #975100. Quy định màu chữ/icon kế thừa.
+ * background: #FFF1DA. Quy định nền để phân tách nội dung và trạng thái.
+ */
 .badge-temple { color: #975100; background: #FFF1DA; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .badge-gate: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: #087D7D. Quy định màu chữ/icon kế thừa.
+ * background: #E6F5F3. Quy định nền để phân tách nội dung và trạng thái.
+ */
 .badge-gate { color: #087D7D; background: #E6F5F3; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-location: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .card-location {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 5px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 5px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 11px. Quy định cỡ chữ.
+ */
   font-size: 11px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-top: 8px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-top: 8px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-location svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .card-location svg {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 14px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * height: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   height: 14px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex-shrink: 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-location span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .card-location span {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-left: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-left: auto;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * white-space: nowrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   white-space: nowrap;
 }
 
@@ -439,319 +1370,1097 @@ input[type="checkbox"] {
 
 /* CHỨC NĂNG: Bộ lọc, lưới/danh sách và phân trang.
  * XỬ LÝ: Sidebar thu gọn bằng media query, state React vẫn được giữ. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .catalog-layout: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .catalog-layout {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ */
   display: grid;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * grid-template-columns: 210px minmax(0, 1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
   grid-template-columns: 210px minmax(0, 1fr);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 24px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 24px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .sort-controls: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .sort-controls {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 12px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .sort-controls label: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .sort-controls label {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * white-space: nowrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   white-space: nowrap;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .sort-controls select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .sort-controls select {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-left: 8px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-left: 8px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 125px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 125px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .view-switch: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
 .view-switch { display: flex; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .view-switch button[aria-pressed="true"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .view-switch button[aria-pressed="true"] {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--white);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
 .filters { min-width: 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters .section-title: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ */
 .filters .section-title { font-size: 13px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .text-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .text-button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: none. Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: none;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 30px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   min-height: 30px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .search-field: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .search-field {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 7px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 7px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 1px solid var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 9px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 9px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 0 9px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 0 9px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-bottom: 9px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-bottom: 9px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .search-field input: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .search-field input {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
   min-width: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 8px 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 8px 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .search-field svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .search-field svg {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   flex-shrink: 0;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 16px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters fieldset label: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .filters fieldset label {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
   align-items: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 7px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 7px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 6px 0. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 6px 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters fieldset legend: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 14px. Quy định cỡ chữ.
+ */
 .filters fieldset legend { font-size: 14px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters > .secondary: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .filters > .secondary {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
 }
 
+/* CHỨC NĂNG: Số cột và khoảng cách của lưới địa điểm. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .place-grid {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ */
   display: grid;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * grid-template-columns: repeat(3, minmax(0, 1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
   grid-template-columns: repeat(3, minmax(0, 1fr));
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 18px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 18px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: 1fr. Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
 .list-view { grid-template-columns: 1fr; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view .place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
 .list-view .place-card { display: flex; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view .card-photo: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 0 0 190px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .list-view .card-photo { flex: 0 0 190px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 145px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .list-view .place-image { height: 145px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view 
+
+.pagination: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .list-view 
 
 .pagination {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ */
   justify-content: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 6px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ */
   flex-wrap: wrap;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-top: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-top: 24px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .pagination button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .pagination button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-width: 40px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
   min-width: 40px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 7px 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 7px 12px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .mobile-filters: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ */
 .mobile-filters { display: none; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .detail {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 900px. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 900px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 20px auto. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 20px auto;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 28px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 28px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 16px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 16px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .detail h1 {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-family: inherit. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   font-family: inherit;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 30px. Quy định cỡ chữ.
+ */
   font-size: 30px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-weight: 700. Tạo độ nhấn chữ theo cấp thông tin.
+ */
   font-weight: 700;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * line-height: 1.4. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
   line-height: 1.4;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 18px 0. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 18px 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 18px 0 10px. Tạo khoảng cách ngoài phần tử.
+ */
 .detail h2 { margin: 18px 0 10px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail > .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .detail > .place-image {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * height: 320px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   height: 320px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 12px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 12px 0. Tạo khoảng cách ngoài phần tử.
+ */
 .detail p { margin: 12px 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .narration: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * white-space: pre-line. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * line-height: 1.9. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
 .narration { white-space: pre-line; line-height: 1.9; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-options: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .language-options {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ */
   display: flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ */
   flex-wrap: wrap;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 8px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   gap: 8px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 12px 0. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 12px 0;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-options button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .language-options button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--background);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--primary);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-options button[aria-pressed="true"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .language-options button[aria-pressed="true"] {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: var(--primary);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--white);
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .qr-panel: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .qr-panel {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-top: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border-top: 1px solid var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-top: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   margin-top: 24px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding-top: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   padding-top: 16px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   overflow-wrap: anywhere;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail form: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .detail form { display: grid; gap: 12px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .footer: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .footer {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
   color: var(--muted);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding-top: 10px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   padding-top: 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding-bottom: 30px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   padding-bottom: 30px;
 }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .footer p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 8px 0. Tạo khoảng cách ngoài phần tử.
+ */
 .footer p { margin: 8px 0; }
 
 /* CHỨC NĂNG: Bố cục tablet. */
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width: 1000px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width: 1000px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ */
 @media (max-width: 1000px) {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .nav-inner: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 15px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   .nav-inner { gap: 15px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar nav: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   .navbar nav { gap: 14px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 17px. Quy định cỡ chữ.
+ */
   .brand strong { font-size: 17px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .catalog-layout: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .catalog-layout {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * grid-template-columns: 180px minmax(0, 1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
     grid-template-columns: 180px minmax(0, 1fr);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
     gap: 16px;
   }
 
+/* CHỨC NĂNG: Số cột và khoảng cách của lưới địa điểm. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .place-grid {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * grid-template-columns: repeat(2, minmax(0, 1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-carousel > .place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .featured-carousel > .place-card {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-basis: calc((100% - 36px) / 3). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     flex-basis: calc((100% - 36px) / 3);
   }
 }
 
 /* CHỨC NĂNG: Bố cục điện thoại và nút mở bộ lọc. */
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width: 720px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width: 720px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ */
 @media (max-width: 720px) {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .container: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .container { padding: 12px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .nav-inner: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .nav-inner {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 10px 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
     padding: 10px 14px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ */
     flex-wrap: wrap;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-height: 72px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     min-height: 72px;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand-mark: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 29px. Quy định cỡ chữ.
+ */
   .brand-mark { font-size: 29px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 16px. Quy định cỡ chữ.
+ */
   .brand strong { font-size: 16px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .brand small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 8px. Quy định cỡ chữ.
+ */
   .brand small { font-size: 8px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar nav: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .navbar nav {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * order: 3. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     order: 3;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ */
     justify-content: center;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 28px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
     gap: 28px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * height: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     height: 38px;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .navbar nav a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ */
   .navbar nav a { font-size: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-picker select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 102px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .language-picker select { width: 102px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .nav-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-left: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .nav-actions { margin-left: auto; }
+/* CHỨC NĂNG: Ảnh bìa, nội dung giới thiệu và vùng tìm kiếm đầu trang. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 320px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .hero { min-height: 320px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 24px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .hero-content { padding: 24px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 35px. Quy định cỡ chữ.
+ */
   .hero h1 { font-size: 35px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero .eyebrow: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 22px. Quy định cỡ chữ.
+ */
   .hero .eyebrow { font-size: 22px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .hero-search {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding-left: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     padding-left: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * gap: 5px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
     gap: 5px;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .hero-search button {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * min-width: 44px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
     min-width: 44px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * font-size: 12px. Quy định cỡ chữ.
+ */
     font-size: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 8px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
     padding: 8px;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search button svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ */
   .hero-search button svg { display: none; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-search input: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * padding: 6px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .hero-search input { font-size: 12px; padding: 6px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .panel: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 17px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .panel { padding: 17px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .section-title h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 19px. Quy định cỡ chữ.
+ */
   .section-title h2 { font-size: 19px; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .catalogue-heading: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .catalogue-heading {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ */
     align-items: flex-start;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     flex-direction: column;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .catalog-layout: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: 1fr. Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
   .catalog-layout { grid-template-columns: 1fr; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .filters {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ */
     display: none;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     border: 1px solid var(--border);
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ */
     border-radius: 12px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
     padding: 16px;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filters-open: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ */
   .filters-open { display: block; }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .mobile-filters: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .mobile-filters {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ */
     display: inline-flex;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin-bottom: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     margin-bottom: 14px;
   }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-carousel > .place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
   .featured-carousel > .place-card {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * flex-basis: calc((100% - 18px) / 2). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
     flex-basis: calc((100% - 18px) / 2);
   }
 
+/* CHỨC NĂNG: Số cột và khoảng cách của lưới địa điểm. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   .place-grid { gap: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 135px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .place-image { height: 135px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .card-content { padding: 10px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-content h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 14px. Quy định cỡ chữ.
+ */
   .card-content h3 { font-size: 14px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-location: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ */
   .card-location { flex-wrap: wrap; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .card-location span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-left: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .card-location span { margin-left: 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view .card-photo: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-basis: 115px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .list-view .card-photo { flex-basis: 115px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view .card-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .list-view .card-content { padding: 14px; }
 }
 
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width: 400px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width: 400px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ */
 @media (max-width: 400px) {
+/* CHỨC NĂNG: Số cột và khoảng cách của lưới địa điểm. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: 1fr. Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
   .place-grid { grid-template-columns: 1fr; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-carousel > .place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-basis: 80%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .featured-carousel > .place-card { flex-basis: 80%; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .list-view .card-photo: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-basis: 100px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   .list-view .card-photo { flex-basis: 100px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .hero-content { padding: 18px; }
 }
 /* CHỨC NĂNG: Nút có phản hồi rõ, không đổi font giữa chữ Việt và các ngôn ngữ khác. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector button:not(:disabled):hover, .button:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * filter: brightness(.97). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 button:not(:disabled):hover, .button:hover { filter: brightness(.97); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector button:not(:disabled):active, .button:active: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * filter: brightness(.92). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 button:not(:disabled):active, .button:active { filter: brightness(.92); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-options: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 8px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .language-options { gap: 8px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-options button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-radius: 11px. Bo góc theo ngôn ngữ giao diện chung.
+ */
 .language-options button { border-radius: 11px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .language-options button[aria-pressed="true"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * box-shadow: 0 3px 10px #1667e822. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .language-options button[aria-pressed="true"] { box-shadow: 0 3px 10px #1667e822; }
 
 /* CHỨC NĂNG: Thông báo tìm kiếm rỗng dễ đọc trên ảnh nền và màn hình nhỏ.
  * XỬ LÝ: Dùng nền sáng, chữ đậm tương phản; role alert nằm ở component. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .hero-content .hero-search-error: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ */
 .hero-content .hero-search-error {
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * color: #922d22. Quy định màu chữ/icon kế thừa.
+ */
   color: #922d22;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * background: #fff1ef. Quy định nền để phân tách nội dung và trạng thái.
+ */
   background: #fff1ef;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border: 1px solid #f0bdb5. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
   border: 1px solid #f0bdb5;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * border-radius: 10px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   border-radius: 10px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * padding: 10px 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   padding: 10px 14px;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * max-width: 100%. Giới hạn độ rộng trên màn lớn.
+ */
   max-width: 100%;
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * margin: 0 0 14px. Tạo khoảng cách ngoài phần tử.
+ */
   margin: 0 0 14px;
 }
 
 /* CHỨC NĂNG: Bộ lọc có một ô tìm kiếm, nhãn rõ và gợi ý nằm ngoài ô nhập.
  * XỬ LÝ: Viền focus nằm ở khung chung để tránh viền lồng; min-width 0 chống tràn sidebar. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-group: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 18px 0 24px. Tạo khoảng cách ngoài phần tử.
+ */
 .filter-search-group { margin: 18px 0 24px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-label: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * font-size: 13px. Quy định cỡ chữ.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * margin-bottom: 8px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .filter-search-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-field: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 48px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 0 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * margin-bottom: 8px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .filter-search-field { min-height: 48px; gap: 10px; padding: 0 12px; background: var(--background); border-radius: 12px; margin-bottom: 8px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-field:focus-within: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 0 0 3px var(--soft). Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .filter-search-field:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--soft); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-field input[type="search"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 10px 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 0. Bo góc theo ngôn ngữ giao diện chung.
+ * background: transparent. Quy định nền để phân tách nội dung và trạng thái.
+ * font-size: 14px. Quy định cỡ chữ.
+ * outline: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: none. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .filter-search-field input[type="search"] { flex: 1; min-width: 0; width: 100%; padding: 10px 0; border: 0; border-radius: 0; background: transparent; font-size: 14px; outline: none; box-shadow: none; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-field input::-webkit-search-cancel-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * -webkit-appearance: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .filter-search-field input::-webkit-search-cancel-button { -webkit-appearance: none; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-field .filter-search-clear: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-height: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 8px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * font-size: 22px. Quy định cỡ chữ.
+ */
 .filter-search-field .filter-search-clear { flex-shrink: 0; min-height: 36px; width: 36px; padding: 0; border: 0; border-radius: 8px; background: var(--soft); color: var(--text); font-size: 22px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .filter-search-hint: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * line-height: 1.6. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
 .filter-search-hint { font-size: 12px; line-height: 1.6; color: var(--muted); }
 
 /* CHỨC NĂNG: Khối nổi bật rỗng có thông báo ngắn, không giữ vùng trắng của carousel.
  * XỬ LÝ: Trên điện thoại nội dung/nút tự xuống dòng, không đẩy tràn ngang. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-empty: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 1px dashed var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 14px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .featured-empty { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 18px; border: 1px dashed var(--border); border-radius: 14px; background: var(--page); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-empty > svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 26px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 26px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
 .featured-empty > svg { width: 26px; height: 26px; flex-shrink: 0; color: var(--primary); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-empty > div: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: min(220px,100%). Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
 .featured-empty > div { flex: 1; min-width: min(220px,100%); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-empty strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 14px. Quy định cỡ chữ.
+ */
 .featured-empty strong { font-size: 14px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .featured-empty p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * margin-top: 4px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .featured-empty p { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
 /* CHỨC NĂNG: Khung ghi nguồn dùng chung chi tiết và biên tập, dễ đọc trên màn nhỏ. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .content-sources: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 1px solid var(--border,#dce5f3). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: #f5f8fd. Quy định nền để phân tách nội dung và trạng thái.
+ * line-height: 1.7. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .content-sources h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0 0 8px. Tạo khoảng cách ngoài phần tử.
+ * Selector .content-sources ul: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding-left: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .content-sources p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 8px 0. Tạo khoảng cách ngoài phần tử.
+ */
 .content-sources{padding:20px;border:1px solid var(--border,#dce5f3);border-radius:18px;background:#f5f8fd;line-height:1.7;overflow-wrap:anywhere}.content-sources h3{margin:0 0 8px}.content-sources ul{padding-left:20px}.content-sources p{margin:8px 0}
+
+/* TẠI SAO TÁCH FILE: Tách phần trình bày giúp đổi màu/bố cục đồng bộ mà không chạm vào nghiệp
+ * vụ. */

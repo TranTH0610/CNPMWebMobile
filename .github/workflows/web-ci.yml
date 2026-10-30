@@ -1,38 +1,81 @@
-# FILE NÀY LÀM GÌ: Kiểm tra và đóng gói web UC01–UC05.
-# Build artifact có thể tải từ Actions; việc phát hành website cần cấu hình hosting.
+# FILE NÀY LÀM GÌ
+# Kiểm tra và đóng gói web UC01–UC05.
+#
+# VỊ TRÍ: ../.github/workflows/web-ci.yml
+# DÙNG BỞI: GitHub Actions theo sự kiện khai báo trong workflow.
+
+# DÒNG BÊN DƯỚI: Đặt tên workflow/artifact để nhận diện trên giao diện GitHub.
 name: Web CI
+# DÒNG BÊN DƯỚI: Khai báo sự kiện kích hoạt workflow.
 on:
+  # DÒNG BÊN DƯỚI: Kích hoạt kiểm tra khi có push khớp điều kiện.
   push:
+    # DÒNG BÊN DƯỚI: Giới hạn đường dẫn thay đổi cần kích hoạt workflow.
     paths: ['ThuyetMinhTuDong/apps/web/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/web-ci.yml']
+  # DÒNG BÊN DƯỚI: Kích hoạt kiểm tra trên thay đổi của pull request.
   pull_request:
+    # DÒNG BÊN DƯỚI: Giới hạn đường dẫn thay đổi cần kích hoạt workflow.
     paths: ['ThuyetMinhTuDong/apps/web/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/web-ci.yml']
+  # DÒNG BÊN DƯỚI: Cho phép chạy workflow thủ công trên GitHub.
   workflow_dispatch:
+# DÒNG BÊN DƯỚI: Khai báo quyền token của job thay vì cấp quyền không cần thiết.
 permissions:
+  # DÒNG BÊN DƯỚI: Chỉ định quyền với nội dung repository.
   contents: read
+# DÒNG BÊN DƯỚI: Nhóm các job của workflow.
 jobs:
+  # DÒNG BÊN DƯỚI: Khai báo check:; thụt lề giữ quan hệ giữa job, step và tham số của workflow.
   check:
+    # DÒNG BÊN DƯỚI: Chọn máy ảo chạy các bước CI.
     runs-on: ubuntu-latest
+    # DÒNG BÊN DƯỚI: Cấu hình mặc định dùng chung cho lệnh của job.
     defaults:
+      # DÒNG BÊN DƯỚI: Khai báo run:; thụt lề giữ quan hệ giữa job, step và tham số của workflow.
       run:
+        # DÒNG BÊN DƯỚI: Chạy lệnh tại đúng thư mục monorepo để npm tìm được workspaces.
         working-directory: ThuyetMinhTuDong
+    # DÒNG BÊN DƯỚI: Xác định thứ tự các bước thực hiện.
     steps:
+      # DÒNG BÊN DƯỚI: Chạy action  actions/checkout@v4; tái sử dụng bước chuẩn bị/thu thập kết quả của GitHub Actions.
       - uses: actions/checkout@v4
+      # DÒNG BÊN DƯỚI: Chạy action  actions/setup-node@v4; tái sử dụng bước chuẩn bị/thu thập kết quả của GitHub Actions.
       - uses: actions/setup-node@v4
+        # DÒNG BÊN DƯỚI: Truyền tham số cho action ngay phía trên.
         with:
+          # DÒNG BÊN DƯỚI: Chọn phiên bản Node trong môi trường CI.
           node-version: 22
+          # DÒNG BÊN DƯỚI: Bật cache được action hỗ trợ để giảm thời gian chuẩn bị.
           cache: npm
+          # DÒNG BÊN DƯỚI: Chọn lockfile dùng tính khóa cache; thay dependency sẽ có cache tương ứng.
           cache-dependency-path: ThuyetMinhTuDong/package-lock.json
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm ci; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm ci
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run typecheck --workspace=web; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run typecheck --workspace=web
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run typecheck --workspace=@travelguide/visitor-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run typecheck --workspace=@travelguide/visitor-core
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run lint --workspace=web; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run lint --workspace=web
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run lint --workspace=@travelguide/visitor-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run lint --workspace=@travelguide/visitor-core
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run typecheck --workspace=@travelguide/admin-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run typecheck --workspace=@travelguide/admin-core
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run lint --workspace=@travelguide/admin-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run lint --workspace=@travelguide/admin-core
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm test; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm test
+      # DÒNG BÊN DƯỚI: Chạy lệnh  npm run build:web; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run build:web
+      # DÒNG BÊN DƯỚI: Chạy action  actions/upload-artifact@v4; tái sử dụng bước chuẩn bị/thu thập kết quả của GitHub Actions.
       - uses: actions/upload-artifact@v4
+        # DÒNG BÊN DƯỚI: Truyền tham số cho action ngay phía trên.
         with:
+          # DÒNG BÊN DƯỚI: Đặt tên workflow/artifact để nhận diện trên giao diện GitHub.
           name: web-dist
+          # DÒNG BÊN DƯỚI: Khai báo path: ThuyetMinhTuDong/apps/web/dist; thụt lề giữ quan hệ giữa job, step và tham số của workflow.
           path: ThuyetMinhTuDong/apps/web/dist
+          # DÒNG BÊN DƯỚI: Quy định kết quả khi không tìm được artifact thay vì báo thành công giả.
           if-no-files-found: error
+
+# TẠI SAO TÁCH FILE: Cấu hình kiểm tra dùng chung giúp các môi trường áp dụng cùng quy tắc cho
+# mã nguồn.

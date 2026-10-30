@@ -1,35 +1,988 @@
-/*
- * FILE NÀY LÀM GÌ: Giao diện Admin web xanh–trắng cùng Admin mobile.
- * AdminLayout nạp; các lớp admin-* chỉ tác động vùng quản lý, UC12–UC17.
- * CHỨC NĂNG: Khung điều hướng, dashboard, thẻ di tích, form và kiểm duyệt.
- * XỬ LÝ: Dùng token màu chung, minmax tránh tràn, breakpoint cho tablet/điện thoại.
+/**
+ * FILE NÀY LÀM GÌ
+ * CSS quản trị web: khung điều hướng, dashboard, danh sách, form và bố cục màn hình nhỏ.
+ *
+ * VỊ TRÍ: apps/web/src/styles/admin.css
+ * DÙNG BỞI: apps/web/src/layouts/AdminLayout.tsx.
+ */
+/* CHỨC NĂNG: Khung bố cục của website quản trị. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-shell: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 100vh. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: 248px minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
  */
 .admin-shell{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr);background:var(--page);color:var(--text)}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-shell button,.admin-shell .button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-shell button:hover:not(:disabled),.admin-shell .button:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * box-shadow: 0 4px 12px #12335a12. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * Selector .admin-shell button:disabled: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * cursor: not-allowed. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-shell button,.admin-shell .button{min-height:44px}.admin-shell button:hover:not(:disabled),.admin-shell .button:hover{box-shadow:0 4px 12px #12335a12}.admin-shell button:disabled{cursor:not-allowed}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-shell :is(a,button,input,select,textarea):focus-visible: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * outline: 3px solid var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * outline-offset: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-shell :is(a,button,input,select,textarea):focus-visible{outline:3px solid var(--primary);outline-offset:3px}
 /* CHỨC NĂNG: Menu cố định trên desktop; icon và vạch xanh nhận diện trang hiện tại. */
+/* CHỨC NĂNG: Menu điều hướng quản trị và trạng thái mục được chọn. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-sidebar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * border-right: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 30px 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * position: sticky. Chọn cách định vị trong bố cục.
+ * top: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 100vh. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 44px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .admin-sidebar{background:var(--background);border-right:1px solid var(--border);padding:30px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:44px}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-brand: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * padding: 0 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-brand-icon: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 14px. Bo góc theo ngôn ngữ giao diện chung.
+ * color: white. Quy định màu chữ/icon kế thừa.
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ * box-shadow: 0 7px 16px #1768e52b. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * Selector .admin-brand-icon svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 27px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 27px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-brand strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 23px. Quy định cỡ chữ.
+ * letter-spacing: -.6px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-brand small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * font-size: 11px. Quy định cỡ chữ.
+ * letter-spacing: .3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * font-weight: 500. Tạo độ nhấn chữ theo cấp thông tin.
+ * margin-top: 1px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-brand{display:flex;gap:12px;align-items:center;color:var(--text);padding:0 10px}.admin-brand-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;color:white;background:var(--primary);box-shadow:0 7px 16px #1768e52b}.admin-brand-icon svg{width:27px;height:27px}.admin-brand strong{font-size:23px;letter-spacing:-.6px}.admin-brand small{display:block;font-size:11px;letter-spacing:.3px;color:var(--muted);font-weight:500;margin-top:1px}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-sidebar nav: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 9px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-sidebar nav a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: relative. Chọn cách định vị trong bố cục.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 13px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 14px 15px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * min-height: 50px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-sidebar nav a:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-sidebar nav a.active: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-sidebar nav a.active:before: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * content: "". Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * position: absolute. Chọn cách định vị trong bố cục.
+ * left: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * top: 15px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * bottom: 15px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ * border-radius: 3px. Bo góc theo ngôn ngữ giao diện chung.
+ * Selector .admin-nav-arrow: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ * margin-left: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-sidebar nav a.active .admin-nav-arrow: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * Selector .admin-nav-arrow svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-sidebar-note: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-top: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 16px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * padding: 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-sidebar-note>svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * width: 27px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 27px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-sidebar-note strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-sidebar-note p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * line-height: 1.7. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
 .admin-sidebar nav{display:grid;gap:9px}.admin-sidebar nav a{position:relative;display:flex;align-items:center;gap:13px;border-radius:13px;padding:14px 15px;color:var(--muted);font-weight:600;min-height:50px}.admin-sidebar nav a:hover{background:var(--page);color:var(--text)}.admin-sidebar nav a.active{color:var(--primary);background:var(--soft)}.admin-sidebar nav a.active:before{content:"";width:3px;position:absolute;left:0;top:15px;bottom:15px;background:var(--primary);border-radius:3px}.admin-nav-arrow{display:none;margin-left:auto}.admin-sidebar nav a.active .admin-nav-arrow{display:flex}.admin-nav-arrow svg{width:16px}.admin-sidebar-note{margin-top:auto;border:1px solid var(--border);border-radius:16px;background:var(--page);padding:18px;display:grid;gap:10px}.admin-sidebar-note>svg{color:var(--primary);width:27px;height:27px}.admin-sidebar-note strong{font-size:13px}.admin-sidebar-note p{font-size:12px;line-height:1.7;color:var(--muted)}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-main: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-topbar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 20px 36px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-bottom: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-topbar strong,.admin-topbar small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * Selector .admin-topbar>div>small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 10px. Quy định cỡ chữ.
+ * letter-spacing: 1px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * margin-bottom: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-topbar>div>strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 19px. Quy định cỡ chữ.
+ * Selector .admin-topbar-tools: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 24px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * Selector .admin-identity: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * border-left: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding-left: 22px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-identity>span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * font-size: 12px. Quy định cỡ chữ.
+ * font-weight: 700. Tạo độ nhấn chữ theo cấp thông tin.
+ * Selector .admin-identity strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-identity small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 11px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
 .admin-main{min-width:0}.admin-topbar{background:var(--background);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 36px;border-bottom:1px solid var(--border)}.admin-topbar strong,.admin-topbar small{display:block}.admin-topbar>div>small{font-size:10px;letter-spacing:1px;color:var(--muted);margin-bottom:3px}.admin-topbar>div>strong{font-size:19px}.admin-topbar-tools{display:flex;gap:24px;align-items:center}.admin-identity{display:flex;gap:10px;align-items:center;border-left:1px solid var(--border);padding-left:22px}.admin-identity>span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--primary);font-size:12px;font-weight:700}.admin-identity strong{font-size:13px}.admin-identity small{font-size:11px;color:var(--muted)}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-workspace: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 30px 36px 32px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * max-width: 1580px. Giới hạn độ rộng trên màn lớn.
+ * margin: auto. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-demo: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * padding: 14px 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * font-size: 12px. Quy định cỡ chữ.
+ * line-height: 1.7. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-footnote: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 28px 0 0. Tạo khoảng cách ngoài phần tử.
+ * background: transparent. Quy định nền để phân tách nội dung và trạng thái.
+ * border-style: dashed. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 11px. Quy định cỡ chữ.
+ */
 .admin-workspace{padding:30px 36px 32px;max-width:1580px;margin:auto}.admin-demo{background:var(--soft);color:var(--muted);padding:14px 18px;border:1px solid var(--border);border-radius:12px;font-size:12px;line-height:1.7;margin-bottom:20px}.admin-footnote{margin:28px 0 0;background:transparent;border-style:dashed;font-size:11px}
 /* CHỨC NĂNG: Banner và đúng bốn chỉ số; không thêm biểu đồ hoặc số liệu giả. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-hero: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: relative. Chọn cách định vị trong bố cục.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * border-radius: 22px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 30px 32px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * margin-bottom: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: linear-gradient(120deg,#102950,#194174). Quy định nền để phân tách nội dung và trạng thái.
+ * color: white. Quy định màu chữ/icon kế thừa.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 24px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * Selector .admin-hero>div:first-child,.admin-hero-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: relative. Chọn cách định vị trong bố cục.
+ * z-index: 1. Quy định thứ tự chồng lớp của phần tử.
+ * Selector .admin-eyebrow: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 10px. Quy định cỡ chữ.
+ * letter-spacing: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: #a8c7ed. Quy định màu chữ/icon kế thừa.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * Selector .admin-hero h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 30px. Quy định cỡ chữ.
+ * margin: 8px 0. Tạo khoảng cách ngoài phần tử.
+ * letter-spacing: -.6px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * line-height: 1.3. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-hero p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: #cee0f7. Quy định màu chữ/icon kế thừa.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-hero-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: white. Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-hero-decoration: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: absolute. Chọn cách định vị trong bố cục.
+ * right: 10%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * top: -28px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 240px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 240px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border: 1px solid #ffffff12. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * transform: rotate(-12deg). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * pointer-events: none. Quy định khả năng nhận thao tác con trỏ.
+ * Selector .admin-hero-decoration svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 150px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 150px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * opacity: .055. Điều chỉnh độ mờ để thể hiện trạng thái.
+ */
 .admin-hero{position:relative;overflow:hidden;border-radius:22px;padding:30px 32px;margin-bottom:24px;background:linear-gradient(120deg,#102950,#194174);color:white;display:flex;gap:24px;align-items:center;justify-content:space-between}.admin-hero>div:first-child,.admin-hero-button{position:relative;z-index:1}.admin-eyebrow{font-size:10px;letter-spacing:3px;color:#a8c7ed;font-weight:600}.admin-hero h1{font-size:30px;margin:8px 0;letter-spacing:-.6px;line-height:1.3}.admin-hero p{color:#cee0f7;font-size:13px}.admin-hero-button{background:white;color:var(--primary);border:0;flex-shrink:0}.admin-hero-decoration{position:absolute;right:10%;top:-28px;width:240px;height:240px;border:1px solid #ffffff12;border-radius:50%;display:grid;place-items:center;transform:rotate(-12deg);pointer-events:none}.admin-hero-decoration svg{height:150px;width:150px;opacity:.055}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-page-title: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * margin-bottom: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-page-title h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 27px. Quy định cỡ chữ.
+ * line-height: 1.4. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * letter-spacing: -.5px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-page-title h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * font-size: 21px. Quy định cỡ chữ.
+ * Selector .admin-page-title p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * margin: 5px 0 0. Tạo khoảng cách ngoài phần tử.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-pill: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 7px 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 30px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
 .admin-page-title{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}.admin-page-title h1{font-size:27px;line-height:1.4;margin:0;letter-spacing:-.5px}.admin-page-title h2{margin:0;font-size:21px}.admin-page-title p{color:var(--muted);margin:5px 0 0;font-size:13px}.admin-pill{padding:7px 12px;border-radius:30px;background:var(--background);border:1px solid var(--border);font-size:12px;color:var(--primary)}
+/* CHỨC NĂNG: Các thẻ số liệu ở trang tổng quan. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-metrics: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: repeat(4,minmax(0,1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 18px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * margin-bottom: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-metric: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 20px 22px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * box-shadow: 0 5px 18px #10295004. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * Selector .admin-metric-top: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-metric-icon: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 11px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-metric strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * font-size: 36px. Quy định cỡ chữ.
+ * margin: 10px 0 16px. Tạo khoảng cách ngoài phần tử.
+ * line-height: 1.2. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * letter-spacing: -1px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-metric-line: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 4px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 6px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-metric.metric-0: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: linear-gradient(130deg,var(--primary),#1351b4). Quy định nền để phân tách nội dung và trạng thái.
+ * color: white. Quy định màu chữ/icon kế thừa.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .metric-0 .admin-metric-top: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: #e9f2ff. Quy định màu chữ/icon kế thừa.
+ * Selector .metric-0 .admin-metric-icon: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #ffffff24. Quy định nền để phân tách nội dung và trạng thái.
+ * color: white. Quy định màu chữ/icon kế thừa.
+ * Selector .metric-0 .admin-metric-line: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #ffffff66. Quy định nền để phân tách nội dung và trạng thái.
+ */
 .admin-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-bottom:24px}.admin-metric{background:var(--background);border:1px solid var(--border);border-radius:18px;padding:20px 22px;box-shadow:0 5px 18px #10295004}.admin-metric-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:13px}.admin-metric-icon{width:36px;height:36px;border-radius:11px;background:var(--soft);color:var(--primary);display:grid;place-items:center;flex-shrink:0}.admin-metric strong{display:block;font-size:36px;margin:10px 0 16px;line-height:1.2;letter-spacing:-1px}.admin-metric-line{height:4px;width:44px;border-radius:6px;background:var(--soft)}.admin-metric.metric-0{background:linear-gradient(130deg,var(--primary),#1351b4);color:white;border:0}.metric-0 .admin-metric-top{color:#e9f2ff}.metric-0 .admin-metric-icon{background:#ffffff24;color:white}.metric-0 .admin-metric-line{background:#ffffff66}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 24px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-card h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0 0 12px. Tạo khoảng cách ngoài phần tử.
+ * font-size: 18px. Quy định cỡ chữ.
+ * Selector .admin-card p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * line-height: 1.8. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-section-heading: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-section-heading h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * font-size: 17px. Quy định cỡ chữ.
+ * Selector .admin-icon-box: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 42px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 42px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-dashboard-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: 1.15fr 1fr. Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 22px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-quick-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-quick-action: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 14px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * transition: background .15s,border-color .15s. Làm thay đổi thuộc tính diễn ra theo thời gian đã chỉ định.
+ * Selector .admin-quick-action:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-quick-action>div: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-quick-action strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 14px. Quy định cỡ chữ.
+ * Selector .admin-quick-action p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * margin-top: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * line-height: 1.6. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-quick-action>svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-presence-card>p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-reset: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * background: transparent. Quy định nền để phân tách nội dung và trạng thái.
+ * border-style: dashed. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-reset h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 14px. Quy định cỡ chữ.
+ * margin-bottom: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-reset p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * font-size: 12px. Quy định cỡ chữ.
+ * Selector .admin-reset button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-card{padding:24px;background:var(--background);border:1px solid var(--border);border-radius:18px;margin-bottom:20px;min-width:0}.admin-card h2{margin:0 0 12px;font-size:18px}.admin-card p{color:var(--muted);line-height:1.8}.admin-section-heading{display:flex;align-items:center;gap:12px;margin-bottom:20px}.admin-section-heading h2{margin:0;font-size:17px}.admin-icon-box{height:42px;width:42px;border-radius:12px;display:grid;place-items:center;color:var(--primary);background:var(--soft);flex-shrink:0}.admin-dashboard-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:22px}.admin-quick-actions{display:grid;gap:12px}.admin-quick-action{display:flex;gap:14px;align-items:center;border:1px solid var(--border);border-radius:14px;padding:16px;color:var(--text);transition:background .15s,border-color .15s}.admin-quick-action:hover{background:var(--page);border-color:var(--primary)}.admin-quick-action>div{flex:1;min-width:0}.admin-quick-action strong{font-size:14px}.admin-quick-action p{font-size:12px;margin-top:3px;line-height:1.6}.admin-quick-action>svg{color:var(--muted);flex-shrink:0;width:18px}.admin-presence-card>p{font-size:13px}.admin-reset{display:flex;align-items:center;justify-content:space-between;gap:20px;background:transparent;border-style:dashed}.admin-reset h2{font-size:14px;margin-bottom:3px}.admin-reset p{margin:0;font-size:12px}.admin-reset button{flex-shrink:0}
 /* CHỨC NĂNG: Thanh tìm kiếm và thẻ di tích có nhãn trạng thái, không thay logic tìm kiếm. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-list-toolbar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * margin-bottom: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-search-wrap: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * padding: 4px 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ * width: min(100%,480px). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-search-wrap:focus-within: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 0 0 3px #1768e510. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * Selector .admin-search-wrap input: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: transparent. Quy định nền để phân tách nội dung và trạng thái.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * padding: 10px 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * outline: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-height: 42px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-search-wrap input:focus-visible: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * outline: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-search-wrap input::-webkit-search-cancel-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ * Selector .admin-clear-search: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: 36px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * min-height: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 6px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-clear-search svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 17px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 17px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-result-count: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * white-space: nowrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-list-toolbar{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-bottom:24px}.admin-search-wrap{display:flex;gap:12px;align-items:center;border:1px solid var(--border);background:var(--background);padding:4px 12px;border-radius:13px;width:min(100%,480px);color:var(--muted)}.admin-search-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px #1768e510}.admin-search-wrap input{border:0;background:transparent;flex:1;width:0;min-width:0;padding:10px 0;outline:0;min-height:42px}.admin-search-wrap input:focus-visible{outline:0}.admin-search-wrap input::-webkit-search-cancel-button{display:none}.admin-clear-search{border:0!important;min-width:36px!important;min-height:36px!important;padding:6px!important;background:var(--page)!important}.admin-clear-search svg{width:17px;height:17px}.admin-result-count{font-size:12px;color:var(--muted);white-space:nowrap}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: repeat(3,minmax(0,1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-place-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * transition: box-shadow .15s,transform .15s. Làm thay đổi thuộc tính diễn ra theo thời gian đã chỉ định.
+ * Selector .admin-place-card:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * box-shadow: 0 12px 24px #1029500b. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * transform: translateY(-2px). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-place-cover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: relative. Chọn cách định vị trong bố cục.
+ * height: 180px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-place-cover>.place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ * Selector .admin-place-cover>.admin-badge: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: absolute. Chọn cách định vị trong bố cục.
+ * top: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * left: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 2px 10px #10295012. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * border: 1px solid #ffffff99. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-place-info: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-place-card h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 18px. Quy định cỡ chữ.
+ * margin: 5px 0 8px. Tạo khoảng cách ngoài phần tử.
+ * line-height: 1.4. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-place-card p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-revision: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 11px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-place-info .admin-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-top: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding-top: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-wrap: nowrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * Selector .admin-place-info .button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 12px. Quy định cỡ chữ.
+ * padding: 9px 8px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-place-info .button svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 17px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-place-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.admin-place-card{border:1px solid var(--border);border-radius:18px;background:var(--background);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}.admin-place-card:hover{box-shadow:0 12px 24px #1029500b;transform:translateY(-2px)}.admin-place-cover{position:relative;height:180px;overflow:hidden;background:var(--soft)}.admin-place-cover>.place-image{width:100%;height:100%;object-fit:cover}.admin-place-cover>.admin-badge{position:absolute;top:12px;left:12px;box-shadow:0 2px 10px #10295012;border:1px solid #ffffff99}.admin-place-info{padding:20px;display:flex;flex-direction:column;flex:1;min-width:0}.admin-place-card h2{font-size:18px;margin:5px 0 8px;line-height:1.4;overflow-wrap:anywhere}.admin-place-card p{font-size:12px;color:var(--muted)}.admin-revision{font-size:11px;color:var(--muted)}.admin-place-info .admin-actions{margin-top:auto;padding-top:18px;flex-wrap:nowrap}.admin-place-info .button{flex:1;font-size:12px;padding:9px 8px;min-width:0}.admin-place-info .button svg{width:17px;flex-shrink:0}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-badge: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * font-size: 11px. Quy định cỡ chữ.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * border-radius: 20px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 6px 11px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: #edf2f8. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #52627c. Quy định màu chữ/icon kế thừa.
+ * max-width: 100%. Giới hạn độ rộng trên màn lớn.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-badge:before: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * content: "". Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 5px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 5px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * background: currentColor. Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-badge.state-published: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #e6f7ed. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #187044. Quy định màu chữ/icon kế thừa.
+ * Selector .admin-badge.state-approved: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #e8f1ff. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #1658b0. Quy định màu chữ/icon kế thừa.
+ * Selector .admin-badge.state-submitted: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #fff4da. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #865f00. Quy định màu chữ/icon kế thừa.
+ * Selector .admin-badge.state-changes: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #fff0ed. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #a63e25. Quy định màu chữ/icon kế thừa.
+ * Selector .admin-badge.state-archived: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #edf0f5. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #6d7180. Quy định màu chữ/icon kế thừa.
+ * Selector .admin-empty: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * justify-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * text-align: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 48px 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-empty>svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-empty h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ */
 .admin-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;border-radius:20px;padding:6px 11px;background:#edf2f8;color:#52627c;max-width:100%;overflow-wrap:anywhere}.admin-badge:before{content:"";width:5px;height:5px;flex-shrink:0;border-radius:50%;background:currentColor}.admin-badge.state-published{background:#e6f7ed;color:#187044}.admin-badge.state-approved{background:#e8f1ff;color:#1658b0}.admin-badge.state-submitted{background:#fff4da;color:#865f00}.admin-badge.state-changes{background:#fff0ed;color:#a63e25}.admin-badge.state-archived{background:#edf0f5;color:#6d7180}.admin-empty{display:grid;justify-items:center;gap:14px;text-align:center;padding:48px 20px}.admin-empty>svg{width:38px;height:38px;color:var(--primary)}.admin-empty h2{margin:0}
 /* CHỨC NĂNG: Chia form thành nhóm có tiêu đề, vùng nhập có focus và hàng hành động riêng. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-form: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * max-width: 1040px. Giới hạn độ rộng trên màn lớn.
+ * Selector .admin-form.admin-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * overflow: visible. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * Selector .admin-form-section: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 26px 28px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-bottom: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-form-section:last-child: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-bottom: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-form-section>h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 16px. Quy định cỡ chữ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * margin-bottom: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-form-section>h2 svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * width: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-field: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 8px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-field>span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * Selector .admin-field input,.admin-field textarea,.admin-field select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 12px 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 11px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * font: inherit. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-height: 46px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * transition: border-color .15s,box-shadow .15s. Làm thay đổi thuộc tính diễn ra theo thời gian đã chỉ định.
+ * Selector .admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 0 0 3px #1768e50c. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * Selector .admin-field textarea: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * resize: vertical. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * line-height: 1.8. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-two: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: minmax(0,1fr) minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-check: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 12px 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * border-radius: 11px. Bo góc theo ngôn ngữ giao diện chung.
+ * font-size: 13px. Quy định cỡ chữ.
+ * line-height: 1.6. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-image-preview: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 220px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-image-preview>.place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ * Selector .admin-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * margin-top: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-form-section>.admin-actions:first-child: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-top: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-actions .admin-delete: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-left: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: transparent. Quy định nền để phân tách nội dung và trạng thái.
+ * border-color: #e9b9b5. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--danger). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-actions .admin-delete:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #fff1ef. Quy định nền để phân tách nội dung và trạng thái.
+ */
 .admin-form{max-width:1040px}.admin-form.admin-card{padding:0;overflow:visible}.admin-form-section{padding:26px 28px;border-bottom:1px solid var(--border)}.admin-form-section:last-child{border-bottom:0}.admin-form-section>h2{font-size:16px;display:flex;gap:10px;align-items:center;margin-bottom:24px}.admin-form-section>h2 svg{color:var(--primary);width:20px}.admin-field{display:grid;gap:8px;min-width:0;margin-bottom:20px}.admin-field>span{font-size:12px;font-weight:600}.admin-field input,.admin-field textarea,.admin-field select{padding:12px 14px;width:100%;border:1px solid var(--border);border-radius:11px;background:var(--background);color:var(--text);font:inherit;min-height:46px;transition:border-color .15s,box-shadow .15s}.admin-field input:focus,.admin-field textarea:focus,.admin-field select:focus{border-color:var(--primary);box-shadow:0 0 0 3px #1768e50c}.admin-field textarea{resize:vertical;line-height:1.8}.admin-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.admin-check{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--page);border-radius:11px;font-size:13px;line-height:1.6}.admin-image-preview{height:220px;margin-bottom:20px;border-radius:13px;overflow:hidden;background:var(--soft)}.admin-image-preview>.place-image{width:100%;height:100%;object-fit:cover}.admin-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}.admin-form-section>.admin-actions:first-child{margin-top:0}.admin-actions .admin-delete{margin-left:auto;background:transparent;border-color:#e9b9b5;color:var(--danger)}.admin-actions .admin-delete:hover{background:#fff1ef}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-language-tabs: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * padding: 6px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 14px. Bo góc theo ngôn ngữ giao diện chung.
+ * margin-bottom: 24px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: fit-content. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * max-width: 100%. Giới hạn độ rộng trên màn lớn.
+ * Selector .admin-language-tabs button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 13px. Quy định cỡ chữ.
+ * padding: 9px 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 9px. Bo góc theo ngôn ngữ giao diện chung.
+ * Selector .admin-language-tabs .secondary: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: transparent. Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-language-tabs .secondary:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * Selector .admin-audio: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ * margin: 18px 0. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-audio>span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * Selector .admin-audio audio,.admin-review audio: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * max-width: 100%. Giới hạn độ rộng trên màn lớn.
+ * Selector .admin-local-file: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 14px 0. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-local-file input: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * max-width: 100%. Giới hạn độ rộng trên màn lớn.
+ * font-size: 12px. Quy định cỡ chữ.
+ * Selector .admin-local-file label: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * Selector .admin-local-file p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * Selector .admin-note: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-left: 3px solid var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * font-size: 13px. Quy định cỡ chữ.
+ * margin-top: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-language-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:6px;background:var(--background);border:1px solid var(--border);border-radius:14px;margin-bottom:24px;width:fit-content;max-width:100%}.admin-language-tabs button{border:0;font-size:13px;padding:9px 18px;border-radius:9px}.admin-language-tabs .secondary{background:transparent;color:var(--muted)}.admin-language-tabs .secondary:hover{background:var(--page)}.admin-audio{display:grid;gap:12px;padding:18px;background:var(--page);border:1px solid var(--border);border-radius:13px;margin:18px 0}.admin-audio>span{font-size:12px;font-weight:600}.admin-audio audio,.admin-review audio{width:100%;max-width:100%}.admin-local-file{margin:14px 0}.admin-local-file input{max-width:100%;font-size:12px}.admin-local-file label{gap:12px;flex-wrap:wrap}.admin-local-file p{font-size:12px;color:var(--muted)}.admin-note{padding:14px;border-left:3px solid var(--primary);background:var(--soft);font-size:13px;margin-top:20px}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-review: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 26px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-review-identity: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-review-identity>.place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 76px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 76px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-review-identity h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0 0 8px. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-review-meta: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * margin: 16px 0. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-review-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: repeat(2,minmax(0,1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * margin: 20px 0 26px. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-review-grid section: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 14px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--page). Quy định nền để phân tách nội dung và trạng thái.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-review-grid h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * font-size: 14px. Quy định cỡ chữ.
+ * line-height: 1.6. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-body: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * white-space: pre-wrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * max-height: 260px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * overflow: auto. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * font-size: 13px. Quy định cỡ chữ.
+ * margin: 12px 0 16px. Tạo khoảng cách ngoài phần tử.
+ * padding-right: 6px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-review .admin-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding-top: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-top: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .admin-review{padding:26px}.admin-review-identity{display:flex;align-items:center;gap:16px}.admin-review-identity>.place-image{width:76px;height:76px;object-fit:cover;border-radius:13px;flex-shrink:0}.admin-review-identity h2{margin:0 0 8px}.admin-review-meta{font-size:12px;color:var(--muted);margin:16px 0}.admin-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0 26px}.admin-review-grid section{padding:20px;border:1px solid var(--border);border-radius:14px;background:var(--page);min-width:0}.admin-review-grid h3{margin:0;font-size:14px;line-height:1.6}.admin-body{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto;font-size:13px;margin:12px 0 16px;padding-right:6px}.admin-review .admin-actions{padding-top:18px;border-top:1px solid var(--border)}
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .admin-error: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * border: 1px solid #f0bdb5. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: #fff1ef. Quy định nền để phân tách nội dung và trạng thái.
+ * padding: 14px 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * color: var(--danger). Quy định màu chữ/icon kế thừa.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-success: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--soft). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 13px 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-modal-backdrop: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: fixed. Chọn cách định vị trong bố cục.
+ * inset: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * z-index: 3000. Quy định thứ tự chồng lớp của phần tử.
+ * background: #10295080. Quy định nền để phân tách nội dung và trạng thái.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-confirm: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: min(100%,460px). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: var(--background). Quy định nền để phân tách nội dung và trạng thái.
+ * padding: 28px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 20px. Bo góc theo ngôn ngữ giao diện chung.
+ * box-shadow: 0 25px 80px #10295044. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * Selector .admin-confirm h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0 0 12px. Tạo khoảng cách ngoài phần tử.
+ * Selector .admin-confirm p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * line-height: 1.7. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * white-space: pre-line. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-confirm .admin-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * justify-content: flex-end. Phân bố/căn phần tử theo trục chính.
+ */
 .admin-error{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1px solid #f0bdb5;background:#fff1ef;padding:14px 18px;border-radius:12px;color:var(--danger);margin-bottom:20px;font-size:13px}.admin-success{background:var(--soft);color:var(--primary);border:1px solid var(--border);padding:13px 18px;border-radius:12px;margin-bottom:20px;font-size:13px}.admin-modal-backdrop{position:fixed;inset:0;z-index:3000;background:#10295080;display:grid;place-items:center;padding:20px}.admin-confirm{width:min(100%,460px);background:var(--background);padding:28px;border-radius:20px;box-shadow:0 25px 80px #10295044}.admin-confirm h2{margin:0 0 12px}.admin-confirm p{line-height:1.7;white-space:pre-line}.admin-confirm .admin-actions{justify-content:flex-end}
 /* CHỨC NĂNG: Tablet giảm cột; điện thoại thu menu và không làm co nhỏ vùng bấm. */
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:1200px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width:1200px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .admin-shell: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: 215px minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * Selector .admin-workspace: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 26px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-topbar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 18px 26px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: repeat(2,minmax(0,1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * Selector .admin-metric: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-metric-top: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ */
 @media(max-width:1200px){.admin-shell{grid-template-columns:215px minmax(0,1fr)}.admin-workspace{padding:26px}.admin-topbar{padding:18px 26px}.admin-place-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-metric{padding:18px}.admin-metric-top{font-size:12px}}
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:1000px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width:1000px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .admin-metrics: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: repeat(2,minmax(0,1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * Selector .admin-dashboard-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 0. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-identity: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ * Selector .admin-review-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ */
 @media(max-width:1000px){.admin-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-dashboard-grid{grid-template-columns:minmax(0,1fr);gap:0}.admin-identity{display:none}.admin-review-grid{grid-template-columns:minmax(0,1fr)}}
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:760px); điều chỉnh bố cục cho màn hình phù */
+/* hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width:760px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .admin-shell: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * Selector .admin-sidebar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: static. Chọn cách định vị trong bố cục.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 18px 16px 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * border-right: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-bottom: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-brand: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-brand strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 21px. Quy định cỡ chữ.
+ * Selector .admin-brand-icon: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 38px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * Selector .admin-sidebar nav: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * overflow-x: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding-bottom: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-sidebar nav a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * white-space: nowrap. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 10px 13px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * gap: 8px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * min-height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-sidebar nav a.active:before,.admin-nav-arrow,.admin-sidebar nav a.active .admin-nav-arrow,.admin-sidebar-note: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: none. Chọn cơ chế bố cục của phần tử.
+ * Selector .admin-topbar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-topbar>div>small: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 9px. Quy định cỡ chữ.
+ * Selector .admin-topbar>div>strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 16px. Quy định cỡ chữ.
+ * Selector .admin-topbar-tools: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * Selector .admin-topbar .language-picker select: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * max-width: 155px. Giới hạn độ rộng trên màn lớn.
+ * font-size: 12px. Quy định cỡ chữ.
+ * Selector .admin-workspace: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 20px 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-hero: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 24px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 20px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * Selector .admin-hero h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 27px. Quy định cỡ chữ.
+ * Selector .admin-hero p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * line-height: 1.7. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * Selector .admin-hero-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ * Selector .admin-metrics: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-metric: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-metric strong: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 30px. Quy định cỡ chữ.
+ * Selector .admin-metric-top: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ * flex-direction: column-reverse. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-metric-icon: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 32px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 32px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-page-title h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 24px. Quy định cỡ chữ.
+ * Selector .admin-page-title>.button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * Selector .admin-list-toolbar: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: stretch. Căn phần tử theo trục phụ của flex/grid.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-search-wrap: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-place-grid: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * Selector .admin-place-cover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * height: 195px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-form-section: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 22px 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-form.admin-card: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-two: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * gap: 0. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-reset: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-quick-action: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 14px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-quick-action .admin-icon-box: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-review: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-review-identity: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .admin-review-identity h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 17px. Quy định cỡ chữ.
+ * Selector .admin-review-identity>.place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 60px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 64px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-language-tabs: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 4px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 5px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .admin-language-tabs button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 8px 11px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * font-size: 12px. Quy định cỡ chữ.
+ * Selector .admin-actions .admin-delete: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-left: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-actions>button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-grow: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 @media(max-width:760px){.admin-shell{display:block}.admin-sidebar{position:static;width:100%;height:auto;padding:18px 16px 12px;gap:20px;border-right:0;border-bottom:1px solid var(--border)}.admin-brand{padding:0}.admin-brand strong{font-size:21px}.admin-brand-icon{width:38px;height:38px;border-radius:12px}.admin-sidebar nav{display:flex;overflow-x:auto;gap:6px;padding-bottom:3px}.admin-sidebar nav a{white-space:nowrap;padding:10px 13px;gap:8px;min-height:44px;font-size:13px}.admin-sidebar nav a.active:before,.admin-nav-arrow,.admin-sidebar nav a.active .admin-nav-arrow,.admin-sidebar-note{display:none}.admin-topbar{padding:16px;gap:12px}.admin-topbar>div>small{font-size:9px}.admin-topbar>div>strong{font-size:16px}.admin-topbar-tools{min-width:0}.admin-topbar .language-picker select{max-width:155px;font-size:12px}.admin-workspace{padding:20px 16px}.admin-hero{padding:24px;align-items:flex-start;flex-direction:column;gap:20px;border-radius:18px}.admin-hero h1{font-size:27px}.admin-hero p{line-height:1.7}.admin-hero-button{font-size:13px}.admin-metrics{gap:12px}.admin-metric{padding:16px}.admin-metric strong{font-size:30px}.admin-metric-top{align-items:flex-start;flex-direction:column-reverse;gap:12px}.admin-metric-icon{width:32px;height:32px}.admin-page-title h1{font-size:24px}.admin-page-title>.button{font-size:12px}.admin-list-toolbar{gap:12px;align-items:stretch;flex-direction:column}.admin-search-wrap{width:100%}.admin-place-grid{grid-template-columns:minmax(0,1fr)}.admin-place-cover{height:195px}.admin-card{padding:20px}.admin-form-section{padding:22px 20px}.admin-form.admin-card{padding:0}.admin-two{grid-template-columns:minmax(0,1fr);gap:0}.admin-reset{align-items:flex-start;flex-direction:column}.admin-quick-action{padding:14px;gap:12px}.admin-quick-action .admin-icon-box{width:36px;height:36px}.admin-review{padding:20px}.admin-review-identity{align-items:flex-start;gap:12px}.admin-review-identity h2{font-size:17px}.admin-review-identity>.place-image{width:60px;height:64px}.admin-language-tabs{gap:4px;padding:5px}.admin-language-tabs button{padding:8px 11px;font-size:12px}.admin-actions .admin-delete{margin-left:0}.admin-actions>button{flex-grow:1}}
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (prefers-reduced-motion:reduce); điều chỉnh bố cục */
+/* cho màn hình phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (prefers-reduced-motion:reduce): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .admin-shell *: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * transition: none. Làm thay đổi thuộc tính diễn ra theo thời gian đã chỉ định.
+ * scroll-behavior: auto. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .admin-place-card:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * transform: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 @media(prefers-reduced-motion:reduce){.admin-shell *{transition:none!important;scroll-behavior:auto!important}.admin-place-card:hover{transform:none}}
 /* CÁCH KIỂM TRA: Thu cửa sổ về 390px, Tab qua nút/textarea, tăng cỡ chữ; form và thẻ không tràn ngang. */
+
+/* TẠI SAO TÁCH FILE: Tách phần trình bày giúp đổi màu/bố cục đồng bộ mà không chạm vào nghiệp
+ * vụ. */

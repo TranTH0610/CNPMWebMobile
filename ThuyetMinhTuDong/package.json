@@ -11,7 +11,7 @@
     "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile",
     "lint": "npm run lint --workspace=@travelguide/admin-core && npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile && npm run lint --workspace=web",
     "typecheck": "npm run typecheck --workspace=@travelguide/admin-core && npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile && npm run typecheck --workspace=web",
-    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs scripts/public-qr.test.cjs && npm run presence:test && npm run catalog:test && node --test scripts/narrations.test.cjs && node --test scripts/startup.test.cjs && node --test scripts/mobile-admin-startup.test.cjs && node --test scripts/mobile-visitor-startup.test.cjs",
+    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs scripts/public-qr.test.cjs && npm run presence:test && npm run catalog:test && node --test scripts/narrations.test.cjs && node --test scripts/startup.test.cjs && node --test scripts/mobile-admin-startup.test.cjs && node --test scripts/mobile-visitor-startup.test.cjs && npm run db:test && npm run test:media",
     "build:web": "npm run build --workspace=web",
     "links:generate": "node scripts/generate-app-links.cjs",
     "qr:create": "node scripts/create-public-qr.cjs",
@@ -24,7 +24,10 @@
     "dev:admin": "node scripts/start-web.cjs --admin",
     "test:startup": "node --test scripts/startup.test.cjs",
     "test:mobile-admin": "node --test scripts/mobile-admin-startup.test.cjs",
-    "test:mobile-visitor": "node --test scripts/mobile-visitor-startup.test.cjs"
+    "test:mobile-visitor": "node --test scripts/mobile-visitor-startup.test.cjs",
+    "db:init": "node services/database/migrate.cjs",
+    "db:test": "node --test services/database/database.test.cjs",
+    "test:media": "node --test services/database/media.test.cjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.46.2",
@@ -36,5 +39,9 @@
   "overrides": {
     "expo": "^58.0.19",
     "react-native": "0.88.0"
+  },
+  "dependencies": {
+    "msnodesqlv8": "^6.2.1",
+    "mssql": "^12.7.13"
   }
 }

@@ -1,52 +1,389 @@
-/* FILE NÀY LÀM GÌ: Giao diện bản đồ, thẻ điểm và thứ tự tham quan.
- * JourneyPage nạp; dùng CSS variables từ ui-tokens. UC06–UC11.
- * CHỨC NĂNG: Tách liên kết chi tiết, nút định vị và nguồn; đủ vùng bấm cho cảm ứng.
- * XỬ LÝ: Grid co giãn, min-width:0 và wrap để tên dài không tràn màn hình. */
+/**
+ * FILE NÀY LÀM GÌ
+ * CSS riêng cho bản đồ, hành trình, danh sách điểm và các khối tương tác liên quan.
+ *
+ * VỊ TRÍ: apps/web/src/styles/journey.css
+ * DÙNG BỞI: apps/web/src/pages/JourneyPage.tsx.
+ */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-page: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 28px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
 .journey-page { padding: 28px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-heading: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * gap: 24px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * margin-bottom: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:20px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-heading h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0 0 8px. Tạo khoảng cách ngoài phần tử.
+ * font-size: 28px. Quy định cỡ chữ.
+ * line-height: 1.35. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
 .journey-heading h1 { margin:0 0 8px; font-size:28px; line-height:1.35; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-heading p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * max-width: 720px. Giới hạn độ rộng trên màn lớn.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
 .journey-heading p { max-width:720px; margin:0; color:var(--muted); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-heading > button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-heading > button { flex-shrink:0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-page svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 19px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 19px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-page svg { width:19px; height:19px; flex-shrink:0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-map: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 20px. Bo góc theo ngôn ngữ giao diện chung.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * scroll-margin-top: 20px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-map { border:1px solid var(--border); border-radius:20px; overflow:hidden; scroll-margin-top:20px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-map:focus-visible: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * outline: 3px solid var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * outline-offset: 3px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-map:focus-visible { outline:3px solid var(--primary); outline-offset:3px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-section: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin-top: 32px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-section { margin-top:32px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-section-heading: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * margin-bottom: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-section-heading { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-section-heading h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 23px. Quy định cỡ chữ.
+ * line-height: 1.4. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ */
 .journey-section-heading h2 { font-size:23px; line-height:1.4; margin:0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-count: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #edf4ff. Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * border-radius: 20px. Bo góc theo ngôn ngữ giao diện chung.
+ * min-width: 32px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * padding: 3px 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * text-align: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-weight: 700. Tạo độ nhấn chữ theo cấp thông tin.
+ */
 .journey-count { background:#edf4ff; color:var(--primary); border-radius:20px; min-width:32px; padding:3px 10px; text-align:center; font-weight:700; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-places: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * grid-template-columns: repeat(2,minmax(0,1fr)). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * list-style: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .journey-places { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); list-style:none; padding:0; margin:0; gap:16px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--white). Quy định nền để phân tách nội dung và trạng thái.
+ * transition: border-color .15s,box-shadow .15s. Làm thay đổi thuộc tính diễn ra theo thời gian đã chỉ định.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ */
 .journey-place { min-width:0; border:1px solid var(--border); border-radius:18px; background:var(--white); transition:border-color .15s,box-shadow .15s; overflow:hidden; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 6px 20px #12396a0c. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .journey-place:hover { border-color:var(--primary); box-shadow:0 6px 20px #12396a0c; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place.is-selected: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 0 0 2px #1667e81c. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .journey-place.is-selected { border-color:var(--primary); box-shadow:0 0 0 2px #1667e81c; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place-open: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ */
 .journey-place-open { display:flex; gap:16px; padding:16px; color:var(--text); align-items:center; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place-open .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 106px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 100px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ */
 .journey-place-open .place-image { width:106px; height:100px; border-radius:12px; flex-shrink:0; object-fit:cover; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place-copy: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
 .journey-place-copy { min-width:0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-category: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ */
 .journey-category { font-size:12px; font-weight:600; color:var(--primary); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 6px 0 10px. Tạo khoảng cách ngoài phần tử.
+ * font-size: 18px. Quy định cỡ chữ.
+ * line-height: 1.4. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-place h3 { margin:6px 0 10px; font-size:18px; line-height:1.4; overflow-wrap:anywhere; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-open-label: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * font-size: 13px. Quy định cỡ chữ.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ */
 .journey-open-label { display:inline-flex; gap:6px; align-items:center; color:var(--primary); font-size:13px; font-weight:600; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-open-label svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-open-label svg { width:16px; height:16px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place-tools: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-top: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 10px 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * background: #f8faff. Quy định nền để phân tách nội dung và trạng thái.
+ */
 .journey-place-tools { border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:10px 16px; background:#f8faff; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-place-tools button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 40px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * font-size: 13px. Quy định cỡ chữ.
+ * padding: 7px 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
 .journey-place-tools button { min-height:40px; font-size:13px; padding:7px 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-source: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
 .journey-source { font-size:12px; color:var(--muted); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-source summary: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * cursor: pointer. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 8px 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
 .journey-source summary { cursor:pointer; padding:8px 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-source a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * padding: 6px 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
 .journey-source a { display:block; padding:6px 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 22px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 18px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: linear-gradient(115deg,#f0f6ff,var(--white)). Quy định nền để phân tách nội dung và trạng thái.
+ * margin-bottom: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-route { padding:22px; border:1px solid var(--border); border-radius:18px; background:linear-gradient(115deg,#f0f6ff,var(--white)); margin-bottom:14px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route.is-selected: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-route.is-selected { border-color:var(--primary); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route-intro: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: flex-start. Căn phần tử theo trục phụ của flex/grid.
+ */
 .journey-route-intro { display:flex; gap:14px; align-items:flex-start; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route-icon: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 42px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 42px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: #dfebff. Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--primary). Quy định màu chữ/icon kế thừa.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ */
 .journey-route-icon { display:grid; place-items:center; width:42px; height:42px; flex-shrink:0; background:#dfebff; color:var(--primary); border-radius:13px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 0. Tạo khoảng cách ngoài phần tử.
+ * font-size: 18px. Quy định cỡ chữ.
+ * line-height: 1.5. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
 .journey-route h3 { margin:0; font-size:18px; line-height:1.5; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route p: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * margin: 6px 0 0. Tạo khoảng cách ngoài phần tử.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ */
 .journey-route p { margin:6px 0 0; color:var(--muted); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * margin-top: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-route-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:18px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-route-actions button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ */
 .journey-route-actions button { min-height:44px; border-radius:12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-stops: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * list-style: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * margin: 22px 0 0. Tạo khoảng cách ngoài phần tử.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .journey-stops { list-style:none; padding:0; margin:22px 0 0; display:grid; gap:10px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-stops li: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
 .journey-stops li { display:flex; align-items:center; gap:12px; min-width:0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-step: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 28px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 28px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * place-items: center. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: var(--primary). Quy định nền để phân tách nội dung và trạng thái.
+ * color: white. Quy định màu chữ/icon kế thừa.
+ * font-weight: 700. Tạo độ nhấn chữ theo cấp thông tin.
+ */
 .journey-step { width:28px; height:28px; border-radius:50%; display:grid; place-items:center; flex-shrink:0; background:var(--primary); color:white; font-weight:700; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-stops a: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 10px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * border: 1px solid var(--border). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--white). Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--text). Quy định màu chữ/icon kế thừa.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ */
 .journey-stops a { flex:1; display:flex; align-items:center; gap:12px; padding:10px; min-width:0; border:1px solid var(--border); border-radius:12px; background:var(--white); color:var(--text); font-weight:600; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-stops a:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-color: var(--primary). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-stops a:hover { border-color:var(--primary); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-stops .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 56px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 48px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 8px. Bo góc theo ngôn ngữ giao diện chung.
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ * flex-shrink: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-stops .place-image { width:56px; height:48px; border-radius:8px; object-fit:cover; flex-shrink:0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-stops a > span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .journey-stops a > span { flex:1; overflow-wrap:anywhere; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .journey-footnote,.journey-notice: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 13px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * background: #f5f8fd. Quy định nền để phân tách nội dung và trạng thái.
+ * padding: 12px 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ */
 .journey-footnote,.journey-notice { font-size:13px; color:var(--muted); background:#f5f8fd; padding:12px 16px; border-radius:12px; }
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:760px); điều chỉnh bố cục cho màn hình phù */
+/* hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width:760px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .journey-page: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 18px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .journey-heading: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * Selector .journey-places: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * grid-template-columns: minmax(0,1fr). Quy định số cột và độ rộng để thẻ thích ứng không gian.
+ * Selector .journey-heading h1: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 24px. Quy định cỡ chữ.
+ * Selector .journey-section-heading h2: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 21px. Quy định cỡ chữ.
+ * Selector .journey-route: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
 @media(max-width:760px) { .journey-page{padding:18px;} .journey-heading{flex-direction:column;gap:14px;} .journey-places{grid-template-columns:minmax(0,1fr);} .journey-heading h1{font-size:24px;} .journey-section-heading h2{font-size:21px;} .journey-route{padding:16px;} }
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:400px); điều chỉnh bố cục cho màn hình phù */
+/* hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width:400px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .journey-place-open: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 12px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * Selector .journey-place-open .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 84px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 90px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * Selector .journey-place h3: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 17px. Quy định cỡ chữ.
+ * Selector .journey-route-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-direction: column. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 @media(max-width:400px) { .journey-place-open{gap:12px;padding:12px;} .journey-place-open .place-image{width:84px;height:90px;} .journey-place h3{font-size:17px;} .journey-route-actions{flex-direction:column;} }
 /* CÁCH KIỂM TRA: 390/768/1280px không có cuộn ngang; focus bàn phím rõ;
  * Xem thứ tự này và Tự khám phá có khoảng cách, không dính chồng nhau. */
+
+/* TẠI SAO TÁCH FILE: Tách phần trình bày giúp đổi màu/bố cục đồng bộ mà không chạm vào nghiệp
+ * vụ. */

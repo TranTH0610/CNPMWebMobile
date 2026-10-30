@@ -32,3 +32,6 @@ apps/web/static/visitor-config.json
 
 # Bundle Node của mock API, sinh khi khởi động.
 .runtime/
+
+# Thông tin kết nối SQL riêng của máy; không đưa lên GitHub.
+.env.sqlserver

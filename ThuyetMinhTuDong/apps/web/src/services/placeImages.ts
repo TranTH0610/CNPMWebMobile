@@ -1,8 +1,8 @@
-/** FILE NÀY LÀM GÌ: Đổi mã ảnh dùng chung thành URL asset web; giữ URL API thật. */
-import { PLACE_PHOTOS } from '@travelguide/visitor-core'
+/** FILE NÀY LÀM GÌ: Cung cấp URL ảnh SQL cho các thẻ, hero và trang chi tiết web.
+ * Component PlaceImage/HomePage gọi; phụ thuộc mediaSource.ts. */
+import { mediaSource } from './mediaSource'
 export function resolvePlaceImage(uri?: string): string | undefined {
   if (!uri) return undefined
-  if (!uri.startsWith('photo:')) return uri
-  const id = uri.slice(6)
-  return PLACE_PHOTOS[id] ? '/images/places/' + id + '.jpg' : undefined
+  // Người dùng có thể đang sửa dở mã/URL trong form; hiện placeholder thay vì làm lỗi render.
+  try { return mediaSource(uri) } catch { return undefined }
 }

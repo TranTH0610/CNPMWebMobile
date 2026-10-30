@@ -1,59 +1,450 @@
-/* FILE NÀY LÀM GÌ: Trình nghe web cùng cấu trúc và token màu với native.
- * JourneyPlayer dùng; giữ phần style của nút nghe/chi tiết/bản đồ ở cuối file.
- * CHỨC NĂNG: Header gọn, điều khiển giữa, tốc độ dạng nút và focus rõ cho bàn phím. */
+/**
+ * FILE NÀY LÀM GÌ
+ * CSS trình nghe thuyết minh, thanh thời gian, trạng thái phát và các nút điều khiển.
+ *
+ * VỊ TRÍ: apps/web/src/styles/player.css
+ * DÙNG BỞI: apps/web/src/main-admin.tsx; apps/web/src/main.tsx.
+ */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-shell: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * max-width: 800px. Giới hạn độ rộng trên màn lớn.
+ * margin: 0 auto 24px. Tạo khoảng cách ngoài phần tử.
+ */
 .audio-shell { max-width: 800px; margin: 0 auto 24px; }
+/* CHỨC NĂNG: Bố cục khung trình nghe và màu nền bài thuyết minh. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-player: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 16px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 22px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ * background: linear-gradient(125deg, var(--playerBackground), #173e70). Quy định nền để phân tách nội dung và trạng thái.
+ * border: 1px solid #ffffff12. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 24px. Bo góc theo ngôn ngữ giao diện chung.
+ * box-shadow: 0 12px 32px #10295018. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .audio-player { display: grid; gap: 16px; padding: 22px; color: var(--white); background: linear-gradient(125deg, var(--playerBackground), #173e70); border: 1px solid #ffffff12; border-radius: 24px; box-shadow: 0 12px 32px #10295018; }
+/* CHỨC NĂNG: Căn ảnh, tên bài và nút đóng trong phần đầu trình nghe. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-header: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 14px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ */
 .audio-header { display: flex; gap: 14px; align-items: center; min-width: 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-artwork: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex: 0 0 64px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 64px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 64px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * overflow: hidden. Quy định nội dung tràn được cuộn, ẩn hay hiện.
+ * border-radius: 14px. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--playerControl). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .audio-artwork { flex: 0 0 64px; width: 64px; height: 64px; overflow: hidden; border-radius: 14px; background: var(--playerControl); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-artwork .place-image: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * object-fit: cover. Chọn cách ảnh lấp vùng chứa mà không méo tỷ lệ.
+ */
 .audio-artwork .place-image { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-artwork .placeholder: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 9px. Quy định cỡ chữ.
+ * padding: 5px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ */
 .audio-artwork .placeholder { font-size: 9px; padding: 5px; color: var(--playerMuted); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-content: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 0. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * flex: 1. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-content { min-width: 0; flex: 1; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-eyebrow: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * font-size: 11px. Quy định cỡ chữ.
+ */
 .audio-eyebrow { display: inline-flex; align-items: center; gap: 6px; color: var(--playerMuted); font-size: 11px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-eyebrow svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-eyebrow svg { width: 14px; height: 14px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-title: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * margin: 2px 0 5px. Tạo khoảng cách ngoài phần tử.
+ * font-size: 20px. Quy định cỡ chữ.
+ * line-height: 1.3. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ * font-weight: 700. Tạo độ nhấn chữ theo cấp thông tin.
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ * overflow-wrap: anywhere. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-title { display: block; margin: 2px 0 5px; font-size: 20px; line-height: 1.3; font-weight: 700; color: var(--white); overflow-wrap: anywhere; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-title:hover: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--playerAccent). Quy định màu chữ/icon kế thừa.
+ */
 .audio-title:hover { color: var(--playerAccent); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-subtitle: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ */
 .audio-subtitle { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-language: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: #ffffff12. Quy định nền để phân tách nội dung và trạng thái.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * padding: 2px 7px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 6px. Bo góc theo ngôn ngữ giao diện chung.
+ * font-size: 10px. Quy định cỡ chữ.
+ */
 .audio-language { background: #ffffff12; color: var(--playerMuted); padding: 2px 7px; border-radius: 6px; font-size: 10px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-status: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: inline-flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * font-size: 11px. Quy định cỡ chữ.
+ */
 .audio-status { display: inline-flex; gap: 6px; align-items: center; color: var(--playerMuted); font-size: 11px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-status > span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 5px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 5px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--playerMuted). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .audio-status > span { width: 5px; height: 5px; border-radius: 50%; background: var(--playerMuted); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-status.is-playing > span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * background: var(--playerAccent). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .audio-status.is-playing > span { background: var(--playerAccent); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-player .audio-close: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * position: static. Chọn cách định vị trong bố cục.
+ * flex: 0 0 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * align-self: flex-start. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border: 1px solid #ffffff22. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ * background: #ffffff0d. Quy định nền để phân tách nội dung và trạng thái.
+ * font-size: 27px. Quy định cỡ chữ.
+ * line-height: 1. Chừa chiều cao dòng để chữ có dấu không bị chật.
+ */
 .audio-player .audio-close { position: static; flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; align-self: flex-start; border: 1px solid #ffffff22; border-radius: 50%; padding: 0; color: var(--white); background: #ffffff0d; font-size: 27px; line-height: 1; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-timeline input[type="range"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: block. Chọn cơ chế bố cục của phần tử.
+ * appearance: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 100%. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 5px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * margin: 9px 0 10px. Tạo khoảng cách ngoài phần tử.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 10px. Bo góc theo ngôn ngữ giao diện chung.
+ * cursor: pointer. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-timeline input[type="range"] { display: block; appearance: none; width: 100%; height: 5px; margin: 9px 0 10px; padding: 0; border: 0; border-radius: 10px; cursor: pointer; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-timeline input::-webkit-slider-thumb: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * appearance: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 14px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border: 2px solid var(--white). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--white). Quy định nền để phân tách nội dung và trạng thái.
+ * box-shadow: 0 0 0 4px #ffffff14. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .audio-timeline input::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; border: 2px solid var(--white); border-radius: 50%; background: var(--white); box-shadow: 0 0 0 4px #ffffff14; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-timeline input::-moz-range-thumb: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border: 2px solid var(--white). Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--white). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .audio-timeline input::-moz-range-thumb { width: 12px; height: 12px; border: 2px solid var(--white); border-radius: 50%; background: var(--white); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-times: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * justify-content: space-between. Phân bố/căn phần tử theo trục chính.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * font-size: 11px. Quy định cỡ chữ.
+ * font-variant-numeric: tabular-nums. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-times { display: flex; justify-content: space-between; color: var(--playerMuted); font-size: 11px; font-variant-numeric: tabular-nums; }
+/* CHỨC NĂNG: Căn nhóm nút lùi, phát/tạm dừng và tiến. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-transport: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 24px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .audio-transport { display: flex; justify-content: center; align-items: center; gap: 24px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-transport button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * padding: 0. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 0. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ */
 .audio-transport button { padding: 0; border: 0; border-radius: 50%; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-transport .audio-skip: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-height: 44px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--white). Quy định màu chữ/icon kế thừa.
+ * background: var(--playerControl). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .audio-transport .audio-skip { width: 44px; height: 44px; min-height: 44px; color: var(--white); background: var(--playerControl); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-skip svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 25px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 25px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-skip svg { width: 25px; height: 25px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-transport .audio-play: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 58px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 58px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * min-height: 58px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * color: var(--playerBackground). Quy định màu chữ/icon kế thừa.
+ * background: var(--white). Quy định nền để phân tách nội dung và trạng thái.
+ * box-shadow: 0 5px 16px #0002. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .audio-transport .audio-play { width: 58px; height: 58px; min-height: 58px; color: var(--playerBackground); background: var(--white); box-shadow: 0 5px 16px #0002; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-play svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 26px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 26px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-play svg { width: 26px; height: 26px; }
+/* CHỨC NĂNG: Bố trí các mức tốc độ và trạng thái đang chọn. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-rates: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * justify-content: center. Phân bố/căn phần tử theo trục chính.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * border-top: 1px solid #ffffff12. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding-top: 12px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-rates { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; border-top: 1px solid #ffffff12; padding-top: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-rates > span: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * font-size: 11px. Quy định cỡ chữ.
+ * margin-right: 4px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .audio-rates > span { color: var(--playerMuted); font-size: 11px; margin-right: 4px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-rates button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 44px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * min-height: 36px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * padding: 5px 9px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border: 1px solid transparent. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 9px. Bo góc theo ngôn ngữ giao diện chung.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * background: #ffffff0b. Quy định nền để phân tách nội dung và trạng thái.
+ * font-size: 12px. Quy định cỡ chữ.
+ */
 .audio-rates button { min-width: 44px; min-height: 36px; padding: 5px 9px; border: 1px solid transparent; border-radius: 9px; color: var(--playerMuted); background: #ffffff0b; font-size: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-rates button[aria-pressed="true"]: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * color: var(--playerBackground). Quy định màu chữ/icon kế thừa.
+ * background: var(--playerAccent). Quy định nền để phân tách nội dung và trạng thái.
+ */
 .audio-rates button[aria-pressed="true"] { color: var(--playerBackground); background: var(--playerAccent); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-notice: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: grid. Chọn cơ chế bố cục của phần tử.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * font-size: 12px. Quy định cỡ chữ.
+ */
 .audio-notice { display: grid; gap: 10px; color: var(--playerMuted); font-size: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .resume-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * gap: 8px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
 .resume-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .resume-actions svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 16px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .resume-actions svg { width: 16px; height: 16px; }
+/* CHỨC NĂNG: Làm rõ lỗi audio và vùng thao tác thử lại. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-error: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * border: 1px solid #f0bdb5. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * background: #fff1ef. Quy định nền để phân tách nội dung và trạng thái.
+ * color: #922d22. Quy định màu chữ/icon kế thừa.
+ * border-radius: 12px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 12px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * font-size: 12px. Quy định cỡ chữ.
+ */
 .audio-error { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border: 1px solid #f0bdb5; background: #fff1ef; color: #922d22; border-radius: 12px; padding: 12px; font-size: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-loading: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * gap: 8px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * color: var(--playerMuted). Quy định màu chữ/icon kế thừa.
+ * font-size: 12px. Quy định cỡ chữ.
+ */
 .audio-loading { display: flex; gap: 8px; align-items: center; color: var(--playerMuted); font-size: 12px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .loading-dot: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 6px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 6px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 50%. Bo góc theo ngôn ngữ giao diện chung.
+ * background: var(--playerAccent). Quy định nền để phân tách nội dung và trạng thái.
+ * animation: audio-pulse 1s ease-in-out infinite alternate. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .loading-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--playerAccent); animation: audio-pulse 1s ease-in-out infinite alternate; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-player :focus-visible: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * outline-color: var(--playerAccent). Quy định màu viền focus phục vụ thao tác bàn phím.
+ */
 .audio-player :focus-visible { outline-color: var(--playerAccent); }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @keyframes audio-pulse: định nghĩa quy tắc CSS đặc biệt theo tên khai báo.
+ * Selector to: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * opacity: .35. Điều chỉnh độ mờ để thể hiện trạng thái.
+ */
 @keyframes audio-pulse { to { opacity: .35; } }
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width: 480px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (max-width: 480px): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ */
 @media (max-width: 480px) {
+/* CHỨC NĂNG: Bố cục khung trình nghe và màu nền bài thuyết minh. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-player: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 13px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * padding: 16px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * border-radius: 20px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   .audio-player { gap: 13px; padding: 16px; border-radius: 20px; }
+/* CHỨC NĂNG: Căn ảnh, tên bài và nút đóng trong phần đầu trình nghe. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-header: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   .audio-header { gap: 10px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-artwork: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * flex-basis: 54px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * width: 54px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 58px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * border-radius: 11px. Bo góc theo ngôn ngữ giao diện chung.
+ */
   .audio-artwork { flex-basis: 54px; width: 54px; height: 58px; border-radius: 11px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-title: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 17px. Quy định cỡ chữ.
+ */
   .audio-title { font-size: 17px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-subtitle: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 6px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   .audio-subtitle { gap: 6px; }
+/* CHỨC NĂNG: Bố trí các mức tốc độ và trạng thái đang chọn. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-rates: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * gap: 5px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ */
   .audio-rates { gap: 5px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .audio-rates button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-width: 40px. Giới hạn độ rộng nhỏ nhất; 0 cho phép phần tử flex/grid co đúng.
+ * padding: 5px 7px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ */
   .audio-rates button { min-width: 40px; padding: 5px 7px; }
 }
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (prefers-reduced-motion: reduce); điều chỉnh bố cục */
+/* cho màn hình phù hợp. */
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * @media (prefers-reduced-motion: reduce): chỉ áp dụng style khi điều kiện kích thước/thiết bị khớp, phục vụ responsive.
+ * Selector .loading-dot: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * animation: none. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 @media (prefers-reduced-motion: reduce) { .loading-dot { animation: none; } }
 
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .listen-button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * border-radius: 13px. Bo góc theo ngôn ngữ giao diện chung.
+ * padding: 12px 20px. Tạo khoảng đệm bên trong vùng nội dung/vùng bấm.
+ * min-height: 46px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: 0 5px 14px #1667e822. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ * font-weight: 600. Tạo độ nhấn chữ theo cấp thông tin.
+ */
 .listen-button { border-radius: 13px; padding: 12px 20px; min-height: 46px; box-shadow: 0 5px 14px #1667e822; font-weight: 600; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .listen-button svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .listen-button svg { width: 18px; height: 18px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail-actions: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * display: flex. Chọn cơ chế bố cục của phần tử.
+ * flex-wrap: wrap. Cho các phần tử xuống hàng khi thiếu chỗ.
+ * gap: 10px. Tạo khoảng cách giữa các phần tử con mà không gắn margin riêng từng phần tử.
+ * align-items: center. Căn phần tử theo trục phụ của flex/grid.
+ * margin: 20px 0. Tạo khoảng cách ngoài phần tử.
+ */
 .detail-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 20px 0; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .detail-actions .button svg: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * width: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * height: 18px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .detail-actions .button svg { width: 18px; height: 18px; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .photo-caption: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * font-size: 12px. Quy định cỡ chữ.
+ * color: var(--muted). Quy định màu chữ/icon kế thừa.
+ * font-style: italic. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ */
 .photo-caption { font-size: 12px; color: var(--muted); font-style: italic; }
+/* GIẢI THÍCH STYLE CỦA DÒNG BÊN DƯỚI:
+ * Selector .leaflet-marker-icon button: chọn các phần tử nhận nhóm style bên dưới, không thay đổi dữ liệu nghiệp vụ.
+ * min-height: 30px. Áp dụng thuộc tính trình bày này cho các phần tử được selector chọn.
+ * box-shadow: none. Tạo độ nổi để phân biệt thẻ/nút với nền.
+ */
 .leaflet-marker-icon button { min-height: 30px; box-shadow: none; }
+
+/* TẠI SAO TÁCH FILE: Tách phần trình bày giúp đổi màu/bố cục đồng bộ mà không chạm vào nghiệp
+ * vụ. */
