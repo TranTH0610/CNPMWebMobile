@@ -62,8 +62,8 @@ jobs:
       - run: npm run typecheck --workspace=@travelguide/admin-core
       # DÒNG BÊN DƯỚI: Chạy lệnh  npm run lint --workspace=@travelguide/admin-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run lint --workspace=@travelguide/admin-core
-      # DÒNG BÊN DƯỚI: Chạy lệnh  npm test; exit code của lệnh quyết định bước CI thành công hay thất bại.
-      - run: npm test
+      # DÒNG BÊN DƯỚI: Kiểm tra logic dùng chung cho app mobile mà không chạy lại toàn bộ suite của Web CI.
+      - run: npm run test --workspace=@travelguide/visitor-core
 
 # TẠI SAO TÁCH FILE: Cấu hình kiểm tra dùng chung giúp các môi trường áp dụng cùng quy tắc cho
 # mã nguồn.

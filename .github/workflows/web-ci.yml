@@ -11,11 +11,11 @@ on:
   # DÒNG BÊN DƯỚI: Kích hoạt kiểm tra khi có push khớp điều kiện.
   push:
     # DÒNG BÊN DƯỚI: Giới hạn đường dẫn thay đổi cần kích hoạt workflow.
-    paths: ['ThuyetMinhTuDong/apps/web/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/web-ci.yml']
+    paths: ['ThuyetMinhTuDong/apps/web/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/services/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/web-ci.yml']
   # DÒNG BÊN DƯỚI: Kích hoạt kiểm tra trên thay đổi của pull request.
   pull_request:
     # DÒNG BÊN DƯỚI: Giới hạn đường dẫn thay đổi cần kích hoạt workflow.
-    paths: ['ThuyetMinhTuDong/apps/web/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/web-ci.yml']
+    paths: ['ThuyetMinhTuDong/apps/web/**', 'ThuyetMinhTuDong/packages/**', 'ThuyetMinhTuDong/services/**', 'ThuyetMinhTuDong/package*.json', 'ThuyetMinhTuDong/.eslintrc.cjs', 'ThuyetMinhTuDong/scripts/**', '.github/workflows/web-ci.yml']
   # DÒNG BÊN DƯỚI: Cho phép chạy workflow thủ công trên GitHub.
   workflow_dispatch:
 # DÒNG BÊN DƯỚI: Khai báo quyền token của job thay vì cấp quyền không cần thiết.
@@ -28,6 +28,26 @@ jobs:
   check:
     # DÒNG BÊN DƯỚI: Chọn máy ảo chạy các bước CI.
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SQL_AUTH: sql
+      SQL_SERVER: localhost
+      SQL_DATABASE: HueGuideDemo
+      SQL_USER: sa
+      SQL_PASSWORD: "GitHubActions!123"
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: "GitHubActions!123"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $MSSQL_SA_PASSWORD -C -Q 'SELECT 1' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 15
     # DÒNG BÊN DƯỚI: Cấu hình mặc định dùng chung cho lệnh của job.
     defaults:
       # DÒNG BÊN DƯỚI: Khai báo run:; thụt lề giữ quan hệ giữa job, step và tham số của workflow.
@@ -50,6 +70,8 @@ jobs:
           cache-dependency-path: ThuyetMinhTuDong/package-lock.json
       # DÒNG BÊN DƯỚI: Chạy lệnh  npm ci; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm ci
+      # DÒNG BÊN DƯỚI: Khởi tạo schema SQL trước các bài test tích hợp.
+      - run: npm run db:init
       # DÒNG BÊN DƯỚI: Chạy lệnh  npm run typecheck --workspace=web; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run typecheck --workspace=web
       # DÒNG BÊN DƯỚI: Chạy lệnh  npm run typecheck --workspace=@travelguide/visitor-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
@@ -62,7 +84,7 @@ jobs:
       - run: npm run typecheck --workspace=@travelguide/admin-core
       # DÒNG BÊN DƯỚI: Chạy lệnh  npm run lint --workspace=@travelguide/admin-core; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run lint --workspace=@travelguide/admin-core
-      # DÒNG BÊN DƯỚI: Chạy lệnh  npm test; exit code của lệnh quyết định bước CI thành công hay thất bại.
+      # DÒNG BÊN DƯỚI: Chạy toàn bộ suite, bao gồm các bài test tích hợp SQL.
       - run: npm test
       # DÒNG BÊN DƯỚI: Chạy lệnh  npm run build:web; exit code của lệnh quyết định bước CI thành công hay thất bại.
       - run: npm run build:web
