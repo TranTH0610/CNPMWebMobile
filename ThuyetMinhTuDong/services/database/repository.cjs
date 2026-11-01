@@ -1,108 +1,68 @@
 /**
- * FILE NÀY LÀM GÌ: Lưu nội dung, QR và phiên hoạt động bằng SQL Server.
- * Catalog/presence server sử dụng; phụ thuộc connection.cjs và schema.sql.
- * TẠI SAO: Mọi thiết bị đọc cùng database; restart Node không xóa nội dung và lượt QR.
+ * FILE NÀY LÀM GÌ: Lưu nội dung, lượt QR và phiên hoạt động bằng 11 bảng tiếng Việt.
+ * Catalog/presence gọi. Mọi lần sửa nằm trong transaction có khóa chống ghi đè.
+ * TẠI SAO: Web/mobile đọc cùng SQL; không dùng RAM thay cho dữ liệu bị lỗi.
  */
-const { connect } = require('./connection.cjs')
-const { readDocument, writeDocument } = require('./catalog-relational.cjs')
-
-function createSqlRepository({ scope = 'main', now = Date.now, ttlMs = 90000, maxSessions = 10000 } = {}) {
-  if (!/^[a-zA-Z0-9_-]{1,100}$/.test(scope)) throw Error('invalid_scope')
-  const dayOf = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(now()))
-
-  // CHỨC NĂNG: Bind tất cả giá trị đầu vào, tránh ghép dữ liệu người dùng vào câu SQL.
-  async function query(executor, text, values = {}) {
-    const { sql } = await connect()
-    const request = executor.request()
-    request.input('scope', sql.NVarChar(100), scope)
-    for (const [key, value] of Object.entries(values)) {
-      const type = typeof value === 'number' ? sql.BigInt : sql.NVarChar(sql.MAX)
-      request.input(key, type, value)
-    }
-    return request.query(text)
-  }
-
-  // CHỨC NĂNG: Khóa theo tác vụ trong transaction, kể cả nhiều tiến trình API.
-  // TẠI SAO: Hai admin cùng revision hoặc hai heartbeat đồng thời không được ghi đè/đếm trùng.
-  async function locked(resource, action) {
-    const { sql, pool } = await connect()
-    const transaction = new sql.Transaction(pool)
-    // App lock đã tuần tự hóa cùng nghiệp vụ/scope; READ COMMITTED tránh khóa dải
-    // của scope test khác hoặc của tác vụ QR/phiên trên cùng database.
-    await transaction.begin(sql.ISOLATION_LEVEL.READ_COMMITTED)
-    try {
-      await query(transaction, `DECLARE @result int;
-        EXEC @result=sys.sp_getapplock @Resource=@resource,@LockMode='Exclusive',@LockOwner='Transaction',@LockTimeout=10000;
-        IF @result<0 THROW 51000,'database_busy',1;`, { resource: `HueGuide:${scope}:${resource}` })
-      const result = await action(transaction)
-      await transaction.commit()
-      return result
-    } catch (error) {
-      try { await transaction.rollback() } catch { /* SQL có thể đã tự rollback. */ }
-      throw error
-    }
-  }
-
-  return {
-    // Mỗi request ghép tài liệu API từ bảng quan hệ; JSON chỉ dùng tại biên service.
-    catalog: action => locked('catalog', async transaction => {
-      const { sql } = await connect()
-      return action({
-        read: async () => { const document=await readDocument(transaction,sql,scope);return document===null?null:JSON.stringify(document) },
-        write: async payload => {
-          if(Buffer.byteLength(payload)>32*1024*1024)throw Error('capacity')
-          await writeDocument(transaction,sql,scope,JSON.parse(payload))
-        },
-      })
-    }),
-    version: async () => {
-      const { pool } = await connect()
-      const result = await query(pool, 'SELECT Revision FROM dbo.CatalogScopes WHERE Scope=@scope')
-      return String(result.recordset[0]?.Revision ?? 0)
-    },
-    gateStatistics: async () => {
-      const { pool } = await connect(), day = dayOf()
-      const result = await query(pool, `SELECT (SELECT COUNT(*) FROM dbo.GateEntries WHERE Scope=@scope AND VisitDay=CONVERT(date,@day))
-        + COALESCE((SELECT Total FROM dbo.GateCarry WHERE Scope=@scope AND VisitDay=CONVERT(date,@day)),0) AS today`, { day })
-      return { today: result.recordset[0].today, day }
-    },
-    gateEntry: (visitId, platform) => locked('gate', async transaction => {
-      const day = dayOf()
-      const result = await query(transaction, `SELECT COUNT(*) AS total FROM dbo.GateEntries WHERE Scope=@scope AND VisitDay=CONVERT(date,@day);
-        SELECT VisitId FROM dbo.GateEntries WHERE Scope=@scope AND VisitDay=CONVERT(date,@day) AND VisitId=@visitId;`, { day, visitId })
-      if (result.recordsets[1].length) return
-      if (result.recordsets[0][0].total >= 50000) throw Error('capacity')
-      await query(transaction, `INSERT dbo.GateEntries(Scope,VisitDay,VisitId,Platform) VALUES(@scope,CONVERT(date,@day),@visitId,@platform)`, { day, visitId, platform })
-    }),
-    // Chỉ nhập tổng từ RAM cũ một lần cho ngày đó, không đụng đến lượt SQL đã có.
-    importGate: gate => locked('gate', async transaction => {
-      if (!gate || !/^\d{4}-\d{2}-\d{2}$/.test(gate.day) || !Number.isSafeInteger(gate.today) || gate.today < 0) throw Error('invalid_gate')
-      await query(transaction, `IF NOT EXISTS(SELECT 1 FROM dbo.GateCarry WHERE Scope=@scope AND VisitDay=CONVERT(date,@day))
-        AND NOT EXISTS(SELECT 1 FROM dbo.GateEntries WHERE Scope=@scope AND VisitDay=CONVERT(date,@day))
-        INSERT dbo.GateCarry(Scope,VisitDay,Total) VALUES(@scope,CONVERT(date,@day),@total)`, { day: gate.day, total: gate.today })
-    }),
-    heartbeat: ({ sessionId, platform }) => locked('presence', async transaction => {
-      const time = now()
-      await query(transaction, 'DELETE dbo.ActiveSessions WHERE Scope=@scope AND LastSeen<=@cutoff', { cutoff: time - ttlMs })
-      const result = await query(transaction, `SELECT Platform FROM dbo.ActiveSessions WHERE Scope=@scope AND SessionId=@id;
-        SELECT COUNT(*) AS total FROM dbo.ActiveSessions WHERE Scope=@scope;`, { id: sessionId })
-      const previous = result.recordsets[0][0]
-      if (previous && previous.Platform !== platform) throw Error('platform_conflict')
-      if (!previous && result.recordsets[1][0].total >= maxSessions) throw Error('capacity')
-      await query(transaction, `UPDATE dbo.ActiveSessions SET LastSeen=@time WHERE Scope=@scope AND SessionId=@id;
-        IF @@ROWCOUNT=0 INSERT dbo.ActiveSessions(Scope,SessionId,Platform,LastSeen) VALUES(@scope,@id,@platform,@time);`, { id: sessionId, platform, time })
-    }),
-    end: async sessionId => { const { pool } = await connect(); await query(pool, 'DELETE dbo.ActiveSessions WHERE Scope=@scope AND SessionId=@id', { id: sessionId }) },
-    prune: async () => { const { pool } = await connect(); await query(pool, 'DELETE dbo.ActiveSessions WHERE Scope=@scope AND LastSeen<=@cutoff', { cutoff: now() - ttlMs }) },
-    snapshot: async () => {
-      const { pool } = await connect(), time = now()
-      // Đếm trực tiếp SQL, không biến lỗi database thành thống kê bằng 0.
-      const result = await query(pool, `SELECT COUNT(*) AS active,
-        COALESCE(SUM(CASE WHEN Platform='web' THEN 1 ELSE 0 END),0) AS web,
-        COALESCE(SUM(CASE WHEN Platform='mobile-app' THEN 1 ELSE 0 END),0) AS mobile
-        FROM dbo.ActiveSessions WHERE Scope=@scope AND LastSeen>@cutoff`, { cutoff: time - ttlMs })
-      return { ...result.recordset[0], updatedAt: time, ttlSeconds: ttlMs / 1000 }
-    },
-  }
+const {connect}=require('./connection.cjs')
+const {readDocument,writeDocument}=require('./catalog11.cjs')
+function createSqlRepository({scope='main',now=Date.now,ttlMs=90000,maxSessions=10000}={}){
+ const dayOf=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(now()))
+ async function query(executor,text,values={}){
+  const {sql}=await connect(scope),request=executor.request()
+  for(const [k,v]of Object.entries(values))request.input(k,typeof v==='number'?sql.BigInt:sql.NVarChar(sql.MAX),v)
+  return request.query(text)
+ }
+ async function locked(resource,action){
+  const {sql,pool}=await connect(scope),transaction=new sql.Transaction(pool)
+  await transaction.begin(sql.ISOLATION_LEVEL.READ_COMMITTED)
+  try{
+   await query(transaction,`DECLARE @r int;EXEC @r=sys.sp_getapplock @Resource=@resource,@LockMode='Exclusive',@LockOwner='Transaction',@LockTimeout=10000;IF @r<0 THROW 51000,'database_busy',1;`,{resource:'HueGuide11:'+resource})
+   const result=await action(transaction);await transaction.commit();return result
+  }catch(error){try{await transaction.rollback()}catch{}throw error}
+ }
+ return {
+  catalog:action=>locked('catalog',async transaction=>{
+   const {sql}=await connect(scope)
+   return action({read:async()=>{
+    // Sequence đánh dấu đã từng cấp mã: xóa hết di tích không tự nạp lại seed.
+    const state=await query(transaction,"SELECT last_used_value AS current_value FROM sys.sequences WHERE name=N'SeqDiTich'")
+    const document=await readDocument(transaction)
+    return !document.places.length&&state.recordset[0]?.current_value===null?null:JSON.stringify(document)
+   },write:async payload=>{if(Buffer.byteLength(payload)>32*1024*1024)throw Error('capacity');await writeDocument(transaction,sql,scope,JSON.parse(payload))}})
+  }),
+  version:async()=>{
+   const {pool}=await connect(scope)
+   const result=await query(pool,`SELECT CONVERT(varchar(64),HASHBYTES('SHA2_256',CONCAT(
+    (SELECT * FROM dbo.DiTich ORDER BY MaDiTich FOR JSON PATH),
+    (SELECT * FROM dbo.BanDiTich ORDER BY MaBanDiTich FOR JSON PATH),
+    (SELECT * FROM dbo.NoiDungDiTich ORDER BY MaNoiDung FOR JSON PATH),
+    (SELECT * FROM dbo.HinhAnhDiTich ORDER BY MaHinhAnh FOR JSON PATH),
+    (SELECT * FROM dbo.BanThuThuyetMinh ORDER BY MaBanThu FOR JSON PATH),
+    (SELECT * FROM dbo.NguonThamKhao ORDER BY MaNguon FOR JSON PATH))),2) AS version`)
+   return result.recordset[0].version
+  },
+  gateStatistics:async()=>{const {pool}=await connect(scope),day=dayOf();const r=await query(pool,'SELECT COALESCE(SUM(CONVERT(bigint,SoLuot)),0) AS today FROM dbo.LuotTruyCapQR WHERE NgayTruyCap=CONVERT(date,@day)',{day});return{today:Number(r.recordset[0].today),day}},
+  gateEntry:(visitId,platform)=>locked('gate',async transaction=>{
+   const day=dayOf(),r=await query(transaction,`SELECT COUNT(*) AS total FROM dbo.LuotTruyCapQR WHERE NgayTruyCap=CONVERT(date,@day) AND LoaiGhiNhan='luot_moi';SELECT 1 AS found FROM dbo.LuotTruyCapQR WHERE NgayTruyCap=CONVERT(date,@day) AND MaLuotTruyCap=@visitId;`,{day,visitId})
+   if(r.recordsets[1].length)return
+   if(r.recordsets[0][0].total>=50000)throw Error('capacity')
+   await query(transaction,`INSERT dbo.LuotTruyCapQR(NgayTruyCap,MaLuotTruyCap,NenTang,ThoiDiemTruyCap,LoaiGhiNhan,SoLuot) VALUES(CONVERT(date,@day),@visitId,@platform,SYSUTCDATETIME(),'luot_moi',1)`,{day,visitId,platform})
+  }),
+  importGate:gate=>locked('gate',async transaction=>{
+   if(!gate||!/^\d{4}-\d{2}-\d{2}$/.test(gate.day)||!Number.isSafeInteger(gate.today)||gate.today<0)throw Error('invalid_gate')
+   await query(transaction,`IF NOT EXISTS(SELECT 1 FROM dbo.LuotTruyCapQR WHERE NgayTruyCap=CONVERT(date,@day)) INSERT dbo.LuotTruyCapQR(NgayTruyCap,MaLuotTruyCap,NenTang,ThoiDiemTruyCap,LoaiGhiNhan,SoLuot) VALUES(CONVERT(date,@day),CONCAT('chuyen-cu-',@day),NULL,NULL,'tong_chuyen_cu',@total)`,{day:gate.day,total:gate.today})
+  }),
+  heartbeat:({sessionId,platform})=>locked('presence',async transaction=>{
+   const time=now(),cutoff=new Date(time-ttlMs).toISOString()
+   await query(transaction,'DELETE dbo.PhienHoatDong WHERE ThoiDiemHoatDongCuoi<=CONVERT(datetime2,@cutoff,127)',{cutoff})
+   const r=await query(transaction,'SELECT NenTang FROM dbo.PhienHoatDong WHERE MaPhien=@id;SELECT COUNT(*) AS total FROM dbo.PhienHoatDong',{id:sessionId})
+   if(r.recordsets[0][0]&&r.recordsets[0][0].NenTang!==platform)throw Error('platform_conflict')
+   if(!r.recordsets[0].length&&r.recordsets[1][0].total>=maxSessions)throw Error('capacity')
+   await query(transaction,`UPDATE dbo.PhienHoatDong SET ThoiDiemHoatDongCuoi=CONVERT(datetime2,@time,127) WHERE MaPhien=@id;IF @@ROWCOUNT=0 INSERT dbo.PhienHoatDong VALUES(@id,@platform,CONVERT(datetime2,@time,127))`,{id:sessionId,platform,time:new Date(time).toISOString()})
+  }),
+  end:async id=>{const{pool}=await connect(scope);await query(pool,'DELETE dbo.PhienHoatDong WHERE MaPhien=@id',{id})},
+  prune:async()=>{const{pool}=await connect(scope);await query(pool,'DELETE dbo.PhienHoatDong WHERE ThoiDiemHoatDongCuoi<=CONVERT(datetime2,@cutoff,127)',{cutoff:new Date(now()-ttlMs).toISOString()})},
+  snapshot:async()=>{const{pool}=await connect(scope),time=now();const r=await query(pool,`SELECT COUNT(*) AS active,COALESCE(SUM(CASE WHEN NenTang='web' THEN 1 ELSE 0 END),0) AS web,COALESCE(SUM(CASE WHEN NenTang='mobile-app' THEN 1 ELSE 0 END),0) AS mobile FROM dbo.PhienHoatDong WHERE ThoiDiemHoatDongCuoi>CONVERT(datetime2,@cutoff,127)`,{cutoff:new Date(time-ttlMs).toISOString()});return{...r.recordset[0],updatedAt:time,ttlSeconds:ttlMs/1000}},
+ }
 }
-module.exports = { createSqlRepository }
+module.exports={createSqlRepository}

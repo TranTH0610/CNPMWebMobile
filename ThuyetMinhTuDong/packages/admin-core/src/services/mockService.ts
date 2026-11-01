@@ -201,7 +201,10 @@ export function createMockAdminService(storage: StoragePort,
   // Khai báo replaceText(place, language, text). Nhận đầu vào qua tham số.
   function replaceText(place: ManagedPlace, language: Language, text: PublishedText) {
     // Thực hiện tính biểu thức place.record.content[language] = { ...text, status: 'draft', approvedAt: undefined, publis. | Gán thuộc tính status: chuỗi 'draft'. | Gán thuộc tính approvedAt: sử dụng undefined làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng. | Gán thuộc tính publishedAt: sử dụng undefined làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
-    place.record.content[language] = { ...text, status: 'draft', approvedAt: undefined, publishedAt: undefined }
+    // CHỨC NĂNG: Bài viết đổi thì bản thu đi kèm cũng phải trở về nháp.
+    // TẠI SAO: Không để âm thanh mang trạng thái công bố cho nội dung chưa duyệt.
+    place.record.content[language] = { ...text, status: 'draft', approvedAt: undefined, publishedAt: undefined,
+      audio: text.audio ? { ...text.audio, status: 'draft', approvedAt: undefined, publishedAt: undefined } : undefined }
     /* GIẢI THÍCH TỪNG DÒNG:
      * DÒNG `touch(place)`: Thực hiện Gọi touch(place).
      * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.

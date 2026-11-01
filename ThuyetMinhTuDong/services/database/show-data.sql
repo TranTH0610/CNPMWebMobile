@@ -1,37 +1,26 @@
-/* FILE NÀY LÀM GÌ: Các lệnh chỉ đọc để xem cấu trúc mới trong SSMS.
-   Chọn HueGuideDemo ở thanh database trước khi chạy nếu database máy bạn có tên khác. */
+/* FILE NÀY LÀM GÌ: Xem 11 bảng và ràng buộc trong SSMS. Chỉ đọc, không sửa dữ liệu. */
 USE HueGuideDemo;
 GO
--- Danh mục/ngôn ngữ hỗ trợ.
-SELECT * FROM dbo.Categories;
-SELECT * FROM dbo.Languages;
--- Mỗi dòng view tương ứng một di tích; tên/địa chỉ nằm trong bản thông tin và bài ngôn ngữ.
-SELECT * FROM dbo.vw_Places WHERE Scope=N'main';
-SELECT * FROM dbo.Places WHERE Scope=N'main' ORDER BY SortOrder;
-SELECT * FROM dbo.PlaceVersions WHERE Scope=N'main' ORDER BY PlaceId,SnapshotKind;
--- Bản admin đang sửa và bản khách đang xem được xem riêng.
-SELECT * FROM dbo.vw_PlaceContent WHERE Scope=N'main' AND SnapshotKind=N'draft' ORDER BY PlaceId,Language;
-SELECT * FROM dbo.vw_PlaceContent WHERE Scope=N'main' AND SnapshotKind=N'published' ORDER BY PlaceId,Language;
-SELECT * FROM dbo.PlaceImages WHERE Scope=N'main' ORDER BY PlaceId,SnapshotKind,SortOrder;
-SELECT * FROM dbo.AudioTracks WHERE Scope=N'main';
-SELECT * FROM dbo.ContentSources WHERE Scope=N'main';
-SELECT * FROM dbo.ReviewHistory WHERE Scope=N'main' ORDER BY SortOrder;
-SELECT * FROM dbo.CatalogScopes WHERE Scope=N'main';
-SELECT * FROM dbo.GateEntries WHERE Scope=N'main' ORDER BY OpenedAt DESC;
-SELECT * FROM dbo.GateCarry WHERE Scope=N'main';
-SELECT * FROM dbo.ActiveSessions WHERE Scope=N'main';
--- Xem các khóa ngoại: bảng nào tham chiếu bảng nào.
-SELECT fk.name AS ForeignKey,OBJECT_SCHEMA_NAME(fk.parent_object_id) AS SchemaName,
- OBJECT_NAME(fk.parent_object_id) AS ChildTable,OBJECT_NAME(fk.referenced_object_id) AS ParentTable
-FROM sys.foreign_keys fk WHERE OBJECT_SCHEMA_NAME(fk.parent_object_id)=N'dbo'
-ORDER BY ChildTable,ForeignKey;
+SELECT COUNT(*) AS SoBangNghiepVu FROM sys.tables WHERE schema_id=SCHEMA_ID(N'dbo') AND name<>N'sysdiagrams';
+SELECT * FROM dbo.NgonNgu ORDER BY ThuTuHienThi;
+SELECT * FROM dbo.DiTich ORDER BY ThuTuHienThi;
+SELECT * FROM dbo.BanDiTich ORDER BY MaDiTich,LoaiBan;
+SELECT * FROM dbo.NoiDungDiTich ORDER BY MaBanDiTich,MaNgonNgu;
+SELECT * FROM dbo.HinhAnhDiTich ORDER BY MaBanDiTich,ThuTuHienThi;
+SELECT * FROM dbo.BanThuThuyetMinh ORDER BY MaNoiDung;
+SELECT * FROM dbo.LichSuKiemDuyet ORDER BY ThoiDiemThaoTac DESC;
+SELECT * FROM dbo.NguonThamKhao ORDER BY MaNoiDung,ThuTuHienThi;
+SELECT * FROM dbo.LuotTruyCapQR ORDER BY NgayTruyCap DESC,ThoiDiemTruyCap DESC;
+SELECT * FROM dbo.PhienHoatDong ORDER BY ThoiDiemHoatDongCuoi DESC;
+/* Không xuất toàn bộ byte tệp vào Results: metadata đủ để kiểm tra, tải qua API để nghe/xem. */
+SELECT MaTep,MaBamTep,LoaiTep,DinhDangTep,DungLuongByte,ThoiDiemTao FROM dbo.TepTaiNguyen ORDER BY MaTep;
 
--- File thật nằm ở MediaFiles.Data (VARBINARY). Chỉ xem metadata để không in hàng MB mã hex.
-SELECT Id,Kind,MimeType,ByteLength,SourceScope,CreatedAt FROM dbo.MediaFiles WHERE SourceScope=N'main';
-SELECT p.PlaceId,v.CanonicalTitle,p.SnapshotKind,m.Id,m.MimeType,m.ByteLength
-FROM dbo.PlaceImages p JOIN dbo.MediaFiles m ON m.Id=p.MediaId
-JOIN dbo.PlaceVersions v ON v.Scope=p.Scope AND v.PlaceId=p.PlaceId AND v.SnapshotKind=p.SnapshotKind
-WHERE p.Scope=N'main';
-SELECT a.PlaceId,a.LanguageCode,a.SnapshotKind,a.ContentVersion,m.Id,m.MimeType,m.ByteLength
-FROM dbo.AudioTracks a JOIN dbo.MediaFiles m ON m.Id=a.MediaId WHERE a.Scope=N'main';
-SELECT SourceUri,MediaId FROM dbo.MediaAliases WHERE SourceUri IS NOT NULL;
+SELECT NgayTruyCap,SUM(SoLuot) AS TongLuot FROM dbo.LuotTruyCapQR GROUP BY NgayTruyCap ORDER BY NgayTruyCap DESC;
+SELECT * FROM dbo.PhienHoatDong WHERE ThoiDiemHoatDongCuoi>DATEADD(SECOND,-90,SYSUTCDATETIME());
+
+SELECT fk.name AS TenKhoaNgoai,OBJECT_NAME(fk.parent_object_id) AS BangCon,
+ OBJECT_NAME(fk.referenced_object_id) AS BangCha,fk.is_disabled,fk.is_not_trusted
+FROM sys.foreign_keys fk ORDER BY BangCon;
+SELECT OBJECT_NAME(parent_object_id) AS TenBang,name,definition,is_disabled,is_not_trusted FROM sys.check_constraints ORDER BY TenBang,name;
+SELECT OBJECT_NAME(parent_object_id) AS TenBang,name,type_desc FROM sys.key_constraints ORDER BY TenBang,name;
+SELECT OBJECT_NAME(parent_object_id) AS TenBang,name,is_disabled FROM sys.triggers WHERE parent_class=1 ORDER BY TenBang,name;

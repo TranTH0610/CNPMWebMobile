@@ -14,7 +14,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict')
 // Khai báo {createCatalogServer}: require nạp module './server.cjs' để dùng chức năng có sẵn thay vì chép lại.
 const {createCatalogServer}=require('./server.cjs')
 // Khai báo setup(t, options). Nhận đầu vào qua tham số. | Khai báo server: Gọi createCatalogServer(options). | Thực hiện await chờ Tạo đối tượng bằng new Promise(resolve=>server.listen(0,'127.0.0.1',resolve)). | Thực hiện Gọi t.after(()=>new Promise(resolve=>{server.close(resolve). | Thực hiện Gọi server.close(resolve). | Thực hiện Gọi server.closeAllConnections(). | Trả kết quả: tạo object gồm url, core. | Gán thuộc tính url: tính biểu thức 'http://127.0.0.1:'+server.address().port. | Gán thuộc tính core: require nạp module '../../.runtime/admin-core.cjs' để dùng chức năng có sẵn thay vì chép lại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
-async function setup(t,options){const scope=options?.scope||'test_'+require('node:crypto').randomUUID();t.after(()=>require('../database/test-support.cjs').cleanup(scope));const server=createCatalogServer({...options,scope});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections()}));return{url:'http://127.0.0.1:'+server.address().port,core:require('../../.runtime/admin-core.cjs')}}
+async function setup(t,options){const scope=options?.scope||'test_'+require('node:crypto').randomUUID();t.after(()=>require('../database/test-support.cjs').cleanup(scope));await require('../database/connection.cjs').connect(scope);const server=createCatalogServer({...options,scope});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections()}));const seeded=await fetch('http://127.0.0.1:'+server.address().port+'/published',{signal:AbortSignal.timeout(30000)});assert.equal(seeded.status,200);return{scope,url:'http://127.0.0.1:'+server.address().port,core:require('../../.runtime/admin-core.cjs')}}
 // TẠI SAO (setup): Dữ liệu hoặc adapter giả có kiểm soát giúp test đúng tình huống mà không cần
 // mạng, GPS hay loa thật.
 // Khai báo input: khai báo callback p=>({id:p.id,expectedRevision:p.revision,title:p.record.canonicalTitle+' cậ. | Gán thuộc tính id: đọc p.id từ đối tượng/mảng để dùng tại bước hiện tại. Mã ổn định giúp tìm đúng bản ghi và làm key danh sách khi thứ tự thay đổi. | Gán thuộc tính expectedRevision: đọc p.revision từ đối tượng/mảng để dùng tại bước hiện tại. Gửi phiên bản đã đọc để service phát hiện bản ghi bị nơi khác sửa trước đó. | Gán thuộc tính title: tính biểu thức p.record.canonicalTitle+' cập nhật'. | Gán thuộc tính category: chuỗi 'monument'. | Gán thuộc tính period: chuỗi '1802'. | Gán thuộc tính lat: chuỗi ''. | Gán thuộc tính lng: chuỗi ''. | Gán thuộc tính verified: sử dụng false làm giá trị của bước hiện tại. Tách tọa độ tham khảo với tọa độ đã xác nhận. | Gán thuộc tính images: đọc p.record.images từ đối tượng/mảng để dùng tại bước hiện tại. Giữ danh sách nguồn ảnh để UI có thể xử lý từng nguồn và ảnh lỗi.
@@ -65,3 +65,20 @@ test('MP3 có Range; không tải được audio chưa publish hoặc path trave
 
 // Đóng pool SQL sau cả bộ test để tiến trình Node thoát gọn.
 require('node:test').after(()=>require('../database/connection.cjs').close())
+
+// CHỨC NĂNG: Kiểm tra xóa bằng API thật, không chỉ xóa qua adapter SQL.
+test('Xóa qua API: mất khỏi admin/visitor, giữ nhật ký và không cấp lại mã',async t=>{
+ const {url,core,scope}=await setup(t),client=core.createHttpAdminService(url)
+ const first=(await client.load()).places[0]
+ await client.deletePlace(first.id,first.revision)
+ const after=await client.load()
+ assert.equal(after.places.length,7);assert.ok(!after.places.some(p=>p.id===first.id))
+ assert.ok(after.audit.some(a=>a.action==='deletePlace'&&a.placeId===first.id))
+ assert.ok(!(await client.published()).some(p=>p.id===first.id))
+ await assert.rejects(client.deletePlace(first.id,first.revision),e=>e.code==='notFound')
+ const {pool}=await require('../database/connection.cjs').connect(scope)
+ const rows=(await pool.request().query("SELECT MaDiTichGoc,MaDiTichLienKet FROM dbo.LichSuKiemDuyet WHERE HanhDong='deletePlace'")).recordset
+ assert.equal(rows[0].MaDiTichGoc,'DT001');assert.equal(rows[0].MaDiTichLienKet,null)
+ await client.savePlace({title:'Di tích kiểm thử mới',category:'monument',period:'',lat:'',lng:'',verified:false,images:[]})
+ assert.ok((await client.load()).places.some(p=>p.id==='DT009'))
+})

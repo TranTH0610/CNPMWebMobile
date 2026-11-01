@@ -7,11 +7,16 @@ const {testRepository}=require('./test-support.cjs'),{connect,close}=require('./
 const {rangeOf}=require('../catalog/media.cjs')
 after(close)
 async function setup(t){
+ // CHỨC NĂNG: Tạo database test trước khi đo timeout HTTP của ứng dụng.
  const {scope,repository}=testRepository(t)
+ await connect(scope)
  const server=createCatalogServer({scope,repository})
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve))
  t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections()}))
  const base='http://127.0.0.1:'+server.address().port
+ // Khởi tạo fixture 13 MB trước khi đo timeout của client; không đổi timeout sản phẩm.
+ const seeded=await fetch(base+'/published',{signal:AbortSignal.timeout(30000)})
+ assert.equal(seeded.status,200)
  const core=require('../../.runtime/admin-core.cjs')
  return{base,scope,client:core.createHttpAdminService(base)}
 }
@@ -20,8 +25,8 @@ const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42
 const mp3=Buffer.from('ID3-test-upload-'+Date.now()+'-'+crypto.randomUUID())
 
 test('8 ảnh và 40 MP3 tải từ SQL đúng từng byte so với nguồn đã nhập',async t=>{
- const {base}=await setup(t),places=await(await fetch(base+'/published')).json()
- const {sql,pool}=await connect()
+ const {base,scope}=await setup(t),places=await(await fetch(base+'/published')).json()
+ const {sql,pool}=await connect(scope)
  let pictures=0,audios=0
  for(const place of places){
   const picture=await fetch(base+'/media/published/'+place.images[0].slice(6))
@@ -29,11 +34,10 @@ test('8 ảnh và 40 MP3 tải từ SQL đúng từng byte so với nguồn đã
   assert.deepEqual(Buffer.from(await picture.arrayBuffer()),await fs.readFile(path.resolve(__dirname,'../../apps/web/static/images/places',place.id+'.jpg')));pictures++
   for(const text of Object.values(place.content)){
    const id=text.audio.url.slice(6)
-   const alias=await pool.request().input('id',sql.Char(64),id).query("SELECT SourceUri FROM dbo.MediaAliases WHERE MediaId=@id AND SourceUri LIKE N'narration:%'")
-   const key=alias.recordset[0].SourceUri.slice(10)
+   const stored=await pool.request().input('id',sql.Char(64),id).query("SELECT DuLieuTep FROM dbo.TepTaiNguyen WHERE MaBamTep=@id")
    const audio=await fetch(base+'/media/published/'+id)
    assert.equal(audio.status,200);assert.equal(audio.headers.get('content-type'),'audio/mpeg')
-   assert.deepEqual(Buffer.from(await audio.arrayBuffer()),await fs.readFile(path.resolve(__dirname,'../../apps/web/static/narrations',key+'.mp3')));audios++
+   const body=Buffer.from(await audio.arrayBuffer());assert.deepEqual(body,stored.recordset[0].DuLieuTep);assert.equal(crypto.createHash('sha256').update(body).digest('hex'),id);audios++
   }
  }
  assert.equal(pictures,8);assert.equal(audios,40)
@@ -76,16 +80,13 @@ test('SQL media hỗ trợ HEAD, tua đầu/cuối và trả 416 cho Range sai',
  assert.equal(rangeOf('bytes=a-b',100),null)
 })
 
-test('File có tên photo:/narration: cũ cũng đọc SQL, không cần mở file nguồn',async t=>{
+test('Tài nguyên công bố dùng SQL khi file nguồn không còn truy cập được',async t=>{
  const {base,client}=await setup(t),place=(await client.load()).places[0]
- const {sql,pool}=await connect()
  const id=place.published.content.vi.audio.url.slice(6)
- const alias=await pool.request().input('id',sql.Char(64),id).query("SELECT SourceUri FROM dbo.MediaAliases WHERE MediaId=@id AND SourceUri LIKE N'narration:%'")
- // Nếu nhánh phục vụ file còn đọc đĩa thì test phải thất bại.
  t.mock.method(fs,'readFile',async()=>{throw Error('Source files unavailable')})
  t.mock.method(require('node:fs'),'createReadStream',()=>{throw Error('Source streams unavailable')})
  assert.equal((await fetch(base+'/images/published/'+place.id+'.jpg')).status,200)
- assert.equal((await fetch(base+'/audio/published/'+alias.recordset[0].SourceUri.slice(10)+'.mp3')).status,200)
+ assert.equal((await fetch(base+'/media/published/'+id)).status,200)
 })
 
 test('Tệp sai loại/MIME giả và media không tồn tại không làm hỏng bản đã lưu',async t=>{

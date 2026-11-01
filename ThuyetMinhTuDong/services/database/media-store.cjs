@@ -54,26 +54,22 @@ async function readSource(uri){
  if(data){if(data[1].length>MAX*4/3+4)throw Error('media_too_large');return Buffer.from(data[1],'base64')}
  return download(uri)
 }
+
+// CHỨC NĂNG: Đọc tệp theo mã băm API; trong SQL tệp có mã dễ đọc TEP001...
+// XỬ LÝ: Không còn bảng alias; đầu vào cũ được giải thành byte rồi chống trùng bằng SHA-256.
 async function resolveMedia(executor,sql,scope,uri,kind){
  const existing=mediaKey(uri)
  if(existing){
-  const found=await executor.request().input('id',sql.Char(64),existing).input('kind',sql.VarChar(10),kind).query('SELECT Id FROM dbo.MediaFiles WHERE Id=@id AND Kind=@kind')
+  const found=await executor.request().input('id',sql.Char(64),existing).input('kind',sql.VarChar(10),kind)
+   .query('SELECT MaTep FROM dbo.TepTaiNguyen WHERE MaBamTep=@id AND LoaiTep=@kind')
   if(!found.recordset.length)throw Error('missing_sql_media');return existing
  }
- const sourceHash=hash(uri)
- const known=await executor.request().input('hash',sql.Char(64),sourceHash).query('SELECT a.MediaId,m.Kind FROM dbo.MediaAliases a JOIN dbo.MediaFiles m ON m.Id=a.MediaId WHERE a.SourceHash=@hash')
- if(known.recordset.length){if(known.recordset[0].Kind!==kind)throw Error('wrong_media_kind');return known.recordset[0].MediaId}
- const bytes=await readSource(uri),mime=mimeOf(bytes)
- if(!bytes.length||bytes.length>MAX||!mime.startsWith(kind+'/'))throw Error('invalid_media')
- const id=hash(bytes)
- // UPDLOCK/HOLDLOCK giữ khóa đến hết transaction ngoài, tránh hai request cùng chèn một file.
- await executor.request().input('id',sql.Char(64),id).input('kind',sql.VarChar(10),kind).input('mime',sql.VarChar(40),mime)
-  .input('bytes',sql.VarBinary(sql.MAX),bytes).input('scope',sql.NVarChar(100),scope).input('hash',sql.Char(64),sourceHash)
-  .input('uri',sql.NVarChar(2048),uri.startsWith('data:')||uri.length>2048?null:uri).query(`
-   IF NOT EXISTS(SELECT 1 FROM dbo.MediaFiles WITH(UPDLOCK,HOLDLOCK) WHERE Id=@id)
-    INSERT dbo.MediaFiles(Id,Kind,MimeType,Data,SourceScope) VALUES(@id,@kind,@mime,@bytes,@scope);
-   IF NOT EXISTS(SELECT 1 FROM dbo.MediaAliases WITH(UPDLOCK,HOLDLOCK) WHERE SourceHash=@hash)
-    INSERT dbo.MediaAliases(SourceHash,SourceUri,MediaId) VALUES(@hash,@uri,@id);`)
+ const content=await readSource(uri),mime=mimeOf(content)
+ if(!content.length||content.length>MAX||!mime.startsWith(kind+'/'))throw Error('invalid_media')
+ const id=hash(content)
+ await executor.request().input('id',sql.Char(64),id).input('mime',sql.VarChar(40),mime).input('bytes',sql.VarBinary(sql.MAX),content).query(`
+  IF NOT EXISTS(SELECT 1 FROM dbo.TepTaiNguyen WITH(UPDLOCK,HOLDLOCK) WHERE MaBamTep=@id)
+   INSERT dbo.TepTaiNguyen(MaBamTep,DinhDangTep,DuLieuTep) VALUES(@id,@mime,@bytes);`)
  return id
 }
 async function normaliseDocumentMedia(executor,sql,scope,document){
@@ -85,20 +81,41 @@ async function normaliseDocumentMedia(executor,sql,scope,document){
  }
  return copy
 }
-async function metadata(id){
- const {sql,pool}=await connect()
- return(await pool.request().input('id',sql.Char(64),id).query('SELECT Id,Kind,MimeType,ByteLength FROM dbo.MediaFiles WHERE Id=@id')).recordset[0]
+async function metadata(id,scope='main'){
+ const {sql,pool}=await connect(scope)
+ return(await pool.request().input('id',sql.Char(64),id).query('SELECT MaBamTep AS Id,LoaiTep AS Kind,DinhDangTep AS MimeType,DungLuongByte AS ByteLength FROM dbo.TepTaiNguyen WHERE MaBamTep=@id')).recordset[0]
 }
-async function alias(uri){const {sql,pool}=await connect();return(await pool.request().input('hash',sql.Char(64),hash(uri)).query('SELECT MediaId FROM dbo.MediaAliases WHERE SourceHash=@hash')).recordset[0]?.MediaId}
+// Chỉ là tương thích URL cũ, không lưu danh sách ánh xạ bên ngoài database.
+// Hero cũ lấy ảnh đầu tiên hiện tại; bài đọc cũ kiểm tra byte hoặc khóa của nội dung.
+async function alias(uri,scope='main'){
+ const {sql,pool}=await connect(scope)
+ const photo=/^photo:([a-z0-9-]+)$/.exec(uri)
+ if(photo){const id=require('./ids.cjs').sqlPlaceId(photo[1]);return(await pool.request().input('id',sql.VarChar(30),id).query(`
+  SELECT TOP(1) t.MaBamTep FROM dbo.HinhAnhDiTich h JOIN dbo.BanDiTich b ON b.MaBanDiTich=h.MaBanDiTich
+  JOIN dbo.TepTaiNguyen t ON t.MaTep=h.MaTep WHERE b.MaDiTich=@id AND b.LoaiBan='published' ORDER BY h.ThuTuHienThi`)).recordset[0]?.MaBamTep}
+ const narration=/^narration:([a-f0-9]{64})$/.exec(uri)
+ if(!narration)return undefined
+ const matches=(await pool.request().query(`SELECT n.MaNgonNgu,n.BaiThuyetMinh,t.MaBamTep FROM dbo.NoiDungDiTich n
+  JOIN dbo.BanThuThuyetMinh a ON a.MaNoiDung=n.MaNoiDung JOIN dbo.TepTaiNguyen t ON t.MaTep=a.MaTep`)).recordset
+ const match=matches.find(n=>hash('gtts-v1|'+n.MaNgonNgu+'|'+n.BaiThuyetMinh)===narration[1])
+ if(match)return match.MaBamTep
+ try{const id=hash(await readSource(uri));return(await pool.request().input('id',sql.Char(64),id).query('SELECT MaBamTep FROM dbo.TepTaiNguyen WHERE MaBamTep=@id')).recordset[0]?.MaBamTep}catch(error){if(error.code==='ENOENT'||error.message==='missing_audio_source')return undefined;throw error}
+}
 async function allowed(id,scope,preview){
- const {sql,pool}=await connect()
- const result=await pool.request().input('id',sql.Char(64),id).input('scope',sql.NVarChar(100),scope).input('preview',sql.Bit,preview).query(`
+ const {sql,pool}=await connect(scope)
+ const result=await pool.request().input('id',sql.Char(64),id).input('preview',sql.Bit,preview).query(`
  SELECT TOP(1) 1 AS ok FROM (
-  SELECT Scope,PlaceId,SnapshotKind,MediaId FROM dbo.PlaceImages
-  UNION ALL SELECT Scope,PlaceId,SnapshotKind,MediaId FROM dbo.AudioTracks
- ) x JOIN dbo.Places p ON p.Scope=x.Scope AND p.PlaceId=x.PlaceId
- WHERE x.Scope=@scope AND x.MediaId=@id AND (@preview=1 OR (x.SnapshotKind=N'published' AND p.Workflow<>N'archived'))`)
+  SELECT h.MaBanDiTich,h.MaTep FROM dbo.HinhAnhDiTich h
+  UNION ALL SELECT n.MaBanDiTich,a.MaTep FROM dbo.BanThuThuyetMinh a JOIN dbo.NoiDungDiTich n ON n.MaNoiDung=a.MaNoiDung
+ ) x JOIN dbo.BanDiTich b ON b.MaBanDiTich=x.MaBanDiTich JOIN dbo.DiTich p ON p.MaDiTich=b.MaDiTich
+ JOIN dbo.TepTaiNguyen t ON t.MaTep=x.MaTep
+ WHERE t.MaBamTep=@id AND (@preview=1 OR (b.LoaiBan='published' AND p.TrangThaiXuLy<>'archived'))`)
  return Boolean(result.recordset.length)
 }
-async function bytes(id,start,length){const {sql,pool}=await connect();const result=await pool.request().input('id',sql.Char(64),id).input('start',sql.Int,start+1).input('length',sql.Int,length).query('SELECT SUBSTRING(Data,@start,@length) AS Content FROM dbo.MediaFiles WHERE Id=@id');if(!result.recordset.length)throw Error('missing_sql_media');return Buffer.from(result.recordset[0].Content)}
+async function bytes(id,start,length,scope='main'){
+ const {sql,pool}=await connect(scope)
+ const result=await pool.request().input('id',sql.Char(64),id).input('start',sql.Int,start+1).input('length',sql.Int,length)
+  .query('SELECT SUBSTRING(DuLieuTep,@start,@length) AS Content FROM dbo.TepTaiNguyen WHERE MaBamTep=@id')
+ if(!result.recordset.length)throw Error('missing_sql_media');return Buffer.from(result.recordset[0].Content)
+}
 module.exports={mediaKey,mimeOf,resolveMedia,normaliseDocumentMedia,metadata,alias,allowed,bytes}

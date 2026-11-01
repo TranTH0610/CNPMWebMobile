@@ -113,8 +113,8 @@ function main() {
   const address = findLanAddress()
   // Rẽ nhánh nếu address.
   if (address) {
-    // Khai báo file: Gọi path.join(root, 'apps/mobile/.env').
-    const file = path.join(root, 'apps/mobile/.env')
+    // Khai báo file: Gọi path.join(root, 'apps/mobile/.env.local').
+    const file = path.join(root, 'apps/mobile/.env.local')
     // Khai báo before: chọn giữa hai giá trị theo điều kiện fs.existsSync(file).
     const before = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : ''
     // Khai báo after: Gọi updateMobileEnv(before, address, process.env.CATALOG_PORT || '8788').

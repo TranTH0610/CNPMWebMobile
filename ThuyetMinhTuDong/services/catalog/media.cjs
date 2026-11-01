@@ -12,12 +12,12 @@ function rangeOf(value,size){
 }
 async function sendMedia(req,res,{id,scope='main',preview=false}){
  if(!id||!await store.allowed(id,scope,preview)){res.statusCode=404;res.end();return}
- const file=await store.metadata(id)
+ const file=await store.metadata(id,scope)
  if(!file){res.statusCode=404;res.end();return}
  const range=rangeOf(req.headers.range,Number(file.ByteLength))
  const length=range?range.end-range.start+1:0
  // Đọc SQL trước khi ghi header: nếu SQL lỗi thì API còn trả JSON lỗi đúng định dạng.
- const content=range&&req.method!=='HEAD'?await store.bytes(id,range.start,length):null
+ const content=range&&req.method!=='HEAD'?await store.bytes(id,range.start,length,scope):null
  res.setHeader('Accept-Ranges','bytes');res.setHeader('Content-Type',file.MimeType)
  res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Cache-Control','private, max-age=300')
  res.setHeader('ETag','"'+id+'"')

@@ -3,12 +3,9 @@
  * connection.cjs và migrate.cjs sử dụng; web/mobile không import file này.
  * TẠI SAO: Không đưa tài khoản database vào bundle Expo hoặc Vite.
  */
-const fs = require('node:fs')
-const path = require('node:path')
-const root = path.resolve(__dirname, '../..')
-const envFile = path.join(root, '.env.sqlserver')
-// CHỨC NĂNG: Chỉ đọc cấu hình riêng của server nếu máy có file này.
-if (fs.existsSync(envFile)) process.loadEnvFile(envFile)
+const { loadServerEnv } = require('../config/env.cjs')
+// CHỨC NĂNG: Chỉ BE nạp cấu hình SQL; đường dẫn không phụ thuộc thư mục terminal.
+loadServerEnv()
 
 function databaseName() {
   const name = process.env.SQL_DATABASE || 'HueGuideDemo'

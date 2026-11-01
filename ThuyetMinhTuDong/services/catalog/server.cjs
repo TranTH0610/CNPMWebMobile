@@ -114,7 +114,7 @@ function createCatalogServer({now=Date.now,origins=['http://127.0.0.1:5173','htt
     const photo=/^\/images\/(published|preview)\/([a-z0-9-]+)\.jpg$/.exec(pathname)
     if(media||audio||photo){
       const match=media||audio||photo
-      const id=media?media[2]:await mediaStore.alias((audio?'narration:':'photo:')+match[2])
+      const id=media?media[2]:await mediaStore.alias((audio?'narration:':'photo:')+match[2],scope)
       await sendMedia(req,res,{id,scope,preview:match[1]==='preview'});return
     }
     // CHỨC NĂNG: Admin mobile đọc cùng thống kê SQL 8787 qua cổng LAN 8788.

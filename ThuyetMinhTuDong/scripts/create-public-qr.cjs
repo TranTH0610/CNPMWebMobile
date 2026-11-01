@@ -148,8 +148,8 @@ async function main(args) {
       fs.writeFileSync(path.join(root, 'apps/web/dist/visitor-config.json'), JSON.stringify({ publicSiteOrigin: new URL(href).origin }))
     }
     // CHỨC NĂNG: Danh mục du khách native đi qua cùng tunnel; API Admin vẫn giữ LAN riêng.
-    // Khai báo catalogEnv: Gọi path.join(root, 'apps/mobile/.env').
-    const catalogEnv = path.join(root, 'apps/mobile/.env')
+    // Khai báo catalogEnv: Gọi path.join(root, 'apps/mobile/.env.local').
+    const catalogEnv = path.join(root, 'apps/mobile/.env.local')
     // Khai báo catalogUrl: chọn giữa hai giá trị theo điều kiện fs.existsSync(catalogEnv).
     const catalogUrl = fs.existsSync(catalogEnv) ? fs.readFileSync(catalogEnv, 'utf8').match(/^EXPO_PUBLIC_CATALOG_API_URL=(.*)$/m)?.[1]?.trim() : null
     // Rẽ nhánh nếu !catalogUrl || /^http:\/\/(192\.168\.|10\.|172\.|localhost|127\.)/.test(catalogUrl) || /^https:\/\/[^/]+\.tryc.
@@ -169,15 +169,15 @@ async function main(args) {
     setVariable(path.join(root, 'apps/web/.env.local'), 'VITE_PUBLIC_SITE_URL', new URL(href).origin,
       path.join(folder, 'web-env-before-' + stamp + '.txt'))
     /* GIẢI THÍCH TỪNG DÒNG:
-     * DÒNG `setVariable(path.join(root, 'apps/mobile/.env'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', ne`: Cập nhật trạng thái qua setVariable(path.join(root, 'apps/mobile/.env'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', new URL(href).origin, path.join(folde.
-     * DÒNG `path.join(folder, 'mobile-env-before-' + stamp + '.txt'))`: Cập nhật trạng thái qua setVariable(path.join(root, 'apps/mobile/.env'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', new URL(href).origin, path.join(folde.
+     * DÒNG `setVariable(path.join(root, 'apps/mobile/.env.local'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', ne`: Cập nhật trạng thái qua setVariable(path.join(root, 'apps/mobile/.env.local'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', new URL(href).origin, path.join(folde.
+     * DÒNG `path.join(folder, 'mobile-env-before-' + stamp + '.txt'))`: Cập nhật trạng thái qua setVariable(path.join(root, 'apps/mobile/.env.local'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', new URL(href).origin, path.join(folde.
      */
-    setVariable(path.join(root, 'apps/mobile/.env'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', new URL(href).origin,
+    setVariable(path.join(root, 'apps/mobile/.env.local'), 'EXPO_PUBLIC_VISITOR_WEB_ORIGIN', new URL(href).origin,
       path.join(folder, 'mobile-env-before-' + stamp + '.txt'))
     // CHỨC NĂNG: Native du khách báo phiên qua cùng tunnel, không cần mở cổng RAM công khai.
     // XỬ LÝ: Chỉ tự điền khi chưa có URL hoặc đang dùng tunnel cũ; giữ nguyên API riêng người dùng đã cấu hình.
-    // Khai báo mobileEnv: Gọi path.join(root, 'apps/mobile/.env').
-    const mobileEnv = path.join(root, 'apps/mobile/.env')
+    // Khai báo mobileEnv: Gọi path.join(root, 'apps/mobile/.env.local').
+    const mobileEnv = path.join(root, 'apps/mobile/.env.local')
     // Khai báo presenceUrl: fs.readFileSync(mobileEnv, 'utf8').match(/^EXPO_PUBLIC_PRESENCE_API_URL=(.*)$/m)?.[1]?.trim bỏ khoảng trắng đầu/cuối để kiểm tra dữ liệu nhập thực tế.
     const presenceUrl = fs.readFileSync(mobileEnv, 'utf8').match(/^EXPO_PUBLIC_PRESENCE_API_URL=(.*)$/m)?.[1]?.trim()
     // Rẽ nhánh nếu !presenceUrl || /^https:\/\/[^/]+\.trycloudflare\.com\/api\/presence\/?$/.test(presenceUrl).

@@ -1,4 +1,4 @@
-﻿# FILE NÀY LÀM GÌ:
+# FILE NÀY LÀM GÌ:
 # Bỏ dependency, kết quả test/build và cấu hình máy cá nhân khỏi Git.
 
 # CHỨC NĂNG: Không commit thư viện cài từ npm.
@@ -35,3 +35,18 @@ apps/web/static/visitor-config.json
 
 # Thông tin kết nối SQL riêng của máy; không đưa lên GitHub.
 .env.sqlserver
+
+# Giữ tất cả cấu hình riêng ngoài Git ở mọi thư mục con.
+# Chỉ cho phép file mẫu; mẫu không được chứa mật khẩu hoặc token thật.
+.env.*
+!.env.example
+!.env.*.example
+
+# Khóa riêng, bản sao lưu database và log chỉ dùng trên máy.
+*.pem
+*.key
+*.pfx
+*.p12
+*.bak
+*.trn
+*.log
