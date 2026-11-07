@@ -3,12 +3,12 @@
 Xem CAU_TRUC_DU_AN.md để biết vai trò thư mục và cách chạy.
 Bản code cũ và cấu trúc trước khi di chuyển đã được sao lưu riêng.
 
-## apps/mobile/src/hooks/usePlaces.ts
+## apps/mobile/src/features/explore/hooks/useDanhSachDiTich.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Cung cấp hooks địa điểm đang được các màn hình gọi.
- * Vị trí: apps/mobile/src/hooks/usePlaces.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/hooks/useDanhSachDiTich.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -19,12 +19,12 @@ Bản code cũ và cấu trúc trước khi di chuyển đã được sao lưu r
 export { usePublishedCatalog, usePublishedPlace, useExplore, usePlaceFilters, useVisitorPosition, useDebounce } from '@travelguide/visitor-core/react'
 ```
 
-## apps/mobile/src/hooks/useVisitor.ts
+## apps/mobile/src/features/language/hooks/useDuKhach.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Cung cấp trạng thái du khách dùng trong UI.
- * Vị trí: apps/mobile/src/hooks/useVisitor.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/language/hooks/useDuKhach.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -34,12 +34,12 @@ export { usePublishedCatalog, usePublishedPlace, useExplore, usePlaceFilters, us
 export { useVisitor } from '@travelguide/visitor-core/react'
 ```
 
-## apps/mobile/src/hooks/useJourney.ts
+## apps/mobile/src/features/journey/hooks/useHanhTrinh.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Cung cấp hook phiên nghe/GPS cho các màn và component.
- * Vị trí: apps/mobile/src/hooks/useJourney.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/hooks/useHanhTrinh.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -49,12 +49,12 @@ export { useVisitor } from '@travelguide/visitor-core/react'
 export { useJourney } from '@travelguide/visitor-core/journey/react'
 ```
 
-## apps/mobile/src/i18n/index.ts
+## apps/mobile/src/features/language/i18n/CauHinhNgonNgu.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Khởi tạo i18n và cung cấp hàm dịch cho ứng dụng.
- * Vị trí: apps/mobile/src/i18n/index.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/language/i18n/CauHinhNgonNgu.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -66,12 +66,12 @@ export const boot = createVisitorI18n()
 export { useText } from '@travelguide/visitor-core/react'
 ```
 
-## apps/web/src/hooks/usePlaces.ts
+## apps/web/src/features/explore/hooks/useDanhSachDiTich.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Cung cấp hooks địa điểm đang được các màn hình gọi.
- * Vị trí: apps/web/src/hooks/usePlaces.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/explore/hooks/useDanhSachDiTich.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -82,12 +82,12 @@ export { useText } from '@travelguide/visitor-core/react'
 export { usePublishedCatalog, usePublishedPlace, useExplore, usePlaceFilters, useVisitorPosition, useDebounce } from '@travelguide/visitor-core/react'
 ```
 
-## apps/web/src/hooks/useVisitor.ts
+## apps/web/src/features/language/hooks/useDuKhach.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Cung cấp trạng thái du khách dùng trong UI.
- * Vị trí: apps/web/src/hooks/useVisitor.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/language/hooks/useDuKhach.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -97,12 +97,12 @@ export { usePublishedCatalog, usePublishedPlace, useExplore, usePlaceFilters, us
 export { useVisitor } from '@travelguide/visitor-core/react'
 ```
 
-## apps/web/src/hooks/useJourney.ts
+## apps/web/src/features/journey/hooks/useHanhTrinh.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Cung cấp hook phiên nghe/GPS cho các màn và component.
- * Vị trí: apps/web/src/hooks/useJourney.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/hooks/useHanhTrinh.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -112,12 +112,12 @@ export { useVisitor } from '@travelguide/visitor-core/react'
 export { useJourney } from '@travelguide/visitor-core/journey/react'
 ```
 
-## apps/web/src/i18n/index.ts
+## apps/web/src/features/language/i18n/CauHinhNgonNgu.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Khởi tạo i18n và cung cấp hàm dịch cho ứng dụng.
- * Vị trí: apps/web/src/i18n/index.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/language/i18n/CauHinhNgonNgu.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -129,12 +129,12 @@ export const boot = createVisitorI18n()
 export { useText } from '@travelguide/visitor-core/react'
 ```
 
-## apps/mobile/src/theme.ts
+## apps/mobile/src/shared/GiaoDienChung.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Style dùng chung của mobile, lấy màu và khoảng cách từ ui-tokens.
- * Vị trí: apps/mobile/src/theme.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/GiaoDienChung.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -217,12 +217,12 @@ export const ui = StyleSheet.create({
 export { colors, spacing, radii } from '../../../packages/ui-tokens/colors'
 ```
 
-## apps/mobile/src/styles/explore.ts
+## apps/mobile/src/features/explore/GiaoDienKhamPha.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Tách riêng một phần giao diện để dễ tìm và bảo trì.
- * Vị trí: apps/mobile/src/styles/explore.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/GiaoDienKhamPha.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -356,7 +356,7 @@ export const explore = StyleSheet.create({
 })
 ```
 
-## apps/mobile/src/components/Action.tsx
+## apps/mobile/src/shared/components/NutThaoTac.tsx
 
 ```tsx
 /**
@@ -401,12 +401,12 @@ const styles = StyleSheet.create({
 })
 ```
 
-## apps/mobile/src/components/LanguageBar.tsx
+## apps/mobile/src/features/language/components/ThanhChonNgonNgu.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Danh sách chọn ngôn ngữ mobile đồng bộ với provider chung.
- * Vị trí: apps/mobile/src/components/LanguageBar.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/language/components/ThanhChonNgonNgu.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -483,12 +483,12 @@ export function DemoNotice() {
 }
 ```
 
-## apps/mobile/src/components/State.tsx
+## apps/mobile/src/shared/components/TrangThaiDuLieu.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trạng thái tải/lỗi/thông báo và các nút thử lại hoặc quay lại.
- * Vị trí: apps/mobile/src/components/State.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/components/TrangThaiDuLieu.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -541,12 +541,12 @@ export function State({
 }
 ```
 
-## apps/mobile/src/components/PlaceImage.tsx
+## apps/mobile/src/shared/components/AnhDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ảnh địa điểm có placeholder và thử lại khi URL thay đổi.
- * Vị trí: apps/mobile/src/components/PlaceImage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/components/AnhDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -603,12 +603,12 @@ export function PlaceImage({
 }
 ```
 
-## apps/mobile/src/components/Cover.tsx
+## apps/mobile/src/shared/components/AnhBia.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ảnh bìa mobile có placeholder khi ảnh thiếu hoặc tải lỗi.
- * Vị trí: apps/mobile/src/components/Cover.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/components/AnhBia.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -677,12 +677,12 @@ export function Cover({
 }
 ```
 
-## apps/mobile/src/components/SearchBar.tsx
+## apps/mobile/src/features/explore/components/OTimKiem.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ô tìm kiếm mobile, thao tác quay lại/xóa và mở bộ lọc.
- * Vị trí: apps/mobile/src/components/SearchBar.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/components/OTimKiem.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -782,12 +782,12 @@ export function SearchBar({
 }
 ```
 
-## apps/mobile/src/components/CategoryChips.tsx
+## apps/mobile/src/features/explore/components/NutLocDanhMuc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị các chip danh mục có dữ liệu và cập nhật mục đang chọn.
- * Vị trí: apps/mobile/src/components/CategoryChips.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/components/NutLocDanhMuc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -865,12 +865,12 @@ export function CategoryChips({
 }
 ```
 
-## apps/mobile/src/components/SortDropdown.tsx
+## apps/mobile/src/features/explore/components/ChonSapXep.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Chọn sắp xếp theo tên hoặc gần nhất; báo cách sắp xếp thực tế.
- * Vị trí: apps/mobile/src/components/SortDropdown.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/components/ChonSapXep.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -925,12 +925,12 @@ export function SortDropdown({
 }
 ```
 
-## apps/mobile/src/components/PlaceCard.tsx
+## apps/mobile/src/features/explore/components/TheDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Thẻ địa điểm, ảnh dự phòng, danh mục, khoảng cách nếu có và nút tim cục bộ.
- * Vị trí: apps/mobile/src/components/PlaceCard.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/components/TheDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1069,7 +1069,7 @@ export function PlaceCard({
 }
 ```
 
-## apps/mobile/src/components/ListenButton.tsx
+## apps/mobile/src/features/journey/components/NutNgheThuyetMinh.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Nút nghe chính có icon và trạng thái đồng bộ với player. */
@@ -1095,7 +1095,7 @@ export function ListenButton({ id }: { id: string }) {
 }
 ```
 
-## apps/mobile/src/components/JourneyPlayer.tsx
+## apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
 
 ```tsx
 /**
@@ -1227,12 +1227,12 @@ const styles = StyleSheet.create({
 })
 ```
 
-## apps/mobile/src/hooks/useJourneyNavigation.ts
+## apps/mobile/src/features/journey/hooks/useDieuHuongHanhTrinh.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Điều hướng theo gợi ý GPS và chốt tiến độ khi app đổi trạng thái.
- * Vị trí: apps/mobile/src/hooks/useJourneyNavigation.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/hooks/useDieuHuongHanhTrinh.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1248,12 +1248,12 @@ export function useJourneyNavigation({ open }: { open: (id: string) => void }) {
 }
 ```
 
-## apps/mobile/src/components/VisitorMap.tsx
+## apps/mobile/src/features/journey/components/BanDoThamQuan.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bản đồ native và marker bấm mở chi tiết; không tạo tuyến đi giả.
- * Vị trí: apps/mobile/src/components/VisitorMap.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/components/BanDoThamQuan.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1286,12 +1286,12 @@ export function VisitorMap({ selected, onOpen }: { selected?: string; onOpen: (i
 const styles = StyleSheet.create({ map: { height: 300, marginVertical: spacing.md } })
 ```
 
-## apps/mobile/src/screens/JourneyScreen.tsx
+## apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Màn bản đồ, GPS và thứ tự tham quan tham khảo trên mobile.
- * Vị trí: apps/mobile/src/screens/JourneyScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1348,12 +1348,12 @@ export function JourneyScreen() {
 }
 ```
 
-## apps/mobile/src/screens/DetailScreen.tsx
+## apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị bài đọc đúng ngôn ngữ, nút nghe và nút mở bản đồ của địa điểm.
- * Vị trí: apps/mobile/src/screens/DetailScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -1768,12 +1768,12 @@ export default function ScanScreen({
 }
 ```
 
-## apps/mobile/src/services/platform.ts
+## apps/mobile/src/shared/services/KetNoiNenTang.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Kết nối bộ nhớ ngôn ngữ, vị trí và chính sách URL/QR của nền tảng.
- * Vị trí: apps/mobile/src/services/platform.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/services/KetNoiNenTang.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1863,12 +1863,12 @@ export async function getPosition(): Promise<Point> {
 }
 ```
 
-## apps/mobile/src/services/journeyAdapters.ts
+## apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Kết nối audio/GPS/bộ nhớ riêng nền tảng vào JourneyProvider.
- * Vị trí: apps/mobile/src/services/journeyAdapters.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1941,12 +1941,12 @@ export const journeyAdapters: JourneyAdapters = {
 }
 ```
 
-## apps/mobile/src/navigation/linking.ts
+## apps/mobile/src/navigation/LienKetMoUngDung.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Nhận deep link bên ngoài và tạo lịch sử điều hướng mobile phù hợp.
- * Vị trí: apps/mobile/src/navigation/linking.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/LienKetMoUngDung.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2016,12 +2016,12 @@ export const linking:
   }
 ```
 
-## apps/mobile/src/navigation/types.ts
+## apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Tách riêng một phần giao diện để dễ tìm và bảo trì.
- * Vị trí: apps/mobile/src/navigation/types.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2177,12 +2177,12 @@ export default function WebAccessCard() {
 }
 ```
 
-## apps/mobile/src/types/assets.d.ts
+## apps/mobile/src/types/KieuTaiNguyen.d.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Khai báo kiểu MP3 đóng gói bởi Metro.
- * Vị trí: apps/mobile/src/types/assets.d.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/types/KieuTaiNguyen.d.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2202,12 +2202,12 @@ declare module '*.mp3' {
 declare module '*.jpg' { const asset: number; export default asset }
 ```
 
-## apps/mobile/src/screens/HomeScreen.tsx
+## apps/mobile/src/features/explore/screens/ManKhamPha.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị Khám phá, carousel và danh sách có tìm kiếm/lọc/kéo làm mới.
- * Vị trí: apps/mobile/src/screens/HomeScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/screens/ManKhamPha.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2583,12 +2583,12 @@ export default function HomeScreen({
 }
 ```
 
-## apps/mobile/src/screens/SettingsScreen.tsx
+## apps/mobile/src/features/settings/screens/ManCaiDat.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị chọn ngôn ngữ chung và liên kết truy cập website/QR.
- * Vị trí: apps/mobile/src/screens/SettingsScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/settings/screens/ManCaiDat.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2646,12 +2646,12 @@ export default function PlaceholderScreen() {
 }
 ```
 
-## apps/mobile/src/navigation/MainTabs.tsx
+## apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Đăng ký các tab Khám phá, Bản đồ, Yêu thích và Cài đặt với nhãn được dịch.
- * Vị trí: apps/mobile/src/navigation/MainTabs.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2726,12 +2726,12 @@ export default function MainTabs() {
 }
 ```
 
-## apps/mobile/src/screens/SearchResultScreen.tsx
+## apps/mobile/src/features/explore/screens/ManKetQuaTimKiem.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Màn kết quả tìm kiếm được Stack đăng ký riêng.
- * Vị trí: apps/mobile/src/screens/SearchResultScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/screens/ManKetQuaTimKiem.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2745,12 +2745,12 @@ export default function SearchResultScreen({ route }: NativeStackScreenProps<Vis
 }
 ```
 
-## apps/mobile/src/navigation/RootNavigator.tsx
+## apps/mobile/src/navigation/DieuHuongGoc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app.
- * Vị trí: apps/mobile/src/navigation/RootNavigator.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/DieuHuongGoc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2835,12 +2835,12 @@ export default function RootNavigator() {
 }
 ```
 
-## apps/mobile/src/providers/AppProviders.tsx
+## apps/mobile/src/app/TrangThaiUngDung.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ghép các provider mobile một lần tại gốc, giữ nguyên khóa lưu ngôn ngữ/tiến độ.
- * Vị trí: apps/mobile/src/providers/AppProviders.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/app/TrangThaiUngDung.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2896,12 +2896,12 @@ export default function App() {
 }
 ```
 
-## apps/mobile/src/components/index.ts
+## apps/mobile/src/shared/components/index.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Điểm xuất component mobile; màn hình import tại đây, component con import trực tiếp để tránh vòng lặp.
- * Vị trí: apps/mobile/src/components/index.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/components/index.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2924,12 +2924,12 @@ export { ui, colors, spacing, radii } from '../theme'
 export { explore } from '../styles/explore'
 ```
 
-## apps/web/src/components/Icon.tsx
+## apps/web/src/shared/components/BieuTuong.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Các icon SVG nhỏ có thể tái sử dụng trong giao diện web.
- * Vị trí: apps/web/src/components/Icon.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/components/BieuTuong.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3000,12 +3000,12 @@ export function Icon({
 }
 ```
 
-## apps/web/src/components/LanguagePicker.tsx
+## apps/web/src/features/language/components/ChonNgonNgu.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Chọn một trong năm ngôn ngữ và hiển thị lỗi lưu lựa chọn trên web.
- * Vị trí: apps/web/src/components/LanguagePicker.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/language/components/ChonNgonNgu.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3055,12 +3055,12 @@ export function LanguagePicker() {
 }
 ```
 
-## apps/web/src/components/State.tsx
+## apps/web/src/shared/components/TrangThaiDuLieu.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trạng thái tải/lỗi/thông báo và các nút thử lại hoặc quay lại.
- * Vị trí: apps/web/src/components/State.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/components/TrangThaiDuLieu.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3090,12 +3090,12 @@ export function State({
 }
 ```
 
-## apps/web/src/components/PlaceImage.tsx
+## apps/web/src/shared/components/AnhDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ảnh địa điểm có placeholder và thử lại khi URL thay đổi.
- * Vị trí: apps/web/src/components/PlaceImage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/components/AnhDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3138,12 +3138,12 @@ export function PlaceImage({
 }
 ```
 
-## apps/web/src/components/CategoryChips.tsx
+## apps/web/src/features/explore/components/NutLocDanhMuc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị các chip danh mục có dữ liệu và cập nhật mục đang chọn.
- * Vị trí: apps/web/src/components/CategoryChips.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/explore/components/NutLocDanhMuc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3190,12 +3190,12 @@ export function CategoryChips({
 }
 ```
 
-## apps/web/src/components/PlaceCard.tsx
+## apps/web/src/features/explore/components/TheDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Thẻ địa điểm, ảnh dự phòng, danh mục, khoảng cách nếu có và nút tim cục bộ.
- * Vị trí: apps/web/src/components/PlaceCard.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/explore/components/TheDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3270,12 +3270,12 @@ export function PlaceCard({
 }
 ```
 
-## apps/web/src/components/index.ts
+## apps/web/src/shared/components/index.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Điểm xuất component UI web.
- * Vị trí: apps/web/src/components/index.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/components/index.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3289,12 +3289,12 @@ export { CategoryChips } from './CategoryChips'
 export { PlaceCard } from './PlaceCard'
 ```
 
-## apps/web/src/components/Catalogue.tsx
+## apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bộ lọc danh mục/khu vực, tìm kiếm, sắp xếp, đổi lưới/danh sách và phân trang.
- * Vị trí: apps/web/src/components/Catalogue.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3633,12 +3633,12 @@ export function Catalogue({
 }
 ```
 
-## apps/web/src/pages/HomePage.tsx
+## apps/web/src/features/explore/pages/TrangChu.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trang chủ web với hero, tìm kiếm, danh mục, carousel và Catalogue.
- * Vị trí: apps/web/src/pages/HomePage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/explore/pages/TrangChu.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3797,12 +3797,12 @@ export function HomePage() {
 }
 ```
 
-## apps/web/src/pages/PlacesPage.tsx
+## apps/web/src/features/explore/pages/TrangDanhSachDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Đọc từ khóa/danh mục từ URL và hiển thị danh sách Catalogue.
- * Vị trí: apps/web/src/pages/PlacesPage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/explore/pages/TrangDanhSachDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -3915,12 +3915,12 @@ export function QrImage() {
  */
 ```
 
-## apps/web/src/pages/DetailPage.tsx
+## apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trang bài đọc, đổi ngôn ngữ, nghe thuyết minh và mở marker địa điểm.
- * Vị trí: apps/web/src/pages/DetailPage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -4135,7 +4135,7 @@ export function QrPage() {
 }
 ```
 
-## apps/web/src/components/ListenButton.tsx
+## apps/web/src/features/journey/components/NutNgheThuyetMinh.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Nút nghe chính có icon và trạng thái đồng bộ với player. */
@@ -4161,7 +4161,7 @@ export function ListenButton({ id }: { id: string }) {
 }
 ```
 
-## apps/web/src/components/JourneyPlayer.tsx
+## apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx
 
 ```tsx
 /**
@@ -4256,12 +4256,12 @@ export function JourneyPlayer() {
 }
 ```
 
-## apps/web/src/components/VisitorMap.tsx
+## apps/web/src/features/journey/components/BanDoThamQuan.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bản đồ Leaflet với marker là nút HTML, hỗ trợ bấm/Enter mở đúng chi tiết.
- * Vị trí: apps/web/src/components/VisitorMap.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/components/BanDoThamQuan.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4316,7 +4316,7 @@ export function VisitorMap({ selected }: { selected: string | null }) {
 }
 ```
 
-## apps/web/src/pages/JourneyPage.tsx
+## apps/web/src/features/journey/pages/TrangHanhTrinh.tsx
 
 ```tsx
 /**
@@ -4335,7 +4335,7 @@ import { Icon } from '../components/Icon'
 import { useText } from '../i18n'
 import { useVisitor } from '../hooks/useVisitor'
 import { useJourney } from '../hooks/useJourney'
-import '../styles/journey.css'
+import '../styles/HanhTrinh.css'
 
 export function JourneyPage() {
   const { engine, state } = useJourney()
@@ -4460,12 +4460,12 @@ export function JourneyPage() {
  */
 ```
 
-## apps/web/src/hooks/useJourneyNavigation.ts
+## apps/web/src/features/journey/hooks/useDieuHuongHanhTrinh.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Nhận gợi ý GPS và lưu tiến độ khi trang ra nền; App gọi hook này một lần.
- * Vị trí: apps/web/src/hooks/useJourneyNavigation.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/hooks/useDieuHuongHanhTrinh.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4488,12 +4488,12 @@ export function useJourneyNavigation() {
 }
 ```
 
-## apps/web/src/services/platform.ts
+## apps/web/src/shared/services/KetNoiNenTang.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Kết nối bộ nhớ ngôn ngữ, vị trí và chính sách URL/QR của nền tảng.
- * Vị trí: apps/web/src/services/platform.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/services/KetNoiNenTang.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4590,12 +4590,12 @@ export async function loadPublicSiteOrigin(): Promise<string | null> {
 }
 ```
 
-## apps/web/src/services/journeyAdapters.ts
+## apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Kết nối audio/GPS/bộ nhớ riêng nền tảng vào JourneyProvider.
- * Vị trí: apps/web/src/services/journeyAdapters.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4662,12 +4662,12 @@ export const journeyAdapters: JourneyAdapters = {
 }
 ```
 
-## apps/web/src/components/Navbar.tsx
+## apps/web/src/shared/layouts/ThanhDieuHuong.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Thanh điều hướng web, logo, chọn ngôn ngữ và liên kết QR chung.
- * Vị trí: apps/web/src/components/Navbar.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/layouts/ThanhDieuHuong.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4709,12 +4709,12 @@ export function Navbar() { const t = useText(); return (<header className="navba
       </header>) }
 ```
 
-## apps/web/src/components/Footer.tsx
+## apps/web/src/shared/layouts/ChanTrang.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Chân trang web với thông tin demo và nguồn ảnh.
- * Vị trí: apps/web/src/components/Footer.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/layouts/ChanTrang.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4744,12 +4744,12 @@ export function Footer() { const t = useText(); return (<footer className="conta
       </footer>) }
 ```
 
-## apps/web/src/layouts/AppLayout.tsx
+## apps/web/src/shared/layouts/BoCucDuKhach.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Layout web dùng chung cho mọi trang; đổi trang không hủy trình phát.
- * Vị trí: apps/web/src/layouts/AppLayout.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/layouts/BoCucDuKhach.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4798,12 +4798,12 @@ import { useText } from '../i18n'
 export function AboutPage() { const t = useText(); return <section className="panel detail"><h1>{t('site')}</h1><p>{t('intro')}</p><p>{t('noAccount')}</p><p>{t('demo')}</p></section> }
 ```
 
-## apps/web/src/pages/NotFoundPage.tsx
+## apps/web/src/shared/pages/TrangKhongTimThay.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trang URL không tồn tại và liên kết quay lại danh sách.
- * Vị trí: apps/web/src/pages/NotFoundPage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/pages/TrangKhongTimThay.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4814,12 +4814,12 @@ import { State } from '../components/State'
 export function NotFoundPage() { const t = useText(); return <section className="panel"><State message="notFound" /><Link to="/places">{t('back')}</Link></section> }
 ```
 
-## apps/web/src/navigation/AppRoutes.tsx
+## apps/web/src/app/DinhTuyenDuKhach.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bảng route web; không chứa code UI của từng trang.
- * Vị trí: apps/web/src/navigation/AppRoutes.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/app/DinhTuyenDuKhach.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4851,12 +4851,12 @@ export function AppRoutes() {
 }
 ```
 
-## apps/web/src/App.tsx
+## apps/web/src/app/App.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ghép điều hướng web với hook GPS/lưu tiến độ.
- * Vị trí: apps/web/src/App.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/app/App.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -4885,8 +4885,8 @@ import { VisitorProvider } from '@travelguide/visitor-core/react'
 import { colors, spacing } from '../../../packages/ui-tokens/colors'
 import { storage } from './services/platform'
 import App from './App'
-import './styles/index.css'
-import './styles/player.css'
+import './styles/GiaoDienNen.css'
+import './styles/GiaoDienTrinhNghe.css'
 
 // CHỨC NĂNG: Cho CSS dùng chung token với mobile.
 // XỬ LÝ: Màu là chuỗi; spacing được đổi thành đơn vị px.
@@ -4925,7 +4925,7 @@ ReactDOM.createRoot(root).render(
 )
 ```
 
-## apps/web/src/styles/index.css
+## apps/web/src/shared/styles/GiaoDienNen.css
 
 ```css
 /*
@@ -5678,7 +5678,7 @@ button:not(:disabled):active, .button:active { filter: brightness(.92); }
 /// <reference types="vite/client" />
 ```
 
-## packages/visitor-core/src/journey.ts
+## packages/visitor-core/src/HanhTrinh.ts
 
 ```ts
 /**
@@ -5934,7 +5934,7 @@ export class JourneyController {
  */
 ```
 
-## packages/visitor-core/src/journey-react.tsx
+## packages/visitor-core/src/TrangThaiHanhTrinhReact.tsx
 
 ```tsx
 /**
@@ -5977,7 +5977,7 @@ export function useJourney() {
  */
 ```
 
-## packages/visitor-core/src/journey-data.ts
+## packages/visitor-core/src/DuLieuHanhTrinh.ts
 
 ```ts
 /**
@@ -6015,12 +6015,12 @@ export const VISIT_ROUTES: readonly VisitRoute[] = [{
  */
 ```
 
-## packages/visitor-core/src/journey-messages.ts
+## packages/visitor-core/src/BanDichHanhTrinh.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Chữ giao diện UC06–UC11, đủ năm ngôn ngữ.
- * messages.ts ghép vào i18n; thứ tự cột được kiểm tra để tránh thiếu/nhầm key.
+ * BanDichGiaoDien.ts ghép vào i18n; thứ tự cột được kiểm tra để tránh thiếu/nhầm key.
  */
 import type { Language } from './model'
 const keys = ['jTitle','jPlay','jPause','jResume','jReplay','jBack','jForward','jSpeed','jSeek','jGpsOn','jGpsOff',
@@ -6056,7 +6056,7 @@ export const journeyMessages = Object.fromEntries(Object.entries(rows).map(([lan
  */
 ```
 
-## packages/visitor-core/src/model.ts
+## packages/visitor-core/src/KieuDuLieuDuKhach.ts
 
 ```ts
 /**
@@ -6176,14 +6176,14 @@ export type StoragePort = {
 }
 ```
 
-## packages/visitor-core/src/mock.ts
+## packages/visitor-core/src/DuLieuKhoiTao.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ:
  * Cung cấp tám điểm minh họa để thử giao diện UC02–UC04.
  * demoCatalog được provider dùng mặc định.
- * Phụ thuộc model.ts và catalog.ts.
+ * Phụ thuộc KieuDuLieuDuKhach.ts và DanhMucDiTich.ts.
  *
  * Danh mục và bài đọc là dữ liệu demo, chưa phải dữ liệu triển khai đã chốt.
  * Không khai báo tọa độ suy đoán.
@@ -6359,14 +6359,14 @@ export async function loadMockCatalog(): Promise<PlaceRecord[]> {
 export const demoCatalog = createCatalog(loadMockCatalog)
 ```
 
-## packages/visitor-core/src/messages.ts
+## packages/visitor-core/src/BanDichGiaoDien.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ:
  * Chứa chữ giao diện UC01–UC11 của năm ngôn ngữ.
- * createVisitorI18n trong react.tsx dùng file này.
- * Phụ thuộc type Language trong model.ts.
+ * createVisitorI18n trong TrangThaiReact.tsx dùng file này.
+ * Phụ thuộc type Language trong KieuDuLieuDuKhach.ts.
  */
 import { qrMessages } from './qr-messages'
 
@@ -6709,13 +6709,13 @@ export const messages: Record<Language, Messages> = {
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./react": "./src/react.tsx",
-    "./journey": "./src/journey.ts",
-    "./journey/react": "./src/journey-react.tsx",
-    "./journey/data": "./src/journey-data.ts"
+    "./react": "./src/TrangThaiReact.tsx",
+    "./journey": "./src/HanhTrinh.ts",
+    "./journey/react": "./src/TrangThaiHanhTrinhReact.tsx",
+    "./journey/data": "./src/DuLieuHanhTrinh.ts"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs tests/journey.test.cjs",
+    "test": "tsc -p tsconfig.test.json && node --test tests/KiemThuNghiepVuChung.test.cjs tests/KiemThuNgonNgu.test.cjs tests/KiemThuDiaChiWebsite.test.cjs tests/KiemThuHanhTrinh.test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx"
   },
@@ -6730,7 +6730,7 @@ export const messages: Record<Language, Messages> = {
 }
 ```
 
-## packages/visitor-core/tests/journey.test.cjs
+## packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs
 
 ```js
 /**
@@ -6918,7 +6918,7 @@ for (const initial of [true, false]) {
 }
 ```
 
-## scripts/create-demo-audio.py
+## scripts/TaoAmThanhMau.py
 
 ```python
 """FILE NÀY LÀM GÌ: Tạo giọng đọc demo VI/EN/CN/PT/JA để thử audio thật.
@@ -7036,7 +7036,7 @@ asyncio.run(main())
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "prebuild": "node ../../scripts/generate-app-links.cjs --if-configured",
+    "prebuild": "node ../../scripts/TaoLienKetUngDung.cjs --if-configured",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx"
@@ -7068,7 +7068,7 @@ asyncio.run(main())
 
 
 
-## packages/visitor-core/src/photos.ts
+## packages/visitor-core/src/DanhMucAnh.ts
 
 ```ts
 /**
@@ -7178,7 +7178,7 @@ export const PLACE_PHOTOS: Readonly<Record<string, PlacePhoto>> = {
 ```
 
 
-## apps/web/src/services/placeImages.ts
+## apps/web/src/shared/services/XuLyAnhDiTich.ts
 
 ```ts
 /** FILE NÀY LÀM GÌ: Đổi mã ảnh dùng chung thành URL asset web; giữ URL API thật. */
@@ -7192,7 +7192,7 @@ export function resolvePlaceImage(uri?: string): string | undefined {
 ```
 
 
-## apps/mobile/src/services/placeImages.ts
+## apps/mobile/src/shared/services/XuLyAnhDiTich.ts
 
 ```ts
 /** FILE NÀY LÀM GÌ: Đổi mã photo:ID thành JPG Metro đóng gói để native có ảnh khi mất mạng. */
@@ -7214,7 +7214,7 @@ export function resolvePlaceImage(uri?: string): ImageSourcePropType | undefined
 ```
 
 
-## apps/web/src/styles/player.css
+## apps/web/src/features/journey/styles/GiaoDienTrinhNghe.css
 
 ```css
 /* FILE NÀY LÀM GÌ: Giao diện nghe web và các nút có cùng phong cách.
@@ -7300,12 +7300,12 @@ export function resolvePlaceImage(uri?: string): ImageSourcePropType | undefined
 ```
 
 
-## scripts/start-public-demo.cjs
+## scripts/ChayDemoCongKhai.cjs
 
 ```js
 /**
  * FILE NÀY LÀM GÌ: Mở Vite/tunnel HTTPS và chỉ công bố QR đã kiểm tra được.
- * npm run demo:public gọi; phụ thuộc cloudflared và create-public-qr.cjs.
+ * npm run demo:public gọi; phụ thuộc cloudflared và TaoMaQRCongKhai.cjs.
  * UC05: QR chung mở website, không yêu cầu Expo Go/tài khoản du khách.
  */
 const fs = require('node:fs')
@@ -7324,7 +7324,7 @@ const local = 'http://127.0.0.1:4173'
 const isBuiltGuidePage = text => typeof text === 'string' && /<title>HueGuide<\/title>/.test(text) && /id=["']root["']/.test(text) && /src=["']\/assets\/[^"']+\.js["']/.test(text) && !text.includes('/@vite/client')
 const builtEntry = text => isBuiltGuidePage(text) ? text.match(/src=["'](\/assets\/[^"']+\.js)["']/)?.[1] : null
 // CHỨC NĂNG: Kiểm tra đúng file sau khi sắp xếp services; test bắt đường dẫn cũ.
-const GUIDE_MODULE_PATH = '/src/services/platform.ts'
+const GUIDE_MODULE_PATH = '/src/services/KetNoiNenTang.ts'
 const isGuideModule = text => typeof text === 'string' && !/<html|<!doctype/i.test(text) && text.includes('publicSiteOrigin') && text.includes('siteOrigin')
 const isGuidePage = text => typeof text === 'string' && /id=["']root["']/.test(text) && text.includes('/src/main.tsx')
 
@@ -7386,7 +7386,7 @@ function launch(command, args, cwd, name) {
   } finally { fs.closeSync(descriptor) }
 }
 function configureQr(origin) {
-  const result = spawnSync(process.execPath, [path.join(root, 'scripts/create-public-qr.cjs'), '--url', origin, '--configure'],
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts/TaoMaQRCongKhai.cjs'), '--url', origin, '--configure'],
     { cwd: root, encoding: 'utf8', windowsHide: true })
   if (result.status !== 0) throw new Error(result.stderr || 'Không tạo được QR')
   process.stdout.write(result.stdout)
@@ -7457,7 +7457,7 @@ module.exports = { GUIDE_MODULE_PATH, isGuideModule, isGuidePage, isBuiltGuidePa
 ```
 
 
-## scripts/create-public-qr.cjs
+## scripts/TaoMaQRCongKhai.cjs
 
 ```js
 /**
@@ -7537,19 +7537,19 @@ module.exports = { sharedEntryUrl, setVariable }
 ```
 
 
-## scripts/public-qr.test.cjs
+## scripts/KiemThuQRCongKhai.test.cjs
 
 ```js
 /**
  * FILE NÀY LÀM GÌ: Kiểm tra QR công khai không chứa link Expo và giữ biến .env khác.
- * npm test gọi; phụ thuộc Node test và create-public-qr.cjs. Liên quan UC05.
+ * npm test gọi; phụ thuộc Node test và TaoMaQRCongKhai.cjs. Liên quan UC05.
  */
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
 const os = require('node:os')
 const path = require('node:path')
-const { sharedEntryUrl, setVariable } = require('./create-public-qr.cjs')
+const { sharedEntryUrl, setVariable } = require('./TaoMaQRCongKhai.cjs')
 
 test('QR chung luôn là website HTTPS, không phải QR Expo', () => {
   assert.equal(sharedEntryUrl('https://guide.test'), 'https://guide.test/')
@@ -7579,14 +7579,14 @@ test('Cập nhật URL không xóa biến khác và có bản sao cấu hình', 
 })
 
 // CHỨC NĂNG: Bắt lỗi đường dẫn probe cũ sau khi di chuyển file vào services.
-test('QR probe trỏ tới service hiện có, không phải src/platform.ts đã bỏ', () => {
-  const { GUIDE_MODULE_PATH } = require('./start-public-demo.cjs')
-  assert.equal(GUIDE_MODULE_PATH, '/src/services/platform.ts')
+test('QR probe trỏ tới service hiện có, không phải src/KetNoiNenTang.ts đã bỏ', () => {
+  const { GUIDE_MODULE_PATH } = require('./ChayDemoCongKhai.cjs')
+  assert.equal(GUIDE_MODULE_PATH, '/src/services/KetNoiNenTang.ts')
   assert.ok(fs.existsSync(path.join(__dirname, '../apps/web', GUIDE_MODULE_PATH)))
 })
 // CHỨC NĂNG: Vite trả HTML fallback không được coi là JS module hợp lệ.
 test('QR probe phân biệt đúng ứng dụng và HTML fallback', () => {
-  const { isGuideModule, isGuidePage } = require('./start-public-demo.cjs')
+  const { isGuideModule, isGuidePage } = require('./ChayDemoCongKhai.cjs')
   assert.equal(isGuideModule('export const publicSiteOrigin = siteOrigin(value)'), true)
   assert.equal(isGuideModule('<html>publicSiteOrigin siteOrigin</html>'), false)
   assert.equal(isGuidePage('<div id="root"></div><script src="/src/main.tsx"></script>'), true)
@@ -7595,7 +7595,7 @@ test('QR probe phân biệt đúng ứng dụng và HTML fallback', () => {
 
 // CHỨC NĂNG: Không đưa bản dev hoặc HTML giả qua QR công khai.
 test('QR công khai nhận production bundle và loại dev/HTML fallback', () => {
-  const { isBuiltGuidePage, builtEntry } = require('./start-public-demo.cjs')
+  const { isBuiltGuidePage, builtEntry } = require('./ChayDemoCongKhai.cjs')
   const html = '<title>HueGuide</title><div id="root"></div><script type="module" src="/assets/index-abc123.js"></script>'
   assert.equal(isBuiltGuidePage(html), true)
   assert.equal(builtEntry(html), '/assets/index-abc123.js')
@@ -7606,7 +7606,7 @@ test('QR công khai nhận production bundle và loại dev/HTML fallback', () =
 ```
 
 
-## apps/web/src/styles/journey.css
+## apps/web/src/features/journey/styles/HanhTrinh.css
 
 ```css
 /* FILE NÀY LÀM GÌ: Giao diện bản đồ, thẻ điểm và thứ tự tham quan.
@@ -7681,12 +7681,12 @@ test('QR công khai nhận production bundle và loại dev/HTML fallback', () =
 ```
 
 
-## packages/visitor-core/src/qr-messages.ts
+## packages/visitor-core/src/BanDichTruyCapQR.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Nhãn hướng dẫn quét và tải QR cho đủ năm ngôn ngữ.
- * messages.ts ghép vào i18n; QrImage dùng, liên quan UC05.
+ * BanDichGiaoDien.ts ghép vào i18n; QrImage dùng, liên quan UC05.
  */
 import type { Language } from './model'
 type QrText = { qrRefresh: string; qrDownload: string; qrScanHint: string; qrTemporary: string }

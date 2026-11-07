@@ -2,14 +2,14 @@
 
 Đọc SUA_ANH_VA_DONG_TRINH_NGHE.md để biết cách chạy và cách kiểm tra.
 
-## 1. SỬA — apps/mobile/src/components/Cover.tsx
+## 1. SỬA — apps/mobile/src/shared/components/AnhBia.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\Cover.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\AnhBia.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ảnh bìa mobile có placeholder khi ảnh thiếu hoặc tải lỗi.
- * Vị trí: apps/mobile/src/components/Cover.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/shared/components/AnhBia.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -83,14 +83,14 @@ export function Cover({
 }
 ```
 
-## 2. SỬA — apps/mobile/src/components/PlaceCard.tsx
+## 2. SỬA — apps/mobile/src/features/explore/components/TheDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\PlaceCard.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\TheDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Thẻ địa điểm, ảnh dự phòng, danh mục, khoảng cách nếu có đồng nhất nội dung mobile/web.
- * Vị trí: apps/mobile/src/components/PlaceCard.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/components/TheDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -199,9 +199,9 @@ export function PlaceCard({
 }
 ```
 
-## 3. SỬA — apps/mobile/src/components/JourneyPlayer.tsx
+## 3. SỬA — apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\JourneyPlayer.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\TrinhNgheThuyetMinh.tsx
 
 ```tsx
 /**
@@ -351,9 +351,9 @@ const styles = StyleSheet.create({
 })
 ```
 
-## 4. SỬA — apps/web/src/components/JourneyPlayer.tsx
+## 4. SỬA — apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\JourneyPlayer.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\TrinhNgheThuyetMinh.tsx
 
 ```tsx
 /**
@@ -452,9 +452,9 @@ export function JourneyPlayer() {
 }
 ```
 
-## 5. SỬA — apps/web/src/styles/player.css
+## 5. SỬA — apps/web/src/features/journey/styles/GiaoDienTrinhNghe.css
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\player.css
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\GiaoDienTrinhNghe.css
 
 ```css
 /* FILE NÀY LÀM GÌ: Trình nghe web cùng cấu trúc và token màu với native.
@@ -518,9 +518,9 @@ export function JourneyPlayer() {
 .leaflet-marker-icon button { min-height: 30px; box-shadow: none; }
 ```
 
-## 6. SỬA — packages/visitor-core/src/journey.ts
+## 6. SỬA — packages/visitor-core/src/HanhTrinh.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\HanhTrinh.ts
 
 ```typescript
 /**
@@ -799,15 +799,15 @@ export class JourneyController {
  */
 ```
 
-## 7. SỬA — packages/visitor-core/src/uiMessages.ts
+## 7. SỬA — packages/visitor-core/src/BanDichThanhPhan.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\uiMessages.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\BanDichThanhPhan.ts
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ:
  * Bổ sung chữ giao diện theo mockup cho năm ngôn ngữ.
- * messages.ts ghép file này vào resource i18n.
+ * BanDichGiaoDien.ts ghép file này vào resource i18n.
  * Phụ thuộc Language; liên quan UC01–UC05.
  */
 
@@ -1075,9 +1075,9 @@ export const uiMessages = {
 } satisfies Record<Language, UiText>
 ```
 
-## 8. SỬA — packages/visitor-core/tests/journey.test.cjs
+## 8. SỬA — packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\journey.test.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\KiemThuHanhTrinh.test.cjs
 
 ```javascript
 /**

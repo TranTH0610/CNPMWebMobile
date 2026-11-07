@@ -2,11 +2,11 @@
 
 Gốc: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong`.
 
-## packages/visitor-core/src/audio/playback.ts
+## packages/visitor-core/src/audio/DieuPhoiPhatAmThanh.ts
 
 TẠO MỚI — Bộ cấp quyền phát duy nhất, tạm dừng nguồn trước khi bật nguồn mới.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\audio\playback.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\audio\DieuPhoiPhatAmThanh.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Giữ quyền phát duy nhất giữa bài du khách và nghe thử Admin.
@@ -30,11 +30,11 @@ export const playbackCoordinator = new PlaybackCoordinator()
 /* CÁCH KIỂM TRA: Bắt đầu B làm A pause; release A không xóa quyền B; resume A không tua về 0. */
 ```
 
-## packages/visitor-core/src/audio/preview.ts
+## packages/visitor-core/src/audio/DieuKhienNgheThu.ts
 
 TẠO MỚI — Controller nghe thử giữ Track, tiến độ và chống nguồn bất đồng bộ đến muộn.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\audio\preview.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\audio\DieuKhienNgheThu.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Điều khiển nghe thử Admin, giữ player khi pause/resume.
@@ -114,11 +114,11 @@ export class PreviewController {
  * close hủy nguồn tải chậm; play thất bại giải phóng player để thử lại sạch. */
 ```
 
-## apps/mobile/src/components/admin/AdminUI.tsx
+## apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
 
 SỬA — AudioPreview dùng controller, pause/resume đúng giây, blur/unmount đóng nguồn.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\AdminUI.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\ThanhPhanQuanTri.tsx`.
 
 ```tsx
 /**
@@ -265,16 +265,16 @@ export function AudioPreview({url,title}:{url:string;title:string}) {
  * rời màn/đổi ngôn ngữ đóng nguồn; nguồn tải muộn không tự phát. */
 ```
 
-## apps/mobile/src/services/journeyAdapters.ts
+## apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
 
 SỬA — Adapter native dùng quyền phát chung với preview; giải phóng lock-screen đúng chủ.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\journeyAdapters.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\KetNoiAudioVaDinhVi.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Kết nối audio/GPS/bộ nhớ riêng nền tảng vào JourneyProvider.
- * Vị trí: apps/mobile/src/services/journeyAdapters.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -370,16 +370,16 @@ export const journeyAdapters: JourneyAdapters = {
 }
 ```
 
-## apps/web/src/services/journeyAdapters.ts
+## apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
 
 SỬA — Quyền phát chung, chặn play đến muộn làm chồng tiếng.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\journeyAdapters.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\KetNoiAudioVaDinhVi.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Kết nối audio/GPS/bộ nhớ riêng nền tảng vào JourneyProvider.
- * Vị trí: apps/web/src/services/journeyAdapters.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -453,11 +453,11 @@ export const journeyAdapters: JourneyAdapters = {
 }
 ```
 
-## apps/web/src/components/admin/AudioPreview.tsx
+## apps/web/src/features/admin/content/components/NgheThuBanThu.tsx
 
 TẠO MỚI — Thẻ HTML audio ổn định, giữ currentTime, dừng khi đổi bài/rời màn.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\AudioPreview.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\NgheThuBanThu.tsx`.
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Nghe thử bản biên tập/kiểm duyệt bằng cùng HTML audio.
@@ -483,11 +483,11 @@ export function AudioPreview({url}:{url:string}) {
 /* CÁCH KIỂM TRA: Pause tại 0:12, resume từ 0:12; bật bản khác làm bản trước pause. */
 ```
 
-## apps/web/src/pages/admin/ContentEditorPage.tsx
+## apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx
 
 SỬA — Dùng component nghe thử chung; bỏ khung nguồn nội dung.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ContentEditorPage.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangBienTapNoiDung.tsx`.
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Biên tập năm ngôn ngữ, bản thu URL, dịch/TTS demo và gửi duyệt.
@@ -553,11 +553,11 @@ function ContentForm({ place, language, dirty, setDirty }: { place: ManagedPlace
 /* CÁCH KIỂM TRA: Lưu trước khi dịch/tạo audio; đổi tab khi bẩn có hỏi; sửa body xóa audio cũ. */
 ```
 
-## apps/web/src/pages/admin/ReviewsPage.tsx
+## apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
 
 SỬA — Dùng cùng component nghe thử và coordinator, không có hai bộ luật riêng.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ReviewsPage.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangKiemDuyet.tsx`.
 
 ```tsx
 /** FILE NÀY LÀM GÌ: So sánh văn bản/audio, yêu cầu sửa, duyệt và công bố đúng bản.
@@ -596,11 +596,11 @@ function ReviewCard({ place }: { place: ManagedPlace }) {
 /* CÁCH KIỂM TRA: Reject thiếu ghi chú bị khóa; approve không tự public; publish cần xác nhận. */
 ```
 
-## apps/mobile/src/screens/admin/ContentEditorScreen.tsx
+## apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx
 
 SỬA — Bỏ khung nguồn nội dung; dùng AudioPreview native đã sửa.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ContentEditorScreen.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManBienTapNoiDung.tsx`.
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Biên tập 5 ngôn ngữ native, audio URL và dịch/TTS demo.
@@ -662,16 +662,16 @@ function ContentForm({place,language,dirty,setDirty}:{place:ManagedPlace;languag
 /* CÁCH KIỂM TRA: Lưu body mới bỏ audio cũ; tác vụ sai revision báo conflict, không ghi đè. */
 ```
 
-## apps/mobile/src/screens/DetailScreen.tsx
+## apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
 
 SỬA — Bỏ nguồn nội dung, hiển thị tọa độ bản đồ đã có dù chưa khảo sát GPS.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\DetailScreen.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManChiTietDiTich.tsx`.
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị bài đọc đúng ngôn ngữ, nút nghe và nút mở bản đồ của địa điểm.
- * Vị trí: apps/mobile/src/screens/DetailScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -842,16 +842,16 @@ export default function DetailScreen({
 }
 ```
 
-## apps/web/src/pages/DetailPage.tsx
+## apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
 
 SỬA — Cùng quy tắc hiển thị nguồn/tọa độ với mobile.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\DetailPage.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\TrangChiTietDiTich.tsx`.
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trang bài đọc, đổi ngôn ngữ, nghe thuyết minh và mở marker địa điểm.
- * Vị trí: apps/web/src/pages/DetailPage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -1030,11 +1030,11 @@ export function DetailPage() {
 }
 ```
 
-## packages/visitor-core/src/domain/model.ts
+## packages/visitor-core/src/domain/KieuDuLieuDuKhach.ts
 
 SỬA — Optional source/checkedAt của position, không đổi luật verified thực địa.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\domain\model.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\domain\KieuDuLieuDuKhach.ts`.
 
 ```typescript
 /**
@@ -1165,18 +1165,18 @@ export type StoragePort = {
 }
 ```
 
-## packages/visitor-core/src/data/mock.ts
+## packages/visitor-core/src/data/DuLieuKhoiTao.ts
 
 SỬA — Seed Admin và du khách có tọa độ của tám công trình.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\mock.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\DuLieuKhoiTao.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ:
  * Cung cấp tám di tích với bài lịch sử có nguồn Wikipedia và MP3 riêng.
  * demoCatalog được provider dùng mặc định.
- * Phụ thuộc model.ts và catalog.ts.
+ * Phụ thuộc KieuDuLieuDuKhach.ts và DanhMucDiTich.ts.
  *
  * Bài đã biên soạn lại và dịch; chưa phải bản do đơn vị di tích chứng nhận.
  * Không khai báo tọa độ suy đoán.
@@ -1222,7 +1222,7 @@ function make(
 }
 
 // CHỨC NĂNG: Cung cấp tám điểm minh họa đủ năm ngôn ngữ.
-// XỬ LÝ: Hàm make lấy bài và MP3 tương ứng từ heritage.ts.
+// XỬ LÝ: Hàm make lấy bài và MP3 tương ứng từ DiSanHue.ts.
 // Trường hợp API thiếu bản dịch được kiểm tra bằng dữ liệu riêng trong test.
 export const MOCK_PLACES: PlaceRecord[] = [
   make('ky-dai', 'fortifications', {
@@ -1324,11 +1324,11 @@ export async function loadMockCatalog(): Promise<PlaceRecord[]> {
 export const demoCatalog = createCatalog(loadMockCatalog)
 ```
 
-## packages/visitor-core/src/journey/journey-data.ts
+## packages/visitor-core/src/journey/DuLieuHanhTrinh.ts
 
 SỬA — Tâm OSM được đối chiếu lại; mapPointFor ưu tiên tọa độ từ API Admin.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey\journey-data.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey\DuLieuHanhTrinh.ts`.
 
 ```typescript
 /**
@@ -1379,11 +1379,11 @@ export function mapPointFor(place: PlaceRecord): MapPoint | undefined {
 }
 ```
 
-## packages/visitor-core/src/journey/journey.ts
+## packages/visitor-core/src/journey/HanhTrinh.ts
 
 SỬA — Gợi ý GPS dùng position đã công bố thay vì cố định marker mặc định.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey\journey.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey\HanhTrinh.ts`.
 
 ```typescript
 /**
@@ -1662,16 +1662,16 @@ export class JourneyController {
  */
 ```
 
-## apps/mobile/src/components/VisitorMap.tsx
+## apps/mobile/src/features/journey/components/BanDoThamQuan.tsx
 
 SỬA — Marker/định tâm lấy cùng record đã công bố.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\VisitorMap.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\BanDoThamQuan.tsx`.
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bản đồ native và marker bấm mở chi tiết; không tạo tuyến đi giả.
- * Vị trí: apps/mobile/src/components/VisitorMap.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/components/BanDoThamQuan.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1705,16 +1705,16 @@ export function VisitorMap({ selected, onOpen }: { selected?: string; onOpen: (i
 const styles = StyleSheet.create({ map: { height: 300, marginVertical: spacing.md } })
 ```
 
-## apps/web/src/components/VisitorMap.tsx
+## apps/web/src/features/journey/components/BanDoThamQuan.tsx
 
 SỬA — Bản đồ web dùng cùng helper vị trí với native.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\VisitorMap.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\BanDoThamQuan.tsx`.
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bản đồ Leaflet với marker là nút HTML, hỗ trợ bấm/Enter mở đúng chi tiết.
- * Vị trí: apps/web/src/components/VisitorMap.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/components/BanDoThamQuan.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1769,16 +1769,16 @@ export function VisitorMap({ selected }: { selected: string | null }) {
 }
 ```
 
-## apps/mobile/src/screens/JourneyScreen.tsx
+## apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
 
 SỬA — Nguồn tọa độ theo vị trí đang công bố, không trỏ nhầm marker cũ.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\JourneyScreen.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManHanhTrinh.tsx`.
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Màn bản đồ, GPS và thứ tự tham quan tham khảo trên mobile.
- * Vị trí: apps/mobile/src/screens/JourneyScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1835,11 +1835,11 @@ export function JourneyScreen() {
 }
 ```
 
-## apps/web/src/pages/JourneyPage.tsx
+## apps/web/src/features/journey/pages/TrangHanhTrinh.tsx
 
 SỬA — Danh sách/bản đồ lấy cùng helper vị trí.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\JourneyPage.tsx`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\TrangHanhTrinh.tsx`.
 
 ```tsx
 /**
@@ -1858,7 +1858,7 @@ import { Icon } from '../components/Icon'
 import { useText } from '../i18n'
 import { useVisitor } from '../hooks/useVisitor'
 import { useJourney } from '../hooks/useJourney'
-import '../styles/journey.css'
+import '../styles/HanhTrinh.css'
 
 export function JourneyPage() {
   const { engine, state } = useJourney()
@@ -1983,11 +1983,11 @@ export function JourneyPage() {
  */
 ```
 
-## packages/admin-core/src/i18n/messages.ts
+## packages/admin-core/src/i18n/BanDichGiaoDien.ts
 
 SỬA — Nhãn Tạm dừng/Tiếp tục đủ 5 ngôn ngữ.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\i18n\messages.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\i18n\BanDichGiaoDien.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Chữ Admin đủ năm ngôn ngữ dùng chung mobile/web.
@@ -2498,15 +2498,15 @@ export const adminMessages: Record<Language, Record<AdminTextKey, string>> = { v
 /* CÁCH KIỂM TRA: Đổi đủ năm ngôn ngữ, mọi nhãn Admin đổi cùng lựa chọn du khách. */
 ```
 
-## packages/visitor-core/src/i18n/heritage-messages.ts
+## packages/visitor-core/src/i18n/BanDichDiSan.ts
 
 SỬA — Nhãn Vị trí công trình trên bản đồ đủ 5 ngôn ngữ.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\i18n\heritage-messages.ts`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\i18n\BanDichDiSan.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Nhãn nguồn lịch sử/giọng tổng hợp cho cả web và mobile.
- * messages.ts ghép vào i18n; UC04/UC06/UC14. */
+ * BanDichGiaoDien.ts ghép vào i18n; UC04/UC06/UC14. */
 import type { Language } from '../domain/model'
 export const heritageMessages = {
   "vi": {
@@ -2547,7 +2547,7 @@ export const heritageMessages = {
 } satisfies Record<Language, Record<'mapCoordinates' | 'heritageSources' | 'heritageCredit' | 'heritageChecked' | 'heritageSynthetic', string>>
 ```
 
-## packages/visitor-core/src/index.ts
+## packages/visitor-core/src/XuatCongKhai.ts
 
 SỬA — Xuất controller và coordinator qua tên package.
 
@@ -2591,11 +2591,11 @@ export * from './audio/playback'
 export * from './audio/preview'
 ```
 
-## packages/visitor-core/tests/audio.test.cjs
+## packages/visitor-core/tests/KiemThuAmThanh.test.cjs
 
 TẠO MỚI — 8 test hồi quy pause/resume, nguồn chậm, quyền phát và vị trí seed/Admin.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\audio.test.cjs`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\KiemThuAmThanh.test.cjs`.
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Chặn lỗi preview phát lại từ đầu, phát chồng và nguồn tải muộn.
@@ -2658,11 +2658,11 @@ test('8 record có tọa độ OSM đúng nguồn; tọa độ Admin ưu tiên h
 })
 ```
 
-## packages/visitor-core/tests/journey.test.cjs
+## packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs
 
 SỬA — GPS fixture tách tọa độ thật; thêm test ưu tiên position mới công bố.
 
-Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\journey.test.cjs`.
+Đường dẫn: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\KiemThuHanhTrinh.test.cjs`.
 
 ```javascript
 /**
@@ -2908,15 +2908,15 @@ SỬA — Biên dịch các module audio cho test thuần.
     "esModuleInterop": true
   },
   "include": [
-    "src/domain/model.ts",
-    "src/catalog/catalog.ts",
-    "src/links/qr.ts",
-    "src/data/mock.ts",
-    "src/i18n/messages.ts",
-    "src/catalog/search.ts",
-    "src/links/site.ts",
-    "src/journey/journey.ts",
-    "src/journey/journey-data.ts",
+    "src/domain/KieuDuLieuDuKhach.ts",
+    "src/catalog/DanhMucDiTich.ts",
+    "src/links/PhanTichLienKetQR.ts",
+    "src/data/DuLieuKhoiTao.ts",
+    "src/i18n/BanDichGiaoDien.ts",
+    "src/catalog/TimKiemVaBoLoc.ts",
+    "src/links/DiaChiWebsite.ts",
+    "src/journey/HanhTrinh.ts",
+    "src/journey/DuLieuHanhTrinh.ts",
     "src/audio/*.ts"
   ]
 }
@@ -2937,15 +2937,15 @@ SỬA — Nối test audio vào lệnh kiểm thử hiện có.
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./react": "./src/react/react.tsx",
-    "./journey": "./src/journey/journey.ts",
-    "./journey/react": "./src/journey/journey-react.tsx",
-    "./journey/data": "./src/journey/journey-data.ts",
-    "./presence": "./src/presence/presence.ts",
-    "./presence/react": "./src/presence/presence-react.ts"
+    "./react": "./src/react/TrangThaiReact.tsx",
+    "./journey": "./src/journey/HanhTrinh.ts",
+    "./journey/react": "./src/journey/TrangThaiHanhTrinhReact.tsx",
+    "./journey/data": "./src/journey/DuLieuHanhTrinh.ts",
+    "./presence": "./src/presence/PhienHoatDong.ts",
+    "./presence/react": "./src/presence/TheoDoiPhienReact.ts"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs tests/journey.test.cjs tests/audio.test.cjs",
+    "test": "tsc -p tsconfig.test.json && node --test tests/KiemThuNghiepVuChung.test.cjs tests/KiemThuNgonNgu.test.cjs tests/KiemThuDiaChiWebsite.test.cjs tests/KiemThuHanhTrinh.test.cjs tests/KiemThuAmThanh.test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx"
   },

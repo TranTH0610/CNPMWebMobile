@@ -31,30 +31,30 @@ Dữ liệu trước cập nhật RAM: `.runtime/coordinate-update-1792822746/or
 
 | Vị trí từ gốc dự án | Chức năng |
 |---|---|
-| `packages/visitor-core/src/audio/playback.ts` | TẠO MỚI — Bộ cấp quyền phát duy nhất, tạm dừng nguồn trước khi bật nguồn mới. |
-| `packages/visitor-core/src/audio/preview.ts` | TẠO MỚI — Controller nghe thử giữ Track, tiến độ và chống nguồn bất đồng bộ đến muộn. |
-| `apps/mobile/src/components/admin/AdminUI.tsx` | SỬA — AudioPreview dùng controller, pause/resume đúng giây, blur/unmount đóng nguồn. |
-| `apps/mobile/src/services/journeyAdapters.ts` | SỬA — Adapter native dùng quyền phát chung với preview; giải phóng lock-screen đúng chủ. |
-| `apps/web/src/services/journeyAdapters.ts` | SỬA — Quyền phát chung, chặn play đến muộn làm chồng tiếng. |
-| `apps/web/src/components/admin/AudioPreview.tsx` | TẠO MỚI — Thẻ HTML audio ổn định, giữ currentTime, dừng khi đổi bài/rời màn. |
-| `apps/web/src/pages/admin/ContentEditorPage.tsx` | SỬA — Dùng component nghe thử chung; bỏ khung nguồn nội dung. |
-| `apps/web/src/pages/admin/ReviewsPage.tsx` | SỬA — Dùng cùng component nghe thử và coordinator, không có hai bộ luật riêng. |
-| `apps/mobile/src/screens/admin/ContentEditorScreen.tsx` | SỬA — Bỏ khung nguồn nội dung; dùng AudioPreview native đã sửa. |
-| `apps/mobile/src/screens/DetailScreen.tsx` | SỬA — Bỏ nguồn nội dung, hiển thị tọa độ bản đồ đã có dù chưa khảo sát GPS. |
-| `apps/web/src/pages/DetailPage.tsx` | SỬA — Cùng quy tắc hiển thị nguồn/tọa độ với mobile. |
-| `packages/visitor-core/src/domain/model.ts` | SỬA — Optional source/checkedAt của position, không đổi luật verified thực địa. |
-| `packages/visitor-core/src/data/mock.ts` | SỬA — Seed Admin và du khách có tọa độ của tám công trình. |
-| `packages/visitor-core/src/journey/journey-data.ts` | SỬA — Tâm OSM được đối chiếu lại; mapPointFor ưu tiên tọa độ từ API Admin. |
-| `packages/visitor-core/src/journey/journey.ts` | SỬA — Gợi ý GPS dùng position đã công bố thay vì cố định marker mặc định. |
-| `apps/mobile/src/components/VisitorMap.tsx` | SỬA — Marker/định tâm lấy cùng record đã công bố. |
-| `apps/web/src/components/VisitorMap.tsx` | SỬA — Bản đồ web dùng cùng helper vị trí với native. |
-| `apps/mobile/src/screens/JourneyScreen.tsx` | SỬA — Nguồn tọa độ theo vị trí đang công bố, không trỏ nhầm marker cũ. |
-| `apps/web/src/pages/JourneyPage.tsx` | SỬA — Danh sách/bản đồ lấy cùng helper vị trí. |
-| `packages/admin-core/src/i18n/messages.ts` | SỬA — Nhãn Tạm dừng/Tiếp tục đủ 5 ngôn ngữ. |
-| `packages/visitor-core/src/i18n/heritage-messages.ts` | SỬA — Nhãn Vị trí công trình trên bản đồ đủ 5 ngôn ngữ. |
-| `packages/visitor-core/src/index.ts` | SỬA — Xuất controller và coordinator qua tên package. |
-| `packages/visitor-core/tests/audio.test.cjs` | TẠO MỚI — 8 test hồi quy pause/resume, nguồn chậm, quyền phát và vị trí seed/Admin. |
-| `packages/visitor-core/tests/journey.test.cjs` | SỬA — GPS fixture tách tọa độ thật; thêm test ưu tiên position mới công bố. |
+| `packages/visitor-core/src/audio/DieuPhoiPhatAmThanh.ts` | TẠO MỚI — Bộ cấp quyền phát duy nhất, tạm dừng nguồn trước khi bật nguồn mới. |
+| `packages/visitor-core/src/audio/DieuKhienNgheThu.ts` | TẠO MỚI — Controller nghe thử giữ Track, tiến độ và chống nguồn bất đồng bộ đến muộn. |
+| `apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx` | SỬA — AudioPreview dùng controller, pause/resume đúng giây, blur/unmount đóng nguồn. |
+| `apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts` | SỬA — Adapter native dùng quyền phát chung với preview; giải phóng lock-screen đúng chủ. |
+| `apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts` | SỬA — Quyền phát chung, chặn play đến muộn làm chồng tiếng. |
+| `apps/web/src/features/admin/content/components/NgheThuBanThu.tsx` | TẠO MỚI — Thẻ HTML audio ổn định, giữ currentTime, dừng khi đổi bài/rời màn. |
+| `apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx` | SỬA — Dùng component nghe thử chung; bỏ khung nguồn nội dung. |
+| `apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx` | SỬA — Dùng cùng component nghe thử và coordinator, không có hai bộ luật riêng. |
+| `apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx` | SỬA — Bỏ khung nguồn nội dung; dùng AudioPreview native đã sửa. |
+| `apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx` | SỬA — Bỏ nguồn nội dung, hiển thị tọa độ bản đồ đã có dù chưa khảo sát GPS. |
+| `apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx` | SỬA — Cùng quy tắc hiển thị nguồn/tọa độ với mobile. |
+| `packages/visitor-core/src/domain/KieuDuLieuDuKhach.ts` | SỬA — Optional source/checkedAt của position, không đổi luật verified thực địa. |
+| `packages/visitor-core/src/data/DuLieuKhoiTao.ts` | SỬA — Seed Admin và du khách có tọa độ của tám công trình. |
+| `packages/visitor-core/src/journey/DuLieuHanhTrinh.ts` | SỬA — Tâm OSM được đối chiếu lại; mapPointFor ưu tiên tọa độ từ API Admin. |
+| `packages/visitor-core/src/journey/HanhTrinh.ts` | SỬA — Gợi ý GPS dùng position đã công bố thay vì cố định marker mặc định. |
+| `apps/mobile/src/features/journey/components/BanDoThamQuan.tsx` | SỬA — Marker/định tâm lấy cùng record đã công bố. |
+| `apps/web/src/features/journey/components/BanDoThamQuan.tsx` | SỬA — Bản đồ web dùng cùng helper vị trí với native. |
+| `apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx` | SỬA — Nguồn tọa độ theo vị trí đang công bố, không trỏ nhầm marker cũ. |
+| `apps/web/src/features/journey/pages/TrangHanhTrinh.tsx` | SỬA — Danh sách/bản đồ lấy cùng helper vị trí. |
+| `packages/admin-core/src/i18n/BanDichGiaoDien.ts` | SỬA — Nhãn Tạm dừng/Tiếp tục đủ 5 ngôn ngữ. |
+| `packages/visitor-core/src/i18n/BanDichDiSan.ts` | SỬA — Nhãn Vị trí công trình trên bản đồ đủ 5 ngôn ngữ. |
+| `packages/visitor-core/src/XuatCongKhai.ts` | SỬA — Xuất controller và coordinator qua tên package. |
+| `packages/visitor-core/tests/KiemThuAmThanh.test.cjs` | TẠO MỚI — 8 test hồi quy pause/resume, nguồn chậm, quyền phát và vị trí seed/Admin. |
+| `packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs` | SỬA — GPS fixture tách tọa độ thật; thêm test ưu tiên position mới công bố. |
 | `packages/visitor-core/tsconfig.test.json` | SỬA — Biên dịch các module audio cho test thuần. |
 | `packages/visitor-core/package.json` | SỬA — Nối test audio vào lệnh kiểm thử hiện có. |
 

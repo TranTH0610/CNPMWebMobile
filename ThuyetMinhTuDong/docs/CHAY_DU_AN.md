@@ -28,8 +28,8 @@ Mở http://127.0.0.1:5174/admin. Lệnh workspace `npm run dev:admin --workspac
 
 | File | Chức năng |
 |---|---|
-| scripts/start-web.cjs | Kiểm tra API, mở service RAM thiếu và chạy đúng bản Vite |
-| scripts/start-catalog.cjs | Catalog chạy được không LAN; cập nhật URL mobile khi có LAN |
-| scripts/startup.test.cjs | Kiểm tra thiếu LAN, tái sử dụng API và cổng sai |
+| scripts/ChayWebsite.cjs | Kiểm tra API, mở service RAM thiếu và chạy đúng bản Vite |
+| scripts/ChayApiDiTich.cjs | Catalog chạy được không LAN; cập nhật URL mobile khi có LAN |
+| scripts/KiemThuKhoiDongWebsite.test.cjs | Kiểm tra thiếu LAN, tái sử dụng API và cổng sai |
 | package.json | Lệnh dev/dev:admin chung và kiểm thử launcher |
 | apps/web/package.json | Lệnh workspace dùng cùng launcher |

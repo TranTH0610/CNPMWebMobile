@@ -1,13 +1,27 @@
 /**
- * FILE NÀY LÀM GÌ
+ * CHỨC NĂNG: [KHOI-DONG] [CAU-HINH]
+ * VAI TRÒ: GIAO DIỆN MOBILE
+ *
+ * FILE NÀY LÀM GÌ:
  * Cấu hình Metro cho monorepo và proxy phát triển; chọn proxy phù hợp bản du khách hoặc admin.
  *
  * VỊ TRÍ: apps/mobile/metro.config.js
- * DÙNG BỞI: Entry hoặc nơi import module này trong ứng dụng.
- * PHỤ THUỘC: expo/metro-config; path; node:module; ../../scripts/metro-admin-proxy.cjs;
- * ../../scripts/metro-visitor-proxy.cjs
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất quán
- * và dễ bảo trì.
+ *
+ * ĐƯỢC DÙNG BỞI:
+ * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
+ *
+ * PHỤ THUỘC:
+ * - expo/metro-config
+ * - path
+ * - node:module
+ * - ../../scripts/ChuyenTiepApiQuanTriMetro.cjs
+ * - ../../scripts/ChuyenTiepApiDuKhachMetro.cjs
+ *
+ * CÁC KHỐI CHÍNH:
+ * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
+ *
+ * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
+ * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
  */
 // Khai báo { getDefaultConfig }: require nạp module 'expo/metro-config' để dùng chức năng có sẵn thay vì chép lại.
 const { getDefaultConfig } = require('expo/metro-config')
@@ -33,12 +47,7 @@ config.watchFolders = [workspaceRoot]
 
 // CHỨC NĂNG: Tìm dependency tại app trước, rồi thư mục gốc.
 // XỬ LÝ: Phù hợp npm workspaces có dependency được hoist.
-/* GIẢI THÍCH TỪNG DÒNG:
- * DÒNG `config.resolver.nodeModulesPaths = [`: Thực hiện tính biểu thức config.resolver.nodeModulesPaths = [ path.resolve(projectRoot, 'node_modules'), path.resol.
- * DÒNG `path.resolve(projectRoot, 'node_modules'),`: Thực hiện tính biểu thức config.resolver.nodeModulesPaths = [ path.resolve(projectRoot, 'node_modules'), path.resol.
- * DÒNG `path.resolve(workspaceRoot, 'node_modules'),`: Thực hiện tính biểu thức config.resolver.nodeModulesPaths = [ path.resolve(projectRoot, 'node_modules'), path.resol.
- * DÒNG `]`: Kết thúc danh sách phần tử trong mảng.
- */
+
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(workspaceRoot, 'node_modules'),
@@ -53,25 +62,19 @@ const mobileRequire = createRequire(path.join(projectRoot, 'package.json'))
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // Rẽ nhánh nếu moduleName === 'react' || moduleName.startsWith('react/').
   if (moduleName === 'react' || moduleName.startsWith('react/')) {
-    /* GIẢI THÍCH TỪNG DÒNG:
-     * DÒNG `return { type: 'sourceFile', filePath: mobileRequire.resolve(moduleName) }`: Trả kết quả: tạo object gồm type, filePath. | Gán thuộc tính type: chuỗi 'sourceFile'. | Gán thuộc tính filePath: Gọi mobileRequire.resolve(moduleName).
-     * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-     */
+    
     return { type: 'sourceFile', filePath: mobileRequire.resolve(moduleName) }
   }
-  /* GIẢI THÍCH TỪNG DÒNG:
-   * DÒNG `return context.resolveRequest(context, moduleName, platform)`: Trả kết quả: Gọi context.resolveRequest(context, moduleName, platform).
-   * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-   */
+  
   return context.resolveRequest(context, moduleName, platform)
 }
 
 // CHỨC NĂNG: Mỗi bản mobile dùng whitelist proxy riêng ngay trên Metro.
 // XỬ LÝ: Visitor chỉ đọc công bố/gửi heartbeat; không mở document/commands/preview admin.
-// Khai báo { createAdminApiMiddleware }: require nạp module '../../scripts/metro-admin-proxy.cjs' để dùng chức năng có sẵn thay vì chép lại.
-const { createAdminApiMiddleware } = require('../../scripts/metro-admin-proxy.cjs')
-// Khai báo { createVisitorApiMiddleware }: require nạp module '../../scripts/metro-visitor-proxy.cjs' để dùng chức năng có sẵn thay vì chép lại.
-const { createVisitorApiMiddleware } = require('../../scripts/metro-visitor-proxy.cjs')
+// Khai báo { createAdminApiMiddleware }: require nạp module '../../scripts/ChuyenTiepApiQuanTriMetro.cjs' để dùng chức năng có sẵn thay vì chép lại.
+const { createAdminApiMiddleware } = require('../../scripts/ChuyenTiepApiQuanTriMetro.cjs')
+// Khai báo { createVisitorApiMiddleware }: require nạp module '../../scripts/ChuyenTiepApiDuKhachMetro.cjs' để dùng chức năng có sẵn thay vì chép lại.
+const { createVisitorApiMiddleware } = require('../../scripts/ChuyenTiepApiDuKhachMetro.cjs')
 // Khai báo previousMiddleware: đọc config.server.enhanceMiddleware từ đối tượng/mảng để dùng tại bước hiện tại.
 const previousMiddleware = config.server.enhanceMiddleware
 // Khai báo isAdmin: tính biểu thức process.env.EXPO_PUBLIC_APP_TARGET === 'admin'.
@@ -82,20 +85,14 @@ const adminProxy = createAdminApiMiddleware({ enabled: isAdmin, target: process.
 const visitorProxy = createVisitorApiMiddleware({ enabled: !isAdmin,
   // Gán thuộc tính catalogTarget: tính biểu thức process.env.CATALOG_TARGET || 'http://127.0.0.1:8788'.
   catalogTarget: process.env.CATALOG_TARGET || 'http://127.0.0.1:8788',
-  /* GIẢI THÍCH TỪNG DÒNG:
-   * DÒNG `presenceTarget: process.env.PRESENCE_TARGET || 'http://127.0.0.1:8787',`: Gán thuộc tính presenceTarget: tính biểu thức process.env.PRESENCE_TARGET || 'http://127.0.0.1:8787'.
-   * DÒNG `})`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-   */
+  
   presenceTarget: process.env.PRESENCE_TARGET || 'http://127.0.0.1:8787',
 })
 // Thực hiện tính biểu thức config.server.enhanceMiddleware = (middleware, server) => { const next = previousMiddlewar.
 config.server.enhanceMiddleware = (middleware, server) => {
   // Khai báo next: chọn giữa hai giá trị theo điều kiện previousMiddleware.
   const next = previousMiddleware ? previousMiddleware(middleware, server) : middleware
-  /* GIẢI THÍCH TỪNG DÒNG:
-   * DÒNG `return (req, res, fallback) => adminProxy(req, res, () => visitorProxy(req, res, () =`: Trả kết quả: khai báo callback (req, res, fallback) => adminProxy(req, res, () => visitorProxy(req, res, (.
-   * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-   */
+  
   return (req, res, fallback) => adminProxy(req, res, () => visitorProxy(req, res, () => next(req, res, fallback)))
 }
 // Thực hiện tính biểu thức module.exports = config.

@@ -29,19 +29,19 @@ Proxy dùng ngay dev server của FE, tương tự `server.proxy` của Vite. Kh
 
 | Vị trí | Chức năng |
 |---|---|
-| scripts/start-mobile-admin.cjs | Kiểm tra mock API, lấy IP, truyền URL admin vào Expo, làm mới bundle cache |
-| scripts/metro-admin-proxy.cjs | Dev proxy GET/POST/audio Range, whitelist route admin; báo 503 nếu nguồn lỗi |
-| scripts/start-catalog.cjs | Chọn Wi-Fi/Ethernet thay adapter VPN; vẫn chạy localhost khi không có LAN |
-| scripts/start-web.cjs | Cung cấp bước kiểm tra mock API chung cho web và launcher admin |
+| scripts/ChayMobileQuanTri.cjs | Kiểm tra mock API, lấy IP, truyền URL admin vào Expo, làm mới bundle cache |
+| scripts/ChuyenTiepApiQuanTriMetro.cjs | Dev proxy GET/POST/audio Range, whitelist route admin; báo 503 nếu nguồn lỗi |
+| scripts/ChayApiDiTich.cjs | Chọn Wi-Fi/Ethernet thay adapter VPN; vẫn chạy localhost khi không có LAN |
+| scripts/ChayWebsite.cjs | Cung cấp bước kiểm tra mock API chung cho web và launcher admin |
 | apps/mobile/metro.config.js | Chỉ cài middleware proxy khi APP_TARGET=admin |
-| apps/mobile/src/services/admin/services.ts | Admin catalog và nội dung nghe thử dùng cùng API admin, không lệ thuộc tunnel du khách |
-| apps/mobile/src/services/presence.ts | Thống kê admin dùng đường dẫn riêng, không gọi nhầm API công khai du khách |
-| apps/mobile/src/components/admin/AdminUI.tsx | Khung cuộn dưới header, vùng tránh bàn phím theo chiều cao header thực |
-| apps/mobile/src/screens/admin/PlacesScreen.tsx | FlatList có inset và chiều cao giới hạn |
-| apps/mobile/src/screens/admin/ReviewsScreen.tsx | Danh sách duyệt có inset và chiều cao giới hạn |
-| apps/mobile/src/navigation/AdminNavigator.tsx | Header không trong suốt |
-| packages/admin-core/src/i18n/messages.ts | Bỏ hướng dẫn reset dữ liệu đã loại khỏi giao diện, cập nhật đủ năm ngôn ngữ |
-| scripts/mobile-admin-startup.test.cjs | Kiểm tra chọn Wi-Fi, config, proxy, truyền JSON/Range, lỗi API và tách visitor |
+| apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts | Admin catalog và nội dung nghe thử dùng cùng API admin, không lệ thuộc tunnel du khách |
+| apps/mobile/src/features/presence/services/PhienHoatDong.ts | Thống kê admin dùng đường dẫn riêng, không gọi nhầm API công khai du khách |
+| apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx | Khung cuộn dưới header, vùng tránh bàn phím theo chiều cao header thực |
+| apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx | FlatList có inset và chiều cao giới hạn |
+| apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx | Danh sách duyệt có inset và chiều cao giới hạn |
+| apps/mobile/src/navigation/DieuHuongQuanTri.tsx | Header không trong suốt |
+| packages/admin-core/src/i18n/BanDichGiaoDien.ts | Bỏ hướng dẫn reset dữ liệu đã loại khỏi giao diện, cập nhật đủ năm ngôn ngữ |
+| scripts/KiemThuKhoiDongMobileQuanTri.test.cjs | Kiểm tra chọn Wi-Fi, config, proxy, truyền JSON/Range, lỗi API và tách visitor |
 | package.json | Thêm test admin vào bộ test chung |
 
 ## Kiểm tra và giới hạn

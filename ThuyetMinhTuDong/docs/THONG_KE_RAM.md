@@ -69,7 +69,7 @@ Không cần QR mới: QR website cũ vẫn mở trang, trang tự gửi heartbe
 
 ## Mở rộng database sau này
 
-server.cjs nhận store qua createPresenceServer({ store }). Hợp đồng ở repository.d.ts gồm heartbeat, end, prune, snapshot; hỗ trợ Promise.
+MayChuApi.cjs nhận store qua createPresenceServer({ store }). Hợp đồng ở KieuKhoDuLieu.d.ts gồm heartbeat, end, prune, snapshot; hỗ trợ Promise.
 Hiện truyền createMemoryStore(). Sau này truyền adapter database; giữ nguyên URL API và JSON cho frontend.
 Gợi ý bảng sessions: session_id (khóa duy nhất), platform, last_seen. Heartbeat dùng upsert, snapshot chỉ đếm last_seen còn trong 90 giây; dọn bản ghi cũ định kỳ.
 Nếu chạy nhiều server thì tất cả phải dùng cùng database hoặc kho chia sẻ. Không lưu mật khẩu truy cập database trong biến EXPO_PUBLIC/VITE.
@@ -99,19 +99,19 @@ Lỗi Network request failed native: kiểm tra IP, Wi-Fi, PRESENCE_HOST, firewa
 |---|---|
 | services/presence/ | Server thống kê độc lập; không nằm trong UI |
 | memory-store.cjs | Map lưu RAM, TTL và giới hạn số phiên |
-| server.cjs | API HTTP, kiểm tra JSON, CORS, dọn định kỳ |
-| repository.d.ts | Hợp đồng thay adapter RAM bằng database |
-| presence.test.cjs | Test store/API/client không Internet |
-| packages/visitor-core/src/presence.ts | Hợp đồng client và vòng lặp heartbeat dùng chung |
-| packages/visitor-core/src/presence-react.ts | Poll thống kê chung, cleanup/lỗi/thử lại |
-| apps/web/src/services/presence.ts | Chọn URL API web |
-| apps/web/src/hooks/usePresenceHeartbeat.ts | Vòng đời visible/hidden và mã phiên web |
-| apps/mobile/src/services/presence.ts | Chọn URL API native |
-| apps/mobile/src/hooks/usePresenceHeartbeat.ts | AppState và bật/tắt khi vào admin |
-| apps/web/src/App.tsx | Gắn heartbeat riêng bản du khách |
-| apps/mobile/src/navigation/RootNavigator.tsx | Gắn heartbeat, dừng khi vào quản lý |
-| DashboardPage.tsx / DashboardScreen.tsx | Hiển thị active từ server, bỏ nút tăng số giả |
-| packages/admin-core/src/messages.ts | Nhãn RAM/lỗi đủ 5 ngôn ngữ |
+| MayChuApi.cjs | API HTTP, kiểm tra JSON, CORS, dọn định kỳ |
+| KieuKhoDuLieu.d.ts | Hợp đồng thay adapter RAM bằng database |
+| KiemThuPhienHoatDong.test.cjs | Test store/API/client không Internet |
+| packages/visitor-core/src/PhienHoatDong.ts | Hợp đồng client và vòng lặp heartbeat dùng chung |
+| packages/visitor-core/src/TheoDoiPhienReact.ts | Poll thống kê chung, cleanup/lỗi/thử lại |
+| apps/web/src/features/presence/services/PhienHoatDong.ts | Chọn URL API web |
+| apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts | Vòng đời visible/hidden và mã phiên web |
+| apps/mobile/src/features/presence/services/PhienHoatDong.ts | Chọn URL API native |
+| apps/mobile/src/features/presence/hooks/useBaoPhienHoatDong.ts | AppState và bật/tắt khi vào admin |
+| apps/web/src/app/App.tsx | Gắn heartbeat riêng bản du khách |
+| apps/mobile/src/navigation/DieuHuongGoc.tsx | Gắn heartbeat, dừng khi vào quản lý |
+| TrangTongQuan.tsx / ManTongQuan.tsx | Hiển thị active từ server, bỏ nút tăng số giả |
+| packages/admin-core/src/BanDichGiaoDien.ts | Nhãn RAM/lỗi đủ 5 ngôn ngữ |
 | apps/web/vite.config.ts | Proxy vào RAM server chung |
 | package.json / visitor-core/package.json | Lệnh server/test và export client/hook |
 | .env.presence.example (mỗi app) | Ví dụ cấu hình, không tự ghi đè .env cá nhân |

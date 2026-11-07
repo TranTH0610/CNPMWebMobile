@@ -44,16 +44,16 @@ Web quản lý: npm run dev:admin --workspace=web → http://127.0.0.1:5174/admi
 
 | File | Vai trò |
 |---|---|
-| apps/mobile/src/components/Cover.tsx | Co ảnh asset đúng khung, placeholder cho nguồn thiếu/lỗi |
-| apps/mobile/src/components/PlaceCard.tsx | Giữ kích thước thumbnail, giới hạn chữ địa chỉ |
-| packages/visitor-core/src/journey.ts | close() chung, hủy nguồn chậm và giải phóng audio |
-| apps/mobile/src/components/JourneyPlayer.tsx | Nút × 44px và bố cục native không đè chữ |
-| apps/web/src/components/JourneyPlayer.tsx | Nút × gọi cùng controller |
-| apps/web/src/styles/player.css | Nút đóng và khoảng trống trên thẻ responsive |
-| packages/visitor-core/src/uiMessages.ts | Nhãn đóng trình nghe cho vi/en/cn/pt/ja |
-| packages/visitor-core/tests/journey.test.cjs | Test đóng khi phát/tải chậm/lỗi lưu đến muộn |
+| apps/mobile/src/shared/components/AnhBia.tsx | Co ảnh asset đúng khung, placeholder cho nguồn thiếu/lỗi |
+| apps/mobile/src/features/explore/components/TheDiTich.tsx | Giữ kích thước thumbnail, giới hạn chữ địa chỉ |
+| packages/visitor-core/src/HanhTrinh.ts | close() chung, hủy nguồn chậm và giải phóng audio |
+| apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx | Nút × 44px và bố cục native không đè chữ |
+| apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx | Nút × gọi cùng controller |
+| apps/web/src/features/journey/styles/GiaoDienTrinhNghe.css | Nút đóng và khoảng trống trên thẻ responsive |
+| packages/visitor-core/src/BanDichThanhPhan.ts | Nhãn đóng trình nghe cho vi/en/cn/pt/ja |
+| packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs | Test đóng khi phát/tải chậm/lỗi lưu đến muộn |
 
-File truy cập quản lý đã có: scripts/start-mobile-admin.cjs, apps/mobile/src/navigation/AdminApp.tsx và apps/mobile/App.tsx.
+File truy cập quản lý đã có: scripts/ChayMobileQuanTri.cjs, apps/mobile/src/navigation/UngDungQuanTri.tsx và apps/mobile/App.tsx.
 
 ## Kiểm tra
 

@@ -2,9 +2,9 @@
 
 Các đường dẫn dưới đây tính từ gốc monorepo. Code có chú thích tiếng Việt tại từng file và các khối giao diện.
 
-## 1. TẠO MỚI — apps/web/src/components/admin/AdminIcon.tsx
+## 1. TẠO MỚI — apps/web/src/features/admin/shared/components/BieuTuongQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\AdminIcon.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\BieuTuongQuanTri.tsx
 
 Icon SVG riêng cho Admin, không thêm dependency.
 
@@ -39,9 +39,9 @@ export function AdminIcon({name}: {name: AdminIconName}) {
 /* CÁCH KIỂM TRA: Icon trên menu/nút cùng hệ nét; tên chức năng vẫn đọc được khi ẩn SVG. */
 ```
 
-## 2. SỬA — apps/web/src/layouts/AdminLayout.tsx
+## 2. SỬA — apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\layouts\AdminLayout.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\layouts\BoCucQuanTri.tsx
 
 Menu, tiêu đề theo route, danh tính và vùng trang con.
 
@@ -58,7 +58,7 @@ import { NavLink, Link, Outlet, useLocation } from 'react-router-dom'
 import { useAdmin, useAdminText } from '@travelguide/admin-core/react'
 import { LanguagePicker } from '../components/LanguagePicker'
 import { AdminIcon, type AdminIconName } from '../components/admin/AdminIcon'
-import '../styles/admin.css'
+import '../styles/GiaoDienQuanTri.css'
 export function AdminLayout() {
  const t = useAdminText(), state = useAdmin(), { engine } = useJourney(), { language } = useVisitor(), { pathname } = useLocation()
  // CHỨC NĂNG: Dừng tiếng du khách khi vào quản lý và cập nhật ngôn ngữ tài liệu.
@@ -87,9 +87,9 @@ export function AdminLayout() {
 /* CÁCH KIỂM TRA: Menu đổi đúng route; đổi ngôn ngữ đổi tiêu đề; ở màn nhỏ không tràn ngang trang. */
 ```
 
-## 3. SỬA — apps/web/src/pages/admin/DashboardPage.tsx
+## 3. SỬA — apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\DashboardPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangTongQuan.tsx
 
 Banner, bốn chỉ số và các liên kết quản lý nhanh.
 
@@ -137,9 +137,9 @@ export function DashboardPage() {
 /* CÁCH KIỂM TRA: Bốn chỉ số đúng; liên kết mở đúng màn; reset vẫn hỏi xác nhận; tắt RAM hiện lỗi. */
 ```
 
-## 4. SỬA — apps/web/src/pages/admin/PlacesPage.tsx
+## 4. SỬA — apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\PlacesPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangDanhSachDiTich.tsx
 
 Thẻ ảnh di tích, tìm kiếm không dấu và mở đúng biểu mẫu.
 
@@ -177,9 +177,9 @@ export function AdminPlacesPage() {
 /* CÁCH KIỂM TRA: Gõ ky dai; xóa từ khóa; tìm rỗng; các nút mở đúng id và trạng thái vẫn đủ nhãn. */
 ```
 
-## 5. SỬA — apps/web/src/pages/admin/PlaceFormPage.tsx
+## 5. SỬA — apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\PlaceFormPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangThemSuaDiTich.tsx
 
 Nhóm thông tin, tọa độ, ảnh xem trước và thao tác lưu/xóa.
 
@@ -261,9 +261,9 @@ function PlaceForm({ initial }: { initial?: ManagedPlace }) {
 /* CÁCH KIỂM TRA: Không lưu tọa độ ngoài Huế/URL nguy hiểm; sửa metadata không đổi bản public. */
 ```
 
-## 6. SỬA — apps/web/src/pages/admin/ContentEditorPage.tsx
+## 6. SỬA — apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ContentEditorPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangBienTapNoiDung.tsx
 
 Biên tập đa ngôn ngữ theo nhóm nội dung, audio và quy trình.
 
@@ -327,9 +327,9 @@ function ContentForm({ place, language, dirty, setDirty }: { place: ManagedPlace
 /* CÁCH KIỂM TRA: Lưu trước khi dịch/tạo audio; đổi tab khi bẩn có hỏi; sửa body xóa audio cũ. */
 ```
 
-## 7. SỬA — apps/web/src/pages/admin/ReviewsPage.tsx
+## 7. SỬA — apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ReviewsPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangKiemDuyet.tsx
 
 Nhận diện di tích, so sánh bản ngôn ngữ, duyệt và công bố.
 
@@ -373,9 +373,9 @@ function ReviewCard({ place }: { place: ManagedPlace }) {
 /* CÁCH KIỂM TRA: Reject thiếu ghi chú bị khóa; approve không tự public; publish cần xác nhận. */
 ```
 
-## 8. SỬA — apps/web/src/styles/admin.css
+## 8. SỬA — apps/web/src/features/admin/styles/GiaoDienQuanTri.css
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\admin.css
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\GiaoDienQuanTri.css
 
 Toàn bộ kiểu hiển thị Admin và breakpoint desktop/tablet/mobile.
 

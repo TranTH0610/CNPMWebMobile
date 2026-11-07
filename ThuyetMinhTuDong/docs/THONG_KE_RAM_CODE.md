@@ -9,7 +9,7 @@
 ```javascript
 /**
  * FILE NÀY LÀM GÌ: Kho phiên RAM cho thống kê, không dùng database hay ghi tệp.
- * server.cjs gọi qua heartbeat/end/snapshot; sau này thay bằng kho database cùng hợp đồng.
+ * MayChuApi.cjs gọi qua heartbeat/end/snapshot; sau này thay bằng kho database cùng hợp đồng.
  * Liên quan thống kê phiên đang hoạt động; không coi phiên là người/vé.
  */
 function createMemoryStore({ now = Date.now, ttlMs = 90000, maxSessions = 10000 } = {}) {
@@ -45,9 +45,9 @@ module.exports = { createMemoryStore }
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 2. TẠO MỚI — services/presence/server.cjs
+## 2. TẠO MỚI — services/presence/MayChuApi.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\presence\server.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\presence\MayChuApi.cjs
 
 ```javascript
 /**
@@ -128,13 +128,13 @@ module.exports = { createPresenceServer }
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 3. TẠO MỚI — services/presence/repository.d.ts
+## 3. TẠO MỚI — services/presence/KieuKhoDuLieu.d.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\presence\repository.d.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\presence\KieuKhoDuLieu.d.ts
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Hợp đồng kho lưu trữ cho adapter RAM/database.
- * server.cjs nhận store cùng giao diện; database triển khai async mà FE không đổi.
+ * MayChuApi.cjs nhận store cùng giao diện; database triển khai async mà FE không đổi.
  * Không lưu thông tin cá nhân; dùng thời gian server cho lastSeen.
  */
 export interface PresenceRepository {
@@ -149,9 +149,9 @@ export interface PresenceRepository {
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 4. TẠO MỚI — services/presence/presence.test.cjs
+## 4. TẠO MỚI — services/presence/KiemThuPhienHoatDong.test.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\presence\presence.test.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\presence\KiemThuPhienHoatDong.test.cjs
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Test kho RAM, API và client HTTP; npm run presence:test gọi.
@@ -160,12 +160,12 @@ Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
 const { createMemoryStore } = require('./memory-store.cjs')
-const { createPresenceServer } = require('./server.cjs')
+const { createPresenceServer } = require('./MayChuApi.cjs')
 const { createRequire } = require('node:module')
 const path = require('node:path')
 const root = path.resolve(__dirname, '../..')
 const req = createRequire(path.join(root, 'apps/web/package.json'))
-req('esbuild').buildSync({ entryPoints: [path.join(root, 'packages/visitor-core/src/presence.ts')],
+req('esbuild').buildSync({ entryPoints: [path.join(root, 'packages/visitor-core/src/PhienHoatDong.ts')],
   bundle: true, platform: 'node', format: 'cjs', outfile: path.join(__dirname, '.test-build/client.cjs') })
 const { createPresenceClient } = require('./.test-build/client.cjs')
 const web = { sessionId: 'web_12345678901234567890', platform: 'web' }
@@ -235,14 +235,14 @@ test('client từ chối số liệu sai và truyền lỗi mạng cho hook', as
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 5. TẠO MỚI — packages/visitor-core/src/presence.ts
+## 5. TẠO MỚI — packages/visitor-core/src/PhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\presence.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\PhienHoatDong.ts
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Hợp đồng API và client thống kê phiên dùng chung web/native.
- * Hook từng nền tảng và presence-react.ts gọi; không phụ thuộc DOM hoặc React Native.
+ * Hook từng nền tảng và TheoDoiPhienReact.ts gọi; không phụ thuộc DOM hoặc React Native.
  * Đổi kho RAM sang database không đổi hợp đồng này. Không có dữ liệu vị trí hoặc tên khách.
  */
 export type PresencePlatform = 'web' | 'mobile-app'
@@ -302,9 +302,9 @@ export function startPresenceHeartbeat(client: PresenceClient, session: Presence
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 6. TẠO MỚI — packages/visitor-core/src/presence-react.ts
+## 6. TẠO MỚI — packages/visitor-core/src/TheoDoiPhienReact.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\presence-react.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\TheoDoiPhienReact.ts
 
 ```typescript
 /**
@@ -341,9 +341,9 @@ export function usePresenceStatistics(client: PresenceClient | null) {
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 7. TẠO MỚI — apps/web/src/services/presence.ts
+## 7. TẠO MỚI — apps/web/src/features/presence/services/PhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\presence.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\PhienHoatDong.ts
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Chọn địa chỉ API thống kê cho web du khách/quản lý.
@@ -358,9 +358,9 @@ export const presenceClient = createPresenceClient(import.meta.env.VITE_PRESENCE
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 8. TẠO MỚI — apps/web/src/hooks/usePresenceHeartbeat.ts
+## 8. TẠO MỚI — apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\hooks\usePresenceHeartbeat.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\hooks\useBaoPhienHoatDong.ts
 
 ```typescript
 import { useGateEntry } from './useGateEntry'
@@ -411,9 +411,9 @@ export function usePresenceHeartbeat() {
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 9. TẠO MỚI — apps/mobile/src/services/presence.ts
+## 9. TẠO MỚI — apps/mobile/src/features/presence/services/PhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\presence.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\PhienHoatDong.ts
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Ghép URL server RAM cho native; hooks và Dashboard dùng.
@@ -433,9 +433,9 @@ export const adminPresenceClient = adminUrl ? createPresenceClient(adminUrl) : n
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 10. TẠO MỚI — apps/mobile/src/hooks/usePresenceHeartbeat.ts
+## 10. TẠO MỚI — apps/mobile/src/features/presence/hooks/useBaoPhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\hooks\usePresenceHeartbeat.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\hooks\useBaoPhienHoatDong.ts
 
 ```typescript
 import { useGateEntry } from './useGateEntry'
@@ -517,15 +517,15 @@ Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
     "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile",
     "lint": "npm run lint --workspace=@travelguide/admin-core && npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile && npm run lint --workspace=web",
     "typecheck": "npm run typecheck --workspace=@travelguide/admin-core && npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile && npm run typecheck --workspace=web",
-    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs scripts/public-qr.test.cjs && npm run presence:test && npm run catalog:test",
+    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/KiemThuLienKetUngDung.test.cjs scripts/KiemThuQRCongKhai.test.cjs && npm run presence:test && npm run catalog:test",
     "build:web": "npm run build --workspace=web",
-    "links:generate": "node scripts/generate-app-links.cjs",
-    "qr:create": "node scripts/create-public-qr.cjs",
-    "demo:public": "node scripts/start-public-demo.cjs",
-    "presence:start": "node services/presence/server.cjs",
-    "presence:test": "node --test services/presence/presence.test.cjs",
-    "catalog:start": "node scripts/start-catalog.cjs",
-    "catalog:test": "node --test services/catalog/catalog.test.cjs"
+    "links:generate": "node scripts/TaoLienKetUngDung.cjs",
+    "qr:create": "node scripts/TaoMaQRCongKhai.cjs",
+    "demo:public": "node scripts/ChayDemoCongKhai.cjs",
+    "presence:start": "node services/presence/MayChuApi.cjs",
+    "presence:test": "node --test services/presence/KiemThuPhienHoatDong.test.cjs",
+    "catalog:start": "node scripts/ChayApiDiTich.cjs",
+    "catalog:test": "node --test services/catalog/KiemThuApiDiTich.test.cjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.46.2",
@@ -551,15 +551,15 @@ Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./react": "./src/react.tsx",
-    "./journey": "./src/journey.ts",
-    "./journey/react": "./src/journey-react.tsx",
-    "./journey/data": "./src/journey-data.ts",
-    "./presence": "./src/presence.ts",
-    "./presence/react": "./src/presence-react.ts"
+    "./react": "./src/TrangThaiReact.tsx",
+    "./journey": "./src/HanhTrinh.ts",
+    "./journey/react": "./src/TrangThaiHanhTrinhReact.tsx",
+    "./journey/data": "./src/DuLieuHanhTrinh.ts",
+    "./presence": "./src/PhienHoatDong.ts",
+    "./presence/react": "./src/TheoDoiPhienReact.ts"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs tests/journey.test.cjs",
+    "test": "tsc -p tsconfig.test.json && node --test tests/KiemThuNghiepVuChung.test.cjs tests/KiemThuNgonNgu.test.cjs tests/KiemThuDiaChiWebsite.test.cjs tests/KiemThuHanhTrinh.test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx"
   },
@@ -576,9 +576,9 @@ Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 15. SỬA — packages/admin-core/src/messages.ts
+## 15. SỬA — packages/admin-core/src/BanDichGiaoDien.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\messages.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\BanDichGiaoDien.ts
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Chữ Admin đủ năm ngôn ngữ dùng chung mobile/web.
@@ -1187,14 +1187,14 @@ export default defineConfig(({ mode }) => ({
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 17. SỬA — apps/web/src/App.tsx
+## 17. SỬA — apps/web/src/app/App.tsx
 
 Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\App.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ghép điều hướng web với hook GPS/lưu tiến độ.
- * Vị trí: apps/web/src/App.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/app/App.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1207,9 +1207,9 @@ export default function App() { usePresenceHeartbeat(); useJourneyNavigation(); 
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 18. SỬA — apps/web/src/pages/admin/DashboardPage.tsx
+## 18. SỬA — apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\DashboardPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangTongQuan.tsx
 
 ```tsx
 /**
@@ -1259,14 +1259,14 @@ export function DashboardPage() {
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 19. SỬA — apps/mobile/src/navigation/RootNavigator.tsx
+## 19. SỬA — apps/mobile/src/navigation/DieuHuongGoc.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\RootNavigator.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\DieuHuongGoc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app.
- * Vị trí: apps/mobile/src/navigation/RootNavigator.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/DieuHuongGoc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1348,9 +1348,9 @@ export default function RootNavigator() {
 
 Cách kiểm tra: chạy các lệnh và checklist trong THONG_KE_RAM.md.
 
-## 20. SỬA — apps/mobile/src/screens/admin/DashboardScreen.tsx
+## 20. SỬA — apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\DashboardScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManTongQuan.tsx
 
 ```tsx
 /**

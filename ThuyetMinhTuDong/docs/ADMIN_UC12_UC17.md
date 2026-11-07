@@ -43,7 +43,7 @@ Vào Cài đặt → Quản lý · Demo. Package mới được nối qua npm wo
 - packages/admin-core: kiểu, hợp đồng service, validation, workflow mock, bộ dịch và hooks dùng chung. Không có UI native/DOM.
 - apps/web/src/pages/admin và components/admin: giao diện web responsive, sidebar, form, preview và modal.
 - apps/mobile/src/screens/admin và components/admin: màn native, FlatList, biểu mẫu, preview và bộ chọn tệp.
-- services/admin/services.ts của mỗi app: ghép storage riêng với cùng service.
+- services/admin/KetNoiDichVuQuanTri.ts của mỗi app: ghép storage riêng với cùng service.
 - navigation: route riêng; không tạo NavigationContainer/i18n thứ hai.
 
 | File | Thao tác | Vai trò |
@@ -51,57 +51,57 @@ Vào Cài đặt → Quản lý · Demo. Package mới được nối qua npm wo
 | `packages/admin-core/package.json` | TẠO MỚI | Cấu hình workspace, dependency hoặc triển khai |
 | `packages/admin-core/tsconfig.json` | TẠO MỚI | Cấu hình workspace, dependency hoặc triển khai |
 | `packages/admin-core/tsconfig.test.json` | TẠO MỚI | Cấu hình workspace, dependency hoặc triển khai |
-| `packages/admin-core/src/models.ts` | TẠO MỚI | Kiểu dữ liệu Admin UC12–UC17 và danh tính được cấp sẵn. |
-| `packages/admin-core/src/contracts.ts` | TẠO MỚI | Hợp đồng service để sau thay mock bằng API mà giữ UI. |
-| `packages/admin-core/src/validation.ts` | TẠO MỚI | Kiểm tra biểu mẫu và tính thống kê phiên mô phỏng. |
+| `packages/admin-core/src/KieuDuLieuQuanTri.ts` | TẠO MỚI | Kiểu dữ liệu Admin UC12–UC17 và danh tính được cấp sẵn. |
+| `packages/admin-core/src/HopDongDichVu.ts` | TẠO MỚI | Hợp đồng service để sau thay mock bằng API mà giữ UI. |
+| `packages/admin-core/src/KiemTraDuLieu.ts` | TẠO MỚI | Kiểm tra biểu mẫu và tính thống kê phiên mô phỏng. |
 | `packages/admin-core/src/mockService.ts` | TẠO MỚI | Adapter Admin demo có lưu cục bộ và kiểm tra phiên bản. |
-| `packages/admin-core/src/messages.ts` | TẠO MỚI | Chữ Admin đủ năm ngôn ngữ dùng chung mobile/web. |
-| `packages/admin-core/src/index.ts` | TẠO MỚI | Entry logic thuần Admin; app import bằng tên package. |
-| `packages/admin-core/src/react.tsx` | TẠO MỚI | Context và hooks Admin dùng chung, UI không biết adapter lưu ở đâu. |
+| `packages/admin-core/src/BanDichGiaoDien.ts` | TẠO MỚI | Chữ Admin đủ năm ngôn ngữ dùng chung mobile/web. |
+| `packages/admin-core/src/XuatCongKhai.ts` | TẠO MỚI | Entry logic thuần Admin; app import bằng tên package. |
+| `packages/admin-core/src/TrangThaiReact.tsx` | TẠO MỚI | Context và hooks Admin dùng chung, UI không biết adapter lưu ở đâu. |
 | `.gitignore` | SỬA | Cấu hình workspace, dependency hoặc triển khai |
 | `apps/mobile/package.json` | SỬA | Cấu hình workspace, dependency hoặc triển khai |
-| `apps/mobile/src/components/admin/AdminUI.tsx` | TẠO MỚI | Khung, trường nhập, feedback và nghe thử cho Admin native. |
-| `apps/mobile/src/components/admin/LocalMediaPicker.tsx` | TẠO MỚI | Chọn ảnh/bản thu từ thiết bị, lưu cục bộ cho FE demo. |
-| `apps/mobile/src/navigation/AdminNavigator.tsx` | TẠO MỚI | Stack Admin native không đăng nhập, tách khỏi các màn visitor. |
-| `apps/mobile/src/navigation/RootNavigator.tsx` | SỬA | Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app. |
-| `apps/mobile/src/navigation/adminTypes.ts` | TẠO MỚI | Kiểu route Admin native; AdminNavigator và màn hình dùng. |
-| `apps/mobile/src/navigation/types.ts` | SỬA | Tách riêng một phần giao diện để dễ tìm và bảo trì. |
-| `apps/mobile/src/providers/AppProviders.tsx` | SỬA | Ghép các provider mobile một lần tại gốc, giữ nguyên khóa lưu ngôn ngữ/tiến độ. |
-| `apps/mobile/src/screens/DetailScreen.tsx` | SỬA | Hiển thị bài đọc đúng ngôn ngữ, nút nghe và nút mở bản đồ của địa điểm. |
-| `apps/mobile/src/screens/SettingsScreen.tsx` | SỬA | Hiển thị chọn ngôn ngữ chung và liên kết truy cập website/QR. |
-| `apps/mobile/src/screens/admin/ContentEditorScreen.tsx` | TẠO MỚI | Biên tập 5 ngôn ngữ native, audio URL và dịch/TTS demo. |
-| `apps/mobile/src/screens/admin/DashboardScreen.tsx` | TẠO MỚI | Dashboard native cùng số liệu/quy tắc với Admin Web. |
-| `apps/mobile/src/screens/admin/PlaceFormScreen.tsx` | TẠO MỚI | Metadata native tương đương biểu mẫu web. |
-| `apps/mobile/src/screens/admin/PlacesScreen.tsx` | TẠO MỚI | FlatList danh mục Admin, tìm không dấu và mở biểu mẫu. |
+| `apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx` | TẠO MỚI | Khung, trường nhập, feedback và nghe thử cho Admin native. |
+| `apps/mobile/src/features/admin/shared/components/ChonTepTuThietBi.tsx` | TẠO MỚI | Chọn ảnh/bản thu từ thiết bị, lưu cục bộ cho FE demo. |
+| `apps/mobile/src/navigation/DieuHuongQuanTri.tsx` | TẠO MỚI | Stack Admin native không đăng nhập, tách khỏi các màn visitor. |
+| `apps/mobile/src/navigation/DieuHuongGoc.tsx` | SỬA | Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app. |
+| `apps/mobile/src/navigation/KieuDieuHuongQuanTri.ts` | TẠO MỚI | Kiểu route Admin native; AdminNavigator và màn hình dùng. |
+| `apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts` | SỬA | Tách riêng một phần giao diện để dễ tìm và bảo trì. |
+| `apps/mobile/src/app/TrangThaiUngDung.tsx` | SỬA | Ghép các provider mobile một lần tại gốc, giữ nguyên khóa lưu ngôn ngữ/tiến độ. |
+| `apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx` | SỬA | Hiển thị bài đọc đúng ngôn ngữ, nút nghe và nút mở bản đồ của địa điểm. |
+| `apps/mobile/src/features/settings/screens/ManCaiDat.tsx` | SỬA | Hiển thị chọn ngôn ngữ chung và liên kết truy cập website/QR. |
+| `apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx` | TẠO MỚI | Biên tập 5 ngôn ngữ native, audio URL và dịch/TTS demo. |
+| `apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx` | TẠO MỚI | Dashboard native cùng số liệu/quy tắc với Admin Web. |
+| `apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx` | TẠO MỚI | Metadata native tương đương biểu mẫu web. |
+| `apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx` | TẠO MỚI | FlatList danh mục Admin, tìm không dấu và mở biểu mẫu. |
 | `apps/mobile/src/screens/admin/QrScreen.tsx` | TẠO MỚI | Quản lý liên kết QR chung trên native. |
-| `apps/mobile/src/screens/admin/ReviewsScreen.tsx` | TẠO MỚI | Danh sách chờ duyệt, so sánh năm bản và công bố native. |
-| `apps/mobile/src/services/admin/services.ts` | TẠO MỚI | Ghép adapter cục bộ của nền tảng với hợp đồng Admin. |
+| `apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx` | TẠO MỚI | Danh sách chờ duyệt, so sánh năm bản và công bố native. |
+| `apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts` | TẠO MỚI | Ghép adapter cục bộ của nền tảng với hợp đồng Admin. |
 | `apps/web/package.json` | SỬA | Cấu hình workspace, dependency hoặc triển khai |
-| `apps/web/src/components/Navbar.tsx` | SỬA | Thanh điều hướng web, logo, chọn ngôn ngữ và liên kết QR chung. |
-| `apps/web/src/components/admin/AdminUI.tsx` | TẠO MỚI | Thành phần và hooks nhỏ dùng lại trong Admin Web. |
-| `apps/web/src/components/admin/LocalMediaPicker.tsx` | TẠO MỚI | Chọn tệp local cho bản FE, không giả gọi upload server. |
-| `apps/web/src/layouts/AdminLayout.tsx` | TẠO MỚI | Khung Admin Web màu xanh/trắng cùng trang du khách. |
+| `apps/web/src/shared/layouts/ThanhDieuHuong.tsx` | SỬA | Thanh điều hướng web, logo, chọn ngôn ngữ và liên kết QR chung. |
+| `apps/web/src/features/admin/shared/components/ThanhPhanQuanTri.tsx` | TẠO MỚI | Thành phần và hooks nhỏ dùng lại trong Admin Web. |
+| `apps/web/src/features/admin/shared/components/ChonTepTuThietBi.tsx` | TẠO MỚI | Chọn tệp local cho bản FE, không giả gọi upload server. |
+| `apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx` | TẠO MỚI | Khung Admin Web màu xanh/trắng cùng trang du khách. |
 | `apps/web/src/main.tsx` | SỬA | Mount React 18, BrowserRouter và các provider; giữ ngôn ngữ/tiến độ dùng chung. |
-| `apps/web/src/navigation/AdminRoutes.tsx` | TẠO MỚI | Cây route Admin Web, không có route đăng nhập theo phạm vi FE. |
-| `apps/web/src/navigation/AppRoutes.tsx` | SỬA | Bảng route web; không chứa code UI của từng trang. |
-| `apps/web/src/pages/DetailPage.tsx` | SỬA | Trang bài đọc, đổi ngôn ngữ, nghe thuyết minh và mở marker địa điểm. |
-| `apps/web/src/pages/admin/ContentEditorPage.tsx` | TẠO MỚI | Biên tập năm ngôn ngữ, bản thu URL, dịch/TTS demo và gửi duyệt. |
-| `apps/web/src/pages/admin/DashboardPage.tsx` | TẠO MỚI | Dashboard thống kê phiên mô phỏng và tình trạng nội dung. |
-| `apps/web/src/pages/admin/PlaceFormPage.tsx` | TẠO MỚI | Tạo/sửa metadata di tích, ảnh và tọa độ xác nhận. |
-| `apps/web/src/pages/admin/PlacesPage.tsx` | TẠO MỚI | Danh mục di tích Admin có tìm không dấu, ảnh và trạng thái. |
+| `apps/web/src/app/DinhTuyenQuanTri.tsx` | TẠO MỚI | Cây route Admin Web, không có route đăng nhập theo phạm vi FE. |
+| `apps/web/src/app/DinhTuyenDuKhach.tsx` | SỬA | Bảng route web; không chứa code UI của từng trang. |
+| `apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx` | SỬA | Trang bài đọc, đổi ngôn ngữ, nghe thuyết minh và mở marker địa điểm. |
+| `apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx` | TẠO MỚI | Biên tập năm ngôn ngữ, bản thu URL, dịch/TTS demo và gửi duyệt. |
+| `apps/web/src/features/admin/dashboard/TrangTongQuan.tsx` | TẠO MỚI | Dashboard thống kê phiên mô phỏng và tình trạng nội dung. |
+| `apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx` | TẠO MỚI | Tạo/sửa metadata di tích, ảnh và tọa độ xác nhận. |
+| `apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx` | TẠO MỚI | Danh mục di tích Admin có tìm không dấu, ảnh và trạng thái. |
 | `apps/web/src/pages/admin/QrPage.tsx` | TẠO MỚI | Xuất cùng QR tại cổng, tái sử dụng component visitor. |
-| `apps/web/src/pages/admin/ReviewsPage.tsx` | TẠO MỚI | So sánh văn bản/audio, yêu cầu sửa, duyệt và công bố đúng bản. |
-| `apps/web/src/services/admin/services.ts` | TẠO MỚI | Ghép adapter cục bộ của nền tảng với hợp đồng Admin. |
-| `apps/web/src/styles/admin.css` | TẠO MỚI | Màu xanh/trắng và typography Admin theo token trang du khách. |
+| `apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx` | TẠO MỚI | So sánh văn bản/audio, yêu cầu sửa, duyệt và công bố đúng bản. |
+| `apps/web/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts` | TẠO MỚI | Ghép adapter cục bộ của nền tảng với hợp đồng Admin. |
+| `apps/web/src/features/admin/styles/GiaoDienQuanTri.css` | TẠO MỚI | Màu xanh/trắng và typography Admin theo token trang du khách. |
 | `apps/web/vercel.json` | SỬA | Cấu hình workspace, dependency hoặc triển khai |
 | `package.json` | SỬA | Cấu hình workspace, dependency hoặc triển khai |
-| `packages/admin-core/tests/admin.test.cjs` | TẠO MỚI | Test nghiệp vụ thật Admin không cần trình duyệt/BE. |
-| `packages/visitor-core/src/catalog.ts` | SỬA |  |
-| `packages/visitor-core/src/journey-react.tsx` | SỬA | Giữ một phiên nghe/GPS xuyên suốt mọi màn UC06–UC11. |
-| `packages/visitor-core/src/journey.ts` | SỬA | Điều phối GPS, một nguồn audio và lưu tiến độ UC06–UC11. |
-| `packages/visitor-core/src/model.ts` | SỬA |  |
-| `packages/visitor-core/src/react.tsx` | SỬA |  |
-| `scripts/build-admin-tests.cjs` | TẠO MỚI | Bundle logic Admin để Node test đọc được workspace TypeScript. |
+| `packages/admin-core/tests/KiemThuQuanTri.test.cjs` | TẠO MỚI | Test nghiệp vụ thật Admin không cần trình duyệt/BE. |
+| `packages/visitor-core/src/DanhMucDiTich.ts` | SỬA |  |
+| `packages/visitor-core/src/TrangThaiHanhTrinhReact.tsx` | SỬA | Giữ một phiên nghe/GPS xuyên suốt mọi màn UC06–UC11. |
+| `packages/visitor-core/src/HanhTrinh.ts` | SỬA | Điều phối GPS, một nguồn audio và lưu tiến độ UC06–UC11. |
+| `packages/visitor-core/src/KieuDuLieuDuKhach.ts` | SỬA |  |
+| `packages/visitor-core/src/TrangThaiReact.tsx` | SỬA |  |
+| `scripts/DongGoiKiemThuQuanTri.cjs` | TẠO MỚI | Bundle logic Admin để Node test đọc được workspace TypeScript. |
 
 Hai workflow thật nằm ở D:/3.HTML/Đồ án CNPM/.github/workflows, ngoài gốc npm workspace một cấp. Đã thêm typecheck/lint admin-core tại đây để CI kiểm tra package mới. package-lock.json cập nhật bằng npm; không cần copy thủ công nội dung lockfile.
 
@@ -127,8 +127,8 @@ Tệp local là data URL có MIME cho phép và tối đa 1 MB gốc mỗi tệp
 
 ## Ghép BE sau này
 
-1. BE thống nhất AdminService ở contracts.ts và mã lỗi AdminErrorCode; bổ sung mapping request/response, không để UI đoán schema.
-2. Viết HTTP adapter thực hiện cùng interface, thay factory tại services/admin/services.ts. Hiện chưa có API adapter hoạt động vì chưa có BE/hợp đồng endpoint được chốt.
+1. BE thống nhất AdminService ở HopDongDichVu.ts và mã lỗi AdminErrorCode; bổ sung mapping request/response, không để UI đoán schema.
+2. Viết HTTP adapter thực hiện cùng interface, thay factory tại services/admin/KetNoiDichVuQuanTri.ts. Hiện chưa có API adapter hoạt động vì chưa có BE/hợp đồng endpoint được chốt.
 3. identity() lấy danh tính/phiên được cấp; BE kiểm tra quyền trên mọi thao tác. Không coi danh tính demo là cơ chế xác thực.
 4. BE xử lý revision/xung đột và công bố bằng giao dịch; không chỉ tin điều kiện FE.
 5. Translation/TTS adapter dùng job id + revision; API key chỉ ở BE. Mock hiện kiểm tra revision khi tác vụ hoàn tất.

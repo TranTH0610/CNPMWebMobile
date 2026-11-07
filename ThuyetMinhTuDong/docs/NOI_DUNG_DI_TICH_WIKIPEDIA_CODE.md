@@ -1,12 +1,12 @@
 # Toàn bộ mã thay đổi cho nội dung di tích và thuyết minh
 
-Gốc dự án: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong`. MP3 là tệp nhị phân; không thể copy qua code block. Bảng ánh xạ từng bản nằm trong `narrations.json`.
+Gốc dự án: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong`. MP3 là tệp nhị phân; không thể copy qua code block. Bảng ánh xạ từng bản nằm trong `DanhMucBanThu.json`.
 
-## packages/visitor-core/src/data/heritageContent.json
+## packages/visitor-core/src/data/NoiDungDiSan.json
 
 Nguồn chuẩn: 8 bài lịch sử × 5 ngôn ngữ; địa chỉ mô tả, tóm tắt và liên kết Wikipedia.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\heritageContent.json`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\NoiDungDiSan.json`.
 
 ```json
 [
@@ -333,11 +333,11 @@ Nguồn chuẩn: 8 bài lịch sử × 5 ngôn ngữ; địa chỉ mô tả, tó
 ]
 ```
 
-## packages/visitor-core/src/data/narrations.json
+## packages/visitor-core/src/data/DanhMucBanThu.json
 
 Manifest 40 MP3: mã văn bản/MP3 SHA-256, thời lượng, dung lượng và ngôn ngữ giọng đọc.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\narrations.json`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\DanhMucBanThu.json`.
 
 ```json
 [
@@ -784,20 +784,20 @@ Manifest 40 MP3: mã văn bản/MP3 SHA-256, thời lượng, dung lượng và 
 ]
 ```
 
-## packages/visitor-core/src/data/heritage.ts
+## packages/visitor-core/src/data/DiSanHue.ts
 
 Ghép bài với MP3 chỉ khi body khớp, kiểm tra khóa audio; không phụ thuộc UI.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\heritage.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\DiSanHue.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Ghép bài lịch sử có nguồn với MP3 đọc đúng văn bản.
- * mock.ts, Admin và bộ test dùng; phụ thuộc heritageContent.json/narrations.json.
+ * DuLieuKhoiTao.ts, Admin và bộ test dùng; phụ thuộc NoiDungDiSan.json/DanhMucBanThu.json.
  * UC02–UC06, UC14: nguồn chung cho cả bốn giao diện, không nhân bản bài trong UI.
  */
-import raw from './heritageContent.json'
-import recordings from './narrations.json'
+import raw from './NoiDungDiSan.json'
+import recordings from './DanhMucBanThu.json'
 import type { ContentSource, Language, PublishedText } from '../domain/model'
 
 type HeritageEntry = {
@@ -841,18 +841,18 @@ export function heritageText(id: string, language: Language, title: string): Pub
  * mỗi audio có khóa khác nhau và đường dẫn không chứa tên máy/IP. */
 ```
 
-## packages/visitor-core/src/data/mock.ts
+## packages/visitor-core/src/data/DuLieuKhoiTao.ts
 
 Khởi tạo danh mục tám di tích từ bài chuẩn; giữ ảnh và danh mục hiện có.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\mock.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\data\DuLieuKhoiTao.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ:
  * Cung cấp tám di tích với bài lịch sử có nguồn Wikipedia và MP3 riêng.
  * demoCatalog được provider dùng mặc định.
- * Phụ thuộc model.ts và catalog.ts.
+ * Phụ thuộc KieuDuLieuDuKhach.ts và DanhMucDiTich.ts.
  *
  * Bài đã biên soạn lại và dịch; chưa phải bản do đơn vị di tích chứng nhận.
  * Không khai báo tọa độ suy đoán.
@@ -893,7 +893,7 @@ function make(
 }
 
 // CHỨC NĂNG: Cung cấp tám điểm minh họa đủ năm ngôn ngữ.
-// XỬ LÝ: Hàm make lấy bài và MP3 tương ứng từ heritage.ts.
+// XỬ LÝ: Hàm make lấy bài và MP3 tương ứng từ DiSanHue.ts.
 // Trường hợp API thiếu bản dịch được kiểm tra bằng dữ liệu riêng trong test.
 export const MOCK_PLACES: PlaceRecord[] = [
   make('ky-dai', 'fortifications', {
@@ -995,11 +995,11 @@ export async function loadMockCatalog(): Promise<PlaceRecord[]> {
 export const demoCatalog = createCatalog(loadMockCatalog)
 ```
 
-## packages/visitor-core/src/domain/model.ts
+## packages/visitor-core/src/domain/KieuDuLieuDuKhach.ts
 
 Thêm metadata nguồn có kiểu, optional để tương thích dữ liệu cũ.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\domain\model.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\domain\KieuDuLieuDuKhach.ts`.
 
 ```typescript
 /**
@@ -1128,7 +1128,7 @@ export type StoragePort = {
 }
 ```
 
-## packages/visitor-core/src/index.ts
+## packages/visitor-core/src/XuatCongKhai.ts
 
 Xuất helper dữ liệu/audio qua tên package dùng chung.
 
@@ -1168,15 +1168,15 @@ export { PLACE_PHOTOS } from './data/photos'
 export * from './data/heritage'
 ```
 
-## packages/visitor-core/src/i18n/heritage-messages.ts
+## packages/visitor-core/src/i18n/BanDichDiSan.ts
 
 Nhãn nguồn, ngày đối chiếu và giọng tổng hợp đủ năm ngôn ngữ.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\i18n\heritage-messages.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\i18n\BanDichDiSan.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Nhãn nguồn lịch sử/giọng tổng hợp cho cả web và mobile.
- * messages.ts ghép vào i18n; UC04/UC06/UC14. */
+ * BanDichGiaoDien.ts ghép vào i18n; UC04/UC06/UC14. */
 import type { Language } from '../domain/model'
 export const heritageMessages = {
   "vi": {
@@ -1212,19 +1212,19 @@ export const heritageMessages = {
 } satisfies Record<Language, Record<'heritageSources' | 'heritageCredit' | 'heritageChecked' | 'heritageSynthetic', string>>
 ```
 
-## packages/visitor-core/src/i18n/messages.ts
+## packages/visitor-core/src/i18n/BanDichGiaoDien.ts
 
 Ghép nhãn mới vào i18n hiện có của hai ứng dụng.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\i18n\messages.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\i18n\BanDichGiaoDien.ts`.
 
 ```typescript
 import { heritageMessages } from './heritage-messages'
 /**
  * FILE NÀY LÀM GÌ:
  * Chứa chữ giao diện UC01–UC11 của năm ngôn ngữ.
- * createVisitorI18n trong react.tsx dùng file này.
- * Phụ thuộc type Language trong model.ts.
+ * createVisitorI18n trong TrangThaiReact.tsx dùng file này.
+ * Phụ thuộc type Language trong KieuDuLieuDuKhach.ts.
  */
 import { qrMessages } from './qr-messages'
 
@@ -1556,7 +1556,7 @@ export const messages: Record<Language, Messages> = {
 }
 ```
 
-## packages/admin-core/src/services/mockService.ts
+## packages/admin-core/src/services/XuLyNghiepVuQuanTri.ts
 
 Dùng chung seed với du khách; sửa bài bỏ audio cũ; tạo giọng thật qua adapter; giữ workflow duyệt.
 
@@ -1595,7 +1595,7 @@ function readDocument(raw: string): AdminDocument {
 }
 // CHỨC NĂNG: Nhận bộ tạo MP3 từ server; logic FE không giữ khóa dịch vụ TTS.
 // XỬ LÝ: Test/offline dùng bài đã đóng gói; bài mới cần adapter tạo giọng thật.
-export function createMockAdminService(storage: StoragePort,
+export function createAdminService(storage: StoragePort,
   prepareAudio?: (body: string, language: Language) => Promise<string>,
 ): AdminService {
   let cached: AdminDocument | undefined
@@ -1773,11 +1773,11 @@ export function createMockAdminService(storage: StoragePort,
  * hai lệnh cùng revision chỉ lệnh đầu thành công; storage.write lỗi không đổi cache. */
 ```
 
-## packages/admin-core/src/services/httpService.ts
+## packages/admin-core/src/services/GoiApiQuanTri.ts
 
 Chờ tối đa 180 giây riêng lệnh tạo MP3; lệnh khác giữ timeout 8 giây.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\services\httpService.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\services\GoiApiQuanTri.ts`.
 
 ```typescript
 /**
@@ -1846,11 +1846,11 @@ export function sendGateEntry(client:GateClient,visitId:string,platform:'web'|'m
 /* CÁCH KIỂM TRA: Hai client đọc cùng bản; mất mạng không về dữ liệu cục bộ; HTTP409 hiện conflict; hủy subscriber dừng polling. */
 ```
 
-## packages/admin-core/src/i18n/messages.ts
+## packages/admin-core/src/i18n/BanDichGiaoDien.ts
 
 Nhãn tạo giọng thật và thông báo dịch tự động vẫn mô phỏng.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\i18n\messages.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\i18n\BanDichGiaoDien.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Chữ Admin đủ năm ngôn ngữ dùng chung mobile/web.
@@ -2359,7 +2359,7 @@ export const adminMessages: Record<Language, Record<AdminTextKey, string>> = { v
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Ánh xạ MP3 tĩnh để Metro đóng gói đúng 40 bản đọc.
- * generate-narrations.py sinh; journeyAdapters và AudioPreview dùng. Không sửa tay. */
+ * TaoCacBanThuyetMinh.py sinh; journeyAdapters và AudioPreview dùng. Không sửa tay. */
 import audio0 from '../../assets/narrations/d2f45554dad78aea74150ddc70541e3c697f048d725c65114039f1b0dba65ddf.mp3'
 import audio1 from '../../assets/narrations/b9f8c3fca7fa3fb28c0d09cfe225094c9b3577141790a8458893f39a955dcd3b.mp3'
 import audio2 from '../../assets/narrations/ea3fc543bd177b75d283ec3c2f4d454bc12242c17586c90ee53b7e7a930fe336.mp3'
@@ -2445,16 +2445,16 @@ export const narrationAssets: Readonly<Record<string, number>> = {
 }
 ```
 
-## apps/mobile/src/services/journeyAdapters.ts
+## apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
 
 Phát MP3 đóng gói hoặc MP3 Admin mới tạo từ API đúng nền tảng.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\journeyAdapters.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\KetNoiAudioVaDinhVi.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Kết nối audio/GPS/bộ nhớ riêng nền tảng vào JourneyProvider.
- * Vị trí: apps/mobile/src/services/journeyAdapters.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2571,17 +2571,17 @@ export function ContentSources({ text }: { text?: PublishedText }) {
 /* CÁCH KIỂM TRA: Nguồn khớp di tích; nhãn đổi theo ngôn ngữ; lỗi mở trình duyệt hiện thông báo. */
 ```
 
-## apps/mobile/src/screens/DetailScreen.tsx
+## apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
 
 Trang đọc du khách hiển thị bài và nguồn đang công bố.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\DetailScreen.tsx`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManChiTietDiTich.tsx`.
 
 ```tsx
 import { ContentSources } from '../components/ContentSources'
 /**
  * FILE NÀY LÀM GÌ: Hiển thị bài đọc đúng ngôn ngữ, nút nghe và nút mở bản đồ của địa điểm.
- * Vị trí: apps/mobile/src/screens/DetailScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -2753,11 +2753,11 @@ export default function DetailScreen({
 }
 ```
 
-## apps/mobile/src/screens/admin/ContentEditorScreen.tsx
+## apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx
 
 Màn biên tập Admin nghe thử cùng MP3, giữ mã nội bộ khỏi ô URL upload.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ContentEditorScreen.tsx`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManBienTapNoiDung.tsx`.
 
 ```tsx
 import { ContentSources } from '../../components/ContentSources'
@@ -2821,11 +2821,11 @@ function ContentForm({place,language,dirty,setDirty}:{place:ManagedPlace;languag
 /* CÁCH KIỂM TRA: Lưu body mới bỏ audio cũ; tác vụ sai revision báo conflict, không ghi đè. */
 ```
 
-## apps/web/src/services/narrationSource.ts
+## apps/web/src/features/journey/adapters/NguonAmThanh.ts
 
 Một bộ phân giải URL audio cho trình nghe du khách và nghe thử Admin.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\narrationSource.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\NguonAmThanh.ts`.
 
 ```typescript
 /** FILE NÀY LÀM GÌ: Đổi mã MP3 dùng chung thành URL web.
@@ -2847,16 +2847,16 @@ export function narrationSource(url: string, preview = false): string {
 /* CÁCH KIỂM TRA: Bài seed trỏ static; bài Admin mới trỏ API; khóa lạ bị từ chối. */
 ```
 
-## apps/web/src/services/journeyAdapters.ts
+## apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
 
 Nối MP3 mới vào HTMLAudioElement, giữ tua/tốc độ và dọn nguồn.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\journeyAdapters.ts`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\KetNoiAudioVaDinhVi.ts`.
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Kết nối audio/GPS/bộ nhớ riêng nền tảng vào JourneyProvider.
- * Vị trí: apps/web/src/services/journeyAdapters.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2954,17 +2954,17 @@ export function ContentSources({ text }: { text?: PublishedText }) {
 /* CÁCH KIỂM TRA: Đổi năm ngôn ngữ; mở link nguồn; bài không có sources không vẽ khung rỗng. */
 ```
 
-## apps/web/src/pages/DetailPage.tsx
+## apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
 
 Trang bài đọc du khách lấy nguồn và bài từ cùng record công khai.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\DetailPage.tsx`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\TrangChiTietDiTich.tsx`.
 
 ```tsx
 import { ContentSources } from '../components/ContentSources'
 /**
  * FILE NÀY LÀM GÌ: Trang bài đọc, đổi ngôn ngữ, nghe thuyết minh và mở marker địa điểm.
- * Vị trí: apps/web/src/pages/DetailPage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -3144,11 +3144,11 @@ export function DetailPage() {
 }
 ```
 
-## apps/web/src/pages/admin/ContentEditorPage.tsx
+## apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx
 
 Admin nghe thử cùng bài/MP3; ô URL dùng cho bản thu ngoài.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ContentEditorPage.tsx`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangBienTapNoiDung.tsx`.
 
 ```tsx
 import { ContentSources } from '../../components/ContentSources'
@@ -3217,11 +3217,11 @@ function ContentForm({ place, language, dirty, setDirty }: { place: ManagedPlace
 /* CÁCH KIỂM TRA: Lưu trước khi dịch/tạo audio; đổi tab khi bẩn có hỏi; sửa body xóa audio cũ. */
 ```
 
-## apps/web/src/styles/index.css
+## apps/web/src/shared/styles/GiaoDienNen.css
 
 Style khung nguồn dễ đọc và xuống dòng trên màn nhỏ.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\index.css`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\GiaoDienNen.css`.
 
 ```css
 /*
@@ -4089,15 +4089,15 @@ export default defineConfig(({ mode }) => ({
 }))
 ```
 
-## services/catalog/narration.cjs
+## services/catalog/TaoAmThanhThuyetMinh.cjs
 
 Tạo MP3 thật từ bài Admin, cache theo body/ngôn ngữ, giới hạn tác vụ và phục vụ HTTP Range.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\narration.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\TaoAmThanhThuyetMinh.cjs`.
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Tạo MP3 thật từ bài Admin đã lưu; server RAM gọi.
- * Phụ thuộc Python/gTTS cài theo scripts/requirements-narration.txt.
+ * Phụ thuộc Python/gTTS cài theo scripts/ThuVienTaoGiongDoc.txt.
  * UC14.2: không gửi khóa API ra FE, không dùng giọng mẫu thay cho nội dung mới. */
 const fs = require('node:fs')
 const path = require('node:path')
@@ -4127,7 +4127,7 @@ async function prepareNarration(body, language) {
     fs.writeFileSync(request, JSON.stringify({body,language}))
     try {
       await new Promise((resolve,reject) => execFile(process.env.NARRATION_PYTHON || 'python',
-        [path.join(root,'scripts/generate-narrations.py'),'--request',request,'--output',output],
+        [path.join(root,'scripts/TaoCacBanThuyetMinh.py'),'--request',request,'--output',output],
         {cwd:root,windowsHide:true,timeout:150000,env:{...process.env,PYTHONPATH:[path.join(root,'.tools/tts-python'),process.env.PYTHONPATH].filter(Boolean).join(path.delimiter)}},
         error => error ? reject(error) : resolve()))
       if (!audioFile(key)) throw Error('Missing MP3')
@@ -4161,11 +4161,11 @@ module.exports={prepareNarration,sendAudio}
  * mất mạng báo lỗi, body không bị sửa; Range trả đúng số byte. */
 ```
 
-## services/catalog/server.cjs
+## services/catalog/MayChuApi.cjs
 
 Gắn bộ tạo giọng vào RAM API chung; kiểm tra audio công bố trước phục vụ khách.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\server.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\MayChuApi.cjs`.
 
 ```javascript
 /**
@@ -4178,16 +4178,16 @@ const path=require('node:path')
 const fs=require('node:fs')
 const {createRequire}=require('node:module')
 const {randomUUID}=require('node:crypto')
-const {prepareNarration,sendAudio}=require('./narration.cjs')
+const {prepareNarration,sendAudio}=require('./TaoAmThanhThuyetMinh.cjs')
 const root=path.resolve(__dirname,'../..')
 // CHỨC NĂNG: Chạy đúng logic TypeScript đang dùng ở FE, tránh chép đôi workflow.
-function loadCore(){const runtime=path.join(root,'.runtime');fs.mkdirSync(runtime,{recursive:true});const req=createRequire(path.join(root,'apps/web/package.json'));req('esbuild').buildSync({entryPoints:[path.join(root,'packages/admin-core/src/index.ts')],bundle:true,platform:'node',format:'cjs',outfile:path.join(runtime,'admin-core.cjs')});return require(path.join(runtime,'admin-core.cjs'))}
+function loadCore(){const runtime=path.join(root,'.runtime');fs.mkdirSync(runtime,{recursive:true});const req=createRequire(path.join(root,'apps/web/package.json'));req('esbuild').buildSync({entryPoints:[path.join(root,'packages/admin-core/src/XuatCongKhai.ts')],bundle:true,platform:'node',format:'cjs',outfile:path.join(runtime,'admin-core.cjs')});return require(path.join(runtime,'admin-core.cjs'))}
 function createCatalogServer({now=Date.now,origins=['http://127.0.0.1:5173','http://localhost:5173','http://127.0.0.1:5174','http://localhost:5174'],core=loadCore(),prepareAudio=prepareNarration,initialDocument=null,initialGate=null}={}){
  let raw=initialDocument?JSON.stringify(initialDocument):null,version=0,day=initialGate?.day||'',visits=new Set(),carried=initialGate?.today||0
  const instance=randomUUID()
  // CHỨC NĂNG: Một instance service duy nhất; mutate của service xếp hàng ghi và kiểm tra revision.
  // XỬ LÝ: Giới hạn kho 32MB, body 8MB; không có endpoint reset hay ghi nguyên document từ client.
- const service=core.createMockAdminService({read:async()=>raw,write:async value=>{if(Buffer.byteLength(value)>32*1024*1024)throw Error('capacity');raw=value}},prepareAudio)
+ const service=core.createAdminService({read:async()=>raw,write:async value=>{if(Buffer.byteLength(value)>32*1024*1024)throw Error('capacity');raw=value}},prepareAudio)
  service.subscribe(()=>{version++})
  const dayOf=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(now()))
  const gate=()=>{const current=dayOf();if(day!==current){day=current;visits=new Set();carried=0}return{today:carried+visits.size,day}}
@@ -4256,15 +4256,15 @@ module.exports={createCatalogServer}
 /* CÁCH KIỂM TRA: Hai HTTP client sửa cùng revision chỉ một thành công; public không lộ nháp; refresh QR không tăng lượt; restart mất RAM. */
 ```
 
-## scripts/generate-narrations.py
+## scripts/TaoCacBanThuyetMinh.py
 
 Tạo lại đồng loạt MP3 từ body, sinh manifest và ánh xạ Metro; hỗ trợ tác vụ một bài do server gọi.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\generate-narrations.py`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\TaoCacBanThuyetMinh.py`.
 
 ```python
-"""FILE NÀY LÀM GÌ: Tạo MP3 từ đúng body trong heritageContent.json cho web/mobile.
-Chạy thủ công khi thay bài nguồn; phụ thuộc requirements-narration.txt. UC06, UC14.2.
+"""FILE NÀY LÀM GÌ: Tạo MP3 từ đúng body trong NoiDungDiSan.json cho web/mobile.
+Chạy thủ công khi thay bài nguồn; phụ thuộc ThuVienTaoGiongDoc.txt. UC06, UC14.2.
 Không dịch tự động, không dùng âm thanh mẫu để thay cho bài mới.
 """
 import argparse
@@ -4310,7 +4310,7 @@ def main():
         destination.parent.mkdir(parents=True, exist_ok=True)
         synthesize(request["body"], request["language"], destination)
         return
-    entries = json.loads((ROOT / "packages/visitor-core/src/data/heritageContent.json").read_text(encoding="utf-8"))
+    entries = json.loads((ROOT / "packages/visitor-core/src/data/NoiDungDiSan.json").read_text(encoding="utf-8"))
     web = ROOT / "apps/web/static/narrations"
     mobile = ROOT / "apps/mobile/assets/narrations"
     web.mkdir(parents=True, exist_ok=True)
@@ -4328,8 +4328,8 @@ def main():
     # CHỨC NĂNG: Giới hạn bốn kết nối; chỉ ghi manifest sau khi đủ 40 bài.
     with ThreadPoolExecutor(max_workers=4) as pool:
         records = list(pool.map(generate, jobs))
-    (ROOT / "packages/visitor-core/src/data/narrations.json").write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    lines = ["/** FILE NÀY LÀM GÌ: Ánh xạ MP3 tĩnh để Metro đóng gói đúng 40 bản đọc.", " * generate-narrations.py sinh; journeyAdapters và AudioPreview dùng. Không sửa tay. */"]
+    (ROOT / "packages/visitor-core/src/data/DanhMucBanThu.json").write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    lines = ["/** FILE NÀY LÀM GÌ: Ánh xạ MP3 tĩnh để Metro đóng gói đúng 40 bản đọc.", " * TaoCacBanThuyetMinh.py sinh; journeyAdapters và AudioPreview dùng. Không sửa tay. */"]
     for index, record in enumerate(records):
         lines.append(f"import audio{index} from '../../assets/narrations/{record['key']}.mp3'")
     lines.extend(["// CHỨC NĂNG: Tra bằng dấu vân tay của văn bản/ngôn ngữ, tránh phát nhầm bài.", "export const narrationAssets: Readonly<Record<string, number>> = {"])
@@ -4341,11 +4341,11 @@ if __name__ == "__main__":
     main()
 ```
 
-## scripts/requirements-narration.txt
+## scripts/ThuVienTaoGiongDoc.txt
 
 Hai dependency Python phục vụ tạo MP3, không thêm thư viện runtime FE.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\requirements-narration.txt`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\ThuVienTaoGiongDoc.txt`.
 
 ```text
 # Công cụ tạo bài đọc; không phải dependency chạy ứng dụng FE.
@@ -4353,11 +4353,11 @@ gTTS==2.5.4
 mutagen==1.48.1
 ```
 
-## scripts/upgrade-heritage-content.cjs
+## scripts/CapNhatNoiDungDiSan.cjs
 
 Sao lưu RAM và chuẩn bị chuyển nội dung; giữ điểm thêm, ảnh/tọa độ và lịch sử.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\upgrade-heritage-content.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\CapNhatNoiDungDiSan.cjs`.
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Chuẩn bị bản chuyển nội dung RAM sang bộ bài Wikipedia.
@@ -4377,9 +4377,9 @@ async function main(){
  fs.writeFileSync(path.join(directory,'gate-statistics.json'),JSON.stringify(gate,null,2))
  const req=createRequire(path.join(root,'apps/web/package.json'))
  const outfile=path.join(directory,'admin-core.cjs')
- req('esbuild').buildSync({entryPoints:[path.join(root,'packages/admin-core/src/index.ts')],bundle:true,platform:'node',format:'cjs',outfile})
- const {createMockAdminService}=require(outfile)
- const seed=await createMockAdminService({read:async()=>null,write:async()=>{}}).load()
+ req('esbuild').buildSync({entryPoints:[path.join(root,'packages/admin-core/src/XuatCongKhai.ts')],bundle:true,platform:'node',format:'cjs',outfile})
+ const {createAdminService}=require(outfile)
+ const seed=await createAdminService({read:async()=>null,write:async()=>{}}).load()
  const updated=structuredClone(original),date=new Date().toISOString()
  for(const place of updated.places){
   const source=seed.places.find(item=>item.id===place.id)
@@ -4413,11 +4413,11 @@ main().catch(error=>{console.error(error.message);process.exitCode=1})
  * tám bài công khai đủ năm bản và nguồn; original vẫn phục hồi được. */
 ```
 
-## scripts/narrations.test.cjs
+## scripts/KiemThuNoiDungBanThu.test.cjs
 
 Kiểm tra đủ 40 bài, nguồn, hash body/MP3 và hai bản asset giống nhau.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\narrations.test.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\KiemThuNoiDungBanThu.test.cjs`.
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Kiểm tra bài lịch sử và MP3 đóng gói giữa hai nền tảng.
@@ -4425,8 +4425,8 @@ Kiểm tra đủ 40 bài, nguồn, hash body/MP3 và hai bản asset giống nha
 const {test}=require('node:test'),assert=require('node:assert/strict')
 const fs=require('node:fs'),path=require('node:path'),{createHash}=require('node:crypto')
 const root=path.resolve(__dirname,'..')
-const entries=require('../packages/visitor-core/src/data/heritageContent.json')
-const audio=require('../packages/visitor-core/src/data/narrations.json')
+const entries=require('../packages/visitor-core/src/data/NoiDungDiSan.json')
+const audio=require('../packages/visitor-core/src/data/DanhMucBanThu.json')
 const hash=value=>createHash('sha256').update(value).digest('hex')
 test('8 di tích × 5 ngôn ngữ có bài riêng, nguồn Wikipedia và không còn bài mẫu',()=>{
  assert.equal(entries.length,8);assert.equal(audio.length,40)
@@ -4456,19 +4456,19 @@ test('40 MP3 khác nhau, đúng body và giống từng byte giữa web/mobile',
 })
 ```
 
-## packages/admin-core/tests/admin.test.cjs
+## packages/admin-core/tests/KiemThuQuanTri.test.cjs
 
 Kiểm tra TTS nhận đúng body và lỗi không làm thay bản công khai.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\tests\admin.test.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\tests\KiemThuQuanTri.test.cjs`.
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Test nghiệp vụ thật Admin không cần trình duyệt/BE.
  * npm test gọi; UC12–UC17. Bộ nhớ giả chỉ thay IO, không thay luật duyệt/công bố. */
 const {test}=require('node:test')
 const assert=require('node:assert/strict')
-const {createMockAdminService,dashboard}=require('../.test-build/index.cjs')
-function fixture(){let raw=null,fail=false;const service=createMockAdminService({read:async()=>raw,write:async value=>{if(fail)throw Error('disk full');raw=value}});return {service,setFail:value=>{fail=value},raw:()=>raw}}
+const {createAdminService,dashboard}=require('../.test-build/index.cjs')
+function fixture(){let raw=null,fail=false;const service=createAdminService({read:async()=>raw,write:async value=>{if(fail)throw Error('disk full');raw=value}});return {service,setFail:value=>{fail=value},raw:()=>raw}}
 const input=(p,title=p.record.canonicalTitle)=>({id:p.id,expectedRevision:p.revision,title,category:'palace',period:'1802–1945',lat:'',lng:'',verified:false,images:p.record.images})
 async function draft(service){const p=(await service.load()).places[0];await service.savePlace(input(p));return (await service.load()).places[0]}
 test('UC12: danh tính cấp sẵn, không cần mật khẩu',async()=>{const {service}=fixture();assert.equal((await service.identity()).mode,'demo')})
@@ -4482,9 +4482,9 @@ test('UC16: approve chưa công bố; publish đổi đúng bản',async()=>{con
 test('UC16: sửa sau duyệt vô hiệu approval',async()=>{const {service}=fixture(),p=await draft(service);await service.submit(p.id,p.revision);await service.review(p.id,p.revision,true,'');await service.savePlace(input(p,'Changed after approval'));await assert.rejects(service.publish(p.id,p.revision+1),e=>e.code==='notApproved')})
 test('UC16: lưu lỗi giữ nguyên cache và published',async()=>{const f=fixture(),p=await draft(f.service);await f.service.submit(p.id,p.revision);await f.service.review(p.id,p.revision,true,'');const before=JSON.stringify(await f.service.load());f.setFail(true);await assert.rejects(f.service.publish(p.id,p.revision),e=>e.code==='saveError');assert.equal(JSON.stringify(await f.service.load()),before)})
 test('UC17: web/app riêng; hết 90 giây không tính active',async()=>{const {service}=fixture();await service.simulate('web');await service.simulate('mobile-app');const d=await service.load(),now=Date.now();assert.equal(dashboard(d,now).web,1);assert.equal(dashboard(d,now).mobile,1);assert.equal(dashboard(d,now+91000).active,0);await service.endSessions();assert.equal(dashboard(await service.load()).active,0)})
-test('Reset/load: dữ liệu lỗi không bị âm thầm thay bằng seed',async()=>{const service=createMockAdminService({read:async()=>'{broken',write:async()=>{}});await assert.rejects(service.load(),e=>e.code==='loadError')})
+test('Reset/load: dữ liệu lỗi không bị âm thầm thay bằng seed',async()=>{const service=createAdminService({read:async()=>'{broken',write:async()=>{}});await assert.rejects(service.load(),e=>e.code==='loadError')})
 
-test('Reset phục hồi được JSON hỏng',async()=>{let raw='{broken';const s=createMockAdminService({read:async()=>raw,write:async value=>{raw=value}});await assert.rejects(s.load());await s.reset();assert.equal((await s.load()).places.length,8)})
+test('Reset phục hồi được JSON hỏng',async()=>{let raw='{broken';const s=createAdminService({read:async()=>raw,write:async value=>{raw=value}});await assert.rejects(s.load());await s.reset();assert.equal((await s.load()).places.length,8)})
 test('UC17: mô phỏng đang nghe có bộ đếm riêng',async()=>{const {service}=fixture();await service.simulate('web',true);assert.equal(dashboard(await service.load()).listening,1)})
 
 test('Media demo chặn SVG/script và tệp quá dung lượng',()=>{const {mediaUrl}=require('../.test-build/index.cjs');assert.equal(mediaUrl('data:image/png;base64,AAAA',true),true);assert.equal(mediaUrl('data:image/svg+xml;base64,AAAA',true),false);assert.equal(mediaUrl('data:audio/mpeg;base64,AAAA'),true);assert.equal(mediaUrl('data:audio/mpeg;base64,'+'A'.repeat(1500000)),false)})
@@ -4496,7 +4496,7 @@ test('UC13: xóa hẳn được điểm đã lưu trữ, giữ các điểm khá
  assert.equal((await f.service.load()).places.length,7)
  assert.equal((await f.service.load()).places.some(item=>item.id===p.id),false)
  assert.equal((await f.service.published()).some(item=>item.id===p.id),false)
- const reopened=createMockAdminService({read:async()=>f.raw(),write:async()=>{}})
+ const reopened=createAdminService({read:async()=>f.raw(),write:async()=>{}})
  assert.equal((await reopened.load()).places.some(item=>item.id===p.id),false)
 })
 test('UC13: xóa sai revision hoặc ID không xóa nhầm dữ liệu',async()=>{
@@ -4516,7 +4516,7 @@ test('UC13: lỗi lưu khi xóa giữ nguyên di tích và bản công khai',asy
 // CHỨC NĂNG: Chứng minh bộ tạo giọng nhận chính body đã lưu và lỗi không gắn MP3 sai.
 test('UC14.2: TTS đọc body thật, không đổi published trước bước duyệt',async()=>{
  let request
- const service=createMockAdminService({read:async()=>null,write:async()=>{}},async(body,lang)=>{request={body,lang};return 'narration:'+'a'.repeat(64)})
+ const service=createAdminService({read:async()=>null,write:async()=>{}},async(body,lang)=>{request={body,lang};return 'narration:'+'a'.repeat(64)})
  const p=(await service.load()).places[0],body='Một bài thuyết minh mới do quản lý biên soạn.'
  await service.saveContent({id:p.id,language:'vi',expectedRevision:p.revision,title:'Bài mới',summary:'',address:'Huế',body})
  const draft=(await service.load()).places[0]
@@ -4527,7 +4527,7 @@ test('UC14.2: TTS đọc body thật, không đổi published trước bước d
  assert.notEqual(next.published.content.vi.body,body)
 })
 test('UC14.2: lỗi tạo giọng giữ nguyên body và không dùng audio mẫu',async()=>{
- const service=createMockAdminService({read:async()=>null,write:async()=>{}},async()=>{throw Error('offline')})
+ const service=createAdminService({read:async()=>null,write:async()=>{}},async()=>{throw Error('offline')})
  const p=(await service.load()).places[0]
  await service.saveContent({id:p.id,language:'vi',expectedRevision:p.revision,title:'Test',summary:'',address:'',body:'Văn bản mới cần tạo giọng.'})
  const before=await service.load()
@@ -4536,11 +4536,11 @@ test('UC14.2: lỗi tạo giọng giữ nguyên body và không dùng audio mẫ
 })
 ```
 
-## packages/visitor-core/tests/core.test.cjs
+## packages/visitor-core/tests/KiemThuNghiepVuChung.test.cjs
 
 Cập nhật kỳ vọng tìm kiếm vì bài mới nhắc đến di tích liên quan; test cô lập ngôn ngữ.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\core.test.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\KiemThuNghiepVuChung.test.cjs`.
 
 ```javascript
 /**
@@ -5069,11 +5069,11 @@ test('UC03: không tìm sang bản Việt khi đang chọn Anh',()=>{
 })
 ```
 
-## packages/visitor-core/tests/journey.test.cjs
+## packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs
 
 Dùng ID/phiên bản MP3 mới trong test đổi ngôn ngữ và khôi phục nghe.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\journey.test.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\tests\KiemThuHanhTrinh.test.cjs`.
 
 ```javascript
 /**
@@ -5291,18 +5291,18 @@ test('UC07/11: lỗi ghi đến muộn sau close không mở lại player', asyn
 })
 ```
 
-## services/catalog/catalog.test.cjs
+## services/catalog/KiemThuApiDiTich.test.cjs
 
 Test HTTP Range và audio không tồn tại/không công bố trả 404.
 
-Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\catalog.test.cjs`.
+Đường dẫn đầy đủ: `D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\KiemThuApiDiTich.test.cjs`.
 
 ```javascript
 /** FILE NÀY LÀM GÌ: Test HTTP thật của kho RAM, adapter FE và lượt QR.
  * npm run catalog:test gọi; Node test built-in, cổng ngẫu nhiên, dữ liệu chỉ nằm trong test.
  * UC13–UC17: kiểm tra xung đột, bản công bố, đồng bộ và chống đếm lặp. */
 const {test}=require('node:test'),assert=require('node:assert/strict')
-const {createCatalogServer}=require('./server.cjs')
+const {createCatalogServer}=require('./MayChuApi.cjs')
 async function setup(t,options){const server=createCatalogServer(options);await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections()}));return{url:'http://127.0.0.1:'+server.address().port,core:require('../../.runtime/admin-core.cjs')}}
 const input=p=>({id:p.id,expectedRevision:p.revision,title:p.record.canonicalTitle+' cập nhật',category:'monument',period:'1802',lat:'',lng:'',verified:false,images:p.record.images})
 test('Hai client đọc/ghi chung; phiên bản cũ bị 409 và không ghi đè',async t=>{const {url,core}=await setup(t);const web=core.createHttpAdminService(url),mobile=core.createHttpAdminService(url);const original=(await web.load()).places[0];await web.savePlace(input(original));const changed=(await mobile.load()).places[0];assert.equal(changed.record.canonicalTitle,original.record.canonicalTitle+' cập nhật');await assert.rejects(mobile.savePlace(input(original)),error=>error.code==='conflict');assert.equal((await mobile.load()).places[0].revision,2);assert.equal((await web.published())[0].canonicalTitle,original.record.canonicalTitle)})
@@ -5311,7 +5311,7 @@ test('Hai lệnh cùng revision chỉ một được ghi; API từ chối reset 
 test('QR đếm mỗi phiên/ngày một; ngày Huế đổi thì bộ đếm mới',async t=>{let now=Date.parse('2026-10-23T16:59:00Z');const {url,core}=await setup(t,{now:()=>now});const gate=core.createGateClient(url),id='gate_web_123456789012345';await gate.entry(id,'web');await gate.entry(id,'web');assert.equal((await gate.statistics()).today,1);await gate.entry('gate_app_123456789012345','mobile-app');assert.equal((await gate.statistics()).today,2);now+=120000;assert.equal((await gate.statistics()).today,0);await gate.entry(id,'web');assert.equal((await gate.statistics()).today,1)})
 test('Kho RAM độc lập sau restart; mất mạng báo lỗi không trả kho cục bộ',async t=>{const first=await setup(t),client=first.core.createHttpAdminService(first.url),p=(await client.load()).places[0];await client.deletePlace(p.id,p.revision);const second=await setup(t);assert.ok((await second.core.createHttpAdminService(second.url).load()).places.some(x=>x.id===p.id));await assert.rejects(first.core.createHttpAdminService('').load(),error=>error.code==='loadError')})
 
-test('Parser chỉ nhận query entry=gate trên trang chủ',async t=>{await setup(t);const {createRequire}=require('node:module'),path=require('node:path');const req=createRequire(path.resolve('apps/web/package.json'));const out=req('esbuild').buildSync({entryPoints:[path.resolve('packages/visitor-core/src/links/qr.ts')],bundle:true,platform:'node',format:'cjs',write:false}).outputFiles[0].text;const Module=require('node:module');const m=new Module('qr-test');m._compile(out,'qr-test.cjs');const policy={allowedOrigins:['https://guide.test'],allowHttp:false};assert.deepEqual(m.exports.parseQrTarget('https://guide.test/?entry=gate',policy),{kind:'home'});assert.throws(()=>m.exports.parseQrTarget('https://guide.test/?entry=other',policy));assert.throws(()=>m.exports.parseQrTarget('https://guide.test/places/ngo-mon?entry=gate',policy))})
+test('Parser chỉ nhận query entry=gate trên trang chủ',async t=>{await setup(t);const {createRequire}=require('node:module'),path=require('node:path');const req=createRequire(path.resolve('apps/web/package.json'));const out=req('esbuild').buildSync({entryPoints:[path.resolve('packages/visitor-core/src/links/PhanTichLienKetQR.ts')],bundle:true,platform:'node',format:'cjs',write:false}).outputFiles[0].text;const Module=require('node:module');const m=new Module('qr-test');m._compile(out,'qr-test.cjs');const policy={allowedOrigins:['https://guide.test'],allowHttp:false};assert.deepEqual(m.exports.parseQrTarget('https://guide.test/?entry=gate',policy),{kind:'home'});assert.throws(()=>m.exports.parseQrTarget('https://guide.test/?entry=other',policy));assert.throws(()=>m.exports.parseQrTarget('https://guide.test/places/ngo-mon?entry=gate',policy))})
 
 // CHỨC NĂNG: iOS cần HTTP Range để tua; audio nháp không lộ qua endpoint công khai.
 test('MP3 có Range; không tải được audio chưa publish hoặc path traversal',async t=>{
@@ -5324,7 +5324,7 @@ test('MP3 có Range; không tải được audio chưa publish hoặc path trave
  assert.equal((await response.arrayBuffer()).byteLength,100)
  assert.match(response.headers.get('content-range'),/^bytes 0-99\//)
  assert.equal((await fetch(url+'/audio/published/'+'a'.repeat(64)+'.mp3')).status,404)
- assert.equal((await fetch(url+'/audio/preview/../../server.cjs')).status,404)
+ assert.equal((await fetch(url+'/audio/preview/../../MayChuApi.cjs')).status,404)
 })
 ```
 
@@ -5348,15 +5348,15 @@ Thêm kiểm tra 40 bài audio vào npm test.
     "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile",
     "lint": "npm run lint --workspace=@travelguide/admin-core && npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile && npm run lint --workspace=web",
     "typecheck": "npm run typecheck --workspace=@travelguide/admin-core && npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile && npm run typecheck --workspace=web",
-    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs scripts/public-qr.test.cjs && npm run presence:test && npm run catalog:test && node --test scripts/narrations.test.cjs",
+    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/KiemThuLienKetUngDung.test.cjs scripts/KiemThuQRCongKhai.test.cjs && npm run presence:test && npm run catalog:test && node --test scripts/KiemThuNoiDungBanThu.test.cjs",
     "build:web": "npm run build --workspace=web",
-    "links:generate": "node scripts/generate-app-links.cjs",
-    "qr:create": "node scripts/create-public-qr.cjs",
-    "demo:public": "node scripts/start-public-demo.cjs",
-    "presence:start": "node services/presence/server.cjs",
-    "presence:test": "node --test services/presence/presence.test.cjs",
-    "catalog:start": "node scripts/start-catalog.cjs",
-    "catalog:test": "node --test services/catalog/catalog.test.cjs"
+    "links:generate": "node scripts/TaoLienKetUngDung.cjs",
+    "qr:create": "node scripts/TaoMaQRCongKhai.cjs",
+    "demo:public": "node scripts/ChayDemoCongKhai.cjs",
+    "presence:start": "node services/presence/MayChuApi.cjs",
+    "presence:test": "node --test services/presence/KiemThuPhienHoatDong.test.cjs",
+    "catalog:start": "node scripts/ChayApiDiTich.cjs",
+    "catalog:test": "node --test services/catalog/KiemThuApiDiTich.test.cjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.46.2",
@@ -5417,15 +5417,15 @@ Bật resolveJsonModule để cùng đọc dữ liệu/manifest JSON, giữ Type
     "esModuleInterop": true
   },
   "include": [
-    "src/domain/model.ts",
-    "src/catalog/catalog.ts",
-    "src/links/qr.ts",
-    "src/data/mock.ts",
-    "src/i18n/messages.ts",
-    "src/catalog/search.ts",
-    "src/links/site.ts",
-    "src/journey/journey.ts",
-    "src/journey/journey-data.ts"
+    "src/domain/KieuDuLieuDuKhach.ts",
+    "src/catalog/DanhMucDiTich.ts",
+    "src/links/PhanTichLienKetQR.ts",
+    "src/data/DuLieuKhoiTao.ts",
+    "src/i18n/BanDichGiaoDien.ts",
+    "src/catalog/TimKiemVaBoLoc.ts",
+    "src/links/DiaChiWebsite.ts",
+    "src/journey/HanhTrinh.ts",
+    "src/journey/DuLieuHanhTrinh.ts"
   ]
 }
 ```

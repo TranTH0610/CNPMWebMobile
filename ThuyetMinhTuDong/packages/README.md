@@ -38,19 +38,19 @@ packages/
 ├── admin-core/
 │   ├── src/
 │   │   ├── domain/
-│   │   │   ├── contracts.ts
-│   │   │   ├── models.ts
-│   │   │   └── validation.ts
+│   │   │   ├── HopDongDichVu.ts
+│   │   │   ├── KieuDuLieuQuanTri.ts
+│   │   │   └── KiemTraDuLieu.ts
 │   │   ├── i18n/
-│   │   │   └── messages.ts
+│   │   │   └── BanDichGiaoDien.ts
 │   │   ├── react/
-│   │   │   └── react.tsx
+│   │   │   └── TrangThaiReact.tsx
 │   │   ├── services/
-│   │   │   ├── httpService.ts
-│   │   │   └── mockService.ts
+│   │   │   ├── GoiApiQuanTri.ts
+│   │   │   └── XuLyNghiepVuQuanTri.ts
 │   │   └── index.ts
 │   ├── tests/
-│   │   └── admin.test.cjs
+│   │   └── KiemThuQuanTri.test.cjs
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── tsconfig.test.json
@@ -60,53 +60,53 @@ packages/
 ├── place-core/
 │   ├── src/
 │   │   ├── data/
-│   │   │   └── mockPlaces.ts
+│   │   │   └── DiTichMauKiemThu.ts
 │   │   ├── hooks/
-│   │   │   └── useDebounce.ts
+│   │   │   └── useChoNgungNhap.ts
 │   │   └── index.ts
 │   ├── tests/
-│   │   └── core.test.cjs
+│   │   └── KiemThuNghiepVuChung.test.cjs
 │   ├── package.json
 │   └── tsconfig.test.json
 ├── shared-types/
 │   ├── index.ts
 │   └── package.json
 ├── ui-tokens/
-│   └── colors.ts
+│   └── MauVaKichThuoc.ts
 └── visitor-core/
     ├── src/
     │   ├── catalog/
-    │   │   ├── catalog.ts
-    │   │   ├── presentation.ts
-    │   │   └── search.ts
+    │   │   ├── DanhMucDiTich.ts
+    │   │   ├── DuLieuHienThi.ts
+    │   │   └── TimKiemVaBoLoc.ts
     │   ├── data/
-    │   │   ├── mock.ts
-    │   │   └── photos.ts
+    │   │   ├── DuLieuKhoiTao.ts
+    │   │   └── DanhMucAnh.ts
     │   ├── domain/
-    │   │   └── model.ts
+    │   │   └── KieuDuLieuDuKhach.ts
     │   ├── i18n/
-    │   │   ├── journey-messages.ts
-    │   │   ├── messages.ts
-    │   │   ├── qr-messages.ts
-    │   │   └── uiMessages.ts
+    │   │   ├── BanDichHanhTrinh.ts
+    │   │   ├── BanDichGiaoDien.ts
+    │   │   ├── BanDichTruyCapQR.ts
+    │   │   └── BanDichThanhPhan.ts
     │   ├── journey/
-    │   │   ├── journey-data.ts
-    │   │   ├── journey-react.tsx
-    │   │   └── journey.ts
+    │   │   ├── DuLieuHanhTrinh.ts
+    │   │   ├── TrangThaiHanhTrinhReact.tsx
+    │   │   └── HanhTrinh.ts
     │   ├── links/
-    │   │   ├── qr.ts
-    │   │   └── site.ts
+    │   │   ├── PhanTichLienKetQR.ts
+    │   │   └── DiaChiWebsite.ts
     │   ├── presence/
-    │   │   ├── presence-react.ts
-    │   │   └── presence.ts
+    │   │   ├── TheoDoiPhienReact.ts
+    │   │   └── PhienHoatDong.ts
     │   ├── react/
-    │   │   └── react.tsx
+    │   │   └── TrangThaiReact.tsx
     │   └── index.ts
     ├── tests/
-    │   ├── core.test.cjs
-    │   ├── journey.test.cjs
-    │   ├── locale.test.cjs
-    │   └── site.test.cjs
+    │   ├── KiemThuNghiepVuChung.test.cjs
+    │   ├── KiemThuHanhTrinh.test.cjs
+    │   ├── KiemThuNgonNgu.test.cjs
+    │   └── KiemThuDiaChiWebsite.test.cjs
     ├── package.json
     ├── tsconfig.json
     └── tsconfig.test.json
@@ -119,44 +119,44 @@ Tất cả đường dẫn dưới đây bắt đầu từ thư mục `packages/
 | File | Chức năng |
 | --- | --- |
 | [visitor-core/src/index.ts](visitor-core/src/index.ts) | Điểm xuất logic công khai của visitor-core; giữ nguyên tên import bên ngoài. |
-| [visitor-core/src/domain/model.ts](visitor-core/src/domain/model.ts) | Kiểu dữ liệu địa điểm, ngôn ngữ, danh mục và các hợp đồng nền tảng. |
-| [visitor-core/src/catalog/catalog.ts](visitor-core/src/catalog/catalog.ts) | Đọc danh sách/chi tiết và chọn đúng nội dung đã công bố. |
-| [visitor-core/src/catalog/search.ts](visitor-core/src/catalog/search.ts) | Bỏ dấu, tìm kiếm, lọc, sắp xếp, phân trang và khoảng cách. |
-| [visitor-core/src/catalog/presentation.ts](visitor-core/src/catalog/presentation.ts) | Thông tin trình bày danh mục và tài nguyên ảnh dùng chung. |
-| [visitor-core/src/data/mock.ts](visitor-core/src/data/mock.ts) | Dữ liệu địa điểm mẫu và nguồn catalog mô phỏng. |
-| [visitor-core/src/data/photos.ts](visitor-core/src/data/photos.ts) | Thông tin ảnh, tên/chú thích và nguồn ảnh địa điểm. |
-| [visitor-core/src/i18n/messages.ts](visitor-core/src/i18n/messages.ts) | Tập hợp bản dịch giao diện du khách. |
-| [visitor-core/src/i18n/uiMessages.ts](visitor-core/src/i18n/uiMessages.ts) | Bản dịch các nhãn tìm kiếm, danh sách và điều khiển giao diện. |
-| [visitor-core/src/i18n/qr-messages.ts](visitor-core/src/i18n/qr-messages.ts) | Bản dịch thông báo liên kết và QR. |
-| [visitor-core/src/i18n/journey-messages.ts](visitor-core/src/i18n/journey-messages.ts) | Bản dịch nghe thuyết minh, bản đồ và hành trình. |
-| [visitor-core/src/links/qr.ts](visitor-core/src/links/qr.ts) | Kiểm tra và phân tích liên kết QR/deep link hợp lệ. |
-| [visitor-core/src/links/site.ts](visitor-core/src/links/site.ts) | Chuẩn hóa, kiểm tra địa chỉ website dùng chung. |
-| [visitor-core/src/journey/journey.ts](visitor-core/src/journey/journey.ts) | Bộ điều khiển audio, tiến độ, vị trí và thứ tự tham quan. |
-| [visitor-core/src/journey/journey-data.ts](visitor-core/src/journey/journey-data.ts) | Dữ liệu điểm trên bản đồ và thứ tự tham quan. |
-| [visitor-core/src/journey/journey-react.tsx](visitor-core/src/journey/journey-react.tsx) | Provider/hook React để màn hình dùng bộ điều khiển hành trình. |
-| [visitor-core/src/presence/presence.ts](visitor-core/src/presence/presence.ts) | Client API phiên hoạt động và bộ gửi heartbeat. |
-| [visitor-core/src/presence/presence-react.ts](visitor-core/src/presence/presence-react.ts) | Hook React đọc thống kê phiên hoạt động. |
-| [visitor-core/src/react/react.tsx](visitor-core/src/react/react.tsx) | Provider ngôn ngữ, catalog và các hook React cho du khách. |
+| [visitor-core/src/domain/KieuDuLieuDuKhach.ts](visitor-core/src/domain/KieuDuLieuDuKhach.ts) | Kiểu dữ liệu địa điểm, ngôn ngữ, danh mục và các hợp đồng nền tảng. |
+| [visitor-core/src/catalog/DanhMucDiTich.ts](visitor-core/src/catalog/DanhMucDiTich.ts) | Đọc danh sách/chi tiết và chọn đúng nội dung đã công bố. |
+| [visitor-core/src/catalog/TimKiemVaBoLoc.ts](visitor-core/src/catalog/TimKiemVaBoLoc.ts) | Bỏ dấu, tìm kiếm, lọc, sắp xếp, phân trang và khoảng cách. |
+| [visitor-core/src/catalog/DuLieuHienThi.ts](visitor-core/src/catalog/DuLieuHienThi.ts) | Thông tin trình bày danh mục và tài nguyên ảnh dùng chung. |
+| [visitor-core/src/data/DuLieuKhoiTao.ts](visitor-core/src/data/DuLieuKhoiTao.ts) | Dữ liệu địa điểm mẫu và nguồn catalog mô phỏng. |
+| [visitor-core/src/data/DanhMucAnh.ts](visitor-core/src/data/DanhMucAnh.ts) | Thông tin ảnh, tên/chú thích và nguồn ảnh địa điểm. |
+| [visitor-core/src/i18n/BanDichGiaoDien.ts](visitor-core/src/i18n/BanDichGiaoDien.ts) | Tập hợp bản dịch giao diện du khách. |
+| [visitor-core/src/i18n/BanDichThanhPhan.ts](visitor-core/src/i18n/BanDichThanhPhan.ts) | Bản dịch các nhãn tìm kiếm, danh sách và điều khiển giao diện. |
+| [visitor-core/src/i18n/BanDichTruyCapQR.ts](visitor-core/src/i18n/BanDichTruyCapQR.ts) | Bản dịch thông báo liên kết và QR. |
+| [visitor-core/src/i18n/BanDichHanhTrinh.ts](visitor-core/src/i18n/BanDichHanhTrinh.ts) | Bản dịch nghe thuyết minh, bản đồ và hành trình. |
+| [visitor-core/src/links/PhanTichLienKetQR.ts](visitor-core/src/links/PhanTichLienKetQR.ts) | Kiểm tra và phân tích liên kết QR/deep link hợp lệ. |
+| [visitor-core/src/links/DiaChiWebsite.ts](visitor-core/src/links/DiaChiWebsite.ts) | Chuẩn hóa, kiểm tra địa chỉ website dùng chung. |
+| [visitor-core/src/journey/HanhTrinh.ts](visitor-core/src/journey/HanhTrinh.ts) | Bộ điều khiển audio, tiến độ, vị trí và thứ tự tham quan. |
+| [visitor-core/src/journey/DuLieuHanhTrinh.ts](visitor-core/src/journey/DuLieuHanhTrinh.ts) | Dữ liệu điểm trên bản đồ và thứ tự tham quan. |
+| [visitor-core/src/journey/TrangThaiHanhTrinhReact.tsx](visitor-core/src/journey/TrangThaiHanhTrinhReact.tsx) | Provider/hook React để màn hình dùng bộ điều khiển hành trình. |
+| [visitor-core/src/presence/PhienHoatDong.ts](visitor-core/src/presence/PhienHoatDong.ts) | Client API phiên hoạt động và bộ gửi heartbeat. |
+| [visitor-core/src/presence/TheoDoiPhienReact.ts](visitor-core/src/presence/TheoDoiPhienReact.ts) | Hook React đọc thống kê phiên hoạt động. |
+| [visitor-core/src/react/TrangThaiReact.tsx](visitor-core/src/react/TrangThaiReact.tsx) | Provider ngôn ngữ, catalog và các hook React cho du khách. |
 | [admin-core/src/index.ts](admin-core/src/index.ts) | Điểm xuất kiểu dữ liệu, nghiệp vụ và adapter Admin. |
-| [admin-core/src/domain/models.ts](admin-core/src/domain/models.ts) | Kiểu document, workflow, phiên bản, danh tính và lỗi Admin. |
-| [admin-core/src/domain/contracts.ts](admin-core/src/domain/contracts.ts) | Hợp đồng AdminService/StoragePort để thay nguồn lưu mà giữ giao diện. |
-| [admin-core/src/domain/validation.ts](admin-core/src/domain/validation.ts) | Kiểm tra biểu mẫu, điều kiện duyệt và thống kê nội dung. |
-| [admin-core/src/services/mockService.ts](admin-core/src/services/mockService.ts) | Nghiệp vụ Admin mô phỏng: lưu, dịch/audio mẫu, duyệt, công bố, lưu trữ và xóa. |
-| [admin-core/src/services/httpService.ts](admin-core/src/services/httpService.ts) | Adapter HTTP, polling phiên bản và client ghi nhận/thống kê QR. |
-| [admin-core/src/react/react.tsx](admin-core/src/react/react.tsx) | AdminProvider, hook dữ liệu, trạng thái tác vụ và thống kê QR. |
-| [admin-core/src/i18n/messages.ts](admin-core/src/i18n/messages.ts) | Bản dịch giao diện quản lý đủ năm ngôn ngữ. |
+| [admin-core/src/domain/KieuDuLieuQuanTri.ts](admin-core/src/domain/KieuDuLieuQuanTri.ts) | Kiểu document, workflow, phiên bản, danh tính và lỗi Admin. |
+| [admin-core/src/domain/HopDongDichVu.ts](admin-core/src/domain/HopDongDichVu.ts) | Hợp đồng AdminService/StoragePort để thay nguồn lưu mà giữ giao diện. |
+| [admin-core/src/domain/KiemTraDuLieu.ts](admin-core/src/domain/KiemTraDuLieu.ts) | Kiểm tra biểu mẫu, điều kiện duyệt và thống kê nội dung. |
+| [admin-core/src/services/XuLyNghiepVuQuanTri.ts](admin-core/src/services/XuLyNghiepVuQuanTri.ts) | Nghiệp vụ Admin mô phỏng: lưu, dịch/audio mẫu, duyệt, công bố, lưu trữ và xóa. |
+| [admin-core/src/services/GoiApiQuanTri.ts](admin-core/src/services/GoiApiQuanTri.ts) | Adapter HTTP, polling phiên bản và client ghi nhận/thống kê QR. |
+| [admin-core/src/react/TrangThaiReact.tsx](admin-core/src/react/TrangThaiReact.tsx) | AdminProvider, hook dữ liệu, trạng thái tác vụ và thống kê QR. |
+| [admin-core/src/i18n/BanDichGiaoDien.ts](admin-core/src/i18n/BanDichGiaoDien.ts) | Bản dịch giao diện quản lý đủ năm ngôn ngữ. |
 | [place-core/src/index.ts](place-core/src/index.ts) | Logic tìm kiếm, danh mục, sắp xếp và service theo kiểu Place cũ. |
-| [place-core/src/data/mockPlaces.ts](place-core/src/data/mockPlaces.ts) | Dữ liệu mẫu của luồng Place cũ. |
-| [place-core/src/hooks/useDebounce.ts](place-core/src/hooks/useDebounce.ts) | Hook chờ người dùng ngừng gõ trước khi xử lý. |
+| [place-core/src/data/DiTichMauKiemThu.ts](place-core/src/data/DiTichMauKiemThu.ts) | Dữ liệu mẫu của luồng Place cũ. |
+| [place-core/src/hooks/useChoNgungNhap.ts](place-core/src/hooks/useChoNgungNhap.ts) | Hook chờ người dùng ngừng gõ trước khi xử lý. |
 | [shared-types/index.ts](shared-types/index.ts) | Kiểu dữ liệu chung như Place, nội dung đa ngôn ngữ và kết quả thuyết minh. |
 | [api-client/index.ts](api-client/index.ts) | Hàm gọi API chuyển audio thành văn bản đã có trong dự án. |
-| [ui-tokens/colors.ts](ui-tokens/colors.ts) | Màu, khoảng cách và bo góc dùng chung web/mobile. |
-| [visitor-core/tests/core.test.cjs](visitor-core/tests/core.test.cjs) | Test catalog, tìm kiếm, danh mục, sắp xếp và QR. |
-| [visitor-core/tests/locale.test.cjs](visitor-core/tests/locale.test.cjs) | Test tính đầy đủ và nội dung bản dịch. |
-| [visitor-core/tests/site.test.cjs](visitor-core/tests/site.test.cjs) | Test địa chỉ website và liên kết. |
-| [visitor-core/tests/journey.test.cjs](visitor-core/tests/journey.test.cjs) | Test audio, vị trí và vòng đời hành trình. |
-| [admin-core/tests/admin.test.cjs](admin-core/tests/admin.test.cjs) | Test validation, revision, workflow và tính bất biến khi thao tác Admin. |
-| [place-core/tests/core.test.cjs](place-core/tests/core.test.cjs) | Test bỏ dấu, tìm kiếm, lọc, sắp xếp và service kiểu Place. |
+| [ui-tokens/MauVaKichThuoc.ts](ui-tokens/MauVaKichThuoc.ts) | Màu, khoảng cách và bo góc dùng chung web/mobile. |
+| [visitor-core/tests/KiemThuNghiepVuChung.test.cjs](visitor-core/tests/KiemThuNghiepVuChung.test.cjs) | Test catalog, tìm kiếm, danh mục, sắp xếp và QR. |
+| [visitor-core/tests/KiemThuNgonNgu.test.cjs](visitor-core/tests/KiemThuNgonNgu.test.cjs) | Test tính đầy đủ và nội dung bản dịch. |
+| [visitor-core/tests/KiemThuDiaChiWebsite.test.cjs](visitor-core/tests/KiemThuDiaChiWebsite.test.cjs) | Test địa chỉ website và liên kết. |
+| [visitor-core/tests/KiemThuHanhTrinh.test.cjs](visitor-core/tests/KiemThuHanhTrinh.test.cjs) | Test audio, vị trí và vòng đời hành trình. |
+| [admin-core/tests/KiemThuQuanTri.test.cjs](admin-core/tests/KiemThuQuanTri.test.cjs) | Test validation, revision, workflow và tính bất biến khi thao tác Admin. |
+| [place-core/tests/KiemThuNghiepVuChung.test.cjs](place-core/tests/KiemThuNghiepVuChung.test.cjs) | Test bỏ dấu, tìm kiếm, lọc, sắp xếp và service kiểu Place. |
 
 ## File cấu hình
 

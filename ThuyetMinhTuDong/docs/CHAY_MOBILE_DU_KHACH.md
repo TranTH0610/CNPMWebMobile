@@ -11,15 +11,15 @@ Lệnh mới tự kiểm tra/mở mock catalog/presence, chọn IP vật lý và
 
 | File | Chức năng |
 |---|---|
-| scripts/start-mobile-visitor.cjs | Một lệnh mở Expo cùng các mock API cần thiết, cấu hình riêng cho tiến trình visitor |
-| scripts/metro-api-proxy.cjs | Chuyển tiếp HTTP/JSON/audio, dùng chung cơ chế giữa hai bản FE |
-| scripts/metro-visitor-proxy.cjs | Chỉ cho đọc bản công bố, gửi heartbeat/entry; chặn nháp/commands/thống kê quản lý |
-| scripts/metro-admin-proxy.cjs | Giữ whitelist riêng cho bản quản lý |
+| scripts/ChayMobileDuKhach.cjs | Một lệnh mở Expo cùng các mock API cần thiết, cấu hình riêng cho tiến trình visitor |
+| scripts/ChuyenTiepApiMetro.cjs | Chuyển tiếp HTTP/JSON/audio, dùng chung cơ chế giữa hai bản FE |
+| scripts/ChuyenTiepApiDuKhachMetro.cjs | Chỉ cho đọc bản công bố, gửi heartbeat/entry; chặn nháp/commands/thống kê quản lý |
+| scripts/ChuyenTiepApiQuanTriMetro.cjs | Giữ whitelist riêng cho bản quản lý |
 | apps/mobile/metro.config.js | Ghép đúng proxy theo APP_TARGET, giữ route manifest/bundle của Expo |
 | apps/mobile/package.json | start/android/ios dùng launcher visitor mới |
-| packages/visitor-core/src/journey/journey.ts | Gỡ loadError sau khi catalog phục hồi; giữ lỗi audio thật và không tự phát |
-| scripts/mobile-visitor-startup.test.cjs | Hồi quy cấu hình visitor và không lộ API quản lý |
-| packages/visitor-core/tests/journey.test.cjs | Hồi quy lỗi tải cũ và bảo toàn lỗi audio |
+| packages/visitor-core/src/journey/HanhTrinh.ts | Gỡ loadError sau khi catalog phục hồi; giữ lỗi audio thật và không tự phát |
+| scripts/KiemThuKhoiDongMobileDuKhach.test.cjs | Hồi quy cấu hình visitor và không lộ API quản lý |
+| packages/visitor-core/tests/KiemThuHanhTrinh.test.cjs | Hồi quy lỗi tải cũ và bảo toàn lỗi audio |
 
 Kiểm tra: typecheck/lint toàn dự án, bộ test chung, manifest/bundle iOS, URL LAN đọc tám điểm/audio, route quản lý bị từ chối. Chưa thay thế thử thao tác trên điện thoại thật.
 

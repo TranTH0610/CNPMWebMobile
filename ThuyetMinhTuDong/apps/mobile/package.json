@@ -4,12 +4,12 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node ../../scripts/start-mobile-visitor.cjs",
-    "android": "node ../../scripts/start-mobile-visitor.cjs --android",
-    "ios": "node ../../scripts/start-mobile-visitor.cjs --ios",
+    "start": "node ../../scripts/ChayMobileDuKhach.cjs",
+    "android": "node ../../scripts/ChayMobileDuKhach.cjs --android",
+    "ios": "node ../../scripts/ChayMobileDuKhach.cjs --ios",
     "lint": "eslint App.tsx src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "start:admin": "node ../../scripts/start-mobile-admin.cjs"
+    "start:admin": "node ../../scripts/ChayMobileQuanTri.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

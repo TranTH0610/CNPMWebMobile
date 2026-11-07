@@ -106,30 +106,30 @@ Trình duyệt: mở /?entry=gate, Admin tăng lượt; refresh không tăng. AP
 
 | File | Vai trò |
 | --- | --- |
-| `services/catalog/server.cjs` | API nội dung chung trong RAM, kiểm tra lệnh và revision; danh mục công bố; bộ đếm QR theo ngày Huế. |
-| `services/catalog/catalog.test.cjs` | Kiểm thử hai client HTTP, xung đột, không lộ nháp, restart RAM, QR lặp và parser. |
-| `packages/admin-core/src/httpService.ts` | Adapter HTTP và polling phiên bản 3 giây; client thống kê QR và retry chống đếm lặp. |
-| `packages/admin-core/src/react.tsx` | Hooks Admin và hook tải thống kê QR 5 giây; bỏ phản hồi tải cũ bằng sequence. |
-| `packages/admin-core/src/index.ts` | Xuất adapter/hợp đồng dùng chung cho hai nền tảng. |
-| `packages/admin-core/src/messages.ts` | Thông báo kho chung, lỗi và giải thích chỉ số QR đủ năm ngôn ngữ. |
+| `services/catalog/MayChuApi.cjs` | API nội dung chung trong RAM, kiểm tra lệnh và revision; danh mục công bố; bộ đếm QR theo ngày Huế. |
+| `services/catalog/KiemThuApiDiTich.test.cjs` | Kiểm thử hai client HTTP, xung đột, không lộ nháp, restart RAM, QR lặp và parser. |
+| `packages/admin-core/src/GoiApiQuanTri.ts` | Adapter HTTP và polling phiên bản 3 giây; client thống kê QR và retry chống đếm lặp. |
+| `packages/admin-core/src/TrangThaiReact.tsx` | Hooks Admin và hook tải thống kê QR 5 giây; bỏ phản hồi tải cũ bằng sequence. |
+| `packages/admin-core/src/XuatCongKhai.ts` | Xuất adapter/hợp đồng dùng chung cho hai nền tảng. |
+| `packages/admin-core/src/BanDichGiaoDien.ts` | Thông báo kho chung, lỗi và giải thích chỉ số QR đủ năm ngôn ngữ. |
 | `packages/admin-core/src/mockService.ts` | Nghiệp vụ dùng StoragePort; server dùng lại một instance, không sao chép workflow. |
-| `apps/web/src/services/admin/services.ts` | Gắn API vào Admin, danh mục công bố và bộ đếm QR của web. |
-| `apps/mobile/src/services/admin/services.ts` | Gắn API LAN riêng cho Admin và API HTTPS cho du khách native. |
+| `apps/web/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts` | Gắn API vào Admin, danh mục công bố và bộ đếm QR của web. |
+| `apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts` | Gắn API LAN riêng cho Admin và API HTTPS cho du khách native. |
 | `apps/web/vite.config.ts` | Proxy Admin đầy đủ; proxy du khách chỉ đọc published/version và gửi gate entry. |
-| `apps/web/src/pages/admin/DashboardPage.tsx` | Bỏ reset, dùng lượt QR từ kho chung, có lỗi/thử lại. |
-| `apps/mobile/src/screens/admin/DashboardScreen.tsx` | Dashboard mobile dùng cùng bộ đếm QR; bỏ reset. |
-| `apps/web/src/pages/admin/ContentEditorPage.tsx` | Giữ bản đang gõ khi có cập nhật từ máy khác. |
-| `apps/mobile/src/screens/admin/ContentEditorScreen.tsx` | Giữ nội dung chưa lưu trên mobile; revision cũ sẽ báo conflict. |
-| `apps/web/src/pages/admin/PlaceFormPage.tsx` | Giữ metadata và expectedRevision cùng bản khi mở form. |
-| `apps/mobile/src/screens/admin/PlaceFormScreen.tsx` | Giữ metadata và revision trên mobile để tránh ghi đè từ xa. |
-| `apps/web/src/hooks/useGateEntry.ts` | Nhận nguồn QR cổng; giữ ID trong phiên trình duyệt. |
-| `apps/mobile/src/hooks/useGateEntry.ts` | Nhận link HTTPS khi mở app hoặc app đang chạy, gửi cùng ID phiên app. |
-| `apps/web/src/hooks/usePresenceHeartbeat.ts` | Gọi hook QR chỉ trong bản du khách; giữ heartbeat đang có. |
-| `apps/mobile/src/hooks/usePresenceHeartbeat.ts` | Gọi hook QR trong luồng du khách được bật; giữ heartbeat native. |
-| `packages/visitor-core/src/qr.ts` | Cho đúng query entry=gate tại trang chủ; query lạ vẫn bị từ chối. |
-| `scripts/start-catalog.cjs` | Chạy RAM qua LAN và cập nhật URL API mobile theo IP máy tính. |
-| `scripts/create-public-qr.cjs` | Tạo QR có dấu nguồn cổng và cấu hình catalog native qua tunnel. |
-| `scripts/start-public-demo.cjs` | Khởi động API nếu thiếu; kiểm tra API công khai trước khi cấp QR. |
+| `apps/web/src/features/admin/dashboard/TrangTongQuan.tsx` | Bỏ reset, dùng lượt QR từ kho chung, có lỗi/thử lại. |
+| `apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx` | Dashboard mobile dùng cùng bộ đếm QR; bỏ reset. |
+| `apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx` | Giữ bản đang gõ khi có cập nhật từ máy khác. |
+| `apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx` | Giữ nội dung chưa lưu trên mobile; revision cũ sẽ báo conflict. |
+| `apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx` | Giữ metadata và expectedRevision cùng bản khi mở form. |
+| `apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx` | Giữ metadata và revision trên mobile để tránh ghi đè từ xa. |
+| `apps/web/src/features/qr/hooks/useGhiNhanVaoCong.ts` | Nhận nguồn QR cổng; giữ ID trong phiên trình duyệt. |
+| `apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts` | Nhận link HTTPS khi mở app hoặc app đang chạy, gửi cùng ID phiên app. |
+| `apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts` | Gọi hook QR chỉ trong bản du khách; giữ heartbeat đang có. |
+| `apps/mobile/src/features/presence/hooks/useBaoPhienHoatDong.ts` | Gọi hook QR trong luồng du khách được bật; giữ heartbeat native. |
+| `packages/visitor-core/src/PhanTichLienKetQR.ts` | Cho đúng query entry=gate tại trang chủ; query lạ vẫn bị từ chối. |
+| `scripts/ChayApiDiTich.cjs` | Chạy RAM qua LAN và cập nhật URL API mobile theo IP máy tính. |
+| `scripts/TaoMaQRCongKhai.cjs` | Tạo QR có dấu nguồn cổng và cấu hình catalog native qua tunnel. |
+| `scripts/ChayDemoCongKhai.cjs` | Khởi động API nếu thiếu; kiểm tra API công khai trước khi cấp QR. |
 | `apps/mobile/.env.catalog.example` | Mẫu URL LAN cho Admin và catalog; không chứa khóa bí mật. |
 | `package.json` | Lệnh catalog:start/catalog:test và ghép test vào bộ kiểm tra chung. |
 | `.gitignore` | Không đưa bundle Node .runtime vào Git. |

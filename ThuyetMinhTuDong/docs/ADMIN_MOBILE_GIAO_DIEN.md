@@ -15,14 +15,14 @@
 
 | File | Chức năng |
 | --- | --- |
-| `apps/mobile/src/components/admin/AdminUI.tsx` | Bộ giao diện dùng chung: thẻ, nút, ô nhập, trạng thái, ngôn ngữ và phản hồi. |
-| `apps/mobile/src/screens/admin/DashboardScreen.tsx` | Tổng quan bốn chỉ số và các lối vào quản lý nhanh. |
-| `apps/mobile/src/screens/admin/PlacesScreen.tsx` | Danh sách di tích bằng FlatList, tìm kiếm, mở thông tin và biên tập. |
-| `apps/mobile/src/screens/admin/PlaceFormScreen.tsx` | Biểu mẫu chia nhóm thông tin, tọa độ, hình ảnh và thao tác lưu. |
-| `apps/mobile/src/screens/admin/ContentEditorScreen.tsx` | Biên tập nội dung đa ngôn ngữ, nghe thử và gửi duyệt. |
-| `apps/mobile/src/screens/admin/ReviewsScreen.tsx` | Hàng chờ duyệt, đọc nội dung, ghi chú và công bố. |
-| `apps/mobile/src/navigation/AdminNavigator.tsx` | Điều hướng Admin và kiểu hiển thị tiêu đề. |
-| `packages/admin-core/src/messages.ts` | Nhãn giao diện Admin bằng Việt, Anh, Trung, Bồ Đào Nha và Nhật. |
+| `apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx` | Bộ giao diện dùng chung: thẻ, nút, ô nhập, trạng thái, ngôn ngữ và phản hồi. |
+| `apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx` | Tổng quan bốn chỉ số và các lối vào quản lý nhanh. |
+| `apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx` | Danh sách di tích bằng FlatList, tìm kiếm, mở thông tin và biên tập. |
+| `apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx` | Biểu mẫu chia nhóm thông tin, tọa độ, hình ảnh và thao tác lưu. |
+| `apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx` | Biên tập nội dung đa ngôn ngữ, nghe thử và gửi duyệt. |
+| `apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx` | Hàng chờ duyệt, đọc nội dung, ghi chú và công bố. |
+| `apps/mobile/src/navigation/DieuHuongQuanTri.tsx` | Điều hướng Admin và kiểu hiển thị tiêu đề. |
+| `packages/admin-core/src/BanDichGiaoDien.ts` | Nhãn giao diện Admin bằng Việt, Anh, Trung, Bồ Đào Nha và Nhật. |
 
 ## Những thay đổi chính
 

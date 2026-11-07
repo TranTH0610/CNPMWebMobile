@@ -16,31 +16,31 @@ Nguyên nhân lỗi cũ: kiểm tra nhầm đường dẫn service sau khi sắp
 
 | Đường dẫn | Chức năng |
 |---|---|
-| scripts/start-public-demo.cjs | Khởi động/kiểm tra Vite và tunnel, chỉ công bố URL khi kiểm tra thành công. |
-| scripts/create-public-qr.cjs | Tạo PNG QR, trang xem QR, cập nhật URL và cấu hình runtime. |
-| apps/web/src/services/platform.ts | Đọc địa chỉ HTTPS hiện tại hoặc cấu hình runtime cho trang localhost. |
+| scripts/ChayDemoCongKhai.cjs | Khởi động/kiểm tra Vite và tunnel, chỉ công bố URL khi kiểm tra thành công. |
+| scripts/TaoMaQRCongKhai.cjs | Tạo PNG QR, trang xem QR, cập nhật URL và cấu hình runtime. |
+| apps/web/src/shared/services/KetNoiNenTang.ts | Đọc địa chỉ HTTPS hiện tại hoặc cấu hình runtime cho trang localhost. |
 | apps/web/src/components/QrImage.tsx | Chờ địa chỉ sẵn sàng rồi tạo đúng QR chung. |
-| apps/web/src/components/JourneyPlayer.tsx | Trình nghe có ảnh, ngôn ngữ, thời gian, tua, tốc độ và trạng thái thật. |
-| apps/web/src/components/ListenButton.tsx | Phát/tạm dừng/tiếp tục cùng một nguồn âm thanh. |
-| apps/web/src/styles/index.css | Font hệ thống hỗ trợ dấu và các ngôn ngữ, nút bấm và kiểu chữ chung. |
-| apps/web/src/styles/player.css | Bố cục trình nghe desktop/điện thoại, nút và thanh tua. |
-| apps/mobile/src/components/JourneyPlayer.tsx | Trình nghe native, thanh tua, tốc độ và vùng an toàn màn hình. |
-| apps/mobile/src/components/Action.tsx | Nút dùng chung có icon, trạng thái nhấn/vô hiệu hóa và nhãn trợ năng. |
-| apps/mobile/src/components/ListenButton.tsx | Nút nghe gọi controller âm thanh đang dùng chung. |
-| apps/mobile/src/theme.ts | Khoảng cao dòng tránh cắt dấu tiếng Việt. |
-| packages/ui-tokens/colors.ts | Màu dùng chung, bổ sung màu trình nghe. |
-| packages/visitor-core/src/photos.ts | Ánh xạ đủ 8 ảnh, tác giả, nguồn và giấy phép. |
-| packages/visitor-core/src/mock.ts | Gắn ảnh đúng ID cho từng địa điểm. |
-| packages/visitor-core/src/presentation.ts | Ảnh hero và nguồn ảnh lấy từ cùng bảng ảnh. |
+| apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx | Trình nghe có ảnh, ngôn ngữ, thời gian, tua, tốc độ và trạng thái thật. |
+| apps/web/src/features/journey/components/NutNgheThuyetMinh.tsx | Phát/tạm dừng/tiếp tục cùng một nguồn âm thanh. |
+| apps/web/src/shared/styles/GiaoDienNen.css | Font hệ thống hỗ trợ dấu và các ngôn ngữ, nút bấm và kiểu chữ chung. |
+| apps/web/src/features/journey/styles/GiaoDienTrinhNghe.css | Bố cục trình nghe desktop/điện thoại, nút và thanh tua. |
+| apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx | Trình nghe native, thanh tua, tốc độ và vùng an toàn màn hình. |
+| apps/mobile/src/shared/components/NutThaoTac.tsx | Nút dùng chung có icon, trạng thái nhấn/vô hiệu hóa và nhãn trợ năng. |
+| apps/mobile/src/features/journey/components/NutNgheThuyetMinh.tsx | Nút nghe gọi controller âm thanh đang dùng chung. |
+| apps/mobile/src/shared/GiaoDienChung.ts | Khoảng cao dòng tránh cắt dấu tiếng Việt. |
+| packages/ui-tokens/MauVaKichThuoc.ts | Màu dùng chung, bổ sung màu trình nghe. |
+| packages/visitor-core/src/DanhMucAnh.ts | Ánh xạ đủ 8 ảnh, tác giả, nguồn và giấy phép. |
+| packages/visitor-core/src/DuLieuKhoiTao.ts | Gắn ảnh đúng ID cho từng địa điểm. |
+| packages/visitor-core/src/DuLieuHienThi.ts | Ảnh hero và nguồn ảnh lấy từ cùng bảng ảnh. |
 | apps/web/static/images/places/ | Tám ảnh JPEG cục bộ do Vite phục vụ. |
 | apps/mobile/assets/places/ | Tám ảnh JPEG đóng gói trong ứng dụng native. |
-| apps/web/src/services/placeImages.ts | Đổi photo:ID thành đường dẫn ảnh web. |
-| apps/mobile/src/services/placeImages.ts | Đổi photo:ID thành asset native; vẫn hỗ trợ URL API. |
-| apps/mobile/src/types/assets.d.ts | Khai báo TypeScript cho file ảnh và âm thanh. |
-| apps/web/src/components/PlaceImage.tsx, apps/mobile/src/components/PlaceImage.tsx, Cover.tsx | Hiển thị asset đúng nền tảng, giữ placeholder khi thiếu/lỗi. |
-| apps/web/src/pages/DetailPage.tsx, apps/mobile/src/screens/DetailScreen.tsx | Nút nghe/bản đồ và chú thích ảnh tư liệu khi cần. |
+| apps/web/src/shared/services/XuLyAnhDiTich.ts | Đổi photo:ID thành đường dẫn ảnh web. |
+| apps/mobile/src/shared/services/XuLyAnhDiTich.ts | Đổi photo:ID thành asset native; vẫn hỗ trợ URL API. |
+| apps/mobile/src/types/KieuTaiNguyen.d.ts | Khai báo TypeScript cho file ảnh và âm thanh. |
+| apps/web/src/shared/components/AnhDiTich.tsx, apps/mobile/src/shared/components/AnhDiTich.tsx, AnhBia.tsx | Hiển thị asset đúng nền tảng, giữ placeholder khi thiếu/lỗi. |
+| apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx, apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx | Nút nghe/bản đồ và chú thích ảnh tư liệu khi cần. |
 
-Ảnh điện Cần Chánh là ảnh tư liệu nền điện năm 2015, có chú thích riêng; không trình bày thành ảnh công trình hiện nay. Các ảnh đều có nguồn và giấy phép tại photos.ts. Audio hiện vẫn là bài demo đa ngôn ngữ đã có, chưa phải tám bài lịch sử riêng.
+Ảnh điện Cần Chánh là ảnh tư liệu nền điện năm 2015, có chú thích riêng; không trình bày thành ảnh công trình hiện nay. Các ảnh đều có nguồn và giấy phép tại DanhMucAnh.ts. Audio hiện vẫn là bài demo đa ngôn ngữ đã có, chưa phải tám bài lịch sử riêng.
 
 ## Cách tự kiểm tra
 

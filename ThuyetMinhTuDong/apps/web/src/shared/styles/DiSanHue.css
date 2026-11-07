@@ -1,0 +1,661 @@
+/* CHỨC NĂNG: [GIAO-DIEN]
+ * VAI TRÒ: GIAO DIỆN
+ * FILE NÀY LÀM GÌ: Thành phần nền tảng Heritage cho web du khách và quản trị.
+ * VỊ TRÍ: apps/web/src/shared/styles/DiSanHue.css
+ * TẠI SAO: Dùng cùng bố cục và trạng thái trong nhóm giao diện, không chứa nghiệp vụ.
+ */
+/** FILE NÀY LÀM GÌ: Thành phần nền tảng Heritage cho web du khách và quản trị.
+ * Hai entry web nạp sau style cục bộ; chỉ đổi trình bày và phản hồi tương tác.
+ * TẠI SAO: Trạng thái, typography và accessibility thống nhất mà không ép hai nền tảng dùng chung component. */
+:root {
+  /* CHỨC NĂNG: Một font stack Unicode cho cả tiêu đề và nội dung, không trộn serif thiếu glyph. */
+  --body-font:
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', 'Noto Sans CJK SC',
+    'Noto Sans JP', sans-serif;
+  --heading-font: var(--body-font);
+  --nav-height: 88px;
+}
+body {
+  font-family: var(--body-font);
+  font-size: 15px;
+  line-height: 1.65;
+  background: var(--page);
+  color: var(--text);
+}
+button,
+.button,
+.secondary {
+  min-height: 46px;
+  border-radius: 11px;
+  touch-action: manipulation;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+  font-size: 14px;
+}
+button:not(:disabled):hover,
+.button:hover {
+  filter: none;
+  background: var(--primaryPressed);
+  color: var(--white);
+}
+.secondary:hover:not(:disabled),
+button.secondary:hover {
+  background: var(--soft);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+input,
+select,
+textarea {
+  font: inherit;
+}
+input[type='search'],
+input[type='text'],
+select,
+textarea {
+  min-height: 46px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+:is(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 4px;
+}
+:target {
+  scroll-margin-top: 180px;
+}
+.heritage-mark {
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 16px;
+  transform: translateY(-150%);
+  z-index: 1000;
+  padding: 12px 20px;
+  background: var(--secondary);
+  color: var(--white);
+  border-radius: 10px;
+}
+.skip-link:focus {
+  transform: none;
+}
+.language-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.language-picker > svg {
+  color: var(--primary);
+  width: 19px;
+  height: 19px;
+}
+.language-picker select {
+  max-width: 170px;
+  font-size: 13px;
+  border-radius: 12px;
+  min-height: 44px;
+  background: var(--background);
+}
+.state {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 36px 24px;
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+  background: var(--page);
+  margin: 14px 0;
+  text-align: center;
+}
+.state > svg {
+  color: var(--primary);
+  width: 32px;
+  height: 32px;
+}
+.state p {
+  max-width: 55ch;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.state > button {
+  min-width: 140px;
+}
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+}
+.skeleton-card {
+  display: grid;
+  gap: 12px;
+  border-radius: 16px;
+  background: var(--background);
+  padding: 12px;
+}
+.skeleton-block {
+  height: 15px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--border), var(--page), var(--border));
+  background-size: 200% 100%;
+  animation: heritage-shimmer 1.8s ease-in-out infinite;
+}
+.skeleton-image {
+  height: 120px;
+  border-radius: 10px;
+}
+.skeleton-short {
+  width: 65%;
+}
+@keyframes heritage-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+.gps-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  background: var(--tealSoft);
+  margin: 18px 0;
+}
+.gps-status > svg {
+  color: var(--secondary);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.gps-status strong {
+  font-size: 15px;
+  color: var(--secondary);
+}
+.gps-status p {
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 5px 0;
+  color: var(--muted);
+}
+.gps-status.is-error {
+  background: var(--dangerSoft);
+  border-color: var(--danger);
+}
+.gps-status.is-error strong,
+.gps-status.is-error > svg {
+  color: var(--danger);
+}
+/* CHỨC NĂNG: Player gọn mặc định; nút mở rộng chỉ thay cách trình bày, giữ mọi lệnh engine. */
+.audio-shell {
+  max-width: 920px;
+  margin: 0 auto 24px;
+  position: sticky;
+  top: calc(var(--nav-height) + 8px);
+  z-index: 15;
+}
+.audio-player {
+  background: var(--playerBackground);
+  border: 1px solid #c6a66750;
+  border-radius: 20px;
+  box-shadow: 0 10px 32px #183c3c20;
+}
+.audio-title {
+  font-size: 20px;
+}
+.audio-artwork {
+  border-radius: 12px;
+}
+.audio-player .audio-close {
+  background: var(--playerControl);
+  border-color: #ffffff30;
+  align-self: center;
+}
+.audio-player .audio-expand {
+  flex: 0 0 44px;
+  min-width: 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: var(--playerControl);
+  border: 0;
+  border-radius: 12px;
+  color: var(--white);
+  font-size: 20px;
+}
+.audio-player .audio-mini-play {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--playerAccent);
+  color: var(--playerBackground);
+}
+.audio-shell.is-compact .audio-player {
+  padding: 16px 20px;
+  gap: 10px;
+}
+.audio-shell.is-compact .audio-title {
+  font-size: 17px;
+}
+.audio-shell.is-compact .audio-artwork {
+  width: 50px;
+  height: 54px;
+  flex-basis: 50px;
+}
+.audio-timeline input[type='range'] {
+  height: 8px;
+  margin-top: 8px;
+}
+.audio-rates button {
+  min-height: 44px;
+  min-width: 44px;
+}
+.audio-player button:focus-visible {
+  outline-color: var(--playerAccent);
+}
+.audio-player button:not(:disabled):hover {
+  filter: brightness(1.1);
+  background: var(--playerControl);
+  color: var(--white);
+}
+.journey-heading h1 {
+  font-family: var(--heading-font);
+  font-size: 36px;
+  font-weight: 500;
+}
+.journey-heading p {
+  font-size: 14px;
+}
+.journey-map {
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.journey-section {
+  padding-top: 10px;
+}
+.journey-place,
+.journey-route {
+  border-radius: 18px;
+  background: var(--background);
+}
+.journey-place.is-selected,
+.journey-route.is-selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.journey-place h3 {
+  font-size: 18px;
+}
+.journey-category {
+  color: var(--primary);
+  background: var(--soft);
+}
+.journey-step {
+  background: var(--secondary);
+  color: var(--white);
+}
+.journey-notice {
+  border-color: var(--border);
+  background: var(--page);
+  font-size: 14px;
+}
+.journey-place-open .place-image {
+  object-fit: cover;
+}
+.leaflet-popup-content {
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+}
+/* CHỨC NĂNG: Toàn bộ trang admin dùng cùng thương hiệu, giữ bố cục bàn làm việc riêng. */
+.admin-shell {
+  background: var(--page);
+}
+.admin-sidebar {
+  background: var(--secondary);
+  color: var(--white);
+  border-right: 0;
+}
+.admin-brand {
+  color: var(--white);
+}
+.admin-brand-icon {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--playerAccent);
+  box-shadow: none;
+}
+.admin-brand small {
+  color: var(--playerMuted);
+}
+.admin-sidebar nav a {
+  color: var(--playerMuted);
+  border-radius: 10px;
+}
+.admin-sidebar nav a:hover {
+  background: var(--playerControl);
+  color: var(--white);
+}
+.admin-sidebar nav a.active {
+  background: var(--background);
+  color: var(--primary);
+}
+.admin-sidebar nav a.active:before {
+  background: var(--gold);
+  width: 4px;
+}
+.admin-sidebar-note {
+  background: transparent;
+  border-color: #ffffff28;
+  color: var(--playerMuted);
+}
+.admin-sidebar-note strong {
+  color: var(--white);
+}
+.admin-sidebar-note p {
+  color: var(--playerMuted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.admin-topbar {
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+}
+.admin-topbar small {
+  color: var(--muted);
+}
+.admin-workspace {
+  max-width: 1500px;
+  margin: auto;
+}
+.admin-page-header h1,
+.admin-heading h1 {
+  font-family: var(--heading-font);
+  font-weight: 500;
+  font-size: 32px;
+}
+.admin-card,
+.admin-metric,
+.admin-editor-section,
+.admin-review-tile,
+.admin-form {
+  box-shadow: 0 4px 20px #24242403;
+  border-color: var(--border);
+  border-radius: 18px;
+}
+.admin-metric-primary {
+  background: var(--secondary);
+}
+.admin-card input,
+.admin-card select,
+.admin-card textarea,
+.admin-place-editor input,
+.admin-place-editor select,
+.admin-place-editor textarea {
+  font-size: 16px;
+}
+.admin-identity > span {
+  background: var(--soft);
+  color: var(--primary);
+}
+.admin-empty {
+  background: var(--background);
+}
+.admin-section-heading {
+  border-color: var(--border);
+}
+.admin-tabs button[aria-pressed='true'],
+.admin-language-tabs button[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--white);
+}
+.admin-shell .language-picker select {
+  font-size: 13px;
+}
+.admin-shell table th {
+  font-size: 13px;
+  letter-spacing: 0.2px;
+}
+.admin-shell table td {
+  font-size: 14px;
+}
+.admin-shell textarea {
+  line-height: 1.8;
+}
+@media (max-width: 720px) {
+  :root {
+    --nav-height: 132px;
+  }
+  .language-picker {
+    gap: 5px;
+  }
+  .language-picker select {
+    max-width: 125px;
+    font-size: 12px;
+  }
+  .language-picker > svg {
+    display: none;
+  }
+  .audio-shell {
+    top: calc(var(--nav-height) + 4px);
+    margin-bottom: 18px;
+  }
+  .audio-shell.is-compact .audio-player {
+    padding: 12px;
+    gap: 8px;
+  }
+  .audio-header {
+    gap: 8px;
+  }
+  .audio-shell.is-compact .audio-artwork {
+    display: none;
+  }
+  .audio-shell.is-compact .audio-title {
+    font-size: 16px;
+  }
+  .audio-player .audio-expand {
+    width: 44px;
+  }
+  .audio-subtitle {
+    gap: 6px;
+  }
+  .skeleton-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .skeleton-card:last-child {
+    display: none;
+  }
+  .journey-heading h1 {
+    font-size: 30px;
+  }
+  .journey-heading {
+    gap: 18px;
+  }
+  .gps-status {
+    padding: 16px;
+    gap: 10px;
+  }
+  .admin-sidebar {
+    height: auto;
+    background: var(--secondary);
+  }
+  .admin-sidebar nav a {
+    color: var(--playerMuted);
+    min-height: 48px;
+  }
+  .admin-brand strong {
+    font-size: 20px;
+  }
+  .admin-topbar {
+    gap: 14px;
+  }
+  .admin-identity {
+    display: none;
+  }
+  .admin-page-header h1 {
+    font-size: 28px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .skeleton-block {
+    background: var(--border);
+  }
+}
+
+.admin-page-title h1 {
+  font-family: var(--heading-font);
+  font-weight: 500;
+  font-size: 32px;
+}
+.admin-hero h1 {
+  font-family: var(--heading-font);
+  font-size: 34px;
+  font-weight: 500;
+}
+.admin-metric.metric-0 {
+  background: var(--secondary);
+}
+.admin-metric.metric-0 .admin-metric-line {
+  background: var(--gold);
+}
+.admin-metric-line {
+  background: var(--soft);
+}
+.admin-review-tile-info h2 {
+  font-family: var(--heading-font);
+  font-size: 24px;
+  font-weight: 500;
+}
+.admin-form-section h2 {
+  font-size: 18px;
+}
+.admin-hero p {
+  color: var(--playerMuted);
+}
+
+/* CHỨC NĂNG: Ba mục quản trị nằm trọn màn hình nhỏ, chữ dài được xuống dòng.
+ * XỬ LÝ: Không giấu mục điều hướng sau thanh cuộn ngang; selector có đủ chỗ đọc. */
+@media (max-width: 760px) {
+  .admin-sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+    gap: 4px;
+  }
+  .admin-sidebar nav a {
+    flex-direction: column;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+    padding: 10px 4px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .admin-sidebar nav a svg {
+    flex-shrink: 0;
+  }
+  .admin-topbar {
+    flex-wrap: wrap;
+  }
+  .admin-topbar .language-picker select {
+    width: 145px;
+    max-width: 145px;
+  }
+}
+
+@media (max-width: 760px) {
+  /* CHỨC NĂNG: Luôn nhìn thấy đủ năm ngôn ngữ khi biên tập trên điện thoại. */
+  .admin-language-tabs {
+    flex-wrap: wrap;
+    overflow: visible;
+    width: 100%;
+  }
+  .admin-language-tabs button {
+    flex: 1 1 85px;
+    min-height: 44px;
+  }
+}
+
+.admin-sidebar-note > svg {
+  color: var(--playerAccent);
+}
+
+/* CHỨC NĂNG: Dấu tiếng Việt và chữ CJK không bị ép sát bởi tracking âm của font serif cũ. */
+h1,
+h2,
+h3,
+.brand strong,
+.admin-brand strong {
+  letter-spacing: normal;
+}
+.admin-images-editor {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.admin-image-options {
+  display: grid;
+  gap: 12px;
+}
+.admin-image-option {
+  display: flex;
+  gap: 14px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  min-width: 0;
+}
+.admin-image-option > .place-image {
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.admin-image-option > div {
+  min-width: 0;
+  flex: 1;
+}
+.admin-image-option strong {
+  font-size: 14px;
+}
+.admin-image-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.admin-image-buttons button {
+  white-space: normal;
+}
+@media (max-width: 480px) {
+  .admin-image-option {
+    flex-direction: column;
+  }
+}

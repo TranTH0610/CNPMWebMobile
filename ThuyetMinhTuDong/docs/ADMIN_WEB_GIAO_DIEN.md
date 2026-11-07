@@ -15,14 +15,14 @@ Admin web đã được thiết kế lại cùng tông xanh–trắng với Admi
 
 | File | Thao tác | Chức năng |
 | --- | --- | --- |
-| `apps/web/src/components/admin/AdminIcon.tsx` | TẠO MỚI | Icon SVG riêng cho Admin, không thêm dependency. |
-| `apps/web/src/layouts/AdminLayout.tsx` | SỬA | Menu, tiêu đề theo route, danh tính và vùng trang con. |
-| `apps/web/src/pages/admin/DashboardPage.tsx` | SỬA | Banner, bốn chỉ số và các liên kết quản lý nhanh. |
-| `apps/web/src/pages/admin/PlacesPage.tsx` | SỬA | Thẻ ảnh di tích, tìm kiếm không dấu và mở đúng biểu mẫu. |
-| `apps/web/src/pages/admin/PlaceFormPage.tsx` | SỬA | Nhóm thông tin, tọa độ, ảnh xem trước và thao tác lưu/xóa. |
-| `apps/web/src/pages/admin/ContentEditorPage.tsx` | SỬA | Biên tập đa ngôn ngữ theo nhóm nội dung, audio và quy trình. |
-| `apps/web/src/pages/admin/ReviewsPage.tsx` | SỬA | Nhận diện di tích, so sánh bản ngôn ngữ, duyệt và công bố. |
-| `apps/web/src/styles/admin.css` | SỬA | Toàn bộ kiểu hiển thị Admin và breakpoint desktop/tablet/mobile. |
+| `apps/web/src/features/admin/shared/components/BieuTuongQuanTri.tsx` | TẠO MỚI | Icon SVG riêng cho Admin, không thêm dependency. |
+| `apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx` | SỬA | Menu, tiêu đề theo route, danh tính và vùng trang con. |
+| `apps/web/src/features/admin/dashboard/TrangTongQuan.tsx` | SỬA | Banner, bốn chỉ số và các liên kết quản lý nhanh. |
+| `apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx` | SỬA | Thẻ ảnh di tích, tìm kiếm không dấu và mở đúng biểu mẫu. |
+| `apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx` | SỬA | Nhóm thông tin, tọa độ, ảnh xem trước và thao tác lưu/xóa. |
+| `apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx` | SỬA | Biên tập đa ngôn ngữ theo nhóm nội dung, audio và quy trình. |
+| `apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx` | SỬA | Nhận diện di tích, so sánh bản ngôn ngữ, duyệt và công bố. |
+| `apps/web/src/features/admin/styles/GiaoDienQuanTri.css` | SỬA | Toàn bộ kiểu hiển thị Admin và breakpoint desktop/tablet/mobile. |
 
 ## Luồng dữ liệu
 

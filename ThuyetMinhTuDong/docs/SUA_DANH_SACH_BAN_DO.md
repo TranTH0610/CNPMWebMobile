@@ -2,8 +2,8 @@
 
 | File | Thay đổi | Được dùng bởi |
 |---|---|---|
-| apps/web/src/pages/JourneyPage.tsx | Thẻ ảnh mở chi tiết, nút định vị riêng, nguồn tọa độ tách riêng; tuyến có thứ tự và liên kết chi tiết. | AppRoutes tại /journey |
-| apps/web/src/styles/journey.css | Thẻ 2 cột desktop/1 cột mobile, vùng bấm lớn, nút cách nhau, trạng thái đang chọn. | JourneyPage |
+| apps/web/src/features/journey/pages/TrangHanhTrinh.tsx | Thẻ ảnh mở chi tiết, nút định vị riêng, nguồn tọa độ tách riêng; tuyến có thứ tự và liên kết chi tiết. | AppRoutes tại /journey |
+| apps/web/src/features/journey/styles/HanhTrinh.css | Thẻ 2 cột desktop/1 cột mobile, vùng bấm lớn, nút cách nhau, trạng thái đang chọn. | JourneyPage |
 
 Bấm ảnh/tên/Xem địa điểm → React Router mở /places/ID → DetailPage tải và hiển thị địa điểm. Bấm Bản đồ → query placeId đổi → VisitorMap phóng tới marker; bấm marker mở chi tiết. Nguồn tọa độ nằm trong mục mở rộng riêng và dẫn tới OpenStreetMap.
 

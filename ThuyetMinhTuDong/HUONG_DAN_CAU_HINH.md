@@ -7,8 +7,8 @@ ThuyetMinhTuDong/
 ├── services/
 │   ├── .env.example          Mẫu API/SQL, được đưa lên GitHub
 │   ├── .env.local            Cấu hình SQL thật, chỉ giữ trên máy
-│   ├── config/env.cjs        Loader BE: chỉ nhận biến SQL, không in giá trị
-│   └── database/config.cjs   Dùng cấu hình đã nạp để kết nối SQL
+│   ├── config/DocCauHinhMoiTruong.cjs        Loader BE: chỉ nhận biến SQL, không in giá trị
+│   └── database/CauHinhSqlServer.cjs   Dùng cấu hình đã nạp để kết nối SQL
 ├── apps/web/
 │   ├── .env.example          Mẫu cấu hình CÔNG KHAI của web
 │   └── .env.local            Cấu hình web riêng của máy, Git bỏ qua
@@ -16,8 +16,8 @@ ThuyetMinhTuDong/
 │   ├── .env.example          Mẫu cấu hình CÔNG KHAI của Expo
 │   └── .env.local            URL/định danh mobile, Git bỏ qua
 └── scripts/
-    ├── check-env.cjs         Kiểm tra vị trí, Git index và tên biến FE
-    └── env-config.test.cjs   Test loader và quy tắc tách BE/FE
+    ├── KiemTraCauHinhMoiTruong.cjs         Kiểm tra vị trí, Git index và tên biến FE
+    └── KiemThuCauHinhMoiTruong.test.cjs   Test loader và quy tắc tách BE/FE
 ```
 
 Không dùng .env.sqlserver ở gốc hoặc .env của mobile nữa. Các mẫu catalog/presence

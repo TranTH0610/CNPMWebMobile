@@ -13,12 +13,12 @@ URL demo hiện tại: https://simply-solutions-addressed-flowers.trycloudflare.
 | File tính từ thư mục ThuyetMinhTuDong | Vai trò |
 |---|---|
 | `apps/mobile/src/visitor/WebAccessCard.tsx` | Mở website, mở trang QR và chia sẻ cùng URL từ mobile |
-| `apps/mobile/src/visitor/MainTabs.tsx` | Ghép thẻ truy cập trong Cài đặt, thêm cuộn cho màn nhỏ |
+| `apps/mobile/src/visitor/ThanhDieuHuongDuKhach.tsx` | Ghép thẻ truy cập trong Cài đặt, thêm cuộn cho màn nhỏ |
 | `apps/mobile/src/visitor/ScanScreen.tsx` | Hiện hướng dẫn dùng camera thường mà không cần Expo Go |
 | `apps/mobile/eas.json` | Profile preview tạo APK standalone, không phải development client |
-| `packages/visitor-core/src/uiMessages.ts` | Nhãn mới đủ Việt/Anh/Trung/Bồ/Nhật |
-| `scripts/create-public-qr.cjs` | Tạo PNG QR website và đồng bộ đúng biến URL của mobile/web |
-| `scripts/public-qr.test.cjs` | Kiểm tra từ chối QR Expo và giữ lại biến .env khác |
+| `packages/visitor-core/src/BanDichThanhPhan.ts` | Nhãn mới đủ Việt/Anh/Trung/Bồ/Nhật |
+| `scripts/TaoMaQRCongKhai.cjs` | Tạo PNG QR website và đồng bộ đúng biến URL của mobile/web |
+| `scripts/KiemThuQRCongKhai.test.cjs` | Kiểm tra từ chối QR Expo và giữ lại biến .env khác |
 | `package.json` | Lệnh qr:create và đăng ký test mới |
 | `.gitignore` | Bỏ ảnh QR và bản sao .env cá nhân khỏi Git |
 | `apps/web/.env.local` | URL HTTPS của QR website, không commit |
@@ -102,11 +102,11 @@ QR trên trang dùng PNG 640px, margin 4, đen/trắng; có nút tải ảnh, m�
 
 | File | Vai trò |
 |---|---|
-| scripts/start-public-demo.cjs | Build và mở bản production demo ở cổng riêng, kiểm tra asset thật trước công bố QR. |
-| scripts/create-public-qr.cjs | Đồng bộ runtime config ở static và dist, tạo PNG QR mới. |
-| scripts/public-qr.test.cjs | Loại HTML fallback và bản dev khỏi kiểm tra readiness. |
+| scripts/ChayDemoCongKhai.cjs | Build và mở bản production demo ở cổng riêng, kiểm tra asset thật trước công bố QR. |
+| scripts/TaoMaQRCongKhai.cjs | Đồng bộ runtime config ở static và dist, tạo PNG QR mới. |
+| scripts/KiemThuQRCongKhai.test.cjs | Loại HTML fallback và bản dev khỏi kiểm tra readiness. |
 | apps/web/src/components/QrImage.tsx | QR rõ, cập nhật URL, tải ảnh và mở web trực tiếp. |
 | apps/web/src/components/qr.css | Giữ ảnh vuông, đủ viền trắng, không cắt/co sai. |
-| apps/web/src/services/platform.ts | Đọc config có timeout và kiểm tra HTTPS. |
-| packages/visitor-core/src/qr-messages.ts | Hướng dẫn QR và nhãn nút đủ năm ngôn ngữ. |
-| packages/visitor-core/src/messages.ts | Ghép bộ khóa QR vào i18n hiện có. |
+| apps/web/src/shared/services/KetNoiNenTang.ts | Đọc config có timeout và kiểm tra HTTPS. |
+| packages/visitor-core/src/BanDichTruyCapQR.ts | Hướng dẫn QR và nhãn nút đủ năm ngôn ngữ. |
+| packages/visitor-core/src/BanDichGiaoDien.ts | Ghép bộ khóa QR vào i18n hiện có. |

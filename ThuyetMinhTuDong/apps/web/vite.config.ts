@@ -1,13 +1,25 @@
 /**
- * FILE NÀY LÀM GÌ
+ * CHỨC NĂNG: [KHOI-DONG] [CAU-HINH]
+ * VAI TRÒ: GIAO DIỆN WEB
+ *
+ * FILE NÀY LÀM GÌ:
  * Cấu hình Vite: chọn bản du khách/admin, tài nguyên tĩnh, build và proxy đến mock API trong môi
- * trường demo.
  *
  * VỊ TRÍ: apps/web/vite.config.ts
- * DÙNG BỞI: Entry hoặc nơi import module này trong ứng dụng.
- * PHỤ THUỘC: node:module; vite; @vitejs/plugin-react
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất quán
- * và dễ bảo trì.
+ *
+ * ĐƯỢC DÙNG BỞI:
+ * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
+ *
+ * PHỤ THUỘC:
+ * - node:module
+ * - vite
+ * - @vitejs/plugin-react
+ *
+ * CÁC KHỐI CHÍNH:
+ * 1. audiencePlugin
+ *
+ * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
+ * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
  */
 // Nhập các thành phần từ 'node:module'.
 import { createRequire } from 'node:module'
@@ -18,11 +30,7 @@ import react from '@vitejs/plugin-react'
 
 // CHỨC NĂNG: Tìm React theo package.json của web.
 // XỬ LÝ: Không tìm theo vị trí file trong packages/visitor-core.
-/* GIẢI THÍCH TỪNG DÒNG:
- * DÒNG `const webRequire = createRequire(`: Khai báo webRequire: Gọi createRequire( new URL('./package.json', import.meta.url), ).
- * DÒNG `new URL('./package.json', import.meta.url),`: Khai báo webRequire: Gọi createRequire( new URL('./package.json', import.meta.url), ).
- * DÒNG `)`: Kết thúc nhóm biểu thức hoặc lời gọi hàm.
- */
+
 const webRequire = createRequire(
   new URL('./package.json', import.meta.url),
 )
@@ -31,6 +39,8 @@ const webRequire = createRequire(
 // XỬ LÝ: Bản visitor không chứa cây route admin. HTTP /admin bị từ chối ở dev/preview visitor.
 // Hosting production cũng phải chặn /admin và bảo vệ tên miền admin bằng xác thực riêng.
 // Khai báo audiencePlugin(admin). Nhận đầu vào qua tham số.
+// ==================== [KHOI-DONG] [CAU-HINH] audiencePlugin ====================
+// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
 function audiencePlugin(admin: boolean): Plugin {
   // Khai báo blockAdmin: khai báo callback (req, res, next) => { const path = (req.url ?? '/').split('?')[0] if (/^\/q.
   const blockAdmin: import('vite').Connect.NextHandleFunction = (req, res, next) => {
@@ -42,16 +52,10 @@ function audiencePlugin(admin: boolean): Plugin {
       res.statusCode = 404
       // Thực hiện Gọi res.end('Not found').
       res.end('Not found')
-      /* GIẢI THÍCH TỪNG DÒNG:
-       * DÒNG `return`: Thoát hàm hiện tại ngay.
-       * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-       */
+      
       return
     }
-    /* GIẢI THÍCH TỪNG DÒNG:
-     * DÒNG `next()`: Thực hiện Gọi next().
-     * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-     */
+    
     next()
   }
   // TẠI SAO (blockAdmin): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất
@@ -66,11 +70,7 @@ function audiencePlugin(admin: boolean): Plugin {
       order: 'pre',
       // Khai báo handler(html). Nhận đầu vào qua tham số.
       handler(html) {
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `return admin ? html.replace('/src/main.tsx', '/src/main-admin.tsx') : html`: Trả kết quả: chọn giữa hai giá trị theo điều kiện admin.
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         */
+        
         return admin ? html.replace('/src/main.tsx', '/src/main-admin.tsx') : html
       },
       // TẠI SAO (handler): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất quán
@@ -80,11 +80,7 @@ function audiencePlugin(admin: boolean): Plugin {
     configureServer(server) { server.middlewares.use(blockAdmin) },
     // TẠI SAO (configureServer): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối
     // nhất quán và dễ bảo trì.
-    /* GIẢI THÍCH TỪNG DÒNG:
-     * DÒNG `configurePreviewServer(server) { server.middlewares.use(blockAdmin) },`: Khai báo configurePreviewServer(server). Nhận đầu vào qua tham số. | Thực hiện Gọi server.middlewares.use(blockAdmin).
-     * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-     * DÒNG `}`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-     */
+    
     configurePreviewServer(server) { server.middlewares.use(blockAdmin) },
     // TẠI SAO (configurePreviewServer): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu
     // mối nhất quán và dễ bảo trì.
@@ -115,10 +111,7 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         // Gán thuộc tính rewrite: khai báo callback path => path.replace(/^\/api\/catalog/, '').
         rewrite: path => path.replace(/^\/api\/catalog/, ''),
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `configure(proxy) { proxy.on('proxyReq', request => request.removeHeader('origin')) },`: Khai báo configure(proxy). Nhận đầu vào qua tham số. | Đăng ký xử lý sự kiện: proxy.on('proxyReq', request => request.removeHeader('origin')).
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         */
+        
         configure(proxy) { proxy.on('proxyReq', request => request.removeHeader('origin')) },
         // TẠI SAO (configure): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất
         // quán và dễ bảo trì.
@@ -131,12 +124,7 @@ export default defineConfig(({ mode }) => ({
         changeOrigin: true,
         // Gán thuộc tính rewrite: khai báo callback path => path.replace(/^\/api\/presence/, '').
         rewrite: path => path.replace(/^\/api\/presence/, ''),
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `configure(proxy) { proxy.on('proxyReq', request => request.removeHeader('origin')) },`: Khai báo configure(proxy). Nhận đầu vào qua tham số. | Đăng ký xử lý sự kiện: proxy.on('proxyReq', request => request.removeHeader('origin')).
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         */
+        
         configure(proxy) { proxy.on('proxyReq', request => request.removeHeader('origin')) },
         // TẠI SAO (configure): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất
         // quán và dễ bảo trì.
@@ -153,61 +141,36 @@ export default defineConfig(({ mode }) => ({
 
   // Gán thuộc tính resolve: tạo object gồm alias.
   resolve: {
-    /* GIẢI THÍCH TỪNG DÒNG:
-     * DÒNG `alias: [`: Gán thuộc tính alias: tạo mảng [ { find: /^react$/, replacement: webRequire.resolve('react'), }, { find: /^reac.
-     * DÒNG `{`: Dấu phân cách của khối hiện tại; không thực hiện xử lý riêng.
-     */
+    
     alias: [
       {
         // Gán thuộc tính find: sử dụng /^react$/ làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
         find: /^react$/,
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `replacement: webRequire.resolve('react'),`: Gán thuộc tính replacement: Gọi webRequire.resolve('react').
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `{`: Dấu phân cách của khối hiện tại; không thực hiện xử lý riêng.
-         */
+        
         replacement: webRequire.resolve('react'),
       },
       {
         // Gán thuộc tính find: sử dụng /^react\/jsx-runtime$/ làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
         find: /^react\/jsx-runtime$/,
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `replacement: webRequire.resolve('react/jsx-runtime'),`: Gán thuộc tính replacement: Gọi webRequire.resolve('react/jsx-runtime').
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `{`: Dấu phân cách của khối hiện tại; không thực hiện xử lý riêng.
-         */
+        
         replacement: webRequire.resolve('react/jsx-runtime'),
       },
       {
         // Gán thuộc tính find: sử dụng /^react\/jsx-dev-runtime$/ làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
         find: /^react\/jsx-dev-runtime$/,
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `replacement: webRequire.resolve('react/jsx-dev-runtime'),`: Gán thuộc tính replacement: Gọi webRequire.resolve('react/jsx-dev-runtime').
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `{`: Dấu phân cách của khối hiện tại; không thực hiện xử lý riêng.
-         */
+        
         replacement: webRequire.resolve('react/jsx-dev-runtime'),
       },
       {
         // Gán thuộc tính find: sử dụng /^react-dom$/ làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
         find: /^react-dom$/,
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `replacement: webRequire.resolve('react-dom'),`: Gán thuộc tính replacement: Gọi webRequire.resolve('react-dom').
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `{`: Dấu phân cách của khối hiện tại; không thực hiện xử lý riêng.
-         */
+        
         replacement: webRequire.resolve('react-dom'),
       },
       {
         // Gán thuộc tính find: sử dụng /^react-dom\/client$/ làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
         find: /^react-dom\/client$/,
-        /* GIẢI THÍCH TỪNG DÒNG:
-         * DÒNG `replacement: webRequire.resolve('react-dom/client'),`: Gán thuộc tính replacement: Gọi webRequire.resolve('react-dom/client').
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `],`: Kết thúc danh sách phần tử trong mảng.
-         * DÒNG `},`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         * DÒNG `}))`: Kết thúc khối lệnh hoặc đối tượng đang viết.
-         */
+        
         replacement: webRequire.resolve('react-dom/client'),
       },
     ],

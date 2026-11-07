@@ -1,0 +1,833 @@
+/* CHỨC NĂNG: [KHAM-PHA]
+ * VAI TRÒ: GIAO DIỆN
+ * FILE NÀY LÀM GÌ: Bố cục du khách Hue Imperial Heritage.
+ * VỊ TRÍ: apps/web/src/features/explore/styles/GiaoDienDuKhach.css
+ * TẠI SAO: Dùng cùng bố cục và trạng thái trong nhóm giao diện, không chứa nghiệp vụ.
+ */
+/** FILE NÀY LÀM GÌ: Bố cục du khách Hue Imperial Heritage.
+ * main.tsx nạp; sử dụng token chung. Không can thiệp service, bộ lọc hay điều khiển audio. */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1360px;
+  min-height: 88px;
+  padding: 14px 32px;
+  gap: 32px;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--gold);
+  color: var(--primary);
+  border-radius: 14px;
+  background: var(--page);
+}
+.brand strong {
+  font-family: var(--heading-font);
+  font-size: 22px;
+  letter-spacing: normal;
+}
+.brand small {
+  font-size: 10px;
+  letter-spacing: 1.3px;
+  color: var(--goldInk);
+  margin-top: 3px;
+}
+.navbar nav {
+  gap: 30px;
+}
+.navbar nav a {
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 48px;
+}
+.navbar nav a.active {
+  border-bottom-color: var(--primary);
+  color: var(--primary);
+}
+.container {
+  max-width: 1360px;
+  padding: 28px 32px;
+  margin: auto;
+}
+/* CHỨC NĂNG: Hero hai vùng rõ ràng, tìm kiếm nằm dưới và không đè lên ảnh. */
+.hero {
+  display: block;
+  color: var(--text);
+  min-height: 0;
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--background);
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  box-shadow: 0 14px 32px #24242408;
+}
+.hero-intro {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr;
+  align-items: stretch;
+}
+.hero-copy {
+  padding: clamp(24px, 4vw, 52px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.hero .eyebrow {
+  font: 700 12px/1.6 var(--body-font);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--goldInk);
+  margin: 0 0 14px;
+}
+.hero h1 {
+  font-family: var(--heading-font);
+  color: var(--text);
+  font-size: clamp(32px, 4vw, 54px);
+  font-weight: 700;
+  margin: 0 0 18px;
+  line-height: 1.16;
+  overflow-wrap: break-word;
+}
+.hero .hero-description {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.8;
+  margin: 0;
+  max-width: 42ch;
+}
+.hero-visual {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+  background: var(--secondary);
+}
+.hero-visual .hero-image {
+  z-index: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.hero-visual .hero-shade {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #183c3c0a, transparent 40%);
+  pointer-events: none;
+}
+.hero-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+.hero-quick-actions .button {
+  min-height: 48px;
+  padding: 12px 18px;
+  white-space: normal;
+  text-align: center;
+}
+.hero-quick-actions .hero-map-link {
+  color: var(--secondary);
+  background: var(--tealSoft);
+  border-color: var(--border);
+}
+.hero-tools {
+  color: var(--text);
+  padding: 24px 28px;
+  background: var(--page);
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+.hero-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding: 6px;
+  max-width: none;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--background);
+  box-shadow: none;
+}
+.hero-search:focus-within {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px #234b4b18;
+}
+.hero-search > svg {
+  flex: 0 0 20px;
+  margin-left: 12px;
+  color: var(--muted);
+}
+.hero-search input {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  min-height: 48px;
+  font-size: 16px;
+  padding: 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+/* CHỨC NĂNG: Chỉ một viền focus cho cả ô tìm; không tạo thêm khối viền lồng nhau. */
+.hero-search input:focus-visible {
+  outline: none;
+}
+.hero-search button {
+  min-height: 48px;
+  min-width: 120px;
+  border-radius: 10px;
+}
+.category-chips {
+  gap: 10px;
+  scrollbar-width: none;
+  padding: 4px 0 8px;
+}
+.category-chips button {
+  border-radius: 10px;
+  min-height: 46px;
+  padding: 10px 16px;
+  font-size: 13px;
+  gap: 8px;
+}
+.hero .category-chips button {
+  background: #fffdfaf5;
+  border-color: transparent;
+}
+.hero .category-chips button[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--white);
+}
+.category-chips svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.heritage-welcome {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin: 42px 4px 48px;
+}
+.heritage-kicker {
+  color: var(--goldInk);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.heritage-welcome h2 {
+  font-family: var(--heading-font);
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 10px 0 14px;
+  max-width: 480px;
+}
+.heritage-welcome p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 520px;
+}
+.heritage-steps {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--background);
+  padding: 5px 20px;
+}
+.heritage-steps a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  min-height: 60px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.heritage-steps a + a {
+  border-top: 1px solid var(--border);
+}
+.heritage-steps a > svg:first-child {
+  color: var(--primary);
+  width: 23px;
+  height: 23px;
+}
+.heritage-steps span {
+  flex: 1;
+}
+.heritage-steps a > svg:last-child {
+  color: var(--goldInk);
+  width: 16px;
+}
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 28px;
+  background: var(--background);
+  margin-bottom: 28px;
+  box-shadow: 0 4px 22px #24242404;
+}
+.section-title {
+  margin-bottom: 24px;
+}
+.section-title h2 {
+  font-family: var(--heading-font);
+  font-size: 27px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.section-title p {
+  font-size: 14px;
+  margin-top: 8px;
+}
+.section-title > a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.place-card {
+  /* CHỨC NĂNG: Cả thẻ là một liên kết, giữ bố cục khối và màu chữ dễ đọc. */
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 16px;
+  box-shadow: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  overflow: hidden;
+}
+.place-card:hover,
+.place-card:focus-visible,
+.place-card:focus-within {
+  color: var(--text);
+  text-decoration: none;
+  border-color: var(--gold);
+  box-shadow: 0 10px 26px #2424240d;
+}
+.place-card .place-image {
+  height: 190px;
+}
+.card-content {
+  padding: 18px;
+}
+.card-content h3 {
+  font-size: 18px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.card-content h3 {
+  display: inline-block;
+  padding: 3px 0;
+}
+.badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  background: var(--soft);
+  color: var(--primary);
+}
+.badge-temple {
+  color: var(--goldInk);
+  background: #f3ead7;
+}
+.badge-gate {
+  color: var(--secondary);
+  background: var(--tealSoft);
+}
+.card-summary {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin-top: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-location {
+  font-size: 12px;
+  line-height: 1.65;
+  align-items: flex-start;
+  overflow-wrap: anywhere;
+}
+.card-location svg {
+  margin-top: 3px;
+}
+.card-location span {
+  color: var(--secondary);
+}
+.card-open {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 44px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.card-open svg {
+  width: 17px;
+}
+.catalog-layout {
+  grid-template-columns: 224px minmax(0, 1fr);
+  gap: 28px;
+}
+.filters {
+  background: var(--page);
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  align-self: start;
+}
+.filters fieldset {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.filters fieldset label {
+  min-height: 40px;
+  margin: 2px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.filters fieldset legend {
+  font-size: 15px;
+}
+.filters .section-title {
+  margin-bottom: 18px;
+}
+.filters .secondary {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.search-field input {
+  font-size: 16px;
+}
+.filter-search-hint {
+  font-size: 12px;
+}
+.sort-controls {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sort-controls select {
+  min-height: 46px;
+  width: auto;
+  max-width: 200px;
+  font-size: 14px;
+}
+.sort-controls label {
+  font-size: 13px;
+}
+.view-switch {
+  gap: 4px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+.pagination button {
+  min-width: 46px;
+  min-height: 46px;
+}
+.list-view .card-photo {
+  flex-basis: 220px;
+}
+.list-view .place-image {
+  height: 100%;
+  min-height: 220px;
+}
+.list-view .card-content {
+  flex: 1;
+  min-width: 0;
+}
+.detail.detail-redesign {
+  max-width: none;
+  margin: 0 auto 28px;
+  padding: 0;
+  background: transparent;
+}
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.detail-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--background);
+}
+.detail-visual {
+  background: var(--tealSoft);
+  min-width: 0;
+}
+.detail-visual .place-image {
+  height: 100%;
+  min-height: 420px;
+  max-height: 650px;
+  object-fit: cover;
+}
+.detail-intro {
+  padding: 36px;
+  min-width: 0;
+}
+.detail-intro h1 {
+  font-family: var(--heading-font);
+  font-size: clamp(30px, 3.6vw, 46px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: normal;
+  margin: 18px 0;
+  overflow-wrap: anywhere;
+}
+.detail-intro .detail-period {
+  color: var(--goldInk);
+  font-size: 14px;
+}
+.detail-intro .detail-summary {
+  font-size: 16px;
+  line-height: 1.8;
+}
+.detail-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.detail-address svg {
+  width: 18px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.detail-actions {
+  margin: 26px 0;
+  align-items: stretch;
+}
+.detail-actions > * {
+  flex: 1 1 160px;
+  min-height: 50px;
+}
+.detail-language-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.detail-intro .language-options button {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.detail-reading {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  margin-top: 26px;
+  padding: 36px clamp(20px, 6vw, 80px);
+}
+.detail-reading h2 {
+  font-family: var(--heading-font);
+  font-size: 28px;
+  font-weight: 500;
+  margin-top: 0;
+}
+.detail-reading .narration {
+  max-width: 75ch;
+  font-size: 17px;
+  line-height: 2;
+  color: var(--text);
+}
+.footer {
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  padding-top: 24px;
+  padding-bottom: 32px;
+  color: var(--secondary);
+  margin-top: 24px;
+}
+.footer strong {
+  font-family: var(--heading-font);
+  font-size: 18px;
+}
+@media (max-width: 1024px) {
+  .catalog-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 18px;
+  }
+  .detail-overview {
+    grid-template-columns: 1fr;
+  }
+  .detail-visual .place-image {
+    height: 360px;
+    min-height: 0;
+  }
+  .heritage-welcome {
+    gap: 28px;
+  }
+  .nav-inner {
+    gap: 18px;
+  }
+  .navbar nav {
+    gap: 18px;
+  }
+}
+@media (max-width: 720px) {
+  .container {
+    padding: 18px 14px;
+  }
+  .nav-inner {
+    min-height: 76px;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+  }
+  .brand strong {
+    font-size: 18px;
+  }
+  .brand small {
+    font-size: 8px;
+  }
+  .navbar nav {
+    order: 3;
+    display: flex;
+    width: 100%;
+    min-height: 44px;
+    height: auto;
+    gap: 12px;
+    justify-content: space-around;
+    overflow-y: hidden;
+  }
+  .navbar nav a {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .heritage-welcome {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin: 28px 4px 34px;
+  }
+  .heritage-welcome h2 {
+    font-size: 28px;
+  }
+  .panel {
+    padding: 22px 16px;
+    border-radius: 18px;
+    margin-bottom: 22px;
+  }
+  .section-title h2 {
+    font-size: 24px;
+  }
+  .catalog-layout {
+    grid-template-columns: 1fr;
+  }
+  .sort-controls {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .place-card .place-image {
+    height: 160px;
+  }
+  .card-content {
+    padding: 14px;
+  }
+  .card-content h3 {
+    font-size: 16px;
+  }
+  .card-summary {
+    font-size: 13px;
+  }
+  .list-view .card-photo {
+    flex-basis: 115px;
+  }
+  .list-view .place-image {
+    height: 100%;
+  }
+  .detail-intro {
+    padding: 24px 20px;
+  }
+  .detail-visual .place-image {
+    height: 270px;
+  }
+  .detail-reading {
+    padding: 26px 22px;
+    margin-top: 18px;
+  }
+  .detail-reading .narration {
+    font-size: 16px;
+  }
+  .detail-actions > * {
+    flex-basis: 100%;
+  }
+  .language-options {
+    gap: 8px;
+  }
+}
+@media (max-width: 390px) {
+  .brand strong {
+    font-size: 16px;
+  }
+  .brand small {
+    letter-spacing: 0.6px;
+  }
+  .section-title {
+    gap: 8px;
+  }
+  .section-title > a {
+    font-size: 12px;
+  }
+}
+
+/* CHỨC NĂNG: Chip vẫn cuộn bằng chạm/chuột/bàn phím, không thêm thanh kéo thô vào hero. */
+.category-chips::-webkit-scrollbar {
+  display: none;
+}
+
+/* CHỨC NĂNG: Dãy tiện ích gọn, không có những khối lớn lệch chiều cao. */
+.heritage-welcome {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 28px;
+  margin: 28px 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--background);
+}
+.heritage-welcome h2 {
+  font-size: 25px;
+  margin: 8px 0;
+}
+.heritage-welcome p {
+  margin-bottom: 0;
+}
+.heritage-steps {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.place-card .place-image {
+  aspect-ratio: 16 / 10;
+  height: auto;
+  object-fit: cover;
+}
+@media (max-width: 900px) {
+  .hero-intro {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero-visual {
+    min-height: 300px;
+  }
+  .hero-copy {
+    padding: 28px;
+  }
+  .hero h1 {
+    font-size: 36px;
+  }
+  .heritage-welcome {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+@media (max-width: 600px) {
+  .container {
+    padding: 18px 14px;
+  }
+  .hero {
+    border-radius: 20px;
+  }
+  .hero-intro {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .hero-visual {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+  .hero-copy {
+    padding: 24px 20px;
+  }
+  .hero h1 {
+    font-size: 32px;
+  }
+  .hero .hero-description {
+    font-size: 15px;
+  }
+  .hero-tools {
+    padding: 18px 16px;
+  }
+  .hero-quick-actions {
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .hero-quick-actions .button {
+    flex: 1 1 130px;
+    padding: 12px;
+    font-size: 14px;
+  }
+  .hero-search {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .hero-search > svg {
+    display: none;
+  }
+  .hero-search input {
+    flex: 1 1 100%;
+    width: 100%;
+    padding: 12px;
+  }
+  .hero-search button {
+    width: 100%;
+  }
+  .heritage-welcome {
+    padding: 20px;
+  }
+  .heritage-welcome h2 {
+    font-size: 23px;
+  }
+  .list-view .place-image {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
+.hero-tools .hero-search-error {
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 14px;
+}

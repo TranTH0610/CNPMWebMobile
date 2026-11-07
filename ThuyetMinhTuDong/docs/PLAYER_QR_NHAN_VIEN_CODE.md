@@ -2,9 +2,9 @@
 
 Hướng dẫn và bảng file: PLAYER_QR_NHAN_VIEN.md.
 
-## 1. SỬA — apps/web/src/components/JourneyPlayer.tsx
+## 1. SỬA — apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\JourneyPlayer.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\TrinhNgheThuyetMinh.tsx
 
 ```tsx
 /**
@@ -103,9 +103,9 @@ export function JourneyPlayer() {
 }
 ```
 
-## 2. SỬA — apps/web/src/styles/player.css
+## 2. SỬA — apps/web/src/features/journey/styles/GiaoDienTrinhNghe.css
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\player.css
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\GiaoDienTrinhNghe.css
 
 ```css
 /* FILE NÀY LÀM GÌ: Trình nghe web cùng cấu trúc và token màu với native.
@@ -169,9 +169,9 @@ export function JourneyPlayer() {
 .leaflet-marker-icon button { min-height: 30px; box-shadow: none; }
 ```
 
-## 3. SỬA — apps/mobile/src/components/JourneyPlayer.tsx
+## 3. SỬA — apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\JourneyPlayer.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\TrinhNgheThuyetMinh.tsx
 
 ```tsx
 /**
@@ -321,14 +321,14 @@ const styles = StyleSheet.create({
 })
 ```
 
-## 4. SỬA — apps/web/src/components/Navbar.tsx
+## 4. SỬA — apps/web/src/shared/layouts/ThanhDieuHuong.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\Navbar.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\ThanhDieuHuong.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Thanh điều hướng web, logo, chọn ngôn ngữ và liên kết QR chung.
- * Vị trí: apps/web/src/components/Navbar.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/layouts/ThanhDieuHuong.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -364,14 +364,14 @@ export function Navbar() { const t = useText(); return (<header className="navba
       </header>) }
 ```
 
-## 5. SỬA — apps/web/src/navigation/AppRoutes.tsx
+## 5. SỬA — apps/web/src/app/DinhTuyenDuKhach.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\navigation\AppRoutes.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\navigation\DinhTuyenDuKhach.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bảng route web; không chứa code UI của từng trang.
- * Vị trí: apps/web/src/navigation/AppRoutes.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/app/DinhTuyenDuKhach.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -541,14 +541,14 @@ export default defineConfig(({ mode }) => ({
 }
 ```
 
-## 8. SỬA — apps/mobile/src/screens/HomeScreen.tsx
+## 8. SỬA — apps/mobile/src/features/explore/screens/ManKhamPha.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\HomeScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManKhamPha.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị Khám phá, carousel và danh sách có tìm kiếm/lọc/kéo làm mới.
- * Vị trí: apps/mobile/src/screens/HomeScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/explore/screens/ManKhamPha.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -974,14 +974,14 @@ export default function HomeScreen({
 }
 ```
 
-## 9. SỬA — apps/mobile/src/screens/SettingsScreen.tsx
+## 9. SỬA — apps/mobile/src/features/settings/screens/ManCaiDat.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\SettingsScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManCaiDat.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị chọn ngôn ngữ; không cung cấp QR hoặc chia sẻ liên kết cho du khách.
- * Vị trí: apps/mobile/src/screens/SettingsScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/settings/screens/ManCaiDat.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1007,14 +1007,14 @@ export default function SettingsScreen() {
 }
 ```
 
-## 10. SỬA — apps/mobile/src/navigation/RootNavigator.tsx
+## 10. SỬA — apps/mobile/src/navigation/DieuHuongGoc.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\RootNavigator.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\DieuHuongGoc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app.
- * Vị trí: apps/mobile/src/navigation/RootNavigator.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/DieuHuongGoc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1094,14 +1094,14 @@ export default function RootNavigator() {
 }
 ```
 
-## 11. SỬA — apps/mobile/src/navigation/types.ts
+## 11. SỬA — apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\types.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\KieuDieuHuongDuKhach.ts
 
 ```typescript
 /**
  * FILE NÀY LÀM GÌ: Tách riêng một phần giao diện để dễ tìm và bảo trì.
- * Vị trí: apps/mobile/src/navigation/types.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 

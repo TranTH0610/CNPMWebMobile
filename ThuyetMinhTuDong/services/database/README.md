@@ -1,3 +1,90 @@
+# Đọc thư mục database theo chức năng
+
+Thư mục giữ nguyên vị trí. Các file đã được đặt tên tiếng Việt không dấu; **database đang chạy vẫn giữ nguyên 11 bảng, tên cột và dữ liệu**. Đổi tên file SQL không có nghĩa là đã chạy file đó lên SQL Server.
+
+## Bắt đầu từ đâu?
+
+| Bạn muốn tìm gì? | Mở file nào? | Tìm hàm/khối nào? |
+|---|---|---|
+| Cấu hình máy chủ và database | `CauHinhSqlServer.cjs` | `databaseName`, `driverConfig` |
+| Pool kết nối SQL | `KetNoiSqlServer.cjs` | `connect`, `close` |
+| Bộ thao tác API gọi để dùng SQL | `KhoDuLieuSql.cjs` | `createSqlRepository` |
+| Ghi nhận và chống trùng lượt QR | `KhoDuLieuSql.cjs` | `gateEntry` |
+| Tổng lượt QR hôm nay | `KhoDuLieuSql.cjs` | `gateStatistics` |
+| Gia hạn phiên đang hoạt động | `KhoDuLieuSql.cjs` | `heartbeat` |
+| Đếm phiên web/mobile còn hoạt động | `KhoDuLieuSql.cjs` | `snapshot` |
+| Kết thúc/dọn phiên | `KhoDuLieuSql.cjs` | `end`, `prune` |
+| Đọc các hàng SQL thành hồ sơ di tích | `catalog/DocDiTichTuSql.cjs` | `readDocument` |
+| Lưu hồ sơ di tích xuống SQL | `catalog/GhiDiTichVaoSql.cjs` | `writeDocument` |
+| So sánh hàng cũ/mới rồi thêm/sửa/xóa | `catalog/ChuanBiThayDoiDuLieu.cjs` | `putRow`, `deleteRow`, `applyChanges` |
+| Truy vấn có tham số và cấp mã | `catalog/TruyVanVaCapMa.cjs` | `rows`, `nextCode` |
+| Lưu byte ảnh/audio, đọc để nghe/xem/tua | `LuuVaDocTepSql.cjs` | `resolveMedia`, `metadata`, `bytes`, `allowed` |
+| Định nghĩa 11 bảng và ràng buộc | `CauTrucMuoiMotBang.sql` | `CREATE TABLE`, `CREATE TRIGGER` |
+| Xem dữ liệu bằng SSMS | `XemDuLieuVaThongKe.sql` | Các câu `SELECT` theo bảng |
+
+## Sơ đồ luồng dữ liệu
+
+```text
+Web / Mobile
+    ↓ gọi HTTP
+services/catalog/MayChuApi.cjs hoặc services/presence/MayChuApi.cjs
+    ↓ gọi các thao tác repository
+KhoDuLieuSql.cjs
+    ├── QR / phiên: truy vấn bảng LuotTruyCapQR / PhienHoatDong
+    └── Di tích: AnhXaMuoiMotBang.cjs
+            ├── catalog/DocDiTichTuSql.cjs
+            └── catalog/GhiDiTichVaoSql.cjs
+                    ├── catalog/ChuanBiThayDoiDuLieu.cjs
+                    └── LuuVaDocTepSql.cjs
+    ↓ cùng dùng pool
+KetNoiSqlServer.cjs ← CauHinhSqlServer.cjs
+    ↓
+SQL Server
+```
+
+## Cây thư mục có chú thích
+
+```text
+database/
+├── CauHinhSqlServer.cjs             Đọc cấu hình SQL ở phía API
+├── KetNoiSqlServer.cjs              Tạo/dùng lại/đóng pool kết nối
+├── KhoDuLieuSql.cjs                 Thao tác di tích, QR và phiên hoạt động
+├── AnhXaMuoiMotBang.cjs             Điểm xuất chung của lớp đọc/ghi di tích
+├── ChuyenDoiMaDuLieu.cjs            Chuyển mã SQL/API và mã danh mục/khu vực
+├── LuuVaDocTepSql.cjs               Lưu/đọc byte ảnh và audio trong SQL
+├── CauTrucMuoiMotBang.sql           11 bảng, sequence, khóa và ràng buộc
+├── XemDuLieuVaThongKe.sql           SELECT xem dữ liệu và thống kê
+├── ChayNangCapDatabase.cjs          Điểm chạy lệnh db:init
+├── ChuyenSangMuoiMotBang.cjs        Migration và đối chiếu dữ liệu cũ/mới
+├── DocDuLieuPhienBanCu.cjs          Đọc cấu trúc cũ để chuyển đổi
+├── NhapDuLieuKhoiTao.cjs            Công cụ nhập dữ liệu ban đầu
+├── DauMoiTuongThichDuLieu.cjs       Lớp xuất tương thích còn được mã nguồn dùng
+├── CanhBaoNangCapTepCu.cjs          Chặn chạy nhầm migration tệp cũ
+├── CauTrucTepPhienBanCu.sql         Thông báo hướng dẫn thay cho schema tệp cũ
+├── HoTroKiemThuDatabase.cjs         Tạo/dọn database kiểm thử riêng
+├── KiemThuRangBuocDatabase.test.cjs  Kiểm thử dữ liệu và các ràng buộc
+├── KiemThuTepTaiNguyen.test.cjs     Kiểm thử byte ảnh/audio và quyền tải
+├── catalog/
+│   ├── DocDiTichTuSql.cjs           Đọc hồ sơ di tích
+│   ├── GhiDiTichVaoSql.cjs          Ghi hồ sơ di tích
+│   ├── ChuanBiThayDoiDuLieu.cjs     Áp dụng khác biệt giữa hàng cũ/mới
+│   └── TruyVanVaCapMa.cjs          Truy vấn và lấy số sequence
+└── README.md                       Hướng dẫn bạn đang đọc
+```
+
+Các file có chữ “cũ” vẫn giữ để migration hoặc chặn chạy nhầm; chúng không phải một database thứ hai. Không chạy `db:init` chỉ vì đổi tên file. File `.env.local` vẫn ở `services/`, không chuyển vào giao diện và không đưa mật khẩu lên GitHub.
+
+## Cách tra bằng mã chức năng
+
+- `Ctrl+Shift+F` → `[DATABASE]`: code SQL/kết nối/lưu trữ.
+- `[TRUY-CAP-QR]`: ghi nhận QR.
+- `[PHIEN-HOAT-DONG]`: heartbeat và kết thúc phiên.
+- `[THONG-KE]`: tính số liệu hiển thị trên quản trị.
+
+Phần chi tiết 11 bảng và ràng buộc hiện có được giữ ở dưới.
+
+---
+
 # SQL Server: cấu trúc cuối 11 bảng nghiệp vụ
 
 Database ứng dụng: `HueGuideDemo`. Dữ liệu kiểm thử nằm trong database riêng
@@ -120,6 +207,6 @@ npm run lint
 npm run typecheck
 ```
 
-Mở show-data.sql trong SSMS để xem dữ liệu, FK, CHECK và các mã mới.
+Mở XemDuLieuVaThongKe.sql trong SSMS để xem dữ liệu, FK, CHECK và các mã mới.
 11 bảng không cung cấp xác thực người dùng. Việc bảo vệ API quản trị vẫn là
 phần độc lập, không tự thêm bảng tài khoản hoặc cơ chế đăng nhập trong thay đổi này.

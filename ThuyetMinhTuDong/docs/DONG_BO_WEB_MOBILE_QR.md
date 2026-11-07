@@ -48,29 +48,29 @@ Sửa .env cần restart Expo --clear. Nội dung di tích vẫn dùng service c
 
 | File/folder | Vai trò |
 |---|---|
-| packages/visitor-core/src/react.tsx | Provider du khách; đã bỏ state và hàm yêu thích |
-| packages/visitor-core/src/uiMessages.ts | Bộ chữ 5 ngôn ngữ, bỏ key yêu thích không dùng |
-| apps/web/src/components/PlaceCard.tsx | Thẻ web không tim, hiển thị địa chỉ bản dịch |
-| apps/web/src/components/Catalogue.tsx | Bộ lọc đồng bộ checkbox và chip |
-| apps/web/src/pages/HomePage.tsx | Truyền lựa chọn danh mục và nhận thay đổi từ sidebar |
-| apps/web/src/components/Icon.tsx, styles/index.css | Bỏ icon/style yêu thích |
-| apps/mobile/src/components/PlaceCard.tsx | Thẻ native không tim, mở chi tiết và địa chỉ |
-| apps/mobile/src/components/SearchBar.tsx | Gửi bằng bàn phím, không tự mở màn lúc focus |
-| apps/mobile/src/screens/HomeScreen.tsx | Kiểm tra ô trống, tìm kiếm, lọc danh mục/nổi bật/khu vực |
-| apps/mobile/src/navigation/MainTabs.tsx | Chỉ còn Khám phá, Bản đồ, Cài đặt |
-| apps/mobile/src/styles/explore.ts | Style native, bỏ style nút tim |
+| packages/visitor-core/src/TrangThaiReact.tsx | Provider du khách; đã bỏ state và hàm yêu thích |
+| packages/visitor-core/src/BanDichThanhPhan.ts | Bộ chữ 5 ngôn ngữ, bỏ key yêu thích không dùng |
+| apps/web/src/features/explore/components/TheDiTich.tsx | Thẻ web không tim, hiển thị địa chỉ bản dịch |
+| apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx | Bộ lọc đồng bộ checkbox và chip |
+| apps/web/src/features/explore/pages/TrangChu.tsx | Truyền lựa chọn danh mục và nhận thay đổi từ sidebar |
+| apps/web/src/shared/components/BieuTuong.tsx, styles/GiaoDienNen.css | Bỏ icon/style yêu thích |
+| apps/mobile/src/features/explore/components/TheDiTich.tsx | Thẻ native không tim, mở chi tiết và địa chỉ |
+| apps/mobile/src/features/explore/components/OTimKiem.tsx | Gửi bằng bàn phím, không tự mở màn lúc focus |
+| apps/mobile/src/features/explore/screens/ManKhamPha.tsx | Kiểm tra ô trống, tìm kiếm, lọc danh mục/nổi bật/khu vực |
+| apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx | Chỉ còn Khám phá, Bản đồ, Cài đặt |
+| apps/mobile/src/features/explore/GiaoDienKhamPha.ts | Style native, bỏ style nút tim |
 | apps/mobile/src/screens/PlaceholderScreen.tsx | ĐÃ XÓA vì chỉ phục vụ tab Yêu thích |
-| apps/mobile/App.tsx, navigation/AdminApp.tsx | Chọn root du khách/quản lý theo cấu hình chạy/build |
-| apps/mobile/src/navigation/RootNavigator.tsx, types.ts | Stack du khách không đăng ký Admin |
-| apps/mobile/src/screens/SettingsScreen.tsx | Không có nút vào Admin |
-| apps/mobile/src/navigation/AdminNavigator.tsx | Stack riêng của bản quản lý |
-| apps/mobile/src/screens/admin/DashboardScreen.tsx | Không có nút quay sang bản du khách, đọc URL thống kê nội bộ |
-| apps/mobile/src/services/presence.ts | Tách URL heartbeat visitor và statistics admin |
-| scripts/start-mobile-admin.cjs, apps/mobile/package.json | Lệnh Expo quản lý riêng trên Windows và các hệ điều hành khác |
-| scripts/create-public-qr.cjs | Xác minh website trước khi ghi QR và cập nhật URL hai app |
-| scripts/start-public-demo.cjs | Build, RAM server, preview và tunnel HTTPS |
-| scripts/qr-http.cjs | Kiểm tra HTTPS/DNS dùng chung, giữ xác minh TLS |
-| scripts/public-qr.test.cjs | Test link hợp lệ, giữ .env và từ chối website lỗi |
+| apps/mobile/App.tsx, navigation/UngDungQuanTri.tsx | Chọn root du khách/quản lý theo cấu hình chạy/build |
+| apps/mobile/src/navigation/DieuHuongGoc.tsx, KieuDieuHuongDuKhach.ts | Stack du khách không đăng ký Admin |
+| apps/mobile/src/features/settings/screens/ManCaiDat.tsx | Không có nút vào Admin |
+| apps/mobile/src/navigation/DieuHuongQuanTri.tsx | Stack riêng của bản quản lý |
+| apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx | Không có nút quay sang bản du khách, đọc URL thống kê nội bộ |
+| apps/mobile/src/features/presence/services/PhienHoatDong.ts | Tách URL heartbeat visitor và statistics admin |
+| scripts/ChayMobileQuanTri.cjs, apps/mobile/package.json | Lệnh Expo quản lý riêng trên Windows và các hệ điều hành khác |
+| scripts/TaoMaQRCongKhai.cjs | Xác minh website trước khi ghi QR và cập nhật URL hai app |
+| scripts/ChayDemoCongKhai.cjs | Build, RAM server, preview và tunnel HTTPS |
+| scripts/KetNoiHttpsQR.cjs | Kiểm tra HTTPS/DNS dùng chung, giữ xác minh TLS |
+| scripts/KiemThuQRCongKhai.test.cjs | Test link hợp lệ, giữ .env và từ chối website lỗi |
 | .qr-output/ | PNG, URL và trạng thái/log phiên tunnel; không commit vào Git |
 
 ## Kiểm tra đã chạy

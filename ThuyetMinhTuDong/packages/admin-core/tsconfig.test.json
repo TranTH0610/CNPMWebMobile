@@ -9,9 +9,9 @@
     "types": []
   },
   "include": [
-    "src/domain/models.ts",
-    "src/domain/contracts.ts",
+    "src/domain/KieuDuLieuQuanTri.ts",
+    "src/domain/HopDongDichVu.ts",
     "src/services/mockService.ts",
-    "src/domain/validation.ts"
+    "src/domain/KiemTraDuLieu.ts"
   ]
 }

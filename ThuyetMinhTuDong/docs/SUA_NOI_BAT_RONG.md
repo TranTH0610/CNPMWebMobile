@@ -14,10 +14,10 @@ Nguyên nhân: bộ lọc chọn Công trình di tích tìm thấy Kỳ Đài nh
 
 | File | Vai trò |
 |---|---|
-| apps/web/src/pages/HomePage.tsx | Empty state, đo overflow và trạng thái nút cuộn |
-| apps/mobile/src/screens/HomeScreen.tsx | Empty state, loading/error và reset slide khi đổi lọc |
-| packages/visitor-core/src/uiMessages.ts | Hai key featuredEmpty/featuredEmptyHint đủ 5 ngôn ngữ |
-| apps/web/src/styles/index.css | Khối thông báo gọn, responsive, không giữ khung carousel trắng |
+| apps/web/src/features/explore/pages/TrangChu.tsx | Empty state, đo overflow và trạng thái nút cuộn |
+| apps/mobile/src/features/explore/screens/ManKhamPha.tsx | Empty state, loading/error và reset slide khi đổi lọc |
+| packages/visitor-core/src/BanDichThanhPhan.ts | Hai key featuredEmpty/featuredEmptyHint đủ 5 ngôn ngữ |
+| apps/web/src/shared/styles/GiaoDienNen.css | Khối thông báo gọn, responsive, không giữ khung carousel trắng |
 
 ## Chạy và kiểm tra
 

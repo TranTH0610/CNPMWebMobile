@@ -1,3 +1,5 @@
+> Tài liệu lưu trữ của phiên bản cũ, không chép đè lên nguồn hiện tại. Xem [cấu trúc sau refactor](./HuongDanCodeDeBaoTri.md).
+
 # Toàn bộ code Admin FE để copy theo thứ tự
 
 Đọc ADMIN_UC12_UC17.md trước. Mỗi mục bên dưới là file đầy đủ; TẠO MỚI hoặc SỬA được ghi rõ. Không copy đè file khác phiên bản nếu bạn đã sửa riêng. Không có dấu ... thay code. JSON không thêm comment vì sẽ sai cú pháp.
@@ -15,7 +17,7 @@
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./react": "./src/react.tsx"
+    "./react": "./src/TrangThaiReact.tsx"
   },
   "dependencies": {
     "@travelguide/visitor-core": "*"
@@ -26,7 +28,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx",
-    "test": "node ../../scripts/build-admin-tests.cjs && node --test tests/admin.test.cjs"
+    "test": "node ../../scripts/DongGoiKiemThuQuanTri.cjs && node --test tests/KiemThuQuanTri.test.cjs"
   }
 }
 ```
@@ -72,17 +74,17 @@
     "types": []
   },
   "include": [
-    "src/models.ts",
-    "src/contracts.ts",
+    "src/KieuDuLieuQuanTri.ts",
+    "src/HopDongDichVu.ts",
     "src/mockService.ts",
-    "src/validation.ts"
+    "src/KiemTraDuLieu.ts"
   ]
 }
 ```
 
-## 4. TẠO MỚI — packages/admin-core/src/models.ts
+## 4. TẠO MỚI — packages/admin-core/src/KieuDuLieuQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\models.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\KieuDuLieuQuanTri.ts
 
 ```ts
 /**
@@ -105,9 +107,9 @@ export type PreparedText = PublishedText
 /* CÁCH KIỂM TRA: TypeScript phải chặn workflow/ngôn ngữ lạ; published và record là hai bản riêng. */
 ```
 
-## 5. TẠO MỚI — packages/admin-core/src/contracts.ts
+## 5. TẠO MỚI — packages/admin-core/src/HopDongDichVu.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\contracts.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\HopDongDichVu.ts
 
 ```ts
 /**
@@ -139,9 +141,9 @@ export interface AdminService {
 /* CÁCH KIỂM TRA: HTTP adapter phải thực hiện cùng interface; màn hình không thay đổi khi đổi nguồn. */
 ```
 
-## 6. TẠO MỚI — packages/admin-core/src/validation.ts
+## 6. TẠO MỚI — packages/admin-core/src/KiemTraDuLieu.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\validation.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\KiemTraDuLieu.ts
 
 ```ts
 /**
@@ -389,9 +391,9 @@ export function createMockAdminService(storage: StoragePort): AdminService {
  * hai lệnh cùng revision chỉ lệnh đầu thành công; storage.write lỗi không đổi cache. */
 ```
 
-## 8. TẠO MỚI — packages/admin-core/src/messages.ts
+## 8. TẠO MỚI — packages/admin-core/src/BanDichGiaoDien.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\messages.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\BanDichGiaoDien.ts
 
 ```ts
 /** FILE NÀY LÀM GÌ: Chữ Admin đủ năm ngôn ngữ dùng chung mobile/web.
@@ -892,7 +894,7 @@ export const adminMessages: Record<Language, Record<AdminTextKey, string>> = { v
 /* CÁCH KIỂM TRA: Đổi đủ năm ngôn ngữ, mọi nhãn Admin đổi cùng lựa chọn du khách. */
 ```
 
-## 9. TẠO MỚI — packages/admin-core/src/index.ts
+## 9. TẠO MỚI — packages/admin-core/src/XuatCongKhai.ts
 
 Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\index.ts
 
@@ -908,9 +910,9 @@ export * from './mockService'
 export * from './httpService'
 ```
 
-## 10. TẠO MỚI — packages/admin-core/src/react.tsx
+## 10. TẠO MỚI — packages/admin-core/src/TrangThaiReact.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\react.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\TrangThaiReact.tsx
 
 ```tsx
 /**
@@ -1037,7 +1039,7 @@ apps/web/static/visitor-config.json
     "ios": "expo start --ios",
     "lint": "eslint App.tsx src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "start:admin": "node ../../scripts/start-mobile-admin.cjs"
+    "start:admin": "node ../../scripts/ChayMobileQuanTri.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -1076,9 +1078,9 @@ apps/web/static/visitor-config.json
 }
 ```
 
-## 13. TẠO MỚI — apps/mobile/src/components/admin/AdminUI.tsx
+## 13. TẠO MỚI — apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\AdminUI.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\ThanhPhanQuanTri.tsx
 
 ```tsx
 /**
@@ -1228,9 +1230,9 @@ export function AudioPreview({url,title}:{url:string;title:string}) {
 /* CÁCH KIỂM TRA: Rời màn dừng preview; input có nhãn; nút dễ bấm, không chồng audio du khách. */
 ```
 
-## 14. TẠO MỚI — apps/mobile/src/components/admin/LocalMediaPicker.tsx
+## 14. TẠO MỚI — apps/mobile/src/features/admin/shared/components/ChonTepTuThietBi.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\LocalMediaPicker.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\ChonTepTuThietBi.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Chọn ảnh/bản thu từ thiết bị, lưu cục bộ cho FE demo.
@@ -1267,9 +1269,9 @@ export function LocalMediaPicker({kind,onPick}:{kind:'image'|'audio';onPick:(val
 /* CÁCH KIỂM TRA: Hủy không lỗi; tệp >1MB bị chặn; lưu bản nháp rồi mở lại vẫn có file. */
 ```
 
-## 15. TẠO MỚI — apps/mobile/src/navigation/AdminNavigator.tsx
+## 15. TẠO MỚI — apps/mobile/src/navigation/DieuHuongQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\AdminNavigator.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\DieuHuongQuanTri.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Stack Admin native không đăng nhập, tách khỏi các màn visitor.
@@ -1297,14 +1299,14 @@ export function AdminNavigator(){const t=useAdminText(),{engine}=useJourney();us
 /* CÁCH KIỂM TRA: start:admin mở quản lý; bản du khách không có route Admin. */
 ```
 
-## 16. SỬA — apps/mobile/src/navigation/RootNavigator.tsx
+## 16. SỬA — apps/mobile/src/navigation/DieuHuongGoc.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\RootNavigator.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\DieuHuongGoc.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Stack điều hướng mobile, giữ một NavigationContainer và một trình phát toàn app.
- * Vị trí: apps/mobile/src/navigation/RootNavigator.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/DieuHuongGoc.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1384,9 +1386,9 @@ export default function RootNavigator() {
 }
 ```
 
-## 17. TẠO MỚI — apps/mobile/src/navigation/adminTypes.ts
+## 17. TẠO MỚI — apps/mobile/src/navigation/KieuDieuHuongQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\adminTypes.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\KieuDieuHuongQuanTri.ts
 
 ```ts
 /** FILE NÀY LÀM GÌ: Kiểu route Admin native; AdminNavigator và màn hình dùng.
@@ -1395,14 +1397,14 @@ export type AdminStack = { Dashboard: undefined; AdminPlaces: undefined; PlaceFo
 /* CÁCH KIỂM TRA: Content thiếu id phải báo TypeScript. */
 ```
 
-## 18. SỬA — apps/mobile/src/navigation/types.ts
+## 18. SỬA — apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\types.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\KieuDieuHuongDuKhach.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ: Tách riêng một phần giao diện để dễ tìm và bảo trì.
- * Vị trí: apps/mobile/src/navigation/types.ts. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1423,14 +1425,14 @@ export type VisitorStack = {
 }
 ```
 
-## 19. SỬA — apps/mobile/src/providers/AppProviders.tsx
+## 19. SỬA — apps/mobile/src/app/TrangThaiUngDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\providers\AppProviders.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\providers\TrangThaiUngDung.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Ghép các provider mobile một lần tại gốc, giữ nguyên khóa lưu ngôn ngữ/tiến độ.
- * Vị trí: apps/mobile/src/providers/AppProviders.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/app/TrangThaiUngDung.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1467,14 +1469,14 @@ export function AppProviders({ children }: { children: ReactNode }) {
 }
 ```
 
-## 20. SỬA — apps/mobile/src/screens/DetailScreen.tsx
+## 20. SỬA — apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\DetailScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManChiTietDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị bài đọc đúng ngôn ngữ, nút nghe và nút mở bản đồ của địa điểm.
- * Vị trí: apps/mobile/src/screens/DetailScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -1644,14 +1646,14 @@ export default function DetailScreen({
 }
 ```
 
-## 21. SỬA — apps/mobile/src/screens/SettingsScreen.tsx
+## 21. SỬA — apps/mobile/src/features/settings/screens/ManCaiDat.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\SettingsScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\ManCaiDat.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Hiển thị chọn ngôn ngữ; không cung cấp QR hoặc chia sẻ liên kết cho du khách.
- * Vị trí: apps/mobile/src/screens/SettingsScreen.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/mobile/src/features/settings/screens/ManCaiDat.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -1677,9 +1679,9 @@ export default function SettingsScreen() {
 }
 ```
 
-## 22. TẠO MỚI — apps/mobile/src/screens/admin/ContentEditorScreen.tsx
+## 22. TẠO MỚI — apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ContentEditorScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManBienTapNoiDung.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Biên tập 5 ngôn ngữ native, audio URL và dịch/TTS demo.
@@ -1741,9 +1743,9 @@ function ContentForm({place,language,dirty,setDirty}:{place:ManagedPlace;languag
 /* CÁCH KIỂM TRA: Lưu body mới bỏ audio cũ; tác vụ sai revision báo conflict, không ghi đè. */
 ```
 
-## 23. TẠO MỚI — apps/mobile/src/screens/admin/DashboardScreen.tsx
+## 23. TẠO MỚI — apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\DashboardScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManTongQuan.tsx
 
 ```tsx
 /**
@@ -1797,9 +1799,9 @@ export function DashboardScreen({navigation}:NativeStackScreenProps<AdminStack,'
 /* CÁCH KIỂM TRA: Bốn ô không tràn; hai mục thao tác mở đúng màn; mất RAM server hiện —/thử lại. */
 ```
 
-## 24. TẠO MỚI — apps/mobile/src/screens/admin/PlaceFormScreen.tsx
+## 24. TẠO MỚI — apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\PlaceFormScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManThemSuaDiTich.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Metadata native tương đương biểu mẫu web.
@@ -1879,9 +1881,9 @@ function Form({initial,navigation}:{initial?:ManagedPlace;navigation:Props['navi
 /* CÁCH KIỂM TRA: Back form bẩn có hỏi; lưu lỗi giữ giá trị; thêm mới không xuất hiện public trước duyệt. */
 ```
 
-## 25. TẠO MỚI — apps/mobile/src/screens/admin/PlacesScreen.tsx
+## 25. TẠO MỚI — apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\PlacesScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManDanhSachDiTich.tsx
 
 ```tsx
 /**
@@ -1941,9 +1943,9 @@ export function AdminPlacesScreen({navigation}:NativeStackScreenProps<AdminStack
 Đã gỡ màn QR admin: apps/mobile/src/screens/admin/QrScreen.tsx
 
 
-## 27. TẠO MỚI — apps/mobile/src/screens/admin/ReviewsScreen.tsx
+## 27. TẠO MỚI — apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ReviewsScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManDanhSachKiemDuyet.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Danh sách chờ duyệt, so sánh năm bản và công bố native.
@@ -1996,9 +1998,9 @@ function Review({place}:{place:ManagedPlace}){
 /* CÁCH KIỂM TRA: Duyệt chưa public; sửa sau duyệt chặn publish; xác nhận mới công bố. */
 ```
 
-## 28. TẠO MỚI — apps/mobile/src/services/admin/services.ts
+## 28. TẠO MỚI — apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\admin\services.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\admin\KetNoiDichVuQuanTri.ts
 
 ```ts
 /**
@@ -2031,7 +2033,7 @@ export const publicCatalog = createCatalog(()=>publicService.published(),publicS
   "private": true,
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "prebuild": "node ../../scripts/generate-app-links.cjs --if-configured",
+    "prebuild": "node ../../scripts/TaoLienKetUngDung.cjs --if-configured",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
@@ -2065,14 +2067,14 @@ export const publicCatalog = createCatalog(()=>publicService.published(),publicS
 }
 ```
 
-## 30. SỬA — apps/web/src/components/Navbar.tsx
+## 30. SỬA — apps/web/src/shared/layouts/ThanhDieuHuong.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\Navbar.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\ThanhDieuHuong.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Thanh điều hướng web, logo, chọn ngôn ngữ và liên kết QR chung.
- * Vị trí: apps/web/src/components/Navbar.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/shared/layouts/ThanhDieuHuong.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2108,9 +2110,9 @@ export function Navbar() { const t = useText(); return (<header className="navba
       </header>) }
 ```
 
-## 31. TẠO MỚI — apps/web/src/components/admin/AdminUI.tsx
+## 31. TẠO MỚI — apps/web/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\AdminUI.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\ThanhPhanQuanTri.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Thành phần và hooks nhỏ dùng lại trong Admin Web.
@@ -2156,9 +2158,9 @@ export function useConfirmation() {
 }
 ```
 
-## 32. TẠO MỚI — apps/web/src/components/admin/LocalMediaPicker.tsx
+## 32. TẠO MỚI — apps/web/src/features/admin/shared/components/ChonTepTuThietBi.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\LocalMediaPicker.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\components\admin\ChonTepTuThietBi.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Chọn tệp local cho bản FE, không giả gọi upload server.
@@ -2180,9 +2182,9 @@ export function LocalMediaPicker({ kind,onPick }: {kind:'image'|'audio';onPick:(
 /* CÁCH KIỂM TRA: Tệp >1MB bị từ chối; ảnh/audio chọn được giữ sau tải lại khi đã lưu. */
 ```
 
-## 33. TẠO MỚI — apps/web/src/layouts/AdminLayout.tsx
+## 33. TẠO MỚI — apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\layouts\AdminLayout.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\layouts\BoCucQuanTri.tsx
 
 ```tsx
 /**
@@ -2197,7 +2199,7 @@ import { NavLink, Link, Outlet, useLocation } from 'react-router-dom'
 import { useAdmin, useAdminText } from '@travelguide/admin-core/react'
 import { LanguagePicker } from '../components/LanguagePicker'
 import { AdminIcon, type AdminIconName } from '../components/admin/AdminIcon'
-import '../styles/admin.css'
+import '../styles/GiaoDienQuanTri.css'
 export function AdminLayout() {
  const t = useAdminText(), state = useAdmin(), { engine } = useJourney(), { language } = useVisitor(), { pathname } = useLocation()
  // CHỨC NĂNG: Dừng tiếng du khách khi vào quản lý và cập nhật ngôn ngữ tài liệu.
@@ -2248,8 +2250,8 @@ import { VisitorProvider } from '@travelguide/visitor-core/react'
 import { colors, spacing } from '../../../packages/ui-tokens/colors'
 import { storage } from './services/platform'
 import App from './App'
-import './styles/index.css'
-import './styles/player.css'
+import './styles/GiaoDienNen.css'
+import './styles/GiaoDienTrinhNghe.css'
 
 // CHỨC NĂNG: Cho CSS dùng chung token với mobile.
 // XỬ LÝ: Màu là chuỗi; spacing được đổi thành đơn vị px.
@@ -2289,9 +2291,9 @@ ReactDOM.createRoot(root).render(
 )
 ```
 
-## 35. TẠO MỚI — apps/web/src/navigation/AdminRoutes.tsx
+## 35. TẠO MỚI — apps/web/src/app/DinhTuyenQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\navigation\AdminRoutes.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\navigation\DinhTuyenQuanTri.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Cây route Admin Web, không có route đăng nhập theo phạm vi FE.
@@ -2314,14 +2316,14 @@ export function AdminRoutes() { return <Routes><Route element={<AdminLayout />}>
 /* CÁCH KIỂM TRA: /admin vào thẳng; refresh /admin/places/ID/content vẫn mở đúng màn. */
 ```
 
-## 36. SỬA — apps/web/src/navigation/AppRoutes.tsx
+## 36. SỬA — apps/web/src/app/DinhTuyenDuKhach.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\navigation\AppRoutes.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\navigation\DinhTuyenDuKhach.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Bảng route web; không chứa code UI của từng trang.
- * Vị trí: apps/web/src/navigation/AppRoutes.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/app/DinhTuyenDuKhach.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 
@@ -2353,14 +2355,14 @@ export function AppRoutes() {
 }
 ```
 
-## 37. SỬA — apps/web/src/pages/DetailPage.tsx
+## 37. SỬA — apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\DetailPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\TrangChiTietDiTich.tsx
 
 ```tsx
 /**
  * FILE NÀY LÀM GÌ: Trang bài đọc, đổi ngôn ngữ, nghe thuyết minh và mở marker địa điểm.
- * Vị trí: apps/web/src/pages/DetailPage.tsx. Liên quan UC01–UC11.
+ * Vị trí: apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx. Liên quan UC01–UC11.
  * Phụ thuộc các import bên dưới; nghiệp vụ chung nằm trong visitor-core.
  */
 import { PLACE_PHOTOS } from '@travelguide/visitor-core'
@@ -2538,9 +2540,9 @@ export function DetailPage() {
 }
 ```
 
-## 38. TẠO MỚI — apps/web/src/pages/admin/ContentEditorPage.tsx
+## 38. TẠO MỚI — apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ContentEditorPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangBienTapNoiDung.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Biên tập năm ngôn ngữ, bản thu URL, dịch/TTS demo và gửi duyệt.
@@ -2606,9 +2608,9 @@ function ContentForm({ place, language, dirty, setDirty }: { place: ManagedPlace
 /* CÁCH KIỂM TRA: Lưu trước khi dịch/tạo audio; đổi tab khi bẩn có hỏi; sửa body xóa audio cũ. */
 ```
 
-## 39. TẠO MỚI — apps/web/src/pages/admin/DashboardPage.tsx
+## 39. TẠO MỚI — apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\DashboardPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangTongQuan.tsx
 
 ```tsx
 /**
@@ -2656,9 +2658,9 @@ export function DashboardPage() {
 /* CÁCH KIỂM TRA: Bốn chỉ số đúng; liên kết mở đúng màn; không còn nút reset; tắt RAM hiện lỗi. */
 ```
 
-## 40. TẠO MỚI — apps/web/src/pages/admin/PlaceFormPage.tsx
+## 40. TẠO MỚI — apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\PlaceFormPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangThemSuaDiTich.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: Tạo/sửa metadata di tích, ảnh và tọa độ xác nhận.
@@ -2739,9 +2741,9 @@ function PlaceForm({ initial }: { initial?: ManagedPlace }) {
 /* CÁCH KIỂM TRA: Không lưu tọa độ ngoài Huế/URL nguy hiểm; sửa metadata không đổi bản public. */
 ```
 
-## 41. TẠO MỚI — apps/web/src/pages/admin/PlacesPage.tsx
+## 41. TẠO MỚI — apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\PlacesPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangDanhSachDiTich.tsx
 
 ```tsx
 /**
@@ -2780,9 +2782,9 @@ export function AdminPlacesPage() {
 Đã gỡ màn QR admin: apps/web/src/pages/admin/QrPage.tsx
 
 
-## 43. TẠO MỚI — apps/web/src/pages/admin/ReviewsPage.tsx
+## 43. TẠO MỚI — apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ReviewsPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangKiemDuyet.tsx
 
 ```tsx
 /** FILE NÀY LÀM GÌ: So sánh văn bản/audio, yêu cầu sửa, duyệt và công bố đúng bản.
@@ -2824,9 +2826,9 @@ function ReviewCard({ place }: { place: ManagedPlace }) {
 /* CÁCH KIỂM TRA: Reject thiếu ghi chú bị khóa; approve không tự public; publish cần xác nhận. */
 ```
 
-## 44. TẠO MỚI — apps/web/src/services/admin/services.ts
+## 44. TẠO MỚI — apps/web/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\admin\services.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\admin\KetNoiDichVuQuanTri.ts
 
 ```ts
 /**
@@ -2846,9 +2848,9 @@ export const publicCatalog = createCatalog(()=>publicService.published(),publicS
 /* CÁCH KIỂM TRA: Web lưu rồi mobile thấy sau khoảng 3 giây; mất API hiện lỗi; public không lộ nháp. */
 ```
 
-## 45. TẠO MỚI — apps/web/src/styles/admin.css
+## 45. TẠO MỚI — apps/web/src/features/admin/styles/GiaoDienQuanTri.css
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\admin.css
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\styles\GiaoDienQuanTri.css
 
 ```css
 /*
@@ -2940,15 +2942,15 @@ export const publicCatalog = createCatalog(()=>publicService.published(),publicS
     "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile",
     "lint": "npm run lint --workspace=@travelguide/admin-core && npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile && npm run lint --workspace=web",
     "typecheck": "npm run typecheck --workspace=@travelguide/admin-core && npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile && npm run typecheck --workspace=web",
-    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs scripts/public-qr.test.cjs && npm run presence:test && npm run catalog:test",
+    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/KiemThuLienKetUngDung.test.cjs scripts/KiemThuQRCongKhai.test.cjs && npm run presence:test && npm run catalog:test",
     "build:web": "npm run build --workspace=web",
-    "links:generate": "node scripts/generate-app-links.cjs",
-    "qr:create": "node scripts/create-public-qr.cjs",
-    "demo:public": "node scripts/start-public-demo.cjs",
-    "presence:start": "node services/presence/server.cjs",
-    "presence:test": "node --test services/presence/presence.test.cjs",
-    "catalog:start": "node scripts/start-catalog.cjs",
-    "catalog:test": "node --test services/catalog/catalog.test.cjs"
+    "links:generate": "node scripts/TaoLienKetUngDung.cjs",
+    "qr:create": "node scripts/TaoMaQRCongKhai.cjs",
+    "demo:public": "node scripts/ChayDemoCongKhai.cjs",
+    "presence:start": "node services/presence/MayChuApi.cjs",
+    "presence:test": "node --test services/presence/KiemThuPhienHoatDong.test.cjs",
+    "catalog:start": "node scripts/ChayApiDiTich.cjs",
+    "catalog:test": "node --test services/catalog/KiemThuApiDiTich.test.cjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.46.2",
@@ -2959,9 +2961,9 @@ export const publicCatalog = createCatalog(()=>publicService.published(),publicS
 }
 ```
 
-## 48. TẠO MỚI — packages/admin-core/tests/admin.test.cjs
+## 48. TẠO MỚI — packages/admin-core/tests/KiemThuQuanTri.test.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\tests\admin.test.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\tests\KiemThuQuanTri.test.cjs
 
 ```js
 /** FILE NÀY LÀM GÌ: Test nghiệp vụ thật Admin không cần trình duyệt/BE.
@@ -3015,15 +3017,15 @@ test('UC13: lỗi lưu khi xóa giữ nguyên di tích và bản công khai',asy
 })
 ```
 
-## 49. SỬA — packages/visitor-core/src/catalog.ts
+## 49. SỬA — packages/visitor-core/src/DanhMucDiTich.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\catalog.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\DanhMucDiTich.ts
 
 ```ts
 /**
  * FILE NÀY LÀM GÌ:
  * Lọc địa điểm và nội dung công bố cho UC02/UC04.
- * Hook trong react.tsx gọi service này; phụ thuộc model.ts.
+ * Hook trong TrangThaiReact.tsx gọi service này; phụ thuộc KieuDuLieuDuKhach.ts.
  * Nguồn mock hoặc API được truyền vào khi tạo service.
  */
 
@@ -3121,9 +3123,9 @@ export function createCatalog(source: CatalogSource, subscribe?: (listener: () =
 export type Catalog = ReturnType<typeof createCatalog>
 ```
 
-## 50. SỬA — packages/visitor-core/src/journey-react.tsx
+## 50. SỬA — packages/visitor-core/src/TrangThaiHanhTrinhReact.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey-react.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\TrangThaiHanhTrinhReact.tsx
 
 ```tsx
 /**
@@ -3167,9 +3169,9 @@ export function useJourney() {
  */
 ```
 
-## 51. SỬA — packages/visitor-core/src/journey.ts
+## 51. SỬA — packages/visitor-core/src/HanhTrinh.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\journey.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\HanhTrinh.ts
 
 ```ts
 /**
@@ -3448,9 +3450,9 @@ export class JourneyController {
  */
 ```
 
-## 52. SỬA — packages/visitor-core/src/model.ts
+## 52. SỬA — packages/visitor-core/src/KieuDuLieuDuKhach.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\model.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\KieuDuLieuDuKhach.ts
 
 ```ts
 /**
@@ -3571,9 +3573,9 @@ export type StoragePort = {
 }
 ```
 
-## 53. SỬA — packages/visitor-core/src/react.tsx
+## 53. SỬA — packages/visitor-core/src/TrangThaiReact.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\react.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\TrangThaiReact.tsx
 
 ```tsx
 /**
@@ -4200,9 +4202,9 @@ export function useExplore(
 export type VisitorI18n = i18n
 ```
 
-## 54. TẠO MỚI — scripts/build-admin-tests.cjs
+## 54. TẠO MỚI — scripts/DongGoiKiemThuQuanTri.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\build-admin-tests.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\DongGoiKiemThuQuanTri.cjs
 
 ```js
 /** FILE NÀY LÀM GÌ: Bundle logic Admin để Node test đọc được workspace TypeScript.
@@ -4212,7 +4214,7 @@ const path = require('node:path')
 const { createRequire } = require('node:module')
 const root = path.resolve(__dirname, '..')
 const req = createRequire(path.join(root, 'apps/web/package.json'))
-req('esbuild').buildSync({ entryPoints: [path.join(root,'packages/admin-core/src/index.ts')],
+req('esbuild').buildSync({ entryPoints: [path.join(root,'packages/admin-core/src/XuatCongKhai.ts')],
  bundle: true, platform: 'node', format: 'cjs', outfile: path.join(root,'packages/admin-core/.test-build/index.cjs') })
 ```
 

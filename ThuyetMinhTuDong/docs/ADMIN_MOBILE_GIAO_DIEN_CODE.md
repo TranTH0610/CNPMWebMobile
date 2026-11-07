@@ -2,9 +2,9 @@
 
 Mỗi mục ghi đường dẫn tính từ gốc monorepo. Các file có chú thích tiếng Việt ngay trong code.
 
-## 1. SỬA — apps/mobile/src/components/admin/AdminUI.tsx
+## 1. SỬA — apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\AdminUI.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\components\admin\ThanhPhanQuanTri.tsx
 
 Bộ giao diện dùng chung: thẻ, nút, ô nhập, trạng thái, ngôn ngữ và phản hồi.
 
@@ -156,9 +156,9 @@ export function AudioPreview({url,title}:{url:string;title:string}) {
 /* CÁCH KIỂM TRA: Rời màn dừng preview; input có nhãn; nút dễ bấm, không chồng audio du khách. */
 ```
 
-## 2. SỬA — apps/mobile/src/screens/admin/DashboardScreen.tsx
+## 2. SỬA — apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\DashboardScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManTongQuan.tsx
 
 Tổng quan bốn chỉ số và các lối vào quản lý nhanh.
 
@@ -215,9 +215,9 @@ export function DashboardScreen({navigation}:NativeStackScreenProps<AdminStack,'
 /* CÁCH KIỂM TRA: Bốn ô không tràn; hai mục thao tác mở đúng màn; mất RAM server hiện —/thử lại. */
 ```
 
-## 3. SỬA — apps/mobile/src/screens/admin/PlacesScreen.tsx
+## 3. SỬA — apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\PlacesScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManDanhSachDiTich.tsx
 
 Danh sách di tích bằng FlatList, tìm kiếm, mở thông tin và biên tập.
 
@@ -276,9 +276,9 @@ export function AdminPlacesScreen({navigation}:NativeStackScreenProps<AdminStack
 /* CÁCH KIỂM TRA: 'ky dai' tìm đúng; xóa tìm khôi phục danh sách; hai nút truyền đúng place ID. */
 ```
 
-## 4. SỬA — apps/mobile/src/screens/admin/PlaceFormScreen.tsx
+## 4. SỬA — apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\PlaceFormScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManThemSuaDiTich.tsx
 
 Biểu mẫu chia nhóm thông tin, tọa độ, hình ảnh và thao tác lưu.
 
@@ -359,9 +359,9 @@ function Form({initial,navigation}:{initial?:ManagedPlace;navigation:Props['navi
 /* CÁCH KIỂM TRA: Back form bẩn có hỏi; lưu lỗi giữ giá trị; thêm mới không xuất hiện public trước duyệt. */
 ```
 
-## 5. SỬA — apps/mobile/src/screens/admin/ContentEditorScreen.tsx
+## 5. SỬA — apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ContentEditorScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManBienTapNoiDung.tsx
 
 Biên tập nội dung đa ngôn ngữ, nghe thử và gửi duyệt.
 
@@ -421,9 +421,9 @@ function ContentForm({place,language,dirty,setDirty}:{place:ManagedPlace;languag
 /* CÁCH KIỂM TRA: Lưu body mới bỏ audio cũ; tác vụ sai revision báo conflict, không ghi đè. */
 ```
 
-## 6. SỬA — apps/mobile/src/screens/admin/ReviewsScreen.tsx
+## 6. SỬA — apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ReviewsScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManDanhSachKiemDuyet.tsx
 
 Hàng chờ duyệt, đọc nội dung, ghi chú và công bố.
 
@@ -478,9 +478,9 @@ function Review({place}:{place:ManagedPlace}){
 /* CÁCH KIỂM TRA: Duyệt chưa public; sửa sau duyệt chặn publish; xác nhận mới công bố. */
 ```
 
-## 7. SỬA — apps/mobile/src/navigation/AdminNavigator.tsx
+## 7. SỬA — apps/mobile/src/navigation/DieuHuongQuanTri.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\AdminNavigator.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\navigation\DieuHuongQuanTri.tsx
 
 Điều hướng Admin và kiểu hiển thị tiêu đề.
 
@@ -510,9 +510,9 @@ export function AdminNavigator(){const t=useAdminText(),{engine}=useJourney();us
 /* CÁCH KIỂM TRA: start:admin mở quản lý; bản du khách không có route Admin. */
 ```
 
-## 8. SỬA — packages/admin-core/src/messages.ts
+## 8. SỬA — packages/admin-core/src/BanDichGiaoDien.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\messages.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\BanDichGiaoDien.ts
 
 Nhãn giao diện Admin bằng Việt, Anh, Trung, Bồ Đào Nha và Nhật.
 

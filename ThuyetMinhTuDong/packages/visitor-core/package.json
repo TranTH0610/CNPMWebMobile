@@ -2,19 +2,19 @@
   "name": "@travelguide/visitor-core",
   "version": "0.1.0",
   "private": true,
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "src/XuatCongKhai.ts",
+  "types": "src/XuatCongKhai.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./react": "./src/react/react.tsx",
-    "./journey": "./src/journey/journey.ts",
-    "./journey/react": "./src/journey/journey-react.tsx",
-    "./journey/data": "./src/journey/journey-data.ts",
-    "./presence": "./src/presence/presence.ts",
-    "./presence/react": "./src/presence/presence-react.ts"
+    ".": "./src/XuatCongKhai.ts",
+    "./react": "./src/react/TrangThaiReact.tsx",
+    "./journey": "./src/journey/HanhTrinh.ts",
+    "./journey/react": "./src/journey/TrangThaiHanhTrinhReact.tsx",
+    "./journey/data": "./src/journey/DuLieuHanhTrinh.ts",
+    "./presence": "./src/presence/PhienHoatDong.ts",
+    "./presence/react": "./src/presence/TheoDoiPhienReact.ts"
   },
   "scripts": {
-    "test": "tsc -p tsconfig.test.json && node --test tests/core.test.cjs tests/locale.test.cjs tests/site.test.cjs tests/journey.test.cjs tests/audio.test.cjs",
+    "test": "tsc -p tsconfig.test.json && node --test tests/KiemThuNghiepVuChung.test.cjs tests/KiemThuNgonNgu.test.cjs tests/KiemThuDiaChiWebsite.test.cjs tests/KiemThuHanhTrinh.test.cjs tests/KiemThuAmThanh.test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint src --ext .ts,.tsx"
   },

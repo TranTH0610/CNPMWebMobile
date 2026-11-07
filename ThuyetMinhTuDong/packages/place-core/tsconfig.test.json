@@ -9,13 +9,13 @@
     "baseUrl": ".",
     "paths": {
       "@travelguide/shared-types": [
-        "../shared-types/index.ts"
+        "../shared-types/XuatCongKhai.ts"
       ]
     }
   },
   "include": [
-    "src/index.ts",
-    "src/data/mockPlaces.ts",
-    "../shared-types/index.ts"
+    "src/XuatCongKhai.ts",
+    "src/data/DiTichMauKiemThu.ts",
+    "../shared-types/XuatCongKhai.ts"
   ]
 }

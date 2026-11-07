@@ -1,0 +1,1511 @@
+/* CHỨC NĂNG: [GIAO-DIEN]
+ * VAI TRÒ: GIAO DIỆN
+ * FILE NÀY LÀM GÌ: CSS quản trị web: khung điều hướng, dashboard, danh sách, form và bố cục màn hình nhỏ.
+ * VỊ TRÍ: apps/web/src/features/admin/styles/GiaoDienQuanTri.css
+ * TẠI SAO: Dùng cùng bố cục và trạng thái trong nhóm giao diện, không chứa nghiệp vụ.
+ */
+/**
+ * FILE NÀY LÀM GÌ
+ * CSS quản trị web: khung điều hướng, dashboard, danh sách, form và bố cục màn hình nhỏ.
+ *
+ * VỊ TRÍ: apps/web/src/features/admin/styles/GiaoDienQuanTri.css
+ * DÙNG BỞI: apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx.
+ */
+/* CHỨC NĂNG: Khung bố cục của website quản trị. */
+.admin-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  background: var(--page);
+  color: var(--text);
+}
+.admin-shell button,
+.admin-shell .button {
+  min-height: 44px;
+}
+.admin-shell button:hover:not(:disabled),
+.admin-shell .button:hover {
+  box-shadow: 0 4px 12px #12335a12;
+}
+.admin-shell button:disabled {
+  cursor: not-allowed;
+}
+.admin-shell :is(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+/* CHỨC NĂNG: Menu cố định trên desktop; icon và vạch xanh nhận diện trang hiện tại. */
+/* CHỨC NĂNG: Menu điều hướng quản trị và trạng thái mục được chọn. */
+.admin-sidebar {
+  background: var(--background);
+  border-right: 1px solid var(--border);
+  padding: 30px 18px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+.admin-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--text);
+  padding: 0 10px;
+}
+.admin-brand-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  color: white;
+  background: var(--primary);
+  box-shadow: 0 7px 16px #1768e52b;
+}
+.admin-brand-icon svg {
+  width: 27px;
+  height: 27px;
+}
+.admin-brand strong {
+  font-size: 23px;
+  letter-spacing: -0.6px;
+}
+.admin-brand small {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 1px;
+}
+.admin-sidebar nav {
+  display: grid;
+  gap: 9px;
+}
+.admin-sidebar nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border-radius: 13px;
+  padding: 14px 15px;
+  color: var(--muted);
+  font-weight: 600;
+  min-height: 50px;
+}
+.admin-sidebar nav a:hover {
+  background: var(--page);
+  color: var(--text);
+}
+.admin-sidebar nav a.active {
+  color: var(--primary);
+  background: var(--soft);
+}
+.admin-sidebar nav a.active:before {
+  content: '';
+  width: 3px;
+  position: absolute;
+  left: 0;
+  top: 15px;
+  bottom: 15px;
+  background: var(--primary);
+  border-radius: 3px;
+}
+.admin-nav-arrow {
+  display: none;
+  margin-left: auto;
+}
+.admin-sidebar nav a.active .admin-nav-arrow {
+  display: flex;
+}
+.admin-nav-arrow svg {
+  width: 16px;
+}
+.admin-sidebar-note {
+  margin-top: auto;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--page);
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+.admin-sidebar-note > svg {
+  color: var(--primary);
+  width: 27px;
+  height: 27px;
+}
+.admin-sidebar-note strong {
+  font-size: 13px;
+}
+.admin-sidebar-note p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.admin-main {
+  min-width: 0;
+}
+.admin-topbar {
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 36px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-topbar strong,
+.admin-topbar small {
+  display: block;
+}
+.admin-topbar > div > small {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.admin-topbar > div > strong {
+  font-size: 19px;
+}
+.admin-topbar-tools {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.admin-identity {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-left: 1px solid var(--border);
+  padding-left: 22px;
+}
+.admin-identity > span {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--soft);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 700;
+}
+.admin-identity strong {
+  font-size: 13px;
+}
+.admin-identity small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.admin-workspace {
+  padding: 30px 36px 32px;
+  max-width: 1580px;
+  margin: auto;
+}
+.admin-demo {
+  background: var(--soft);
+  color: var(--muted);
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.admin-footnote {
+  margin: 28px 0 0;
+  background: transparent;
+  border-style: dashed;
+  font-size: 11px;
+}
+/* CHỨC NĂNG: Banner và đúng bốn chỉ số; không thêm biểu đồ hoặc số liệu giả. */
+.admin-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 30px 32px;
+  margin-bottom: 24px;
+  background: linear-gradient(120deg, var(--secondary), var(--playerBackground));
+  color: white;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+.admin-hero > div:first-child,
+.admin-hero-button {
+  position: relative;
+  z-index: 1;
+}
+.admin-eyebrow {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--playerAccent);
+  font-weight: 600;
+}
+.admin-hero h1 {
+  font-size: 30px;
+  margin: 8px 0;
+  letter-spacing: -0.6px;
+  line-height: 1.3;
+}
+.admin-hero p {
+  color: var(--playerMuted);
+  font-size: 13px;
+}
+.admin-hero-button {
+  background: white;
+  color: var(--primary);
+  border: 0;
+  flex-shrink: 0;
+}
+.admin-hero-decoration {
+  position: absolute;
+  right: 10%;
+  top: -28px;
+  width: 240px;
+  height: 240px;
+  border: 1px solid #ffffff12;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+.admin-hero-decoration svg {
+  height: 150px;
+  width: 150px;
+  opacity: 0.055;
+}
+.admin-page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.admin-page-title h1 {
+  font-size: 27px;
+  line-height: 1.4;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+.admin-page-title h2 {
+  margin: 0;
+  font-size: 21px;
+}
+.admin-page-title p {
+  color: var(--muted);
+  margin: 5px 0 0;
+  font-size: 13px;
+}
+.admin-pill {
+  padding: 7px 12px;
+  border-radius: 30px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--primary);
+}
+/* CHỨC NĂNG: Các thẻ số liệu ở trang tổng quan. */
+.admin-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.admin-metric {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px 22px;
+  box-shadow: 0 5px 18px #10295004;
+}
+.admin-metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.admin-metric-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--soft);
+  color: var(--primary);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.admin-metric strong {
+  display: block;
+  font-size: 36px;
+  margin: 10px 0 16px;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+.admin-metric-line {
+  height: 4px;
+  width: 44px;
+  border-radius: 6px;
+  background: var(--soft);
+}
+.admin-metric.metric-0 {
+  background: var(--secondary);
+  color: white;
+  border: 0;
+}
+.metric-0 .admin-metric-top {
+  color: var(--playerMuted);
+}
+.metric-0 .admin-metric-icon {
+  background: #ffffff24;
+  color: white;
+}
+.metric-0 .admin-metric-line {
+  background: #ffffff66;
+}
+.admin-card {
+  padding: 24px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  margin-bottom: 20px;
+  min-width: 0;
+}
+.admin-card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+.admin-card p {
+  color: var(--muted);
+  line-height: 1.8;
+}
+.admin-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.admin-section-heading h2 {
+  margin: 0;
+  font-size: 17px;
+}
+.admin-icon-box {
+  height: 42px;
+  width: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  background: var(--soft);
+  flex-shrink: 0;
+}
+.admin-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 22px;
+}
+.admin-quick-actions {
+  display: grid;
+  gap: 12px;
+}
+.admin-quick-action {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  color: var(--text);
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.admin-quick-action:hover {
+  background: var(--page);
+  border-color: var(--primary);
+}
+.admin-quick-action > div {
+  flex: 1;
+  min-width: 0;
+}
+.admin-quick-action strong {
+  font-size: 14px;
+}
+.admin-quick-action p {
+  font-size: 12px;
+  margin-top: 3px;
+  line-height: 1.6;
+}
+.admin-quick-action > svg {
+  color: var(--muted);
+  flex-shrink: 0;
+  width: 18px;
+}
+.admin-presence-card > p {
+  font-size: 13px;
+}
+.admin-reset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: transparent;
+  border-style: dashed;
+}
+.admin-reset h2 {
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+.admin-reset p {
+  margin: 0;
+  font-size: 12px;
+}
+.admin-reset button {
+  flex-shrink: 0;
+}
+/* CHỨC NĂNG: Thanh tìm kiếm và thẻ di tích có nhãn trạng thái, không thay logic tìm kiếm. */
+.admin-list-toolbar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.admin-search-wrap {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--border);
+  background: var(--background);
+  padding: 4px 12px;
+  border-radius: 13px;
+  width: min(100%, 480px);
+  color: var(--muted);
+}
+.admin-search-wrap:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #1768e510;
+}
+.admin-search-wrap input {
+  border: 0;
+  background: transparent;
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  padding: 10px 0;
+  outline: 0;
+  min-height: 42px;
+}
+.admin-search-wrap input:focus-visible {
+  outline: 0;
+}
+.admin-search-wrap input::-webkit-search-cancel-button {
+  display: none;
+}
+.admin-clear-search {
+  border: 0 !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  padding: 6px !important;
+  background: var(--page) !important;
+}
+.admin-clear-search svg {
+  width: 17px;
+  height: 17px;
+}
+.admin-result-count {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.admin-place-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.admin-place-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--background);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s;
+}
+.admin-place-card:hover {
+  box-shadow: 0 12px 24px #1029500b;
+  transform: translateY(-2px);
+}
+.admin-place-cover {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  background: var(--soft);
+}
+.admin-place-cover > .place-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-place-cover > .admin-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  box-shadow: 0 2px 10px #10295012;
+  border: 1px solid #ffffff99;
+}
+.admin-place-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.admin-place-card h2 {
+  font-size: 18px;
+  margin: 5px 0 8px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.admin-place-card p {
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-revision {
+  font-size: 11px;
+  color: var(--muted);
+}
+.admin-place-info .admin-actions {
+  margin-top: auto;
+  padding-top: 18px;
+  flex-wrap: nowrap;
+}
+.admin-place-info .button {
+  flex: 1;
+  font-size: 12px;
+  padding: 9px 8px;
+  min-width: 0;
+}
+.admin-place-info .button svg {
+  width: 17px;
+  flex-shrink: 0;
+}
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 6px 11px;
+  background: var(--page);
+  color: var(--muted);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.admin-badge:before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+.admin-badge.state-published {
+  background: #e6f7ed;
+  color: #187044;
+}
+.admin-badge.state-approved {
+  background: var(--tealSoft);
+  color: var(--secondary);
+}
+.admin-badge.state-submitted {
+  background: #fff4da;
+  color: #865f00;
+}
+.admin-badge.state-changes {
+  background: #fff0ed;
+  color: #a63e25;
+}
+.admin-badge.state-archived {
+  background: #edf0f5;
+  color: #6d7180;
+}
+.admin-empty {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 48px 20px;
+}
+.admin-empty > svg {
+  width: 38px;
+  height: 38px;
+  color: var(--primary);
+}
+.admin-empty h2 {
+  margin: 0;
+}
+/* CHỨC NĂNG: Chia form thành nhóm có tiêu đề, vùng nhập có focus và hàng hành động riêng. */
+.admin-form {
+  max-width: 1040px;
+}
+.admin-form.admin-card {
+  padding: 0;
+  overflow: visible;
+}
+.admin-form-section {
+  padding: 26px 28px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-form-section:last-child {
+  border-bottom: 0;
+}
+.admin-form-section > h2 {
+  font-size: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.admin-form-section > h2 svg {
+  color: var(--primary);
+  width: 20px;
+}
+.admin-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 20px;
+}
+.admin-field > span {
+  font-size: 12px;
+  font-weight: 600;
+}
+.admin-field input,
+.admin-field textarea,
+.admin-field select {
+  padding: 12px 14px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--background);
+  color: var(--text);
+  font: inherit;
+  min-height: 46px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.admin-field input:focus,
+.admin-field textarea:focus,
+.admin-field select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #1768e50c;
+}
+.admin-field textarea {
+  resize: vertical;
+  line-height: 1.8;
+}
+.admin-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+}
+.admin-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--page);
+  border-radius: 11px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.admin-image-preview {
+  height: 220px;
+  margin-bottom: 20px;
+  border-radius: 13px;
+  overflow: hidden;
+  background: var(--soft);
+}
+.admin-image-preview > .place-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.admin-form-section > .admin-actions:first-child {
+  margin-top: 0;
+}
+.admin-actions .admin-delete {
+  margin-left: auto;
+  background: transparent;
+  border-color: #e9b9b5;
+  color: var(--danger);
+}
+.admin-actions .admin-delete:hover {
+  background: #fff1ef;
+}
+.admin-language-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 24px;
+  width: fit-content;
+  max-width: 100%;
+}
+.admin-language-tabs button {
+  border: 0;
+  font-size: 13px;
+  padding: 9px 18px;
+  border-radius: 9px;
+}
+.admin-language-tabs .secondary {
+  background: transparent;
+  color: var(--muted);
+}
+.admin-language-tabs .secondary:hover {
+  background: var(--page);
+}
+.admin-audio {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  margin: 18px 0;
+}
+.admin-audio > span {
+  font-size: 12px;
+  font-weight: 600;
+}
+.admin-audio audio,
+.admin-review audio {
+  width: 100%;
+  max-width: 100%;
+}
+.admin-local-file {
+  margin: 14px 0;
+}
+.admin-local-file input {
+  max-width: 100%;
+  font-size: 12px;
+}
+.admin-local-file label {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-local-file p {
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-note {
+  padding: 14px;
+  border-left: 3px solid var(--primary);
+  background: var(--soft);
+  font-size: 13px;
+  margin-top: 20px;
+}
+.admin-review {
+  padding: 26px;
+}
+.admin-review-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.admin-review-identity > .place-image {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 13px;
+  flex-shrink: 0;
+}
+.admin-review-identity h2 {
+  margin: 0 0 8px;
+}
+.admin-review-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 16px 0;
+}
+.admin-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 26px;
+}
+.admin-review-grid section {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--page);
+  min-width: 0;
+}
+.admin-review-grid h3 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.admin-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 260px;
+  overflow: auto;
+  font-size: 13px;
+  margin: 12px 0 16px;
+  padding-right: 6px;
+}
+.admin-review .admin-actions {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.admin-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  border: 1px solid #f0bdb5;
+  background: #fff1ef;
+  padding: 14px 18px;
+  border-radius: 12px;
+  color: var(--danger);
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+.admin-success {
+  background: var(--soft);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  padding: 13px 18px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: #10295080;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.admin-confirm {
+  width: min(100%, 460px);
+  background: var(--background);
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 25px 80px #10295044;
+}
+.admin-confirm h2 {
+  margin: 0 0 12px;
+}
+.admin-confirm p {
+  line-height: 1.7;
+  white-space: pre-line;
+}
+.admin-confirm .admin-actions {
+  justify-content: flex-end;
+}
+/* CHỨC NĂNG: Tablet giảm cột; điện thoại thu menu và không làm co nhỏ vùng bấm. */
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:1200px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+@media (max-width: 1200px) {
+  .admin-shell {
+    grid-template-columns: 215px minmax(0, 1fr);
+  }
+  .admin-workspace {
+    padding: 26px;
+  }
+  .admin-topbar {
+    padding: 18px 26px;
+  }
+  .admin-place-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-metric {
+    padding: 18px;
+  }
+  .admin-metric-top {
+    font-size: 12px;
+  }
+}
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:1000px); điều chỉnh bố cục cho màn hình */
+/* phù hợp. */
+@media (max-width: 1000px) {
+  .admin-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .admin-identity {
+    display: none;
+  }
+  .admin-review-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (max-width:760px); điều chỉnh bố cục cho màn hình phù */
+/* hợp. */
+@media (max-width: 760px) {
+  .admin-shell {
+    display: block;
+  }
+  .admin-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 18px 16px 12px;
+    gap: 20px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-brand {
+    padding: 0;
+  }
+  .admin-brand strong {
+    font-size: 21px;
+  }
+  .admin-brand-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+  .admin-sidebar nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 3px;
+  }
+  .admin-sidebar nav a {
+    white-space: nowrap;
+    padding: 10px 13px;
+    gap: 8px;
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .admin-sidebar nav a.active:before,
+  .admin-nav-arrow,
+  .admin-sidebar nav a.active .admin-nav-arrow,
+  .admin-sidebar-note {
+    display: none;
+  }
+  .admin-topbar {
+    padding: 16px;
+    gap: 12px;
+  }
+  .admin-topbar > div > small {
+    font-size: 9px;
+  }
+  .admin-topbar > div > strong {
+    font-size: 16px;
+  }
+  .admin-topbar-tools {
+    min-width: 0;
+  }
+  .admin-topbar .language-picker select {
+    max-width: 155px;
+    font-size: 12px;
+  }
+  .admin-workspace {
+    padding: 20px 16px;
+  }
+  .admin-hero {
+    padding: 24px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 18px;
+  }
+  .admin-hero h1 {
+    font-size: 27px;
+  }
+  .admin-hero p {
+    line-height: 1.7;
+  }
+  .admin-hero-button {
+    font-size: 13px;
+  }
+  .admin-metrics {
+    gap: 12px;
+  }
+  .admin-metric {
+    padding: 16px;
+  }
+  .admin-metric strong {
+    font-size: 30px;
+  }
+  .admin-metric-top {
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+  .admin-metric-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .admin-page-title h1 {
+    font-size: 24px;
+  }
+  .admin-page-title > .button {
+    font-size: 12px;
+  }
+  .admin-list-toolbar {
+    gap: 12px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .admin-search-wrap {
+    width: 100%;
+  }
+  .admin-place-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-place-cover {
+    height: 195px;
+  }
+  .admin-card {
+    padding: 20px;
+  }
+  .admin-form-section {
+    padding: 22px 20px;
+  }
+  .admin-form.admin-card {
+    padding: 0;
+  }
+  .admin-two {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .admin-reset {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .admin-quick-action {
+    padding: 14px;
+    gap: 12px;
+  }
+  .admin-quick-action .admin-icon-box {
+    width: 36px;
+    height: 36px;
+  }
+  .admin-review {
+    padding: 20px;
+  }
+  .admin-review-identity {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .admin-review-identity h2 {
+    font-size: 17px;
+  }
+  .admin-review-identity > .place-image {
+    width: 60px;
+    height: 64px;
+  }
+  .admin-language-tabs {
+    gap: 4px;
+    padding: 5px;
+  }
+  .admin-language-tabs button {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+  .admin-actions .admin-delete {
+    margin-left: 0;
+  }
+  .admin-actions > button {
+    flex-grow: 1;
+  }
+}
+/* RESPONSIVE: Chỉ áp dụng nhóm style này khi (prefers-reduced-motion:reduce); điều chỉnh bố cục */
+/* cho màn hình phù hợp. */
+@media (prefers-reduced-motion: reduce) {
+  .admin-shell * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .admin-place-card:hover {
+    transform: none;
+  }
+}
+/* CÁCH KIỂM TRA: Thu cửa sổ về 390px, Tab qua nút/textarea, tăng cỡ chữ; form và thẻ không tràn ngang. */
+
+/* TẠI SAO TÁCH FILE: Tách phần trình bày giúp đổi màu/bố cục đồng bộ mà không chạm vào nghiệp
+ * vụ. */
+
+/* CHỨC NĂNG: Fieldset khóa toàn bộ form khi đang lưu/dịch, không tạo khung lồng nhau. */
+.admin-editor-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.admin-editor-fields:disabled {
+  opacity: 0.75;
+}
+.admin-editor-footer {
+  margin-top: 20px;
+}
+.admin-muted {
+  color: #526482;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.admin-list-toolbar > select {
+  padding: 12px;
+  border: 1px solid #dce5f3;
+  border-radius: 12px;
+  max-width: 100%;
+  background: white;
+  color: #102d59;
+}
+
+/* CHỨC NĂNG: Bố cục editor hai cột trên desktop; chuyển thành các khối xếp dọc trên tablet/mobile.
+ * TẠI SAO: Bài thuyết minh có vùng nhập rộng; tọa độ và media nằm bên cạnh, không để form hẹp giữa màn hình.
+ */
+.admin-workspace {
+  width: 100%;
+}
+.admin-form.admin-place-editor {
+  max-width: none;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.admin-place-editor .admin-editor-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 1fr);
+  align-items: start;
+  gap: 22px;
+}
+.admin-place-editor .admin-form-section {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 26px;
+  min-width: 0;
+}
+.admin-place-editor .editor-content {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+.admin-place-editor .editor-location {
+  grid-column: 2;
+  grid-row: 1;
+}
+.admin-place-editor .editor-media {
+  grid-column: 2;
+  grid-row: 2;
+}
+.admin-place-editor .editor-workflow {
+  grid-column: 1 / -1;
+}
+.admin-place-editor .admin-form-section > h2 {
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-place-editor .admin-field:last-child {
+  margin-bottom: 0;
+}
+.admin-place-editor .editor-content textarea {
+  min-height: 110px;
+}
+.admin-place-editor .editor-content .admin-field:last-child textarea {
+  min-height: 380px;
+}
+.admin-place-editor .editor-workflow .admin-actions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.admin-place-editor .editor-workflow .admin-actions button {
+  padding: 12px;
+  line-height: 1.5;
+}
+.admin-place-editor .admin-check {
+  width: fit-content;
+  max-width: 100%;
+  padding: 10px 12px;
+  background: var(--page);
+}
+.admin-editor-footer {
+  justify-content: flex-end;
+  padding: 4px 0 24px;
+}
+.admin-editor-footer > .button:first-child {
+  margin-right: auto;
+}
+.admin-dashboard-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+.admin-quick-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 1150px) {
+  .admin-place-editor .admin-editor-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+  .admin-place-editor .editor-content,
+  .admin-place-editor .editor-location,
+  .admin-place-editor .editor-media,
+  .admin-place-editor .editor-workflow {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+@media (max-width: 760px) {
+  .admin-place-editor .admin-form-section {
+    padding: 20px;
+    border-radius: 16px;
+  }
+  .admin-place-editor .editor-workflow .admin-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-place-editor .editor-content .admin-field:last-child textarea {
+    min-height: 280px;
+  }
+  .admin-quick-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-editor-footer {
+    gap: 10px;
+  }
+  .admin-language-tabs {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .admin-language-tabs button {
+    flex-shrink: 0;
+  }
+}
+@media (max-width: 380px) {
+  .admin-place-editor .editor-workflow .admin-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* CHỨC NĂNG: Các ô cùng hàng luôn có cùng chiều cao; không áp dụng ngoại lệ last-child vào ô thứ hai. */
+.admin-place-editor .admin-two {
+  align-items: start;
+  margin-bottom: 20px;
+}
+.admin-place-editor .admin-two > .admin-field {
+  margin: 0;
+  align-self: start;
+  grid-template-rows: minmax(20px, auto) 46px;
+  align-content: start;
+}
+.admin-place-editor .admin-two > .admin-field > span {
+  line-height: 20px;
+}
+.admin-place-editor .admin-two input,
+.admin-place-editor .admin-two select {
+  height: 46px;
+  min-height: 46px;
+  margin: 0;
+  box-sizing: border-box;
+}
+/* CHỨC NĂNG: Hàng chờ chỉ tải các thẻ ảnh, bấm thẻ mới mở bài cần kiểm duyệt. */
+.admin-review-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.admin-review-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.admin-review-tile {
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px #10295006;
+}
+.admin-review-tile:hover {
+  border-color: var(--primary);
+  box-shadow: 0 12px 26px #10295014;
+}
+.admin-review-tile-cover {
+  height: 190px;
+  position: relative;
+  background: var(--soft);
+}
+.admin-review-tile-cover > .place-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.admin-review-tile-cover > .admin-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+.admin-review-tile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  flex: 1;
+  min-width: 0;
+}
+.admin-review-tile-info h2 {
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.admin-review-tile-info p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.admin-review-tile-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  padding-top: 16px;
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+}
+.admin-review-tile-footer span {
+  color: var(--muted);
+}
+.admin-review-tile-footer strong {
+  color: var(--primary);
+}
+.admin-review-back {
+  margin-bottom: 22px;
+}
+.admin-review-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+.admin-review-document {
+  padding: 0;
+  overflow: hidden;
+}
+.admin-review-document > .place-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+.admin-review-document-content {
+  padding: 26px;
+}
+.admin-review-document .admin-language-tabs {
+  width: 100%;
+}
+.admin-review-full-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+  line-height: 1.9;
+  margin: 12px 0 24px;
+}
+.admin-review-summary {
+  font-size: 14px;
+  border-left: 3px solid var(--primary);
+  padding-left: 14px;
+  margin: 16px 0 24px;
+}
+.admin-review-facts {
+  margin: 20px 0 0;
+  display: grid;
+  gap: 5px;
+}
+.admin-review-facts dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+.admin-review-facts dd {
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 15px;
+  overflow-wrap: anywhere;
+}
+.admin-review-facts dd:last-child {
+  margin-bottom: 0;
+}
+.admin-review-decision {
+  display: grid;
+  gap: 12px;
+}
+.admin-review-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.admin-review-gallery > .place-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+@media (max-width: 1200px) {
+  .admin-review-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-review-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px) {
+  .admin-review-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-review-document-content {
+    padding: 20px;
+  }
+  .admin-review-document > .place-image {
+    height: 210px;
+  }
+  .admin-review-gallery {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

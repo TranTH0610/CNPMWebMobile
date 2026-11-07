@@ -79,36 +79,36 @@ Thông tin này theo tài liệu chính thức: [Android App Links](https://docs
 | `ThuyetMinhTuDong/.github/workflows/` | Bỏ ba workflow cũ | Loại workflow sai cấp và bước deploy placeholder |
 | `ThuyetMinhTuDong/package.json` | Sửa | Lệnh kiểm tra chung; khai báo plugin lint tại đúng gốc workspaces |
 | `ThuyetMinhTuDong/package-lock.json` | Sửa | Khóa dependency để npm ci cài lại được |
-| `ThuyetMinhTuDong/packages/visitor-core/src/mock.ts` | Sửa | Đủ năm bản ngôn ngữ cho tám điểm; buộc đủ tên bằng TypeScript |
-| `ThuyetMinhTuDong/packages/visitor-core/src/site.ts` | Tạo | Kiểm tra origin dùng cho QR; từ chối localhost/domain ví dụ |
-| `ThuyetMinhTuDong/packages/visitor-core/src/index.ts` | Sửa | Xuất hàm siteOrigin cho mobile/web |
-| `ThuyetMinhTuDong/packages/visitor-core/src/uiMessages.ts` | Sửa | Thông báo cấu hình QR bằng VI/EN/CN/PT/JA |
-| `ThuyetMinhTuDong/packages/visitor-core/src/messages.ts` | Sửa | Hướng dẫn quét QR chung bằng đủ năm ngôn ngữ |
-| `ThuyetMinhTuDong/packages/visitor-core/tests/core.test.cjs` | Sửa | Đưa options đúng phạm vi, cập nhật số điểm, kiểm tra đủ/thiếu bản dịch |
-| `ThuyetMinhTuDong/packages/visitor-core/tests/site.test.cjs` | Tạo | Test origin HTTPS/LAN và từ chối URL không dùng được |
-| `ThuyetMinhTuDong/packages/visitor-core/tsconfig.test.json` | Sửa | Biên dịch site.ts cho Node test |
+| `ThuyetMinhTuDong/packages/visitor-core/src/DuLieuKhoiTao.ts` | Sửa | Đủ năm bản ngôn ngữ cho tám điểm; buộc đủ tên bằng TypeScript |
+| `ThuyetMinhTuDong/packages/visitor-core/src/DiaChiWebsite.ts` | Tạo | Kiểm tra origin dùng cho QR; từ chối localhost/domain ví dụ |
+| `ThuyetMinhTuDong/packages/visitor-core/src/XuatCongKhai.ts` | Sửa | Xuất hàm siteOrigin cho mobile/web |
+| `ThuyetMinhTuDong/packages/visitor-core/src/BanDichThanhPhan.ts` | Sửa | Thông báo cấu hình QR bằng VI/EN/CN/PT/JA |
+| `ThuyetMinhTuDong/packages/visitor-core/src/BanDichGiaoDien.ts` | Sửa | Hướng dẫn quét QR chung bằng đủ năm ngôn ngữ |
+| `ThuyetMinhTuDong/packages/visitor-core/tests/KiemThuNghiepVuChung.test.cjs` | Sửa | Đưa options đúng phạm vi, cập nhật số điểm, kiểm tra đủ/thiếu bản dịch |
+| `ThuyetMinhTuDong/packages/visitor-core/tests/KiemThuDiaChiWebsite.test.cjs` | Tạo | Test origin HTTPS/LAN và từ chối URL không dùng được |
+| `ThuyetMinhTuDong/packages/visitor-core/tsconfig.test.json` | Sửa | Biên dịch DiaChiWebsite.ts cho Node test |
 | `ThuyetMinhTuDong/packages/visitor-core/package.json` | Sửa | Đăng ký test mới |
-| `ThuyetMinhTuDong/apps/mobile/src/visitor/DetailScreen.tsx` | Sửa | Đổi bản bài đọc qua provider chung, đồng bộ tab/tiêu đề/ngôn ngữ lưu |
-| `ThuyetMinhTuDong/apps/mobile/src/visitor/platform.ts` | Sửa | Dùng origin hợp lệ cho scanner, không dùng domain ví dụ mặc định |
-| `ThuyetMinhTuDong/apps/mobile/src/visitor/linking.ts` | Tạo | Nhận URL từ camera ngoài app, mở danh sách/chi tiết và giữ nút quay lại |
+| `ThuyetMinhTuDong/apps/mobile/src/visitor/ManChiTietDiTich.tsx` | Sửa | Đổi bản bài đọc qua provider chung, đồng bộ tab/tiêu đề/ngôn ngữ lưu |
+| `ThuyetMinhTuDong/apps/mobile/src/visitor/KetNoiNenTang.ts` | Sửa | Dùng origin hợp lệ cho scanner, không dùng domain ví dụ mặc định |
+| `ThuyetMinhTuDong/apps/mobile/src/visitor/LienKetMoUngDung.ts` | Tạo | Nhận URL từ camera ngoài app, mở danh sách/chi tiết và giữ nút quay lại |
 | `ThuyetMinhTuDong/apps/mobile/App.tsx` | Sửa | Gắn linking vào NavigationContainer |
 | `ThuyetMinhTuDong/apps/mobile/app.config.js` | Tạo | Ghép scheme/intent filters/associated domains với cấu hình Expo cũ |
 | `ThuyetMinhTuDong/apps/mobile/.env.example` | Sửa | Mẫu origin và định danh app thật |
 | `ThuyetMinhTuDong/apps/web/src/pages.tsx` | Sửa | Một QR chung, thử lại tạo QR, ngôn ngữ bài đọc đồng bộ UI |
-| `ThuyetMinhTuDong/apps/web/src/platform.ts` | Sửa | Chọn origin QR và chính sách parser dùng chung |
+| `ThuyetMinhTuDong/apps/web/src/KetNoiNenTang.ts` | Sửa | Chọn origin QR và chính sách parser dùng chung |
 | `ThuyetMinhTuDong/apps/web/.env.example` | Sửa | Mẫu origin công khai và thông tin xác minh app |
 | `ThuyetMinhTuDong/apps/web/package.json` | Sửa | Sinh association trước build khi có cấu hình native |
 | `ThuyetMinhTuDong/apps/web/vite.config.ts` | Sửa | Copy static/.well-known, không copy public/index.html cũ |
 | `ThuyetMinhTuDong/apps/web/vercel.json` | Sửa/tạo | Refresh route SPA và phục vụ AASA đúng kiểu JSON |
-| `ThuyetMinhTuDong/scripts/generate-app-links.cjs` | Tạo | Kiểm tra thông tin ký, sinh JSON xác minh website/app |
-| `ThuyetMinhTuDong/scripts/app-links.test.cjs` | Tạo | Test payload xác minh và giữ plugin Expo khi ghép cấu hình |
+| `ThuyetMinhTuDong/scripts/TaoLienKetUngDung.cjs` | Tạo | Kiểm tra thông tin ký, sinh JSON xác minh website/app |
+| `ThuyetMinhTuDong/scripts/KiemThuLienKetUngDung.test.cjs` | Tạo | Test payload xác minh và giữ plugin Expo khi ghép cấu hình |
 | `ThuyetMinhTuDong/docs/SUA_LOI_UC01_UC05.md` | Tạo | Hướng dẫn chạy, cấu hình, bảng file và kiểm tra thủ công |
 
 ## Luồng dữ liệu
 
 Chọn ngôn ngữ ở navbar/tab Cài đặt hoặc bài đọc → `changeLanguage` trong provider → i18next phát sự kiện đổi ngôn ngữ → tiêu đề/tab và bản nội dung được render lại → lưu lựa chọn vào localStorage/AsyncStorage. Không còn state ngôn ngữ riêng trong màn chi tiết. Nội dung demo đủ năm bản; API thiếu bản công bố vẫn hiện thông báo thiếu, không tự dịch bản chưa duyệt.
 
-Mở trang QR → `platform.ts` chọn origin → `siteOrigin` kiểm tra → `QRCode.toDataURL` tạo ảnh cục bộ → camera quét cùng URL gốc → hệ điều hành mở app đã xác minh hoặc website. Trong app, `linking.ts` dùng parser chung và chuyển tới danh sách/chi tiết; service tiếp tục kiểm tra ID và bản công bố.
+Mở trang QR → `KetNoiNenTang.ts` chọn origin → `siteOrigin` kiểm tra → `QRCode.toDataURL` tạo ảnh cục bộ → camera quét cùng URL gốc → hệ điều hành mở app đã xác minh hoặc website. Trong app, `LienKetMoUngDung.ts` dùng parser chung và chuyển tới danh sách/chi tiết; service tiếp tục kiểm tra ID và bản công bố.
 
 ## Cách kiểm tra các file chạy đúng
 

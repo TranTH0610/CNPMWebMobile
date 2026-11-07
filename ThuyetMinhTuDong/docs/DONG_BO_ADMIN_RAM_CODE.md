@@ -1,10 +1,12 @@
+> Tài liệu lưu trữ của phiên bản cũ, không chép đè lên nguồn hiện tại. Xem [cấu trúc sau refactor](./HuongDanCodeDeBaoTri.md).
+
 # Toàn bộ code đồng bộ Admin RAM và lượt QR
 
 Đường dẫn tính từ gốc monorepo. Các đoạn chú thích tiếng Việt nằm trong source. Không bao gồm .env thật hoặc dữ liệu RAM.
 
-## 1. TẠO MỚI — services/catalog/server.cjs
+## 1. TẠO MỚI — services/catalog/MayChuApi.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\server.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\MayChuApi.cjs
 
 API nội dung chung trong RAM, kiểm tra lệnh và revision; danh mục công bố; bộ đếm QR theo ngày Huế.
 
@@ -21,7 +23,7 @@ const {createRequire}=require('node:module')
 const {randomUUID}=require('node:crypto')
 const root=path.resolve(__dirname,'../..')
 // CHỨC NĂNG: Chạy đúng logic TypeScript đang dùng ở FE, tránh chép đôi workflow.
-function loadCore(){const runtime=path.join(root,'.runtime');fs.mkdirSync(runtime,{recursive:true});const req=createRequire(path.join(root,'apps/web/package.json'));req('esbuild').buildSync({entryPoints:[path.join(root,'packages/admin-core/src/index.ts')],bundle:true,platform:'node',format:'cjs',outfile:path.join(runtime,'admin-core.cjs')});return require(path.join(runtime,'admin-core.cjs'))}
+function loadCore(){const runtime=path.join(root,'.runtime');fs.mkdirSync(runtime,{recursive:true});const req=createRequire(path.join(root,'apps/web/package.json'));req('esbuild').buildSync({entryPoints:[path.join(root,'packages/admin-core/src/XuatCongKhai.ts')],bundle:true,platform:'node',format:'cjs',outfile:path.join(runtime,'admin-core.cjs')});return require(path.join(runtime,'admin-core.cjs'))}
 function createCatalogServer({now=Date.now,origins=['http://127.0.0.1:5173','http://localhost:5173','http://127.0.0.1:5174','http://localhost:5174'],core=loadCore()}={}){
  let raw=null,version=0,day='',visits=new Set()
  const instance=randomUUID()
@@ -92,9 +94,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 2. TẠO MỚI — services/catalog/catalog.test.cjs
+## 2. TẠO MỚI — services/catalog/KiemThuApiDiTich.test.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\catalog.test.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\services\catalog\KiemThuApiDiTich.test.cjs
 
 Kiểm thử hai client HTTP, xung đột, không lộ nháp, restart RAM, QR lặp và parser.
 
@@ -103,7 +105,7 @@ Kiểm thử hai client HTTP, xung đột, không lộ nháp, restart RAM, QR l�
  * npm run catalog:test gọi; Node test built-in, cổng ngẫu nhiên, dữ liệu chỉ nằm trong test.
  * UC13–UC17: kiểm tra xung đột, bản công bố, đồng bộ và chống đếm lặp. */
 const {test}=require('node:test'),assert=require('node:assert/strict')
-const {createCatalogServer}=require('./server.cjs')
+const {createCatalogServer}=require('./MayChuApi.cjs')
 async function setup(t,options){const server=createCatalogServer(options);await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections()}));return{url:'http://127.0.0.1:'+server.address().port,core:require('../../.runtime/admin-core.cjs')}}
 const input=p=>({id:p.id,expectedRevision:p.revision,title:p.record.canonicalTitle+' cập nhật',category:'monument',period:'1802',lat:'',lng:'',verified:false,images:p.record.images})
 test('Hai client đọc/ghi chung; phiên bản cũ bị 409 và không ghi đè',async t=>{const {url,core}=await setup(t);const web=core.createHttpAdminService(url),mobile=core.createHttpAdminService(url);const original=(await web.load()).places[0];await web.savePlace(input(original));const changed=(await mobile.load()).places[0];assert.equal(changed.record.canonicalTitle,original.record.canonicalTitle+' cập nhật');await assert.rejects(mobile.savePlace(input(original)),error=>error.code==='conflict');assert.equal((await mobile.load()).places[0].revision,2);assert.equal((await web.published())[0].canonicalTitle,original.record.canonicalTitle)})
@@ -112,7 +114,7 @@ test('Hai lệnh cùng revision chỉ một được ghi; API từ chối reset 
 test('QR đếm mỗi phiên/ngày một; ngày Huế đổi thì bộ đếm mới',async t=>{let now=Date.parse('2026-10-23T16:59:00Z');const {url,core}=await setup(t,{now:()=>now});const gate=core.createGateClient(url),id='gate_web_123456789012345';await gate.entry(id,'web');await gate.entry(id,'web');assert.equal((await gate.statistics()).today,1);await gate.entry('gate_app_123456789012345','mobile-app');assert.equal((await gate.statistics()).today,2);now+=120000;assert.equal((await gate.statistics()).today,0);await gate.entry(id,'web');assert.equal((await gate.statistics()).today,1)})
 test('Kho RAM độc lập sau restart; mất mạng báo lỗi không trả kho cục bộ',async t=>{const first=await setup(t),client=first.core.createHttpAdminService(first.url),p=(await client.load()).places[0];await client.deletePlace(p.id,p.revision);const second=await setup(t);assert.ok((await second.core.createHttpAdminService(second.url).load()).places.some(x=>x.id===p.id));await assert.rejects(first.core.createHttpAdminService('').load(),error=>error.code==='loadError')})
 
-test('Parser chỉ nhận query entry=gate trên trang chủ',async t=>{await setup(t);const {createRequire}=require('node:module'),path=require('node:path');const req=createRequire(path.resolve('apps/web/package.json'));const out=req('esbuild').buildSync({entryPoints:[path.resolve('packages/visitor-core/src/qr.ts')],bundle:true,platform:'node',format:'cjs',write:false}).outputFiles[0].text;const Module=require('node:module');const m=new Module('qr-test');m._compile(out,'qr-test.cjs');const policy={allowedOrigins:['https://guide.test'],allowHttp:false};assert.deepEqual(m.exports.parseQrTarget('https://guide.test/?entry=gate',policy),{kind:'home'});assert.throws(()=>m.exports.parseQrTarget('https://guide.test/?entry=other',policy));assert.throws(()=>m.exports.parseQrTarget('https://guide.test/places/ngo-mon?entry=gate',policy))})
+test('Parser chỉ nhận query entry=gate trên trang chủ',async t=>{await setup(t);const {createRequire}=require('node:module'),path=require('node:path');const req=createRequire(path.resolve('apps/web/package.json'));const out=req('esbuild').buildSync({entryPoints:[path.resolve('packages/visitor-core/src/PhanTichLienKetQR.ts')],bundle:true,platform:'node',format:'cjs',write:false}).outputFiles[0].text;const Module=require('node:module');const m=new Module('qr-test');m._compile(out,'qr-test.cjs');const policy={allowedOrigins:['https://guide.test'],allowHttp:false};assert.deepEqual(m.exports.parseQrTarget('https://guide.test/?entry=gate',policy),{kind:'home'});assert.throws(()=>m.exports.parseQrTarget('https://guide.test/?entry=other',policy));assert.throws(()=>m.exports.parseQrTarget('https://guide.test/places/ngo-mon?entry=gate',policy))})
 ```
 
 Cách kiểm tra:
@@ -120,9 +122,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 3. TẠO MỚI — packages/admin-core/src/httpService.ts
+## 3. TẠO MỚI — packages/admin-core/src/GoiApiQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\httpService.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\GoiApiQuanTri.ts
 
 Adapter HTTP và polling phiên bản 3 giây; client thống kê QR và retry chống đếm lặp.
 
@@ -198,9 +200,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 4. SỬA — packages/admin-core/src/react.tsx
+## 4. SỬA — packages/admin-core/src/TrangThaiReact.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\react.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\TrangThaiReact.tsx
 
 Hooks Admin và hook tải thống kê QR 5 giây; bỏ phản hồi tải cũ bằng sequence.
 
@@ -277,7 +279,7 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 5. SỬA — packages/admin-core/src/index.ts
+## 5. SỬA — packages/admin-core/src/XuatCongKhai.ts
 
 Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\index.ts
 
@@ -300,9 +302,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 6. SỬA — packages/admin-core/src/messages.ts
+## 6. SỬA — packages/admin-core/src/BanDichGiaoDien.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\messages.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\admin-core\src\BanDichGiaoDien.ts
 
 Thông báo kho chung, lỗi và giải thích chỉ số QR đủ năm ngôn ngữ.
 
@@ -1016,9 +1018,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 8. SỬA — apps/web/src/services/admin/services.ts
+## 8. SỬA — apps/web/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\admin\services.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\services\admin\KetNoiDichVuQuanTri.ts
 
 Gắn API vào Admin, danh mục công bố và bộ đếm QR của web.
 
@@ -1045,9 +1047,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 9. SỬA — apps/mobile/src/services/admin/services.ts
+## 9. SỬA — apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\admin\services.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\services\admin\KetNoiDichVuQuanTri.ts
 
 Gắn API LAN riêng cho Admin và API HTTPS cho du khách native.
 
@@ -1187,9 +1189,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 11. SỬA — apps/web/src/pages/admin/DashboardPage.tsx
+## 11. SỬA — apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\DashboardPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangTongQuan.tsx
 
 Bỏ reset, dùng lượt QR từ kho chung, có lỗi/thử lại.
 
@@ -1244,9 +1246,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 12. SỬA — apps/mobile/src/screens/admin/DashboardScreen.tsx
+## 12. SỬA — apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\DashboardScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManTongQuan.tsx
 
 Dashboard mobile dùng cùng bộ đếm QR; bỏ reset.
 
@@ -1307,9 +1309,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 13. SỬA — apps/web/src/pages/admin/ContentEditorPage.tsx
+## 13. SỬA — apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\ContentEditorPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangBienTapNoiDung.tsx
 
 Giữ bản đang gõ khi có cập nhật từ máy khác.
 
@@ -1382,9 +1384,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 14. SỬA — apps/mobile/src/screens/admin/ContentEditorScreen.tsx
+## 14. SỬA — apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ContentEditorScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManBienTapNoiDung.tsx
 
 Giữ nội dung chưa lưu trên mobile; revision cũ sẽ báo conflict.
 
@@ -1453,9 +1455,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 15. SỬA — apps/web/src/pages/admin/PlaceFormPage.tsx
+## 15. SỬA — apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\PlaceFormPage.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\pages\admin\TrangThemSuaDiTich.tsx
 
 Giữ metadata và expectedRevision cùng bản khi mở form.
 
@@ -1543,9 +1545,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 16. SỬA — apps/mobile/src/screens/admin/PlaceFormScreen.tsx
+## 16. SỬA — apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\PlaceFormScreen.tsx
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\screens\admin\ManThemSuaDiTich.tsx
 
 Giữ metadata và revision trên mobile để tránh ghi đè từ xa.
 
@@ -1632,9 +1634,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 17. TẠO MỚI — apps/web/src/hooks/useGateEntry.ts
+## 17. TẠO MỚI — apps/web/src/features/qr/hooks/useGhiNhanVaoCong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\hooks\useGateEntry.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\hooks\useGhiNhanVaoCong.ts
 
 Nhận nguồn QR cổng; giữ ID trong phiên trình duyệt.
 
@@ -1669,9 +1671,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 18. TẠO MỚI — apps/mobile/src/hooks/useGateEntry.ts
+## 18. TẠO MỚI — apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\hooks\useGateEntry.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\hooks\useGhiNhanVaoCong.ts
 
 Nhận link HTTPS khi mở app hoặc app đang chạy, gửi cùng ID phiên app.
 
@@ -1708,9 +1710,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 19. SỬA — apps/web/src/hooks/usePresenceHeartbeat.ts
+## 19. SỬA — apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\hooks\usePresenceHeartbeat.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\web\src\hooks\useBaoPhienHoatDong.ts
 
 Gọi hook QR chỉ trong bản du khách; giữ heartbeat đang có.
 
@@ -1766,9 +1768,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 20. SỬA — apps/mobile/src/hooks/usePresenceHeartbeat.ts
+## 20. SỬA — apps/mobile/src/features/presence/hooks/useBaoPhienHoatDong.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\hooks\usePresenceHeartbeat.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\apps\mobile\src\hooks\useBaoPhienHoatDong.ts
 
 Gọi hook QR trong luồng du khách được bật; giữ heartbeat native.
 
@@ -1808,9 +1810,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 21. SỬA — packages/visitor-core/src/qr.ts
+## 21. SỬA — packages/visitor-core/src/PhanTichLienKetQR.ts
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\qr.ts
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\packages\visitor-core\src\PhanTichLienKetQR.ts
 
 Cho đúng query entry=gate tại trang chủ; query lạ vẫn bị từ chối.
 
@@ -1945,9 +1947,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 22. TẠO MỚI — scripts/start-catalog.cjs
+## 22. TẠO MỚI — scripts/ChayApiDiTich.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\start-catalog.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\ChayApiDiTich.cjs
 
 Chạy RAM qua LAN và cập nhật URL API mobile theo IP máy tính.
 
@@ -1970,7 +1972,7 @@ for(const key of ['EXPO_PUBLIC_ADMIN_API_URL','EXPO_PUBLIC_CATALOG_API_URL','EXP
 }
 fs.writeFileSync(file,text)
 console.log('URL Admin mobile: http://'+address+':'+(process.env.CATALOG_PORT||8788)+' — restart Expo sau khi đổi .env')
-const child=spawn(process.execPath,[path.join(root,'services/catalog/server.cjs')],{cwd:root,env:{...process.env,CATALOG_HOST:process.env.CATALOG_HOST||'0.0.0.0'},stdio:'inherit',windowsHide:true})
+const child=spawn(process.execPath,[path.join(root,'services/catalog/MayChuApi.cjs')],{cwd:root,env:{...process.env,CATALOG_HOST:process.env.CATALOG_HOST||'0.0.0.0'},stdio:'inherit',windowsHide:true})
 child.on('error',error=>{console.error(error.message);process.exitCode=1});child.on('exit',code=>{process.exitCode=code||0})
 /* CÁCH KIỂM TRA: Cùng mạng mở /version bằng IP trên điện thoại; Expo tải lại để dùng URL mới. */
 ```
@@ -1980,9 +1982,9 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 23. SỬA — scripts/create-public-qr.cjs
+## 23. SỬA — scripts/TaoMaQRCongKhai.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\create-public-qr.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\TaoMaQRCongKhai.cjs
 
 Tạo QR có dấu nguồn cổng và cấu hình catalog native qua tunnel.
 
@@ -1993,7 +1995,7 @@ Tạo QR có dấu nguồn cổng và cấu hình catalog native qua tunnel.
  * --configure cập nhật đúng một biến URL trong .env mobile và .env.local web.
  * Liên quan UC05; file ảnh và bản sao cấu hình chỉ nằm trong .qr-output đã ignore.
  */
-const { fetchQrPage } = require('./qr-http.cjs')
+const { fetchQrPage } = require('./KetNoiHttpsQR.cjs')
 const fs = require('node:fs')
 const path = require('node:path')
 const { createRequire } = require('node:module')
@@ -2097,20 +2099,20 @@ Cách kiểm tra:
 - Đối chiếu vai trò file ở hướng dẫn DONG_BO_ADMIN_RAM.md.
 - Chạy typecheck/lint/test tương ứng và các bước kiểm tra hai thiết bị ở checklist.
 
-## 24. SỬA — scripts/start-public-demo.cjs
+## 24. SỬA — scripts/ChayDemoCongKhai.cjs
 
-Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\start-public-demo.cjs
+Đường dẫn: D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong\scripts\ChayDemoCongKhai.cjs
 
 Khởi động API nếu thiếu; kiểm tra API công khai trước khi cấp QR.
 
 ```javascript
 /**
  * FILE NÀY LÀM GÌ: Mở Vite/tunnel HTTPS và chỉ công bố QR đã kiểm tra được.
- * npm run demo:public gọi; phụ thuộc cloudflared và create-public-qr.cjs.
+ * npm run demo:public gọi; phụ thuộc cloudflared và TaoMaQRCongKhai.cjs.
  * UC05: QR chung mở website, không yêu cầu Expo Go/tài khoản du khách.
  */
 const fs = require('node:fs')
-const { readWithPublicDns } = require('./qr-http.cjs')
+const { readWithPublicDns } = require('./KetNoiHttpsQR.cjs')
 const path = require('node:path')
 const { createRequire } = require('node:module')
 const { spawn, spawnSync } = require('node:child_process')
@@ -2125,7 +2127,7 @@ const local = 'http://127.0.0.1:' + previewPort
 const isBuiltGuidePage = text => typeof text === 'string' && /<title>HueGuide<\/title>/.test(text) && /id=["']root["']/.test(text) && /src=["']\/assets\/[^"']+\.js["']/.test(text) && !text.includes('/@vite/client')
 const builtEntry = text => isBuiltGuidePage(text) ? text.match(/src=["'](\/assets\/[^"']+\.js)["']/)?.[1] : null
 // CHỨC NĂNG: Kiểm tra đúng file sau khi sắp xếp services; test bắt đường dẫn cũ.
-const GUIDE_MODULE_PATH = '/src/services/platform.ts'
+const GUIDE_MODULE_PATH = '/src/services/KetNoiNenTang.ts'
 const isGuideModule = text => typeof text === 'string' && !/<html|<!doctype/i.test(text) && text.includes('publicSiteOrigin') && text.includes('siteOrigin')
 const isGuidePage = text => typeof text === 'string' && /id=["']root["']/.test(text) && text.includes('/src/main.tsx')
 
@@ -2167,7 +2169,7 @@ function launch(command, args, cwd, name) {
   } finally { fs.closeSync(descriptor) }
 }
 function configureQr(origin) {
-  const result = spawnSync(process.execPath, [path.join(root, 'scripts/create-public-qr.cjs'), '--url', origin, '--configure'],
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts/TaoMaQRCongKhai.cjs'), '--url', origin, '--configure'],
     { cwd: root, encoding: 'utf8', windowsHide: true })
   if (result.status !== 0) throw new Error(result.stderr || 'Không tạo được QR')
   process.stdout.write(result.stdout)
@@ -2196,7 +2198,7 @@ async function main() {
   const catalogOrigin=process.env.CATALOG_TARGET||'http://127.0.0.1:8788'
   if(!await read(catalogOrigin+'/version')){
     if(process.env.CATALOG_TARGET)throw new Error('CATALOG_TARGET chưa chạy')
-    launch(process.execPath,[path.join(root,'services/catalog/server.cjs')],root,'catalog')
+    launch(process.execPath,[path.join(root,'services/catalog/MayChuApi.cjs')],root,'catalog')
     let ready=false
     for(let i=0;i<20;i++){if(await read(catalogOrigin+'/version')){ready=true;break};await delay(300)}
     if(!ready)throw new Error('Không khởi động được Catalog RAM')
@@ -2210,7 +2212,7 @@ async function main() {
   }
   if (!await readyPresence()) {
     if (process.env.PRESENCE_TARGET) throw new Error('PRESENCE_TARGET chưa sẵn sàng; khởi động server RAM đã cấu hình trước.')
-    presenceProcess = launch(process.execPath, [path.join(root, 'services/presence/server.cjs')], root, 'presence')
+    presenceProcess = launch(process.execPath, [path.join(root, 'services/presence/MayChuApi.cjs')], root, 'presence')
     let ready = false
     for (let i = 0; i < 20; i++) { if (await readyPresence()) { ready = true; break }; await delay(300) }
     if (!ready) { presenceProcess.child.kill(); throw new Error('Không khởi động được RAM server. Xem ' + presenceProcess.log) }
@@ -2304,15 +2306,15 @@ Lệnh catalog:start/catalog:test và ghép test vào bộ kiểm tra chung.
     "lint:visitor": "npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile",
     "lint": "npm run lint --workspace=@travelguide/admin-core && npm run lint --workspace=@travelguide/visitor-core && npm run lint --workspace=mobile && npm run lint --workspace=web",
     "typecheck": "npm run typecheck --workspace=@travelguide/admin-core && npm run typecheck --workspace=@travelguide/visitor-core && npm run typecheck --workspace=mobile && npm run typecheck --workspace=web",
-    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/app-links.test.cjs scripts/public-qr.test.cjs && npm run presence:test && npm run catalog:test",
+    "test": "npm run test --workspace=@travelguide/admin-core && npm run test --workspace=@travelguide/visitor-core && npm run test --workspace=@travelguide/place-core && node --test scripts/KiemThuLienKetUngDung.test.cjs scripts/KiemThuQRCongKhai.test.cjs && npm run presence:test && npm run catalog:test",
     "build:web": "npm run build --workspace=web",
-    "links:generate": "node scripts/generate-app-links.cjs",
-    "qr:create": "node scripts/create-public-qr.cjs",
-    "demo:public": "node scripts/start-public-demo.cjs",
-    "presence:start": "node services/presence/server.cjs",
-    "presence:test": "node --test services/presence/presence.test.cjs",
-    "catalog:start": "node scripts/start-catalog.cjs",
-    "catalog:test": "node --test services/catalog/catalog.test.cjs"
+    "links:generate": "node scripts/TaoLienKetUngDung.cjs",
+    "qr:create": "node scripts/TaoMaQRCongKhai.cjs",
+    "demo:public": "node scripts/ChayDemoCongKhai.cjs",
+    "presence:start": "node services/presence/MayChuApi.cjs",
+    "presence:test": "node --test services/presence/KiemThuPhienHoatDong.test.cjs",
+    "catalog:start": "node scripts/ChayApiDiTich.cjs",
+    "catalog:test": "node --test services/catalog/KiemThuApiDiTich.test.cjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.46.2",

@@ -11,15 +11,15 @@
     "esModuleInterop": true
   },
   "include": [
-    "src/domain/model.ts",
-    "src/catalog/catalog.ts",
-    "src/links/qr.ts",
-    "src/data/mock.ts",
-    "src/i18n/messages.ts",
-    "src/catalog/search.ts",
-    "src/links/site.ts",
-    "src/journey/journey.ts",
-    "src/journey/journey-data.ts",
+    "src/domain/KieuDuLieuDuKhach.ts",
+    "src/catalog/DanhMucDiTich.ts",
+    "src/links/PhanTichLienKetQR.ts",
+    "src/data/DuLieuKhoiTao.ts",
+    "src/i18n/BanDichGiaoDien.ts",
+    "src/catalog/TimKiemVaBoLoc.ts",
+    "src/links/DiaChiWebsite.ts",
+    "src/journey/HanhTrinh.ts",
+    "src/journey/DuLieuHanhTrinh.ts",
     "src/audio/*.ts"
   ]
 }

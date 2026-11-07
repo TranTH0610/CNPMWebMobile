@@ -1,16 +1,16 @@
 # Thanh nghe thử Admin mobile
 
-File chính: `apps/mobile/src/components/admin/AudioPreview.tsx` (TẠO MỚI).
-File này được `AdminUI.tsx` xuất lại; màn biên tập và kiểm duyệt vẫn dùng import cũ.
+File chính: `apps/mobile/src/features/admin/content/components/NgheThuBanThu.tsx` (TẠO MỚI).
+File này được `ThanhPhanQuanTri.tsx` xuất lại; màn biên tập và kiểm duyệt vẫn dùng import cũ.
 
 | Folder/file từ gốc dự án | Chức năng |
 |---|---|
-| apps/mobile/src/components/admin/AudioPreview.tsx | Thanh play/pause, thời gian, tua MP3, loa/âm lượng, menu tốc độ. |
-| apps/mobile/src/components/admin/AdminUI.tsx | Xuất lại AudioPreview để hai màn Admin dùng cùng player. |
-| packages/visitor-core/src/audio/preview.ts | Giữ nguồn khi pause, nạp metadata không tự phát, tua thật, tốc độ và âm lượng. |
-| apps/mobile/src/services/journeyAdapters.ts | Nối điều khiển vào expo-audio; volume thay âm lượng player. |
-| packages/admin-core/src/i18n/messages.ts | Nhãn nút mới bằng VI/EN/CN/PT/JA. |
-| packages/visitor-core/tests/audio.test.cjs | Kiểm tra giữ tiến độ, tua khi pause, âm lượng/tốc độ và cleanup metadata. |
+| apps/mobile/src/features/admin/content/components/NgheThuBanThu.tsx | Thanh play/pause, thời gian, tua MP3, loa/âm lượng, menu tốc độ. |
+| apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx | Xuất lại AudioPreview để hai màn Admin dùng cùng player. |
+| packages/visitor-core/src/audio/DieuKhienNgheThu.ts | Giữ nguồn khi pause, nạp metadata không tự phát, tua thật, tốc độ và âm lượng. |
+| apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts | Nối điều khiển vào expo-audio; volume thay âm lượng player. |
+| packages/admin-core/src/i18n/BanDichGiaoDien.ts | Nhãn nút mới bằng VI/EN/CN/PT/JA. |
+| packages/visitor-core/tests/KiemThuAmThanh.test.cjs | Kiểm tra giữ tiến độ, tua khi pause, âm lượng/tốc độ và cleanup metadata. |
 
 Gốc dự án: `D:/3.HTML/Đồ án CNPM/ThuyetMinhTuDong`.
 

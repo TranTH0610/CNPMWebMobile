@@ -14,11 +14,11 @@ Nếu server 5173 đang chạy, cấu hình Vite sẽ tự khởi động lại 
 | File | Vai trò |
 |---|---|
 | apps/web/src/main.tsx | Entry du khách, không AdminProvider |
-| apps/web/src/navigation/AppRoutes.tsx | Chỉ route du khách, không import AdminRoutes |
-| apps/web/src/components/Navbar.tsx | Không có liên kết quản lý |
+| apps/web/src/app/DinhTuyenDuKhach.tsx | Chỉ route du khách, không import AdminRoutes |
+| apps/web/src/shared/layouts/ThanhDieuHuong.tsx | Không có liên kết quản lý |
 | apps/web/src/main-admin.tsx | Entry quản lý với provider riêng |
-| apps/web/src/AdminApp.tsx | Chỉ điều hướng vào các trang quản lý |
-| apps/web/src/layouts/AdminLayout.tsx | Khung quản lý không liên kết sang du khách |
+| apps/web/src/app/UngDungQuanTri.tsx | Chỉ điều hướng vào các trang quản lý |
+| apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx | Khung quản lý không liên kết sang du khách |
 | apps/web/vite.config.ts | Chọn entry trước khi Vite phân tích HTML; chặn admin trên dev/preview visitor |
 | apps/web/package.json | Lệnh dev:admin, build:admin, preview:admin |
 | apps/web/vercel.json | Cấu hình visitor không rewrite route admin |

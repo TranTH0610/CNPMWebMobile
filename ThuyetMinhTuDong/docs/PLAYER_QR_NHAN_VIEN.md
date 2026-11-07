@@ -27,19 +27,19 @@ Nếu phải kiểm soát quyền vào theo vé, cần server phát mã/vé có 
 
 | File | Thay đổi |
 |---|---|
-| apps/web/src/components/JourneyPlayer.tsx | Header gọn, nút điều khiển giữa, tốc độ dạng chip |
-| apps/web/src/styles/player.css | Bố cục responsive, dùng token và bỏ override khoảng trống cũ |
-| apps/mobile/src/components/JourneyPlayer.tsx | Cùng cấu trúc header/điều khiển/tốc độ với web |
-| apps/web/src/components/Navbar.tsx | Bỏ icon và liên kết QR |
-| apps/web/src/navigation/AppRoutes.tsx | Không đăng ký /qr |
+| apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx | Header gọn, nút điều khiển giữa, tốc độ dạng chip |
+| apps/web/src/features/journey/styles/GiaoDienTrinhNghe.css | Bố cục responsive, dùng token và bỏ override khoảng trống cũ |
+| apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx | Cùng cấu trúc header/điều khiển/tốc độ với web |
+| apps/web/src/shared/layouts/ThanhDieuHuong.tsx | Bỏ icon và liên kết QR |
+| apps/web/src/app/DinhTuyenDuKhach.tsx | Không đăng ký /qr |
 | apps/web/vite.config.ts | Trả 404 route QR cũ ở dev/preview |
 | apps/web/vercel.json | Bỏ rewrite /qr |
-| apps/mobile/src/screens/HomeScreen.tsx | Bỏ nút scan QR trong hero |
-| apps/mobile/src/screens/SettingsScreen.tsx | Bỏ thẻ mở/chia sẻ QR |
-| apps/mobile/src/navigation/RootNavigator.tsx, types.ts | Bỏ route Scan |
+| apps/mobile/src/features/explore/screens/ManKhamPha.tsx | Bỏ nút scan QR trong hero |
+| apps/mobile/src/features/settings/screens/ManCaiDat.tsx | Bỏ thẻ mở/chia sẻ QR |
+| apps/mobile/src/navigation/DieuHuongGoc.tsx, KieuDieuHuongDuKhach.ts | Bỏ route Scan |
 | QrPage.tsx, QrImage.tsx, qr.css | Đã xóa UI phát QR trên web du khách |
 | WebAccessCard.tsx, ScanScreen.tsx | Đã xóa UI phát/chia sẻ/scan trên mobile du khách |
-| scripts/create-public-qr.cjs, start-public-demo.cjs | Giữ nguyên, chỉ nhân viên vận hành |
+| scripts/TaoMaQRCongKhai.cjs, ChayDemoCongKhai.cjs | Giữ nguyên, chỉ nhân viên vận hành |
 | .qr-output/ | Giữ ảnh QR/URL để nhân viên cung cấp tại cổng |
 
 ## Chạy thử

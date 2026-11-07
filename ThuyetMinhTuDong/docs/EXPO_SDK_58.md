@@ -11,9 +11,9 @@
 | package-lock.json | Khóa cây dependency sau nâng cấp và dedupe. |
 | apps/mobile/metro.config.js | Chọn React mobile cho source dùng chung, tránh lấy React 18 của web. |
 | apps/mobile/tsconfig.json | Bỏ đường dẫn ép expo-modules-core cũ; dùng phân giải module chuẩn. |
-| apps/mobile/src/hooks/useGateEntry.ts | Chấp nhận undefined từ Linking.getInitialURL theo kiểu RN 0.88; link rỗng vẫn bỏ qua. |
-| apps/mobile/src/screens/admin/PlacesScreen.tsx | ListEmptyComponent dùng undefined khi chưa cần hiển thị, đúng kiểu FlatList mới. |
-| apps/mobile/src/screens/admin/ReviewsScreen.tsx | Tương tự cho danh sách kiểm duyệt. |
+| apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts | Chấp nhận undefined từ Linking.getInitialURL theo kiểu RN 0.88; link rỗng vẫn bỏ qua. |
+| apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx | ListEmptyComponent dùng undefined khi chưa cần hiển thị, đúng kiểu FlatList mới. |
+| apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx | Tương tự cho danh sách kiểm duyệt. |
 | apps/mobile/.gitignore | Bỏ qua cache .expo sinh từ máy đang chạy. |
 
 Không sửa giao diện, bản dịch, dữ liệu di tích, quy tắc QR hoặc dữ liệu RAM. Không đổi React của web sang 19, không nâng React Navigation lên major khác. Không khởi động lại server RAM.
