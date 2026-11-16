@@ -1,0 +1,174 @@
+# FILE NÀY LÀM GÌ: Chạy SQL, API nội dung, API phiên, web khách và web quản lý.
+# DÙNG BỞI: npm run docker:up. Không thay đổi schema hoặc tự xóa dữ liệu đang có.
+name: hueguide
+
+# CHỨC NĂNG: Các API dùng một cấu hình kết nối, tránh mỗi nền tảng đọc một database.
+x-sql-environment: &sql-environment
+  SQL_SERVER: sqlserver
+  SQL_PORT: "1433"
+  SQL_DATABASE: ${DOCKER_SQL_DATABASE:-HueGuideDemo}
+  SQL_AUTH: sql
+  SQL_USER: ${DOCKER_SQL_USER:-hueguide_app}
+  SQL_ENCRYPT: "true"
+  SQL_TRUST_CERT: "true" # Chỉ tin chứng thư tự ký trong mạng Docker của bản demo.
+
+# CHỨC NĂNG: Tái sử dụng một image Node/Python cho hai API và bước phục hồi database.
+x-api: &api
+  image: hueguide-api:local
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+    target: api
+  init: true # Thu hồi tiến trình con Python khi API kết thúc.
+  networks: [backend]
+  restart: unless-stopped
+
+# CHỨC NĂNG: Web chỉ sẵn sàng khi Nginx gọi được API SQL qua proxy thực tế.
+x-web-health: &web-health
+  test: [CMD, wget, --quiet, --spider, http://127.0.0.1/api/catalog/version]
+  interval: 10s
+  timeout: 5s
+  retries: 12
+  start_period: 10s
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer # Chỉ dùng phát triển và báo cáo, không dùng sản xuất.
+    # XỬ LÝ: Mật khẩu đọc từ secret khi chạy; không lưu trong image hoặc Compose.
+    command: [/bin/bash, -c, 'export MSSQL_SA_PASSWORD="$$(cat /run/secrets/sql_admin_password)"; exec /opt/mssql/bin/sqlservr']
+    secrets: [sql_admin_password]
+    ports:
+      - "127.0.0.1:${DOCKER_SQL_PORT:-14330}:1433" # SSMS cục bộ; không mở SQL cho điện thoại.
+    volumes:
+      - sql_data:/var/opt/mssql # Tạo lại container vẫn giữ dữ liệu nếu giữ volume này.
+      - ./.docker/backups:/backups:ro # Chỉ đọc bản sao lưu nguồn, không ghi đè file backup.
+    networks: [backend]
+    restart: unless-stopped
+    healthcheck:
+      # TẠI SAO: Container chạy chưa có nghĩa SQL đã nhận được truy vấn.
+      test: [CMD-SHELL, 'SQLCMDPASSWORD="$$(cat /run/secrets/sql_admin_password)" /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -C -b -Q "SELECT 1" -o /dev/null']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  database-init:
+    <<: *api
+    restart: "no" # Chạy một lần, không lặp phục hồi khi có lỗi.
+    command: [node, docker/scripts/KhoiTaoSql.cjs]
+    environment:
+      <<: *sql-environment
+    secrets: [sql_admin_password, sql_app_password]
+    volumes:
+      - ./.docker/backups:/backups:ro
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  catalog:
+    <<: *api
+    command: [node, docker/scripts/KhoiChayApi.cjs, catalog]
+    environment:
+      <<: *sql-environment
+      CATALOG_HOST: 0.0.0.0
+      CATALOG_PORT: "8788"
+      PRESENCE_TARGET: http://presence:8787
+      NARRATION_PYTHON: /opt/tts/bin/python
+    secrets: [sql_app_password]
+    ports:
+      - "127.0.0.1:${DOCKER_CATALOG_PORT:-18888}:8788" # Metro mobile chuyển tiếp qua cổng này.
+    depends_on:
+      database-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, node, -e, 'fetch("http://127.0.0.1:8788/version").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))']
+      interval: 15s
+      timeout: 8s
+      retries: 10
+      start_period: 15s
+
+  presence:
+    <<: *api
+    command: [node, docker/scripts/KhoiChayApi.cjs, presence]
+    environment:
+      <<: *sql-environment
+      PRESENCE_HOST: 0.0.0.0
+      PRESENCE_PORT: "8787"
+    secrets: [sql_app_password]
+    ports:
+      - "127.0.0.1:${DOCKER_PRESENCE_PORT:-18887}:8787" # Chỉ máy chạy Metro được gọi trực tiếp.
+    depends_on:
+      database-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, node, -e, 'fetch("http://127.0.0.1:8787/statistics/active").then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))']
+      interval: 15s
+      timeout: 8s
+      retries: 10
+      start_period: 15s
+
+  visitor:
+    image: hueguide-visitor:local
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: visitor
+    ports:
+      - "${DOCKER_VISITOR_BIND:-0.0.0.0}:${DOCKER_VISITOR_PORT:-18080}:80"
+    networks: [backend]
+    depends_on:
+      catalog:
+        condition: service_healthy
+      presence:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck: *web-health
+    # CHỨC NĂNG: Đọc URL QR từ host; cập nhật file bằng qr:create --configure không cần build lại web.
+    volumes:
+      - type: bind
+        source: ./apps/web/static/visitor-config.json
+        target: /usr/share/nginx/html/visitor-config.json
+        read_only: true
+        bind:
+          create_host_path: false
+
+  admin:
+    image: hueguide-admin:local
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: admin
+    ports:
+      - "127.0.0.1:${DOCKER_ADMIN_PORT:-18081}:80" # Quản lý chưa có xác thực thật: chỉ mở localhost.
+    networks: [backend]
+    depends_on:
+      catalog:
+        condition: service_healthy
+      presence:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck: *web-health
+    # CHỨC NĂNG: Đọc URL QR từ host; cập nhật file bằng qr:create --configure không cần build lại web.
+    volumes:
+      - type: bind
+        source: ./apps/web/static/visitor-config.json
+        target: /usr/share/nginx/html/visitor-config.json
+        read_only: true
+        bind:
+          create_host_path: false
+
+# CHỨC NĂNG: Cấp đúng mật khẩu cho đúng dịch vụ; web không được nhận secret SQL.
+secrets:
+  sql_admin_password:
+    file: ./.docker/secrets/sql-admin-password
+  sql_app_password:
+    file: ./.docker/secrets/sql-app-password
+
+volumes:
+  sql_data: # Không chạy down -v nếu muốn giữ database.
+
+networks:
+  backend: # Các dịch vụ tìm nhau bằng tên service, không dùng IP máy tính.

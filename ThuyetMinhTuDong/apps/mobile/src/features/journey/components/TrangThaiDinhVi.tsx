@@ -56,7 +56,7 @@ export function GpsStatus() {
         <Text style={[styles.title, visual.error && { color: colors.danger }]}>
           {t(visual.key)}
         </Text>
-        {nearby && state.gps && (
+        {nearby && state.gps && state.fix && (
           <Text style={styles.text}>
             {publishedText(nearby, language)?.title ?? nearby.canonicalTitle}
           </Text>

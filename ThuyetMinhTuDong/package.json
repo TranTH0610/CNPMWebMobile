@@ -32,7 +32,18 @@
     "test:env": "node --test scripts/KiemThuCauHinhMoiTruong.test.cjs",
     "format": "prettier --write \"apps/*/src/**/*.{ts,tsx,css}\" \"packages/admin-core/src/**/*.{ts,tsx}\" \"services/{catalog,database}/**/*.cjs\" \".prettierrc.cjs\" \".eslintrc.cjs\"",
     "format:check": "prettier --check \"apps/*/src/**/*.{ts,tsx,css}\" \"packages/admin-core/src/**/*.{ts,tsx}\" \"services/{catalog,database}/**/*.cjs\" \".prettierrc.cjs\" \".eslintrc.cjs\"",
-    "lint:services": "eslint services/catalog services/database --ext .cjs"
+    "lint:services": "eslint services/catalog services/database --ext .cjs",
+    "docker:prepare": "node docker/scripts/ChuanBiDocker.cjs",
+    "docker:up": "node docker/scripts/DieuKhienDocker.cjs up",
+    "docker:stop": "node docker/scripts/DieuKhienDocker.cjs stop",
+    "docker:down": "node docker/scripts/DieuKhienDocker.cjs down",
+    "docker:status": "node docker/scripts/DieuKhienDocker.cjs status",
+    "docker:logs": "node docker/scripts/DieuKhienDocker.cjs logs",
+    "docker:check": "node docker/scripts/KiemTraHeThongDocker.cjs",
+    "docker:test": "node --test docker/scripts/KiemThuDocker.test.cjs",
+    "docker:mobile": "node docker/scripts/ChayMobile.cjs",
+    "docker:mobile:admin": "node docker/scripts/ChayMobile.cjs --admin",
+    "lint:docker": "eslint docker/scripts --ext .cjs"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.46.2",

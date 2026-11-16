@@ -50,3 +50,6 @@ apps/web/static/visitor-config.json
 *.bak
 *.trn
 *.log
+
+# Secret, backup và dữ liệu Docker riêng của máy.
+.docker/

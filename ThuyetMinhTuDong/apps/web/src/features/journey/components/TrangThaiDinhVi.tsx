@@ -50,7 +50,7 @@ export function GpsStatus() {
       <Icon name="pin" />
       <div>
         <strong>{t(visual.key)}</strong>
-        {nearby && state.gps && (
+        {nearby && state.gps && state.fix && (
           <p>{publishedText(nearby, language)?.title ?? nearby.canonicalTitle}</p>
         )}
         {state.status === 'playing' && (

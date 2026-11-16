@@ -478,3 +478,71 @@ test('UC07: refresh danh mục không xóa lỗi audio thật', async () => {
  
  await engine.refreshCatalog();assert.equal(engine.snapshot().error,'audioFailed');engine.dispose()
 })
+
+// CHỨC NĂNG: Tái hiện lỗi điểm A vẫn còn được gợi ý sau khi GPS mất độ tin cậy.
+// TẠI SAO: Kiểm thử bằng fix mô phỏng nên không phải tới Huế; không thay tọa độ dữ liệu thật.
+test('UC06: fix yếu hoặc quá cũ xóa gợi ý và phục hồi khi có fix mới', async () => {
+  const { engine } = fixture()
+  await engine.start()
+  engine.acceptFix(fix())
+  assert.equal(engine.snapshot().suggestedId, 'ngo-mon')
+  engine.acceptFix({ ...fix(), accuracy: 1000 })
+  assert.equal(engine.snapshot().fix, undefined)
+  assert.equal(engine.snapshot().suggestedId, undefined)
+  assert.equal(engine.snapshot().error, 'gpsWeak')
+  engine.acceptFix(fix())
+  assert.equal(engine.snapshot().suggestedId, 'ngo-mon')
+  assert.equal(engine.snapshot().error, undefined)
+  engine.acceptFix({ ...fix(), timestamp: Date.now() - 31000 })
+  assert.equal(engine.snapshot().suggestedId, undefined)
+  engine.dispose()
+})
+
+test('UC06: tắt rồi bật GPS không dùng gợi ý cũ hoặc callback của lần trước', async () => {
+  let next
+  const { engine } = fixture({ watch: async callback => { next = callback; return () => {} } })
+  await engine.start()
+  await engine.gps(true)
+  next(fix())
+  assert.equal(engine.snapshot().suggestedId, 'ngo-mon')
+  const oldNext = next
+  await engine.gps(false)
+  assert.equal(engine.snapshot().fix, undefined)
+  assert.equal(engine.snapshot().suggestedId, undefined)
+  oldNext(fix())
+  assert.equal(engine.snapshot().suggestedId, undefined)
+  await engine.gps(true)
+  assert.equal(engine.snapshot().fix, undefined)
+  assert.equal(engine.snapshot().suggestedId, undefined)
+  next(fix())
+  assert.equal(engine.snapshot().suggestedId, 'ngo-mon')
+  engine.dispose()
+})
+
+test('UC06/07: lỗi watcher xóa marker/gợi ý nhưng không dừng bài nghe', async () => {
+  let fail
+  const { engine, tracks } = fixture({ watch: async (_next, onFail) => { fail = onFail; return () => {} } })
+  await engine.start()
+  await engine.gps(true)
+  engine.acceptFix(fix())
+  await engine.play('ky-dai', 'vi')
+  fail()
+  assert.equal(engine.snapshot().gps, false)
+  assert.equal(engine.snapshot().fix, undefined)
+  assert.equal(engine.snapshot().suggestedId, undefined)
+  assert.equal(engine.snapshot().session.placeId, 'ky-dai')
+  assert.equal(engine.snapshot().status, 'playing')
+  assert.equal(tracks[0].playing, true)
+  engine.dispose()
+})
+
+test('UC06: watcher báo lỗi ngay khi đăng ký phải được gỡ', async () => {
+  let stops = 0
+  const { engine } = fixture({ watch: async (_next, fail) => { fail(); return () => { stops++ } } })
+  await engine.start()
+  await engine.gps(true)
+  assert.equal(stops, 1)
+  assert.equal(engine.snapshot().gps, false)
+  assert.equal(engine.snapshot().error, 'gpsFailed')
+  engine.dispose()
+})

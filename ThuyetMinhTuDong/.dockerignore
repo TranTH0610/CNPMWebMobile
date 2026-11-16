@@ -1,0 +1,24 @@
+# FILE NÀY LÀM GÌ: Loại cấu hình bí mật, cache và dependency của Windows khỏi image.
+**/node_modules
+**/.env
+**/.env.*
+.git
+.docker
+.runtime
+.tools
+.qr-output
+**/.expo
+**/.test-build
+**/.verify-*
+**/dist
+**/dist-admin
+**/*.bak
+**/*.trn
+**/*.log
+**/*.pem
+**/*.key
+**/*.pfx
+**/*.p12
+docs
+apps/web/static/visitor-config.json
+# Không loại static/assets: các ảnh và bản thu hiện có cần được giữ cho web/API.

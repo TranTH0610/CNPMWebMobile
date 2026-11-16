@@ -47,6 +47,7 @@ export function VisitorMap({ selected }: { selected: string | null }) {
   const element = useRef<HTMLDivElement>(null)
 
   const [failed, setFailed] = useState(false)
+  const [attempt, setAttempt] = useState(0)
 
   const t = useText()
 
@@ -72,6 +73,8 @@ export function VisitorMap({ selected }: { selected: string | null }) {
   useEffect(() => {
     if (!element.current) return
 
+    // CHỨC NĂNG: Mỗi lần thử lại xóa lỗi cũ và tạo lớp bản đồ mới.
+    setFailed(false)
     const map = L.map(element.current, { zoomAnimation: false }).setView([16.468, 107.578], 17)
 
     mapRef.current = map
@@ -129,7 +132,7 @@ export function VisitorMap({ selected }: { selected: string | null }) {
       mapRef.current = null
       userLayer.current = null
     }
-  }, [state.places, selected, language, open])
+  }, [state.places, selected, language, open, attempt])
   // TẠI SAO: Marker phải khớp dữ liệu/ngôn ngữ/điểm chọn; tạo mới mà không gỡ map cũ sẽ giữ DOM và
   // listener thừa.
   // CHỨC NĂNG: Xóa marker vị trí khách cũ; nếu có state.fix thì vẽ lại marker ở tọa độ mới.
@@ -146,12 +149,17 @@ export function VisitorMap({ selected }: { selected: string | null }) {
       L.circleMarker([state.fix.lat, state.fix.lng], { radius: 9, color: '#16813c' }).addTo(
         userLayer.current,
       )
-  }, [state.fix, state.places, selected, language, open])
+  }, [state.fix, state.places, selected, language, open, attempt])
   // TẠI SAO: Vị trí khách di chuyển cần cập nhật, không để nhiều dấu vị trí cũ tồn tại đồng thời.
 
   return (
     <>
-      {failed && <p role="alert">{t('loadError')}</p>}
+      {failed && (
+        <div role="alert">
+          <p>{t('jMapFailed')}</p>
+          <button type="button" onClick={() => setAttempt(value => value + 1)}>{t('jRetry')}</button>
+        </div>
+      )}
       <div
         ref={element}
         role="region"

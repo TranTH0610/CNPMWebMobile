@@ -525,7 +525,12 @@ export class JourneyController {
     // Khai báo prior: đọc this.state.error từ đối tượng/mảng để dùng tại bước hiện tại.
     const prior = this.state.error
     // Thực hiện Gọi this.set({ fix: weak ? undefined : fix, error: weak ? 'gpsWeak' : prior === 'gpsWeak' || p. | Gán thuộc tính fix: chọn giữa hai giá trị theo điều kiện weak. | Gán thuộc tính error: chọn giữa hai giá trị theo điều kiện weak.
-    this.set({ fix: weak ? undefined : fix, error: weak ? 'gpsWeak' : prior === 'gpsWeak' || prior === 'gpsFailed' ? undefined : prior })
+    // CHỨC NĂNG: Vô hiệu hóa gợi ý cũ khi tín hiệu mới không còn tin cậy.
+    // XỬ LÝ: Xóa cả tọa độ và suggestedId; giữ nguyên phiên nghe và nguồn audio.
+    // TẠI SAO: Không để tên di tích cũ trông như được nhận diện từ GPS đang bị lỗi.
+    this.set({ fix: weak ? undefined : fix,
+      suggestedId: weak ? undefined : this.state.suggestedId,
+      error: weak ? 'gpsWeak' : prior === 'gpsWeak' || prior === 'gpsFailed' ? undefined : prior })
     // Rẽ nhánh nếu weak || !['idle', 'paused', 'error'].includes(this.state.status) || this.state.restore. | Thoát hàm hiện tại ngay.
     if (weak || !['idle', 'paused', 'error'].includes(this.state.status) || this.state.restore) return
     
@@ -542,17 +547,25 @@ export class JourneyController {
     // Thực hiện Gọi this.unwatch?.(). | Thực hiện tính biểu thức this.unwatch = undefined.
     this.unwatch?.(); this.unwatch = undefined
     // Thực hiện Gọi this.set({ gps: enabled, error: undefined }). | Gán thuộc tính gps: sử dụng enabled làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng. | Gán thuộc tính error: sử dụng undefined làm giá trị của bước hiện tại. Đặt tên trường để nơi nhận đọc đúng giá trị theo hợp đồng đối tượng.
-    this.set({ gps: enabled, error: undefined })
+    // CHỨC NĂNG: Mỗi lần bật lại bắt đầu bằng trạng thái chờ vị trí mới.
+    // TẠI SAO: Tắt GPS hoặc đang xin lại quyền không được giữ marker/gợi ý của lần cũ.
+    this.set({ gps: enabled, fix: undefined, suggestedId: undefined, error: undefined })
     // Rẽ nhánh nếu !enabled. | Thoát hàm hiện tại ngay.
     if (!enabled) return
     // Bắt đầu vùng try.
     try {
       
-      const stop = await this.ports.watch(fix => { if (request === this.gpsGeneration) this.acceptFix(fix) },
-        () => { if (request === this.gpsGeneration) this.set({ gps: false, error: 'gpsFailed' }) })
+      const stop = await this.ports.watch(fix => { if (request === this.gpsGeneration && this.state.gps) this.acceptFix(fix) },
+        () => {
+          if (request !== this.gpsGeneration) return
+          this.unwatch?.(); this.unwatch = undefined
+          this.set({ gps: false, fix: undefined, suggestedId: undefined, error: 'gpsFailed' })
+        })
       
-      if (request !== this.gpsGeneration) stop(); else this.unwatch = stop
-    } catch { if (request === this.gpsGeneration) this.set({ gps: false, error: 'gpsFailed' }) }
+      // CHỨC NĂNG: Gỡ watcher nếu đã tắt GPS hoặc adapter báo lỗi trong lúc đăng ký.
+      // TẠI SAO: Kết quả đến muộn không được làm theo dõi vị trí sống lại.
+      if (request !== this.gpsGeneration || !this.state.gps) stop(); else this.unwatch = stop
+    } catch { if (request === this.gpsGeneration) this.set({ gps: false, fix: undefined, suggestedId: undefined, error: 'gpsFailed' }) }
   }
   // TẠI SAO (gps): Khách có thể đổi quyết định khi yêu cầu vị trí còn đang chờ; cần bỏ kết quả của
   // lần đăng ký cũ.
