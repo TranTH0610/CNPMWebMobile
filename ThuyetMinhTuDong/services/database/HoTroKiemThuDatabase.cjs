@@ -1,39 +1,25 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Tạo và dọn môi trường database kiểm thử, tách khỏi dữ liệu ứng dụng.
- *
- * VỊ TRÍ: services/database/HoTroKiemThuDatabase.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/KiemThuApiDiTich.test.cjs
- * - services/database/KiemThuRangBuocDatabase.test.cjs
- * - services/database/KiemThuTepTaiNguyen.test.cjs
- * - services/presence/KiemThuPhienHoatDong.test.cjs
- *
- * PHỤ THUỘC:
- * - node:crypto
- * - ./KetNoiSqlServer.cjs
- * - ./CauHinhSqlServer.cjs
- * - ./KhoDuLieuSql.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. cleanup
- * 2. testRepository
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/HoTroKiemThuDatabase.cjs
+ * FILE NÀY LÀM GÌ: Tạo và dọn môi trường database kiểm thử, tách khỏi dữ liệu ứng dụng.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { randomUUID } = require('node:crypto')
 const { close, scopeDatabase } = require('./KetNoiSqlServer.cjs')
 const { driverConfig } = require('./CauHinhSqlServer.cjs')
 const { createSqlRepository } = require('./KhoDuLieuSql.cjs')
-// ==================== [DATABASE] cleanup ====================
-// CHỨC NĂNG: Thực hiện bước cleanup trong nhiệm vụ: Tạo và dọn môi trường database kiểm thử, tách khỏi dữ liệu ứng dụng.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function cleanup(scope) {
   if (!/^test_[a-f0-9-]{36}$/.test(scope)) throw Error('Không được cleanup dữ liệu ứng dụng.')
   const name = scopeDatabase(scope)
@@ -51,10 +37,6 @@ async function cleanup(scope) {
     await pool.close()
   }
 }
-// ==================== [DATABASE] testRepository ====================
-// CHỨC NĂNG: Thực hiện bước testRepository trong nhiệm vụ: Tạo và dọn môi trường database kiểm thử, tách khỏi dữ liệu ứng dụng.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function testRepository(t, options = {}) {
   const scope = 'test_' + randomUUID()
   t.after(() => cleanup(scope))

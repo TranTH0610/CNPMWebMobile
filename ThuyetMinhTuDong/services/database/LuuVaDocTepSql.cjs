@@ -1,43 +1,20 @@
 /**
- * CHỨC NĂNG: [DATABASE] [TAI-NGUYEN]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
- *
- * VỊ TRÍ: services/database/LuuVaDocTepSql.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/MayChuApi.cjs
- * - services/catalog/TaoAmThanhThuyetMinh.cjs
- * - services/catalog/XuLyTepTaiNguyen.cjs
- * - services/database/catalog/GhiDiTichVaoSql.cjs
- *
- * PHỤ THUỘC:
- * - node:fs/promises
- * - node:path
- * - node:crypto
- * - node:dns/promises
- * - node:net
- * - ./KetNoiSqlServer.cjs
- * - ./ChuyenDoiMaDuLieu.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. hash
- * 2. mediaKey
- * 3. mimeOf
- * 4. isPrivate
- * 5. download
- * 6. readSource
- * 7. resolveMedia
- * 8. normaliseDocumentMedia
- * 9. metadata
- * 10. alias
- * 11. allowed
- * 12. bytes
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/LuuVaDocTepSql.cjs
+ * FILE NÀY LÀM GÌ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const fs = require('node:fs/promises'),
   path = require('node:path'),
@@ -49,10 +26,6 @@ const root = path.resolve(__dirname, '../..'),
   MAX = 15 * 1024 * 1024
 const hash = (value) => crypto.createHash('sha256').update(value).digest('hex')
 const mediaKey = (value) => /^media:([a-f0-9]{64})$/.exec(value)?.[1]
-// ==================== [DATABASE] [TAI-NGUYEN] mimeOf ====================
-// CHỨC NĂNG: Thực hiện bước mimeOf trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function mimeOf(bytes) {
   if (bytes.subarray(0, 3).equals(Buffer.from([255, 216, 255]))) return 'image/jpeg'
   if (bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])))
@@ -69,10 +42,6 @@ function mimeOf(bytes) {
     return 'audio/mpeg'
   throw Error('unsupported_media')
 }
-// ==================== [DATABASE] [TAI-NGUYEN] isPrivate ====================
-// CHỨC NĂNG: Thực hiện bước isPrivate trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function isPrivate(address) {
   if (net.isIP(address) === 4) {
     const [a, b] = address.split('.').map(Number)
@@ -98,10 +67,6 @@ function isPrivate(address) {
   )
 }
 // Chỉ tải URL ảnh/audio công khai; kiểm tra lại mỗi redirect, giới hạn kích thước và thời gian.
-// ==================== [DATABASE] [TAI-NGUYEN] download ====================
-// CHỨC NĂNG: Thực hiện bước download trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function download(address) {
   for (let redirect = 0; redirect < 4; redirect++) {
     const url = new URL(address)
@@ -134,10 +99,6 @@ async function download(address) {
   throw Error('too_many_redirects')
 }
 // Chỉ dùng khi nhập/generate file. Luồng nghe/xem luôn lấy byte từ SQL.
-// ==================== [DATABASE] [TAI-NGUYEN] readSource ====================
-// CHỨC NĂNG: Thực hiện bước readSource trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function readSource(uri) {
   const photo = /^photo:([a-z0-9-]+)$/.exec(uri)
   if (photo) return fs.readFile(path.join(root, 'apps/web/static/images/places', photo[1] + '.jpg'))
@@ -164,8 +125,7 @@ async function readSource(uri) {
 
 // CHỨC NĂNG: Đọc tệp theo mã băm API; trong SQL tệp có mã dễ đọc TEP001...
 // XỬ LÝ: Không còn bảng alias; đầu vào cũ được giải thành byte rồi chống trùng bằng SHA-256.
-// ==================== [DATABASE] [TAI-NGUYEN] resolveMedia ====================
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+// [UC02 / UC03 / UC04 / UC06 / UC07 / UC10 / UC11 / UC12 / UC13 / UC14] resolveMedia — Đọc tệp theo mã băm API; trong SQL tệp có mã dễ đọc TEP001...
 async function resolveMedia(executor, sql, scope, uri, kind) {
   const existing = mediaKey(uri)
   if (existing) {
@@ -191,16 +151,13 @@ async function resolveMedia(executor, sql, scope, uri, kind) {
    INSERT dbo.TepTaiNguyen(MaBamTep,DinhDangTep,DuLieuTep) VALUES(@id,@mime,@bytes);`)
   return id
 }
-// ==================== [DATABASE] [TAI-NGUYEN] normaliseDocumentMedia ====================
-// CHỨC NĂNG: Thực hiện bước normaliseDocumentMedia trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function normaliseDocumentMedia(executor, sql, scope, document, knownMedia) {
   const copy = structuredClone(document),
     resolved = new Map()
   const known = new Map((knownMedia ?? []).map((row) => [row.MaBamTep, row.LoaiTep]))
   // CHỨC NĂNG: Mã media đã có chỉ kiểm tra trên metadata SQL của transaction này.
   // TẠI SAO: Không cần gửi hàng chục SELECT giống nhau cho ảnh/audio không đổi.
+  // [UC02 / UC03 / UC04 / UC06 / UC07 / UC10 / UC11 / UC12 / UC13 / UC14] ref — Mã media đã có chỉ kiểm tra trên metadata SQL của transaction này.
   async function ref(uri, kind) {
     const key = kind + '|' + uri,
       id = mediaKey(uri)
@@ -226,10 +183,6 @@ async function normaliseDocumentMedia(executor, sql, scope, document, knownMedia
       }
   return copy
 }
-// ==================== [DATABASE] [TAI-NGUYEN] metadata ====================
-// CHỨC NĂNG: Thực hiện bước metadata trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function metadata(id, scope = 'main') {
   const { sql, pool } = await connect(scope)
   return (
@@ -243,10 +196,6 @@ async function metadata(id, scope = 'main') {
 }
 // Chỉ là tương thích URL cũ, không lưu danh sách ánh xạ bên ngoài database.
 // Hero cũ lấy ảnh đầu tiên hiện tại; bài đọc cũ kiểm tra byte hoặc khóa của nội dung.
-// ==================== [DATABASE] [TAI-NGUYEN] alias ====================
-// CHỨC NĂNG: Thực hiện bước alias trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function alias(uri, scope = 'main') {
   const { sql, pool } = await connect(scope)
   const photo = /^photo:([a-z0-9-]+)$/.exec(uri)
@@ -282,10 +231,6 @@ async function alias(uri, scope = 'main') {
     throw error
   }
 }
-// ==================== [DATABASE] [TAI-NGUYEN] allowed ====================
-// CHỨC NĂNG: Thực hiện bước allowed trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function allowed(id, scope, preview) {
   const { sql, pool } = await connect(scope)
   const result = await pool
@@ -300,10 +245,6 @@ async function allowed(id, scope, preview) {
  WHERE t.MaBamTep=@id AND (@preview=1 OR (b.LoaiBan='published' AND p.TrangThaiXuLy<>'archived'))`)
   return Boolean(result.recordset.length)
 }
-// ==================== [DATABASE] [TAI-NGUYEN] bytes ====================
-// CHỨC NĂNG: Thực hiện bước bytes trong nhiệm vụ: Lưu và đọc byte ảnh/audio trong SQL Server; dùng mã băm để nhận diện tệp.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function bytes(id, start, length, scope = 'main') {
   const { sql, pool } = await connect(scope)
   const result = await pool

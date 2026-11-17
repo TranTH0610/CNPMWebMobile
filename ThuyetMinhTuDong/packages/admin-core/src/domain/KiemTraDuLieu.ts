@@ -1,28 +1,15 @@
 /**
- * CHỨC NĂNG: [KIEU-DU-LIEU]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Kiểm tra dữ liệu địa điểm, URL tài nguyên và điều kiện sẵn sàng cho quy trình kiểm duyệt.
- *
- * VỊ TRÍ: packages/admin-core/src/domain/KiemTraDuLieu.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/services/XuLyNghiepVuQuanTri.ts
- * - packages/admin-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- * - ./KieuDuLieuQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. mediaUrl
- * 2. validatePlace
- * 3. readyForReview
- * 4. dashboard
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/domain/KiemTraDuLieu.ts
+ * FILE NÀY LÀM GÌ: Kiểm tra dữ liệu di tích, điều kiện gửi duyệt/công bố và tổng hợp các chỉ số nội dung.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { LANGUAGES } from '@travelguide/visitor-core'
 import type { ManagedPlace, PlaceInput, AdminDocument, Dashboard } from './KieuDuLieuQuanTri'
@@ -30,8 +17,7 @@ import { AdminError } from './KieuDuLieuQuanTri'
 // CHỨC NĂNG: Không nhận URL javascript/data hoặc tọa độ rỗng một nửa.
 // XỬ LÝ: Cho asset photo:ID đã đóng gói; URL API chỉ HTTP(S), loại khoảng trắng.
 
-// ==================== [KIEU-DU-LIEU] mediaUrl ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC10 / UC11] mediaUrl — Kiểm tra định dạng và giới hạn liên kết/tệp ảnh hoặc audio được nhập.
 export function mediaUrl(value: string, photo = false): boolean {
   // Mã file SQL hợp lệ về định dạng; API tiếp tục kiểm tra file tồn tại và đúng loại.
   if (/^media:[a-f0-9]{64}$/.test(value)) return true
@@ -57,7 +43,7 @@ export function mediaUrl(value: string, photo = false): boolean {
 // CHỨC NĂNG: Kiểm tra form địa điểm trước khi lưu.
 // XỬ LÝ: Áp dụng chung điều kiện tên, tọa độ và tài nguyên cho cả web lẫn mobile.
 
-// ==================== [KIEU-DU-LIEU] validatePlace ====================
+// [UC10] validatePlace — Kiểm tra dữ liệu hồ sơ trước khi cho lưu di tích.
 export function validatePlace(input: PlaceInput) {
   if (!input.title.trim() || input.images.some((url) => !mediaUrl(url, true)))
     throw new AdminError('invalid')
@@ -88,7 +74,7 @@ export function validatePlace(input: PlaceInput) {
 // CHỨC NĂNG: Kiểm tra điều kiện gửi nội dung đi duyệt.
 // XỬ LÝ: Chỉ xét dữ liệu hiện có theo quy tắc; không tự tạo bản dịch hoặc âm thanh còn thiếu.
 
-// ==================== [KIEU-DU-LIEU] readyForReview ====================
+// [UC12 / UC13] readyForReview — Kiểm tra các trường và bản ngôn ngữ/bản thu bắt buộc trước khi duyệt hoặc công bố.
 export function readyForReview(place: ManagedPlace) {
   const vi = place.record.content.vi
 
@@ -107,7 +93,7 @@ export function readyForReview(place: ManagedPlace) {
 // CHỨC NĂNG: Số liệu là phiên, không phải số người/vé; 90 giây là giả định demo.
 // XỬ LÝ: Dùng ngày lịch địa phương, không dùng toISOString cắt ngày UTC gây lệch múi giờ.
 
-// ==================== [KIEU-DU-LIEU] dashboard ====================
+// [UC14] dashboard — Tính số di tích và hồ sơ chờ duyệt từ document quản trị để hiển thị tổng quan.
 export function dashboard(doc: AdminDocument, now = Date.now()): Dashboard {
   const live = doc.sessions.filter((item) => now - item.lastSeen <= 90000 && now >= item.lastSeen)
 

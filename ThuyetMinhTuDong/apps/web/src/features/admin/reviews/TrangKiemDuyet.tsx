@@ -1,34 +1,12 @@
 /**
- * CHỨC NĂNG: [KIEM-DUYET]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Danh sách hồ sơ kiểm duyệt dạng thẻ ảnh; mở một hồ sơ để xem và xử lý. AdminRoutes gọi; dùng API admin chung, không tự duyệt/công bố khi chỉ mở thẻ. TẠI SAO: Không tải trình nghe và toàn bộ bài của mọi di tích vào cùng một màn dài.
- *
- * VỊ TRÍ: apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - @travelguide/visitor-core
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../shared/components/BieuTuongQuanTri
- * - ../../../shared/components/AnhDiTich
- * - ../shared/components/ThanhPhanQuanTri
- * - ../content/components/NgheThuBanThu
- *
- * CÁC KHỐI CHÍNH:
- * 1. ReviewsPage
- * 2. ReviewDetailPage
- * 3. ReviewDetails
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
+ * FILE NÀY LÀM GÌ: Danh sách hồ sơ kiểm duyệt dạng thẻ ảnh; mở một hồ sơ để xem và xử lý. AdminRoutes gọi; dùng API admin chung, không tự duyệt/công bố khi chỉ mở thẻ. TẠI SAO: Không tải trình nghe và toàn bộ bài của mọi di tích vào cùng một màn dài.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -41,10 +19,8 @@ import { PlaceImage } from '../../../shared/components/AnhDiTich'
 import { Feedback, Status, Field, useConfirmation } from '../shared/components/ThanhPhanQuanTri'
 import { AudioPreview } from '../content/components/NgheThuBanThu'
 
-// ==================== [KIEM-DUYET] ReviewsPage ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ReviewsPage.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC12 / UC13] ReviewsPage — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ReviewsPage.
 export function ReviewsPage() {
   const state = useAdmin(),
     t = useAdminText(),
@@ -114,8 +90,7 @@ export function ReviewsPage() {
 }
 
 // CHỨC NĂNG: URL chi tiết giữ mã hồ sơ nên tải lại trang vẫn mở đúng di tích.
-// ==================== [KIEM-DUYET] ReviewDetailPage ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC12 / UC13] ReviewDetailPage — URL chi tiết giữ mã hồ sơ nên tải lại trang vẫn mở đúng di tích.
 export function ReviewDetailPage() {
   const state = useAdmin(),
     t = useAdminText(),
@@ -138,10 +113,8 @@ export function ReviewDetailPage() {
   )
 }
 
-// ==================== [KIEM-DUYET] ReviewDetails ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ReviewDetails.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC12 / UC13] ReviewDetails — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ReviewDetails.
 function ReviewDetails({ place }: { place: ManagedPlace }) {
   const state = useAdmin(),
     t = useAdminText(),
@@ -175,7 +148,7 @@ function ReviewDetails({ place }: { place: ManagedPlace }) {
                   aria-pressed={language === l.code}
                   onClick={() => setLanguage(l.code)}
                 >
-                  {l.label}
+                  {vt(`language_${l.code}`)}
                 </button>
               ))}
             </div>

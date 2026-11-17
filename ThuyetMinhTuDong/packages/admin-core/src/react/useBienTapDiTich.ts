@@ -1,29 +1,13 @@
 /**
- * CHỨC NĂNG: [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Quản lý form và thao tác lưu nháp, tự dịch, tạo audio, gửi duyệt dùng chung web/mobile.
- *
- * VỊ TRÍ: packages/admin-core/src/react/useBienTapDiTich.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/react/TrangThaiReact.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - @travelguide/visitor-core
- * - ../domain/KieuDuLieuQuanTri
- * - ../i18n/BanDichGiaoDien
- * - ./TrangThaiReact
- *
- * CÁC KHỐI CHÍNH:
- * 1. emptyText
- * 2. textsOf
- * 3. usePlaceEditor
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/react/useBienTapDiTich.ts
+ * FILE NÀY LÀM GÌ: Giữ dữ liệu biểu mẫu; lưu nháp, dịch, tạo audio và gửi duyệt dùng chung cho Web/Mobile.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useRef, useState } from 'react'
 import { LANGUAGES, categoryOf, type Category, type Language } from '@travelguide/visitor-core'
@@ -44,8 +28,7 @@ const emptyText = (): DraftText => ({ title: '', summary: '', address: '', body:
 
 // CHỨC NĂNG: Đọc các bản ngôn ngữ từ SQL vào vùng đang nhập của form.
 // XỬ LÝ: Không đưa trạng thái duyệt, phiên bản hoặc URL media nội bộ vào ô URL nhập tay.
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] textsOf ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC11] textsOf — Đưa các bản ngôn ngữ đã lưu vào ô nhập của biểu mẫu; tách metadata duyệt khỏi nội dung nhập tay.
 function textsOf(place?: ManagedPlace): Texts {
   const result: Texts = {}
   for (const { code } of LANGUAGES) {
@@ -61,10 +44,7 @@ function textsOf(place?: ManagedPlace): Texts {
   return result
 }
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] usePlaceEditor ====================
-// CHỨC NĂNG: Thực hiện bước usePlaceEditor trong nhiệm vụ: Quản lý form và thao tác lưu nháp, tự dịch, tạo audio, gửi duyệt dùng chung web/mobile.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC10 / UC11 / UC12] usePlaceEditor — Giữ state của biểu mẫu và ghép các nút lưu nháp, dịch, tạo audio, gửi duyệt vào cùng luồng xử lý.
 export function usePlaceEditor(
   state: EditorState,
   initial: ManagedPlace | undefined,
@@ -92,10 +72,10 @@ export function usePlaceEditor(
 
   // CHỨC NĂNG: Sửa bản đang chọn; bản Việt là tên chuẩn và nguồn dịch tự động.
   // TẠI SAO: Không đổi i18n của giao diện khi chỉ chuyển tab nội dung cần biên tập.
-  // ==================== [BIEN-TAP] edit ====================
   // CHỨC NĂNG: Cập nhật trường của bản ngôn ngữ đang được biên tập.
   // XỬ LÝ: Sao chép state, cập nhật trường và đánh dấu đã thay đổi; tên Việt đồng bộ tên chuẩn.
   // TẠI SAO: Không sửa trực tiếp state và không đổi ngôn ngữ giao diện khi chuyển bản nội dung.
+  // [UC11] edit — Cập nhật trường nội dung của ngôn ngữ đang biên tập và đánh dấu biểu mẫu đã thay đổi.
   function edit(key: keyof DraftText, value: string) {
     setTexts((old) => ({ ...old, [language]: { ...(old[language] ?? emptyText()), [key]: value } }))
     if (language === 'vi' && key === 'title') setTitle(value)
@@ -104,10 +84,10 @@ export function usePlaceEditor(
 
   // CHỨC NĂNG: Sau mỗi tác vụ, lấy revision mới nhất do SQL trả về.
   // TẠI SAO: Dịch/tạo audio tăng phiên bản; dùng lại revision cũ sẽ bị chặn xung đột.
-  // ==================== [LUU-NHAP] refresh ====================
   // CHỨC NĂNG: Lấy lại bản nháp và phiên bản mới nhất sau tác vụ.
   // XỬ LÝ: Đọc service, tìm đúng mã, cập nhật ref và state của form.
   // TẠI SAO: Lần lưu tiếp theo phải dùng revision mới để tránh xung đột phiên bản.
+  // [UC10 / UC11] refresh — Đọc lại bản nháp và revision mới nhất sau khi API hoàn tất thao tác.
   async function refresh(id: string) {
     const place = (await state.service.load()).places.find((item) => item.id === id)
     if (!place) throw new AdminError('notFound')
@@ -118,10 +98,10 @@ export function usePlaceEditor(
     return place
   }
 
-  // ==================== [TU-DONG-DICH] translateAll ====================
   // CHỨC NĂNG: Dịch bản Việt sang các ngôn ngữ hỗ trợ còn lại.
   // XỬ LÝ: Bỏ qua vi; dịch tuần tự từng ngôn ngữ rồi refresh để lấy revision mới.
   // TẠI SAO: Mỗi lần dịch có thể tăng revision; không dùng lại revision cũ cho tác vụ sau.
+  // [UC11] translateAll — Dịch lần lượt các ngôn ngữ đích và đọc lại revision sau từng tác vụ.
   async function translateAll() {
     for (const { code, label } of LANGUAGES) {
       if (code === 'vi') continue
@@ -133,10 +113,10 @@ export function usePlaceEditor(
     }
   }
 
-  // ==================== [LUU-NHAP] save ====================
   // CHỨC NĂNG: Lưu thông tin đang nhập thành bản nháp.
   // XỬ LÝ: Ghép metadata/nội dung, gọi savePlace và refresh; chỉ dịch lại khi bản Việt thay đổi và tùy chọn cho phép.
   // TẠI SAO: Lưu nháp không tự công bố; mã đã lưu được giữ để thử lại khi tác vụ dịch lỗi.
+  // [UC10 / UC11] save — Gom metadata và các bản ngôn ngữ trong biểu mẫu để lưu hồ sơ/bản nháp qua service.
   async function save(skipTranslation = false) {
     if (!dirty && current.current) return
     // CHỨC NĂNG: Không bắt buộc hoàn tất mọi trường khi lưu nháp.
@@ -175,10 +155,10 @@ export function usePlaceEditor(
 
   // CHỨC NĂNG: Xóa trạng thái nhập sau gửi duyệt, không xóa bản ghi đã gửi trong SQL.
   // TẠI SAO: Gom về một hàm để không quên reset trường khi thêm thông tin mới cho form.
-  // ==================== [LUU-NHAP] resetForNextPlace ====================
   // CHỨC NĂNG: Đưa form về trạng thái nhập di tích tiếp theo.
   // XỬ LÝ: Xóa state/ref của form và bật thông báo gửi thành công.
   // TẠI SAO: Không xóa bản ghi đã gửi trong SQL và không sửa nhầm hồ sơ vừa gửi.
+  // [UC10 / UC11] resetForNextPlace — Dọn biểu mẫu để bắt đầu di tích tiếp theo sau khi gửi duyệt thành công.
   function resetForNextPlace() {
     current.current = undefined
     setSaved(undefined)
@@ -196,10 +176,10 @@ export function usePlaceEditor(
     setSubmittedSuccess(true)
   }
 
-  // ==================== [BIEN-TAP] perform ====================
   // CHỨC NĂNG: Điều phối nút lưu, dịch, tạo audio và gửi phê duyệt.
   // XỬ LÝ: Lưu trước; chạy tác vụ được chọn; dọn tiến trình trong finally và reset form khi gửi thành công.
   // TẠI SAO: Các nút dùng cùng một luồng xử lý trên web/mobile và không để giao diện mắc trạng thái đang xử lý.
+  // [UC10 / UC11 / UC12] perform — Lưu trước khi dịch/tạo audio/gửi duyệt; cập nhật tiến trình và dọn trạng thái bận khi xong hoặc lỗi.
   async function perform(action: PlaceEditorAction) {
     setSubmittedSuccess(false)
     const ok = await state.run(async () => {
@@ -239,10 +219,10 @@ export function usePlaceEditor(
 
   // CHỨC NĂNG: Nạp bản mới nhất sau khi người dùng đồng ý bỏ thay đổi bị xung đột.
   // XỬ LÝ: Cập nhật cả metadata và nội dung; không chỉ thay revision của dữ liệu cũ.
-  // ==================== [LUU-NHAP] reloadDraft ====================
   // CHỨC NĂNG: Nạp lại bản nháp mới nhất khi cần xử lý xung đột.
   // XỬ LÝ: Refresh rồi đồng bộ tên, danh mục, tọa độ và cờ đã sửa của form.
   // TẠI SAO: Không chỉ thay revision trong khi các trường vẫn giữ dữ liệu cũ.
+  // [UC10 / UC11] reloadDraft — Nạp lại bản nháp mới nhất để xử lý xung đột và đồng bộ lại dữ liệu biểu mẫu.
   async function reloadDraft() {
     if (!current.current) throw new AdminError('notFound')
     const latest = await refresh(current.current.id)

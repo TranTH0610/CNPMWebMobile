@@ -1,49 +1,16 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Các khối giao diện quản trị dùng lại như khung trang, phản hồi thao tác, biểu mẫu, thẻ và nút hành động.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
- * - apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
- * - apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- * - apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx
- * - apps/mobile/src/features/admin/reviews/ManChiTietKiemDuyet.tsx
- * - apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx
- * - apps/mobile/src/features/admin/shared/components/ChonTepTuThietBi.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - react-native-safe-area-context
- * - @expo/vector-icons
- * - @react-navigation/native
- * - @react-navigation/elements
- * - @travelguide/admin-core/react
- * - @travelguide/admin-core
- * - @travelguide/visitor-core
- * - ../../../../shared/components/NutThaoTac
- * - ../../../../shared/GiaoDienChung
- * - ../../content/components/NgheThuBanThu
- *
- * CÁC KHỐI CHÍNH:
- * 1. PageHeader
- * 2. SectionHeading
- * 3. QuickAction
- * 4. StatusBadge
- * 5. LanguageTabs
- * 6. Frame
- * 7. Feedback
- * 8. Field
- * 9. DangerAction
- * 10. useUnsaved
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
+ * FILE NÀY LÀM GÌ: Các khối giao diện quản trị dùng lại như khung trang, phản hồi thao tác, biểu mẫu, thẻ và nút hành động.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 import {
@@ -65,10 +32,10 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import { useAdmin, useAdminText } from '@travelguide/admin-core/react'
 import type { ManagedPlace } from '@travelguide/admin-core'
 import { LANGUAGES, type Language } from '@travelguide/visitor-core'
+import { useText } from '@travelguide/visitor-core/react'
 import { Action } from '../../../../shared/components/NutThaoTac'
 import { colors, spacing } from '../../../../shared/GiaoDienChung'
 
-// Đặt tên kiểu IconName.
 type IconName = ComponentProps<typeof Ionicons>['name']
 // CHỨC NĂNG: Tập trung style Admin, không sửa style của app du khách.
 // XỬ LÝ: Dùng token chung; bố cục mềm và chữ có thể xuống dòng khi dịch dài.
@@ -241,8 +208,7 @@ export const styles = StyleSheet.create({
 })
 // CHỨC NĂNG: Tiêu đề từng màn và tiêu đề từng nhóm dùng cùng nhịp chữ/khoảng cách.
 
-// ==================== [GIAO-DIEN] PageHeader ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] PageHeader — Tiêu đề từng màn và tiêu đề từng nhóm dùng cùng nhịp chữ/khoảng cách.
 export function PageHeader({ title, description }: { title: string; description?: string }) {
   return (
     <View style={{ gap: 6 }}>
@@ -256,7 +222,7 @@ export function PageHeader({ title, description }: { title: string; description?
 // CHỨC NĂNG: Hiển thị tiêu đề của một nhóm nội dung.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] SectionHeading ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] SectionHeading — Hiển thị tiêu đề của một nhóm nội dung.
 export function SectionHeading({ title, icon }: { title: string; icon?: IconName }) {
   return (
     <View style={styles.sectionHeading}>
@@ -270,7 +236,7 @@ export function SectionHeading({ title, icon }: { title: string; icon?: IconName
 // CHỨC NĂNG: Hiển thị lối tắt đến một thao tác quản lý.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] QuickAction ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] QuickAction — Hiển thị lối tắt đến một thao tác quản lý.
 export function QuickAction({
   title,
   description,
@@ -304,7 +270,7 @@ export function QuickAction({
 // diện tại một nơi.
 // CHỨC NĂNG: Mỗi trạng thái có nhãn dịch và biểu tượng, không chỉ phân biệt bằng màu.
 
-// ==================== [GIAO-DIEN] StatusBadge ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] StatusBadge — Mỗi trạng thái có nhãn dịch và biểu tượng, không chỉ phân biệt bằng màu.
 export function StatusBadge({ workflow }: { workflow: ManagedPlace['workflow'] }) {
   const t = useAdminText()
 
@@ -346,7 +312,7 @@ export function StatusBadge({ workflow }: { workflow: ManagedPlace['workflow'] }
 // CHỨC NĂNG: Hiển thị lựa chọn ngôn ngữ của form quản trị.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] LanguageTabs ====================
+// [UC11] LanguageTabs — Hiển thị các tab chọn bản ngôn ngữ đang biên tập; không đổi ngôn ngữ giao diện.
 export function LanguageTabs({
   value,
   onChange,
@@ -356,6 +322,8 @@ export function LanguageTabs({
   onChange: (language: Language) => void
   disabled?: boolean
 }) {
+  // CHỨC NĂNG: Tên tab theo ngôn ngữ giao diện, độc lập ngôn ngữ nội dung đang biên tập.
+  const text = useText()
   return (
     <ScrollView
       horizontal
@@ -367,7 +335,7 @@ export function LanguageTabs({
           key={language.code}
           disabled={disabled}
           accessibilityRole="button"
-          accessibilityLabel={language.label}
+          accessibilityLabel={text(`language_${language.code}`)}
           accessibilityState={{ selected: value === language.code, disabled }}
           onPress={() => onChange(language.code)}
           style={[
@@ -385,7 +353,7 @@ export function LanguageTabs({
               color: value === language.code ? colors.white : colors.muted,
             }}
           >
-            {language.label}
+            {text(`language_${language.code}`)}
           </Text>
         </Pressable>
       ))}
@@ -397,7 +365,7 @@ export function LanguageTabs({
 
 // CHỨC NĂNG: Biểu mẫu tránh bàn phím che nội dung; thông báo dữ liệu nằm cuối trang.
 
-// ==================== [GIAO-DIEN] Frame ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] Frame — Biểu mẫu tránh bàn phím che nội dung; thông báo dữ liệu nằm cuối trang.
 export function Frame({ children }: { children: ReactNode }) {
   // Dùng chiều cao header thực tế thay vì 88 cố định khi bàn phím mở.
 
@@ -428,7 +396,7 @@ export function Frame({ children }: { children: ReactNode }) {
 // CHỨC NĂNG: Hiển thị kết quả tải/lưu hoặc lỗi của thao tác quản trị.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] Feedback ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] Feedback — Hiển thị kết quả tải/lưu hoặc lỗi của thao tác quản trị.
 export function Feedback({ state }: { state: ReturnType<typeof useAdmin> }) {
   const t = useAdminText()
 
@@ -469,7 +437,7 @@ export function Feedback({ state }: { state: ReturnType<typeof useAdmin> }) {
 // tại một nơi.
 // CHỨC NĂNG: Trường nhập có nhãn và phản hồi focus, giữ nguyên giá trị/handler do form truyền.
 
-// ==================== [GIAO-DIEN] Field ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] Field — Trường nhập có nhãn và phản hồi focus, giữ nguyên giá trị/handler do form truyền.
 export function Field({
   label,
   value,
@@ -519,7 +487,7 @@ export function Field({
 // một nơi.
 // CHỨC NĂNG: Thao tác xóa có màu cảnh báo riêng, vẫn do màn hình hỏi xác nhận.
 
-// ==================== [GIAO-DIEN] DangerAction ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] DangerAction — Thao tác xóa có màu cảnh báo riêng, vẫn do màn hình hỏi xác nhận.
 export function DangerAction({
   title,
   onPress,
@@ -562,7 +530,7 @@ export function DangerAction({
 // diện tại một nơi.
 // CHỨC NĂNG: Hỏi trước khi back khỏi biểu mẫu chưa lưu, tránh mất nội dung.
 
-// ==================== [GIAO-DIEN] useUnsaved ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] useUnsaved — Hỏi trước khi back khỏi biểu mẫu chưa lưu, tránh mất nội dung.
 export function useUnsaved(dirty: boolean) {
   const navigation = useNavigation(),
     t = useAdminText(),
@@ -571,8 +539,6 @@ export function useUnsaved(dirty: boolean) {
   // CHỨC NĂNG: Đăng ký chặn thao tác rời màn nếu form vẫn còn thay đổi chưa lưu.
   // XỬ LÝ: ref.current cho biết form còn dirty; xác nhận rời thì bỏ chặn và dispatch lại
   // chính thao tác điều hướng đã nhận.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: navigation, t.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (event) => {

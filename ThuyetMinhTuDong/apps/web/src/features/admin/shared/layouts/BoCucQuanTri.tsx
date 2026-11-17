@@ -1,31 +1,16 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Khung website quản trị gồm điều hướng quản lý, bố cục trang và vùng hiển thị nội dung admin.
- *
- * VỊ TRÍ: apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - ../../../../shared/components/BieuTrungDiSan
- * - @travelguide/visitor-core/react
- * - react
- * - ../../../journey/hooks/useHanhTrinh
- * - react-router-dom
- * - @travelguide/admin-core/react
- * - ../../../language/components/ChonNgonNgu
- * - ../components/BieuTuongQuanTri
- * - ../../styles/GiaoDienQuanTri.css
- *
- * CÁC KHỐI CHÍNH:
- * 1. AdminLayout
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx
+ * FILE NÀY LÀM GÌ: Khung website quản trị gồm điều hướng quản lý, bố cục trang và vùng hiển thị nội dung admin.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { HeritageMark } from '../../../../shared/components/BieuTrungDiSan'
 import { useVisitor } from '@travelguide/visitor-core/react'
@@ -40,8 +25,7 @@ import '../../styles/GiaoDienQuanTri.css'
 // admin.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] AdminLayout ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] AdminLayout — Khung website quản trị gồm điều hướng quản lý, bố cục trang và vùng hiển thị nội dung
 export function AdminLayout() {
   const t = useAdminText(),
     state = useAdmin(),
@@ -52,8 +36,6 @@ export function AdminLayout() {
   // XỬ LÝ: Chỉ dùng instance đang có; mã cn nội bộ được chuyển thành zh-CN cho HTML.
   // CHỨC NĂNG: Gọi engine.pause() khi giao diện quản trị được gắn hoặc engine thay đổi.
   // XỬ LÝ: Thao tác tạm dừng phiên bài nghe mà engine đang sở hữu.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: engine.
-  // Đăng ký useEffect để thực hiện tác vụ sau render. | Thực hiện engine.pause tạm dừng nguồn âm thanh hiện tại.
   useEffect(() => {
     engine.pause()
   }, [engine])
@@ -61,8 +43,6 @@ export function AdminLayout() {
   // admin.
   // CHỨC NĂNG: Đồng bộ tiêu đề tab và thuộc tính ngôn ngữ HTML theo ngôn ngữ giao diện.
   // XỬ LÝ: Mã nội bộ cn đổi sang zh-CN khi ghi thuộc tính lang của tài liệu.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: language, t.
-  // Đăng ký useEffect để thực hiện tác vụ sau render. | Thực hiện tính biểu thức document.title = 'HueGuide · ' + t('admin'). | Thực hiện tính biểu thức document.documentElement.lang = language === 'cn' ? 'zh-CN' : language.
   useEffect(() => {
     document.title = 'HueGuide · ' + t('admin')
     document.documentElement.lang = language === 'cn' ? 'zh-CN' : language

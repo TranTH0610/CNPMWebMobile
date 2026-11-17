@@ -1,29 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Phần chào mừng native có ảnh, nội dung và công cụ tìm tách riêng. HomeScreen gọi; Cover/SearchBar/Action và i18n cung cấp UI, callback cũ giữ toàn bộ nghiệp vụ. TẠI SAO: Không đặt nhiều khối lên ảnh, không khóa chiều cao khi chữ dài hoặc cỡ chữ hệ thống tăng.
- *
- * VỊ TRÍ: apps/mobile/src/features/explore/components/KhoiChaoMung.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../../shared/GiaoDienChung
- * - ../../../shared/components/AnhBia
- * - ./OTimKiem
- * - ../../../shared/components/NutThaoTac
- *
- * CÁC KHỐI CHÍNH:
- * 1. ExploreHero
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/explore/components/KhoiChaoMung.tsx
+ * FILE NÀY LÀM GÌ: Phần chào mừng native có ảnh, nội dung và công cụ tìm tách riêng. HomeScreen gọi; Cover/SearchBar/Action và i18n cung cấp UI, callback cũ giữ toàn bộ nghiệp vụ. TẠI SAO: Không đặt nhiều khối lên ảnh, không khóa chiều cao khi chữ dài hoặc cỡ chữ hệ thống tăng.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { StyleSheet, Text, View } from 'react-native'
 import { HERO_IMAGE } from '@travelguide/visitor-core'
@@ -32,10 +15,8 @@ import { colors, spacing } from '../../../shared/GiaoDienChung'
 import { Cover } from '../../../shared/components/AnhBia'
 import { SearchBar } from './OTimKiem'
 import { Action } from '../../../shared/components/NutThaoTac'
-// ==================== [KHAM-PHA] ExploreHero ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ExploreHero.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] ExploreHero — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ExploreHero.
 export function ExploreHero({
   query,
   onChange,

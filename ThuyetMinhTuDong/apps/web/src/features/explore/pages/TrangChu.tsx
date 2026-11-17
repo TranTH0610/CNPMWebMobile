@@ -1,33 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Trang chủ web với hero, ô tìm kiếm, danh mục, carousel điểm nổi bật và danh mục bên dưới.
- *
- * VỊ TRÍ: apps/web/src/features/explore/pages/TrangChu.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - ../../../shared/services/XuLyAnhDiTich
- * - ../components/DanhSachVaBoLoc
- * - react
- * - react-router-dom
- * - @travelguide/visitor-core
- * - ../hooks/useDanhSachDiTich
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../components/NutLocDanhMuc
- * - ../../../shared/components/BieuTuong
- * - ../components/TheDiTich
- * - ../../../shared/components/TrangThaiDuLieu
- *
- * CÁC KHỐI CHÍNH:
- * 1. HomePage
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/explore/pages/TrangChu.tsx
+ * FILE NÀY LÀM GÌ: Trang chủ web với hero, ô tìm kiếm, danh mục, carousel điểm nổi bật và danh mục bên dưới.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { resolvePlaceImage } from '../../../shared/services/XuLyAnhDiTich'
 import { Catalogue } from '../components/DanhSachVaBoLoc'
@@ -45,8 +24,7 @@ import { State } from '../../../shared/components/TrangThaiDuLieu'
 // CHỨC NĂNG: Trang chủ gồm hero, carousel và danh sách.
 // XỬ LÝ: Tải service một lần tại trang; chia cùng dữ liệu cho các khối.
 
-// ==================== [KHAM-PHA] HomePage ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] HomePage — Trang chủ gồm hero, carousel và danh sách.
 export function HomePage() {
   const data = usePublishedCatalog()
 
@@ -100,9 +78,7 @@ export function HomePage() {
   // chưa.
   // XỬ LÝ: Reset về đầu khi dữ liệu đổi; theo dõi scroll/resize và ResizeObserver;
   // cleanup gỡ cả ba.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: featured,
   // data.loading, data.error.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     const node = carousel.current
 
@@ -159,6 +135,7 @@ export function HomePage() {
   // CHỨC NĂNG: Chuyển điều kiện tìm từ hero sang trang kết quả.
   // XỬ LÝ: URLSearchParams mã hóa từ khóa đúng, không tự ghép ký tự đặc biệt.
 
+  // [UC02 / UC03] submit — Chuyển điều kiện tìm từ hero sang trang kết quả.
   const submit = () => {
     // CHỨC NĂNG: Yêu cầu nhập từ khóa khi gửi tìm kiếm.
     // XỬ LÝ: trim loại khoảng trắng; giữ nguyên trang và đưa con trỏ về ô nhập.

@@ -1,33 +1,18 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Đăng ký route du khách như trang chủ, danh mục, chi tiết, hành trình và trang không tìm thấy.
- *
- * VỊ TRÍ: apps/web/src/app/DinhTuyenDuKhach.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/App.tsx
- *
- * PHỤ THUỘC:
- * - react-router-dom
- * - ../shared/layouts/BoCucDuKhach
- * - ../features/explore/pages/TrangChu
- * - ../features/explore/pages/TrangDanhSachDiTich
- * - ../features/place-detail/pages/TrangChiTietDiTich
- * - react
- * - ../shared/components/TrangThaiDuLieu
- * - ../shared/components/BaoVeLoiTrang
- * - ../shared/pages/TrangKhongTimThay
- * - ../features/journey/pages/TrangHanhTrinh
- *
- * CÁC KHỐI CHÍNH:
- * 1. JourneyRoute
- * 2. AppRoutes
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/app/DinhTuyenDuKhach.tsx
+ * FILE NÀY LÀM GÌ: Đăng ký route du khách như trang chủ, danh mục, chi tiết, hành trình và trang không tìm thấy.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 // CHỨC NĂNG: Bản du khách chỉ đăng ký các route công khai.
 // XỬ LÝ: Không import hoặc tải cây màn hình Admin; /admin không tồn tại ở bản này.
@@ -48,10 +33,8 @@ const JourneyPage = lazy(() =>
     default: module.JourneyPage,
   })),
 )
-// ==================== [DIEU-HUONG] JourneyRoute ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider JourneyRoute.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] JourneyRoute — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider JourneyRoute.
 function JourneyRoute() {
   return (
     <RouteBoundary>
@@ -64,8 +47,7 @@ function JourneyRoute() {
 
 // CHỨC NĂNG: Giữ nguyên mọi URL cũ, bao gồm QR chung và deep link chi tiết.
 
-// ==================== [DIEU-HUONG] AppRoutes ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] AppRoutes — Giữ nguyên mọi URL cũ, bao gồm QR chung và deep link chi tiết.
 export function AppRoutes() {
   return (
     <Routes>

@@ -1,27 +1,10 @@
 /**
- * CHỨC NĂNG: [KHOI-DONG] [CAU-HINH]
- * VAI TRÒ: CÔNG CỤ CHẠY DỰ ÁN
- *
- * FILE NÀY LÀM GÌ:
- * Kiểm tra cách đặt file .env trước khi commit/build.
- *
- * VỊ TRÍ: scripts/KiemTraCauHinhMoiTruong.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - scripts/KiemThuCauHinhMoiTruong.test.cjs
- *
- * PHỤ THUỘC:
- * - node:fs
- * - node:path
- * - node:child_process
- * - node:util
- *
- * CÁC KHỐI CHÍNH:
- * 1. validateEntries
- * 2. main
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: scripts/KiemTraCauHinhMoiTruong.cjs
+ * FILE NÀY LÀM GÌ: Kiểm tra cách đặt file .env trước khi commit/build.
+ * VAI TRÒ: Công cụ vận hành/khởi động; hỗ trợ UC, không phải màn hình nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const fs = require('node:fs')
 const path = require('node:path')
@@ -34,8 +17,7 @@ const identity = new Set(['ANDROID_APPLICATION_ID', 'ANDROID_SHA256_CERT_FINGERP
 const secretName = /(?:^|_)(?:SQL|DATABASE|DB|PASSWORD|SECRET|PRIVATE|TOKEN|CREDENTIAL|CONNECTION_STRING)(?:_|$)/i
 
 // CHỨC NĂNG: Kiểm tra namespace và tên biến mà không in giá trị.
-// ==================== [KHOI-DONG] [CAU-HINH] validateEntries ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [HỖ TRỢ CHUNG] validateEntries — Kiểm tra namespace và tên biến mà không in giá trị.
 function validateEntries(relative, values) {
   const prefix = relative.startsWith('apps/web/') ? 'VITE_' : relative.startsWith('apps/mobile/') ? 'EXPO_PUBLIC_' : null
   if (!prefix) return []
@@ -48,10 +30,6 @@ function validateEntries(relative, values) {
   return errors
 }
 
-// ==================== [KHOI-DONG] [CAU-HINH] main ====================
-// CHỨC NĂNG: Thực hiện bước main trong nhiệm vụ: Kiểm tra cách đặt file .env trước khi commit/build.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function main() {
   for (const folder of locations) {
     for (const name of fs.readdirSync(path.join(root, folder))) {

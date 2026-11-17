@@ -1,39 +1,16 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Các biểu tượng SVG dùng lại trong website du khách.
- *
- * VỊ TRÍ: apps/web/src/shared/components/BieuTuong.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx
- * - apps/web/src/features/explore/components/NutLocDanhMuc.tsx
- * - apps/web/src/features/explore/components/TheDiTich.tsx
- * - apps/web/src/features/explore/pages/TrangChu.tsx
- * - apps/web/src/features/journey/components/NutNgheThuyetMinh.tsx
- * - apps/web/src/features/journey/components/TrangThaiDinhVi.tsx
- * - apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx
- * - apps/web/src/features/journey/pages/TrangHanhTrinh.tsx
- * - apps/web/src/features/language/components/ChonNgonNgu.tsx
- * - apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
- * - apps/web/src/shared/components/TrangThaiDuLieu.tsx
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. Icon
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/shared/components/BieuTuong.tsx
+ * FILE NÀY LÀM GÌ: Các biểu tượng SVG dùng lại trong website du khách.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 // CHỨC NĂNG: Icon SVG nhỏ để không thêm framework UI.
 // XỬ LÝ: Icon trang trí ẩn với trình đọc màn hình;
 // nút bên ngoài có aria-label đã dịch.
 
-// ==================== [GIAO-DIEN] Icon ====================
+// [HỖ TRỢ CHUNG] Icon — Icon SVG nhỏ để không thêm framework UI.
 export function Icon({
   name,
 }: {

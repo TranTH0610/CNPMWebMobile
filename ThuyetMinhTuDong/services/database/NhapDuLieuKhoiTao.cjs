@@ -1,33 +1,24 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Nhập dữ liệu khởi tạo theo quy trình hiện có; không tự chạy khi đổi tên file.
- *
- * VỊ TRÍ: services/database/NhapDuLieuKhoiTao.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - node:fs
- * - ./KhoDuLieuSql.cjs
- * - ./KetNoiSqlServer.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. main
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/NhapDuLieuKhoiTao.cjs
+ * FILE NÀY LÀM GÌ: Nhập dữ liệu khởi tạo theo quy trình hiện có; không tự chạy khi đổi tên file.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const fs = require('node:fs')
 const { createSqlRepository } = require('./KhoDuLieuSql.cjs')
 const { close } = require('./KetNoiSqlServer.cjs')
-// ==================== [DATABASE] main ====================
-// CHỨC NĂNG: Thực hiện bước main trong nhiệm vụ: Nhập dữ liệu khởi tạo theo quy trình hiện có; không tự chạy khi đổi tên file.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function main() {
   const args = process.argv.slice(2)
   const read = (key) => {

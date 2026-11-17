@@ -1,29 +1,18 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Logic danh mục giai đoạn đầu: chuẩn hóa bỏ dấu, tìm theo ngôn ngữ, lọc/thống kê danh mục, sắp
- *
- * VỊ TRÍ: packages/place-core/src/XuatCongKhai.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - @travelguide/shared-types
- *
- * CÁC KHỐI CHÍNH:
- * 1. normalize
- * 2. searchPlaces
- * 3. filterCategories
- * 4. categoryCounts
- * 5. shouldShowCategories
- * 6. sortPlaces
- * 7. createPlaceService
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/place-core/src/XuatCongKhai.ts
+ * FILE NÀY LÀM GÌ: Xuất các kiểu/hàm để module khác sử dụng qua một đầu mối; không phải màn hình thực hiện UC độc lập.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type {
   CategoryId,
@@ -46,95 +35,59 @@ export type {
 
 // CHỨC NĂNG: tên danh mục dùng để tìm kiếm trong đúng ngôn ngữ.
 // XỬ LÝ: đủ năm ngôn ngữ đang có; các hàm normalize/search giữ nguyên.
-// Khai báo CATEGORY_LABELS: tạo object gồm heritage, landscape, museum, culture, spiritual, food, craft.
 export const CATEGORY_LABELS: Record<CategoryId, LocalizedText> = {
-  // Gán thuộc tính heritage: tạo object gồm vi, en, ja, pt, cn.
   heritage: {
-    // Gán thuộc tính vi: chuỗi 'Di tích'.
     vi: 'Di tích',
-    // Gán thuộc tính en: chuỗi 'Heritage'.
     en: 'Heritage',
-    // Gán thuộc tính ja: chuỗi '史跡'.
     ja: '史跡',
-    // Gán thuộc tính pt: chuỗi 'Património'.
     pt: 'Património',
     
     cn: '历史遗迹',
   },
-  // Gán thuộc tính landscape: tạo object gồm vi, en, ja, pt, cn.
   landscape: {
-    // Gán thuộc tính vi: chuỗi 'Danh lam thắng cảnh'.
     vi: 'Danh lam thắng cảnh',
-    // Gán thuộc tính en: chuỗi 'Scenic attractions'.
     en: 'Scenic attractions',
-    // Gán thuộc tính ja: chuỗi '名勝'.
     ja: '名勝',
-    // Gán thuộc tính pt: chuỗi 'Paisagens'.
     pt: 'Paisagens',
     
     cn: '风景名胜',
   },
-  // Gán thuộc tính museum: tạo object gồm vi, en, ja, pt, cn.
   museum: {
-    // Gán thuộc tính vi: chuỗi 'Bảo tàng'.
     vi: 'Bảo tàng',
-    // Gán thuộc tính en: chuỗi 'Museums'.
     en: 'Museums',
-    // Gán thuộc tính ja: chuỗi '博物館'.
     ja: '博物館',
-    // Gán thuộc tính pt: chuỗi 'Museus'.
     pt: 'Museus',
     
     cn: '博物馆',
   },
-  // Gán thuộc tính culture: tạo object gồm vi, en, ja, pt, cn.
   culture: {
-    // Gán thuộc tính vi: chuỗi 'Văn hóa'.
     vi: 'Văn hóa',
-    // Gán thuộc tính en: chuỗi 'Culture'.
     en: 'Culture',
-    // Gán thuộc tính ja: chuỗi '文化'.
     ja: '文化',
-    // Gán thuộc tính pt: chuỗi 'Cultura'.
     pt: 'Cultura',
     
     cn: '文化',
   },
-  // Gán thuộc tính spiritual: tạo object gồm vi, en, ja, pt, cn.
   spiritual: {
-    // Gán thuộc tính vi: chuỗi 'Tâm linh'.
     vi: 'Tâm linh',
-    // Gán thuộc tính en: chuỗi 'Spiritual sites'.
     en: 'Spiritual sites',
-    // Gán thuộc tính ja: chuỗi '宗教施設'.
     ja: '宗教施設',
-    // Gán thuộc tính pt: chuỗi 'Locais religiosos'.
     pt: 'Locais religiosos',
     
     cn: '宗教场所',
   },
-  // Gán thuộc tính food: tạo object gồm vi, en, ja, pt, cn.
   food: {
-    // Gán thuộc tính vi: chuỗi 'Ẩm thực'.
     vi: 'Ẩm thực',
-    // Gán thuộc tính en: chuỗi 'Food'.
     en: 'Food',
-    // Gán thuộc tính ja: chuỗi 'グルメ'.
     ja: 'グルメ',
-    // Gán thuộc tính pt: chuỗi 'Gastronomia'.
     pt: 'Gastronomia',
     
     cn: '美食',
   },
-  // Gán thuộc tính craft: tạo object gồm vi, en, ja, pt, cn.
   craft: {
-    // Gán thuộc tính vi: chuỗi 'Làng nghề'.
     vi: 'Làng nghề',
-    // Gán thuộc tính en: chuỗi 'Craft villages'.
     en: 'Craft villages',
-    // Gán thuộc tính ja: chuỗi '工芸村'.
     ja: '工芸村',
-    // Gán thuộc tính pt: chuỗi 'Aldeias artesanais'.
     pt: 'Aldeias artesanais',
     
     cn: '手工艺村',
@@ -148,9 +101,7 @@ export const CATEGORY_LABELS: Record<CategoryId, LocalizedText> = {
 // 3. Xóa dấu kết hợp.
 // 4. Đổi đ thành d vì NFD không tự xử lý chữ đ.
 // 5. Gom nhiều khoảng trắng thành một và bỏ khoảng trắng hai đầu.
-// Khai báo normalize(value). Chuẩn hóa chữ để so sánh/tìm kiếm.
-// ==================== [DUNG-CHUNG] normalize ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] normalize — Chuẩn hóa chữ hoa/thường và dấu để tìm từ khóa nhất quán.
 export function normalize(value: string): string {
   
   return value
@@ -172,7 +123,7 @@ export function normalize(value: string): string {
 // - Mọi từ trong truy vấn đều phải xuất hiện trong nội dung địa điểm.
 // - Các từ không bắt buộc nằm liền nhau.
 
-// ==================== [DUNG-CHUNG] searchPlaces ====================
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] searchPlaces — tìm địa điểm trong ngôn ngữ đang chọn.
 export function searchPlaces(
   places: readonly Place[],
   query: string,
@@ -187,7 +138,6 @@ export function searchPlaces(
 
   // CHỨC NĂNG: xóa ô tìm kiếm thì trả lại đủ danh sách.
   // XỬ LÝ: tạo mảng mới để bên gọi không sửa trực tiếp mảng nguồn.
-  // Rẽ nhánh nếu words.length === 0.
   if (words.length === 0) {
     
     return [...places]
@@ -229,14 +179,13 @@ export function searchPlaces(
 // - Web có thể truyền nhiều ID do có checkbox.
 // - Địa điểm cũ thiếu category vẫn hiện trong "Tất cả".
 
-// ==================== [DUNG-CHUNG] filterCategories ====================
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] filterCategories — lọc một hoặc nhiều danh mục.
 export function filterCategories(
   places: readonly Place[],
   selected: readonly CategoryId[],
 ): Place[] {
   // Trả kết quả: places.filter tạo mảng chỉ giữ phần tử đạt điều kiện.
   return places.filter((place) => {
-    // Rẽ nhánh nếu selected.length === 0.
     if (selected.length === 0) {
       
       return true
@@ -258,16 +207,14 @@ export function filterCategories(
 // - Bỏ qua địa điểm chưa có category.
 // - ?? 0 nghĩa là danh mục chưa được đếm thì bắt đầu từ 0.
 
-// ==================== [DUNG-CHUNG] categoryCounts ====================
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] categoryCounts — đếm số địa điểm thuộc từng danh mục.
 export function categoryCounts(
   places: readonly Place[],
 ): Partial<Record<CategoryId, number>> {
-  // Khai báo counts: tạo object gồm.
   const counts: Partial<Record<CategoryId, number>> = {}
 
   // Duyệt lần lượt places bằng const place.
   for (const place of places) {
-    // Rẽ nhánh nếu place.category.
     if (place.category) {
       
       counts[place.category] =
@@ -286,7 +233,7 @@ export function categoryCounts(
 // UI nên truyền danh sách gốc đã tải, không truyền danh sách sau khi
 // người dùng chọn một danh mục, nếu không bộ lọc có thể biến mất.
 
-// ==================== [DUNG-CHUNG] shouldShowCategories ====================
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] shouldShowCategories — quyết định có cần hiển thị bộ lọc danh mục.
 export function shouldShowCategories(
   places: readonly Place[],
 ): boolean {
@@ -298,18 +245,13 @@ export function shouldShowCategories(
 
 // CHỨC NĂNG: giới hạn các cách sắp xếp được hỗ trợ.
 // XỬ LÝ: dùng ID nội bộ; nhãn hiển thị sẽ lấy từ i18n của app.
-// Đặt tên kiểu SortOrder.
 export type SortOrder = 'nearest' | 'name' | 'rating'
 
-// Đặt tên kiểu SortOptions.
 export type SortOptions = {
-  // Khai báo language, kiểu PlaceLanguage. Chọn đúng bản nội dung/âm thanh, tránh đọc văn bản một thứ tiếng bằng giọng thứ tiếng khác.
   language: PlaceLanguage
-  // Khai báo order, kiểu SortOrder.
   order: SortOrder
 
   // Không có origin nghĩa là chưa có vị trí người dùng.
-  // Khai báo origin không bắt buộc, kiểu Point.
   origin?: Point
 
   // Mobile truyền hàm distanceMeters từ services/geo.ts hiện có.
@@ -325,8 +267,7 @@ export type SortOptions = {
 // - Địa điểm thiếu tọa độ hoặc khoảng cách không hợp lệ đi cuối.
 // - Khi bằng nhau dùng tên và ID để giữ thứ tự ổn định.
 
-// ==================== [DUNG-CHUNG] sortPlaces ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] sortPlaces — sắp xếp theo khoảng cách, tên hoặc đánh giá.
 export function sortPlaces(
   places: readonly Place[],
   options: SortOptions,
@@ -345,7 +286,6 @@ export function sortPlaces(
   // CHỨC NĂNG: lưu khoảng cách đã tính theo ID.
   // XỬ LÝ: tính một lần mỗi địa điểm thay vì tính lại trong mỗi
   // lần hàm sort so sánh hai phần tử.
-  // Khai báo distances: Map giữ các cặp khóa–giá trị trong RAM.
   const distances = new Map<string, number>()
 
   
@@ -382,7 +322,7 @@ export function sortPlaces(
   // - Thiếu tên thì dùng chuỗi rỗng, không phát sinh lỗi.
   // - cn là mã nội bộ hiện có; Intl dùng mã zh cho tiếng Trung.
   // - Tên bằng nhau thì so sánh ID để thứ tự không thay đổi ngẫu nhiên.
-  // Khai báo compareNames: khai báo callback (a: Place, b: Place): number => { const leftName = normalize( a.name[option.
+  // [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] compareNames — so sánh tên theo ngôn ngữ đang chọn.
   const compareNames = (a: Place, b: Place): number => {
     
     const leftName = normalize(
@@ -414,7 +354,6 @@ export function sortPlaces(
     // CHỨC NĂNG: rating cao đứng trước.
     // XỬ LÝ: dữ liệu cũ thiếu rating dùng 0 cho việc sắp xếp;
     // UI vẫn phải phân biệt "chưa có đánh giá" với rating thật bằng 0.
-    // Rẽ nhánh nếu effectiveOrder === 'rating'.
     if (effectiveOrder === 'rating') {
       
       return (
@@ -426,7 +365,6 @@ export function sortPlaces(
     // CHỨC NĂNG: khoảng cách nhỏ đứng trước.
     // XỬ LÝ: hai Infinity không được trừ trực tiếp vì ra NaN;
     // kiểm tra bằng nhau trước để chuyển sang so sánh tên.
-    // Rẽ nhánh nếu effectiveOrder === 'nearest'.
     if (effectiveOrder === 'nearest') {
       
       const leftDistance =
@@ -479,8 +417,7 @@ export type TextResolver = (
 // - Không sửa dữ liệu gốc.
 // - Lỗi được truyền lên hook để hiện ErrorState và nút Thử lại.
 
-// ==================== [DUNG-CHUNG] createPlaceService ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] createPlaceService — tạo service danh sách có thể thay nguồn dữ liệu.
 export function createPlaceService(
   source: PlaceSource,
   resolveText?: TextResolver,
@@ -493,7 +430,6 @@ export function createPlaceService(
     ): Promise<Place[]> {
       // CHỨC NĂNG: tải dữ liệu từ nguồn được truyền vào.
       // XỬ LÝ: không catch ở đây để caller nhận được lỗi nguồn.
-      // Khai báo places: await chờ Gọi source().
       const places = await source()
 
       // CHỨC NĂNG: hỗ trợ đọc dữ liệu thô hoặc tiếng Việt.
@@ -514,7 +450,6 @@ export function createPlaceService(
         return [...places]
       }
 
-      // Khai báo result: tạo mảng [].
       const result: Place[] = []
 
       // CHỨC NĂNG: bổ sung bản dịch cho từng địa điểm.
@@ -529,7 +464,6 @@ export function createPlaceService(
         ): Promise<LocalizedText | undefined> => {
           // CHỨC NĂNG: bỏ qua trường không có hoặc đã có bản dịch.
           // XỬ LÝ: dữ liệu cũ có thể thiếu address/region.
-          // Rẽ nhánh nếu !value || value[language].
           if (!value || value[language]) {
             
             return value
@@ -553,7 +487,6 @@ export function createPlaceService(
           // CHỨC NĂNG: không chấp nhận bản dịch rỗng.
           // XỬ LÝ: ném lỗi kỹ thuật; UI hiển thị thông báo qua i18n,
           // không hiển thị trực tiếp chuỗi lỗi này.
-          // Rẽ nhánh nếu !translated.trim().
           if (!translated.trim()) {
             
             throw new Error('Empty place translation')

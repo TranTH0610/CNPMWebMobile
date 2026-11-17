@@ -1,27 +1,11 @@
 /**
- * CHỨC NĂNG: [PHIEN-HOAT-DONG] [THONG-KE]
- * VAI TRÒ: HOOK XỬ LÝ VÀ VÒNG ĐỜI
- *
- * FILE NÀY LÀM GÌ:
- * Báo phiên du khách đang hoạt động theo vòng đời nền tảng; web xét tab hiển thị, native xét AppState.
- *
- * VỊ TRÍ: apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/App.tsx
- *
- * PHỤ THUỘC:
- * - ../../qr/hooks/useGhiNhanVaoCong
- * - react
- * - @travelguide/visitor-core/presence
- * - ../services/PhienHoatDong
- *
- * CÁC KHỐI CHÍNH:
- * 1. getSessionId
- * 2. usePresenceHeartbeat
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts
+ * FILE NÀY LÀM GÌ: Báo phiên du khách đang hoạt động theo vòng đời nền tảng; web xét tab hiển thị, native xét AppState.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useGateEntry } from '../../qr/hooks/useGhiNhanVaoCong'
 /** FILE NÀY LÀM GÌ: Báo phiên du khách web đang mở và ở foreground.
@@ -38,8 +22,7 @@ let sessionId: string | undefined
 // CHỨC NĂNG: Giữ một mã phiên ẩn danh ổn định khi tải lại trang.
 // XỬ LÝ: Ưu tiên sessionStorage; nếu storage bị chặn thì giữ mã trong RAM của trang.
 
-// ==================== [PHIEN-HOAT-DONG] [THONG-KE] getSessionId ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC14] getSessionId — Giữ một mã phiên ẩn danh ổn định khi tải lại trang.
 function getSessionId() {
   if (sessionId) return sessionId
 
@@ -67,7 +50,7 @@ function getSessionId() {
 // CHỨC NĂNG: Nối vòng đời du khách với nhịp báo hoạt động.
 // XỬ LÝ: Chỉ gửi theo trạng thái hiển thị/hoạt động của nền tảng và dừng lịch khi không còn dùng.
 
-// ==================== [PHIEN-HOAT-DONG] [THONG-KE] usePresenceHeartbeat ====================
+// [UC14] usePresenceHeartbeat — Theo dõi vòng đời nền tảng để báo hoặc kết thúc phiên hoạt động.
 export function usePresenceHeartbeat() {
   useGateEntry()
   // CHỨC NĂNG: Chỉ báo hoạt động khi tab du khách đang hiển thị.
@@ -75,9 +58,7 @@ export function usePresenceHeartbeat() {
   // CHỨC NĂNG: Chạy heartbeat khi tab visible; ẩn/rời trang thì dừng lịch gửi.
   // XỬ LÝ: Đăng ký sự kiện vòng đời phù hợp nền tảng, rồi cleanup gỡ listener và dừng
   // timer.
-  // KHI NÀO CHẠY: Theo vòng mount của component; mảng [] không theo dõi props/state. Cleanup chạy
   // khi rời component.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     let stop: (() => void) | undefined
 

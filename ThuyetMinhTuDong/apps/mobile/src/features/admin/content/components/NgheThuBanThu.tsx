@@ -1,32 +1,12 @@
 /**
- * CHỨC NĂNG: [BIEN-TAP] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Nghe thử bản thu trong biên tập/kiểm duyệt. Native dùng controller nghe thử; web dùng phần tử audio của trình duyệt.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/content/components/NgheThuBanThu.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - @react-navigation/native
- * - @react-native-community/slider
- * - @expo/vector-icons
- * - @travelguide/visitor-core
- * - @travelguide/admin-core/react
- * - ../../../journey/adapters/KetNoiAudioVaDinhVi
- * - ../../../../shared/GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. clock
- * 2. AudioPreview
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/content/components/NgheThuBanThu.tsx
+ * FILE NÀY LÀM GÌ: Nghe thử bản thu trong biên tập/kiểm duyệt. Native dùng controller nghe thử; web dùng phần tử audio của trình duyệt.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
@@ -48,7 +28,7 @@ const clock = (seconds: number) => {
 // CHỨC NĂNG: Nghe thử bản thu trong biên tập/kiểm duyệt.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [BIEN-TAP] [THUYET-MINH] AudioPreview ====================
+// [UC11 / UC12] AudioPreview — Hiển thị điều khiển nghe thử bản thu phục vụ biên tập hoặc kiểm duyệt.
 export function AudioPreview({ url, title }: { url: string; title: string }) {
   const t = useAdminText()
   // CHỨC NĂNG: Giữ cùng player khi form render/poll, không mở lại khi pause.

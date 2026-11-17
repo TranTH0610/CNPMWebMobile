@@ -1,29 +1,18 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Thanh tab mobile du khách cho Khám phá, Bản đồ và Cài đặt; nhãn tab dùng ngôn ngữ hiện tại.
- *
- * VỊ TRÍ: apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- *
- * PHỤ THUỘC:
- * - ../features/explore/screens/ManKhamPha
- * - ../features/settings/screens/ManCaiDat
- * - ../features/journey/screens/ManHanhTrinh
- * - @react-navigation/bottom-tabs
- * - @expo/vector-icons
- * - ../features/language/i18n/CauHinhNgonNgu
- * - ../shared/GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. MainTabs
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
+ * FILE NÀY LÀM GÌ: Thanh tab mobile du khách cho Khám phá, Bản đồ và Cài đặt; nhãn tab dùng ngôn ngữ hiện tại.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import HomeScreen from '../features/explore/screens/ManKhamPha'
 import SettingsScreen from '../features/settings/screens/ManCaiDat'
@@ -37,8 +26,7 @@ const Tabs = createBottomTabNavigator()
 // CHỨC NĂNG: Đăng ký label được dịch cho các tab.
 // XỬ LÝ: i18n đổi thì options được render lại.
 
-// ==================== [DIEU-HUONG] MainTabs ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] MainTabs — Đăng ký label được dịch cho các tab.
 export default function MainTabs() {
   const t = useText()
 

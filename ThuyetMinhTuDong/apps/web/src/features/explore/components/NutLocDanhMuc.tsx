@@ -1,25 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị các nút danh mục và trạng thái đang chọn; gửi lựa chọn về màn cha để cập nhật bộ lọc.
- *
- * VỊ TRÍ: apps/web/src/features/explore/components/NutLocDanhMuc.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/explore/pages/TrangChu.tsx
- *
- * PHỤ THUỘC:
- * - ../../../shared/components/BieuTuong
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. CategoryChips
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/explore/components/NutLocDanhMuc.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị các nút danh mục và trạng thái đang chọn; gửi lựa chọn về màn cha để cập nhật bộ lọc.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { Icon } from '../../../shared/components/BieuTuong'
 import type { Category } from '@travelguide/visitor-core'
@@ -28,8 +15,7 @@ import { useText } from '../../language/i18n/CauHinhNgonNgu'
 // CHỨC NĂNG: Chip danh mục ở hero.
 // XỬ LÝ: Chỉ hiện danh mục có dữ liệu và có ít nhất hai loại.
 
-// ==================== [KHAM-PHA] CategoryChips ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] CategoryChips — Chip danh mục ở hero.
 export function CategoryChips({
   categories,
   selected,

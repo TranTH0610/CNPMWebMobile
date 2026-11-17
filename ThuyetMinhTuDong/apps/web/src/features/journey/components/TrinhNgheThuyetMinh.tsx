@@ -1,35 +1,15 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Trình nghe thuyết minh: trạng thái phát, tạm dừng, tua, tốc độ và nút đóng; thao tác được chuyển đến controller chung.
- *
- * VỊ TRÍ: apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/shared/layouts/BoCucDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../hooks/useHanhTrinh
- * - ../../../shared/components/BieuTuong
- * - ../../../shared/components/AnhDiTich
- *
- * CÁC KHỐI CHÍNH:
- * 1. clock
- * 2. JourneyPlayer
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/journey/components/TrinhNgheThuyetMinh.tsx
+ * FILE NÀY LÀM GÌ: Trình nghe thuyết minh: trạng thái phát, tạm dừng, tua, tốc độ và nút đóng; thao tác được chuyển đến controller chung.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useState } from 'react'
 
 import { Link } from 'react-router-dom'
-import { LANGUAGES } from '@travelguide/visitor-core'
 import { useText } from '../../language/i18n/CauHinhNgonNgu'
 import { useJourney } from '../hooks/useHanhTrinh'
 import { Icon } from '../../../shared/components/BieuTuong'
@@ -44,7 +24,7 @@ const clock = (value: number) =>
 // được chuyển đến controller chung.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] JourneyPlayer ====================
+// [UC07] JourneyPlayer — Trình nghe thuyết minh: trạng thái phát, tạm dừng, tua, tốc độ và nút đóng; thao tác
 export function JourneyPlayer() {
   const { engine, state, resumeSaved } = useJourney()
 
@@ -73,6 +53,7 @@ export function JourneyPlayer() {
 
   // CHỨC NĂNG: Thao tác đều gọi audio thật, không tăng thời gian bằng timer UI.
 
+  // [UC07] toggle — Thao tác đều gọi audio thật, không tăng thời gian bằng timer UI.
   const toggle = () => {
     if (!session) return
 
@@ -111,7 +92,7 @@ export function JourneyPlayer() {
             {session && (
               <div className="audio-subtitle">
                 <span className="audio-language">
-                  {LANGUAGES.find((item) => item.code === session.language)?.label}
+                  {t(`language_${session.language}`)}
                 </span>
                 <span className={'audio-status ' + (playing ? 'is-playing' : '')}>
                   <span />

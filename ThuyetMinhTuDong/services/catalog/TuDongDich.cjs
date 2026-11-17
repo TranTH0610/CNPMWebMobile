@@ -1,26 +1,11 @@
 /**
- * CHỨC NĂNG: [TU-DONG-DICH]
- * VAI TRÒ: API PHÍA MÁY CHỦ
- *
- * FILE NÀY LÀM GÌ:
- * Dịch văn bản tiếng Việt bằng MyMemory, không cần API key cho demo.
- *
- * VỊ TRÍ: services/catalog/TuDongDich.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/KiemThuTuDongDich.test.cjs
- * - services/catalog/MayChuApi.cjs
- *
- * PHỤ THUỘC:
- * - ./ThuatNguDich.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. chunks
- * 2. plain
- * 3. translateText
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: services/catalog/TuDongDich.cjs
+ * FILE NÀY LÀM GÌ: Dịch văn bản sang ngôn ngữ đích qua dịch vụ ngoài; chia đoạn và chuẩn hóa kết quả dịch.
+ * VAI TRÒ: Máy chủ/API; nhận yêu cầu từ Web và Mobile.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { protect } = require('./ThuatNguDich.cjs')
 const codes = { en: 'en', cn: 'zh-CN', pt: 'pt-PT', ja: 'ja' }
@@ -28,7 +13,7 @@ const codes = { en: 'en', cn: 'zh-CN', pt: 'pt-PT', ja: 'ja' }
 // CHỨC NĂNG: Chia văn bản theo giới hạn byte UTF-8 của một request dịch.
 // XỬ LÝ: Ưu tiên ngắt sau dấu câu/khoảng trắng; không cắt đôi ký tự Unicode.
 // TẠI SAO: Tiếng Việt/Trung có ký tự nhiều byte; đếm length không đủ chính xác.
-// ==================== [TU-DONG-DICH] chunks ====================
+// [UC11] chunks — Chia văn bản theo giới hạn byte UTF-8 của một request dịch.
 function chunks(text, limit = 450) {
   const result = []
   let rest = text
@@ -56,8 +41,7 @@ function chunks(text, limit = 450) {
 
 // CHỨC NĂNG: Đổi các thực thể HTML thường gặp trong kết quả về văn bản thuần.
 // XỬ LÝ: Không thực thi HTML và không dùng dangerouslySetInnerHTML trên giao diện.
-// ==================== [TU-DONG-DICH] plain ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC11] plain — Đổi các thực thể HTML thường gặp trong kết quả về văn bản thuần.
 function plain(text) {
   const named = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
   return text.replace(/&(amp|lt|gt|quot|apos|nbsp|#\d+|#x[a-f0-9]+);/gi, (original, key) => {
@@ -72,10 +56,7 @@ function plain(text) {
   })
 }
 
-// ==================== [TU-DONG-DICH] translateText ====================
-// CHỨC NĂNG: Thực hiện bước translateText trong nhiệm vụ: Dịch văn bản tiếng Việt bằng MyMemory, không cần API key cho demo.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC11] translateText — Chia và gửi văn bản đến dịch vụ dịch, sau đó chuẩn hóa kết quả theo ngôn ngữ đích.
 async function translateText(text, language, request = fetch, context = {}) {
   if (!codes[language] || typeof text !== 'string' || text.length > 20000)
     throw Error('Invalid translation')

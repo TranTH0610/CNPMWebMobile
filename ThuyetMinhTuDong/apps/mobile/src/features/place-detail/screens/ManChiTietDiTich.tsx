@@ -1,36 +1,13 @@
 /**
- * CHỨC NĂNG: [CHI-TIET]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Chi tiết địa điểm mobile với ảnh lớn, thanh ngôn ngữ và bài thuyết minh dễ đọc. RootNavigator gọi; dùng service/hook du khách và bộ phát ListenButton đã có. TẠI SAO: Một ScrollView dọc, thanh ngôn ngữ ngang giúp tránh lỗi nội dung bị khuất dưới header.
- *
- * VỊ TRÍ: apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - react-native-safe-area-context
- * - @react-navigation/native-stack
- * - @travelguide/visitor-core
- * - ../../explore/hooks/useDanhSachDiTich
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../../../shared/components/NutThaoTac
- * - ../../language/components/ThanhChonNgonNgu
- * - ../../journey/components/NutNgheThuyetMinh
- * - ../../../shared/components/AnhDiTich
- * - ../../../shared/components/TrangThaiDuLieu
- * - ../../../shared/GiaoDienChung
- * - ../../../navigation/KieuDieuHuongDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. DetailScreen
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
+ * FILE NÀY LÀM GÌ: Chi tiết địa điểm mobile với ảnh lớn, thanh ngôn ngữ và bài thuyết minh dễ đọc. RootNavigator gọi; dùng service/hook du khách và bộ phát ListenButton đã có. TẠI SAO: Một ScrollView dọc, thanh ngôn ngữ ngang giúp tránh lỗi nội dung bị khuất dưới header.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -47,10 +24,8 @@ import { State } from '../../../shared/components/TrangThaiDuLieu'
 import { ui } from '../../../shared/GiaoDienChung'
 import { colors, radii, spacing } from '../../../shared/GiaoDienChung'
 import type { VisitorStack } from '../../../navigation/KieuDieuHuongDuKhach'
-// ==================== [CHI-TIET] DetailScreen ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider DetailScreen.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC04 / UC07 / UC08] DetailScreen — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider DetailScreen.
 export default function DetailScreen({
   route,
   navigation,

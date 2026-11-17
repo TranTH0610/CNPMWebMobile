@@ -1,28 +1,11 @@
 /**
- * CHỨC NĂNG: [THUYET-MINH]
- * VAI TRÒ: API PHÍA MÁY CHỦ
- *
- * FILE NÀY LÀM GÌ:
- * Chuẩn bị MP3 từ nội dung/ngôn ngữ, dùng bộ nhớ đệm tệp cho lớp lưu media SQL.
- *
- * VỊ TRÍ: services/catalog/TaoAmThanhThuyetMinh.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/MayChuApi.cjs
- *
- * PHỤ THUỘC:
- * - node:fs
- * - node:path
- * - node:crypto
- * - node:child_process
- * - ../database/LuuVaDocTepSql.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. audioFile
- * 2. prepareNarration
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: services/catalog/TaoAmThanhThuyetMinh.cjs
+ * FILE NÀY LÀM GÌ: Tạo hoặc lấy bản MP3 từ nội dung và ngôn ngữ đã chọn để chuẩn bị bản thu thuyết minh.
+ * VAI TRÒ: Máy chủ/API; nhận yêu cầu từ Web và Mobile.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const fs = require('node:fs')
 
@@ -39,8 +22,7 @@ const { alias } = require('../database/LuuVaDocTepSql.cjs')
 // CHỨC NĂNG: Xác định tệp MP3 của một khóa bản thu.
 // XỬ LÝ: Giới hạn đường dẫn theo kho audio để không dùng chuỗi nhập làm đường dẫn tùy ý.
 
-// ==================== [THUYET-MINH] audioFile ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC11] audioFile — Xác định tệp MP3 của một khóa bản thu.
 function audioFile(key) {
   if (!/^[a-f0-9]{64}$/.test(key)) return undefined
 
@@ -55,7 +37,7 @@ function audioFile(key) {
 // CHỨC NĂNG: Chuẩn bị MP3 từ đúng bài và ngôn ngữ.
 // XỬ LÝ: Dùng khóa nội dung để tái sử dụng bản khớp và tránh dùng âm thanh mẫu cho bài mới.
 
-// ==================== [THUYET-MINH] prepareNarration ====================
+// [UC11] prepareNarration — Chuẩn bị bản MP3 theo văn bản và ngôn ngữ, tái sử dụng kết quả phù hợp khi có.
 async function prepareNarration(body, language) {
   if (!['vi', 'en', 'cn', 'pt', 'ja'].includes(language) || !body.trim() || body.length > 20000)
     throw Error('Invalid narration')

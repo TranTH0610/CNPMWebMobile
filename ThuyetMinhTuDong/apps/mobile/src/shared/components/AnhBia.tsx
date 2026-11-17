@@ -1,35 +1,14 @@
 /**
- * CHỨC NĂNG: [TAI-NGUYEN]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị phần ảnh bìa và nội dung mở đầu của trang khám phá trên mobile.
- *
- * VỊ TRÍ: apps/mobile/src/shared/components/AnhBia.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- * - apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx
- * - apps/mobile/src/features/admin/reviews/ManChiTietKiemDuyet.tsx
- * - apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx
- * - apps/mobile/src/features/explore/components/KhoiChaoMung.tsx
- * - apps/mobile/src/features/explore/components/TheDiTich.tsx
- * - apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
- *
- * PHỤ THUỘC:
- * - ../../features/explore/GiaoDienKhamPha
- * - ../GiaoDienChung
- * - react
- * - react-native
- * - @expo/vector-icons
- * - ../services/XuLyAnhDiTich
- * - ../../features/language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. Cover
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/shared/components/AnhBia.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị phần ảnh bìa và nội dung mở đầu của trang khám phá trên mobile.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { explore } from '../../features/explore/GiaoDienKhamPha'
 import { colors } from '../GiaoDienChung'
@@ -43,8 +22,7 @@ import { useText } from '../../features/language/i18n/CauHinhNgonNgu'
 // CHỨC NĂNG: Hiển thị ảnh co theo khung hoặc placeholder.
 // XỬ LÝ: Lỗi gắn với URI để callback ảnh cũ không làm hỏng ảnh mới; thiếu asset cũng hiện placeholder.
 
-// ==================== [TAI-NGUYEN] Cover ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC04 / UC10 / UC11] Cover — Hiển thị ảnh co theo khung hoặc placeholder.
 export function Cover({
   uri,
   style,

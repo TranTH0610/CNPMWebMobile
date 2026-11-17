@@ -1,39 +1,13 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Màn bản đồ/hành trình mobile, chọn điểm và tuyến tham khảo, liên kết đến nội dung thuyết minh.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- * - apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - ../components/TrangThaiDinhVi
- * - ../components/BanDoThamQuan
- * - react-native
- * - react-native-safe-area-context
- * - @react-navigation/native
- * - @react-navigation/native-stack
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../hooks/useHanhTrinh
- * - @travelguide/visitor-core/journey/data
- * - @travelguide/visitor-core/journey
- * - ../../../shared/components/NutThaoTac
- * - ../../../shared/GiaoDienChung
- * - ../../explore/components/TheDiTich
- * - ../../../navigation/KieuDieuHuongDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. JourneyScreen
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
+ * FILE NÀY LÀM GÌ: Màn bản đồ/hành trình mobile, chọn điểm và tuyến tham khảo, liên kết đến nội dung thuyết minh.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { GpsStatus } from '../components/TrangThaiDinhVi'
 
@@ -58,8 +32,7 @@ import type { VisitorStack } from '../../../navigation/KieuDieuHuongDuKhach'
 // thuyết minh.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] JourneyScreen ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC06 / UC07 / UC08] JourneyScreen — Màn bản đồ/hành trình mobile, chọn điểm và tuyến tham khảo, liên kết đến nội dung
 export function JourneyScreen() {
   const { engine, state } = useJourney(),
     { language } = useVisitor(),

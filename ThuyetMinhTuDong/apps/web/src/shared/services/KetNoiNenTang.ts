@@ -1,26 +1,10 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: KẾT NỐI API / THIẾT BỊ
- *
- * FILE NÀY LÀM GÌ:
- * Tạo adapter/bộ nhớ và nguồn danh mục riêng nền tảng; nhận cấu hình API để UI không tự ghép URL dịch vụ.
- *
- * VỊ TRÍ: apps/web/src/shared/services/KetNoiNenTang.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx
- * - apps/web/src/main-admin.tsx
- * - apps/web/src/main.tsx
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- *
- * CÁC KHỐI CHÍNH:
- * 1. getPosition
- * 2. loadPublicSiteOrigin
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+ * FILE: apps/web/src/shared/services/KetNoiNenTang.ts
+ * FILE NÀY LÀM GÌ: Tạo adapter/bộ nhớ và nguồn danh mục riêng nền tảng; nhận cấu hình API để UI không tự ghép URL dịch vụ.
+ * VAI TRÒ: Lớp kết nối nền tảng; chuyển thao tác chung sang API/thiết bị cụ thể.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { siteOrigin } from '@travelguide/visitor-core'
 import type { Point, StoragePort, QrPolicy } from '@travelguide/visitor-core'
@@ -41,8 +25,7 @@ export const storage: StoragePort = {
 // CHỨC NĂNG: Lấy vị trí khi người dùng chủ động yêu cầu.
 // XỬ LÝ: Thiếu API, từ chối quyền hoặc timeout sẽ được hook xử lý.
 
-// ==================== [DUNG-CHUNG] getPosition ====================
-// TẠI SAO: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+// [HỖ TRỢ CHUNG] getPosition — Lấy vị trí khi người dùng chủ động yêu cầu.
 export function getPosition(): Promise<Point> {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -107,8 +90,7 @@ export const qrPolicy: QrPolicy = {
 // CHỨC NĂNG: Đọc URL QR mới nhất mà không phụ thuộc cache .env của Vite.
 // XỬ LÝ: HTTPS đang mở được ưu tiên; localhost mới đọc runtime config của script QR.
 
-// ==================== [DUNG-CHUNG] loadPublicSiteOrigin ====================
-// TẠI SAO: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+// [HỖ TRỢ CHUNG] loadPublicSiteOrigin — Đọc URL QR mới nhất mà không phụ thuộc cache .env của Vite.
 export async function loadPublicSiteOrigin(): Promise<string | null> {
   try {
     if (window.location.protocol === 'https:') return siteOrigin(window.location.origin)

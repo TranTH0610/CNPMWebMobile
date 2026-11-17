@@ -1,31 +1,11 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Trình bày các điểm tham quan trên bản đồ và nối thao tác chọn điểm với luồng hành trình của nền tảng.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/components/BanDoThamQuan.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- *
- * PHỤ THUỘC:
- * - ../../../shared/components/NutThaoTac
- * - ../../../shared/GiaoDienChung
- * - react-native
- * - react-native-maps
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../hooks/useHanhTrinh
- * - @travelguide/visitor-core/journey/data
- *
- * CÁC KHỐI CHÍNH:
- * 1. VisitorMap
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/journey/components/BanDoThamQuan.tsx
+ * FILE NÀY LÀM GÌ: Trình bày các điểm tham quan trên bản đồ và nối thao tác chọn điểm với luồng hành trình của nền tảng.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { Action } from '../../../shared/components/NutThaoTac'
 import { colors, spacing } from '../../../shared/GiaoDienChung'
@@ -43,8 +23,7 @@ import { mapPointFor } from '@travelguide/visitor-core/journey/data'
 // trình của nền tảng.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] VisitorMap ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC08] VisitorMap — Hiển thị marker, vị trí và các thao tác chọn di tích/mở bản đồ ngoài.
 export function VisitorMap({
   selected,
   onOpen,
@@ -64,6 +43,7 @@ export function VisitorMap({
 
   // CHỨC NĂNG: Mở đúng vị trí trong ứng dụng/trình duyệt bản đồ bên ngoài.
   // XỬ LÝ: Lỗi mở liên kết được hiển thị, không để Promise bị từ chối mà không xử lý.
+  // [UC08] openExternal — Mở tọa độ di tích bằng ứng dụng/trình duyệt bản đồ ngoài và báo lỗi nếu không mở được.
   const openExternal = async () => {
     setExternalFailed(false)
     try {
@@ -101,6 +81,7 @@ export function VisitorMap({
 // CHỨC NĂNG: Theo dõi thời hạn khởi tạo bản đồ; component được tạo lại khi đổi điểm hoặc thử lại.
 // XỬ LÝ: Android chờ onMapLoaded; iOS chỉ xác nhận SDK sẵn sàng bằng onMapReady.
 // TẠI SAO: Không dùng sự kiện sẵn sàng trên iOS để cam kết mọi ảnh nền đã tải thành công.
+// [UC08] NativeMap — Theo dõi thời hạn khởi tạo bản đồ; component được tạo lại khi đổi điểm hoặc thử lại.
 function NativeMap({ selected, onOpen }: { selected?: string; onOpen: (id: string) => void }) {
   const { state } = useJourney(), { language } = useVisitor(), t = useText()
   const place = state.places.find(item => item.id === selected)

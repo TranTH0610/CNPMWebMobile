@@ -1,35 +1,19 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: API PHÍA MÁY CHỦ
- *
- * FILE NÀY LÀM GÌ:
- * HTTP API cổng 8788: chia sẻ nội dung admin, danh mục công bố, audio, phiên bản và lượt mở
- *
- * VỊ TRÍ: services/catalog/MayChuApi.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/KiemThuApiDiTich.test.cjs
- * - services/database/KiemThuTepTaiNguyen.test.cjs
- *
- * PHỤ THUỘC:
- * - node:http
- * - node:path
- * - node:fs
- * - node:module
- * - node:crypto
- * - ./TaoAmThanhThuyetMinh.cjs
- * - ./TuDongDich.cjs
- * - ./KiemTraLenhQuanTri.cjs
- * - ./XuLyTepTaiNguyen.cjs
- * - ../database/LuuVaDocTepSql.cjs
- * - ../database/KhoDuLieuSql.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. loadCore
- * 2. createCatalogServer
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: services/catalog/MayChuApi.cjs
+ * FILE NÀY LÀM GÌ: Nhận yêu cầu HTTP cho danh mục, quản trị, media và lượt QR; gọi nghiệp vụ và repository SQL.
+ * VAI TRÒ: Máy chủ/API; nhận yêu cầu từ Web và Mobile.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const http = require('node:http')
 
@@ -52,8 +36,7 @@ const { createSqlRepository } = require('../database/KhoDuLieuSql.cjs')
 const root = path.resolve(__dirname, '../..')
 // CHỨC NĂNG: Chạy đúng logic TypeScript đang dùng ở FE, tránh chép đôi workflow.
 
-// ==================== [DUNG-CHUNG] loadCore ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] loadCore — Chạy đúng logic TypeScript đang dùng ở FE, tránh chép đôi workflow.
 function loadCore() {
   const runtime = path.join(root, '.runtime')
   fs.mkdirSync(runtime, { recursive: true })
@@ -73,7 +56,7 @@ function loadCore() {
 // XỬ LÝ: Tạo service cho từng transaction; lệnh sửa phải qua kiểm tra đầu vào và
 // revision.
 
-// ==================== [DUNG-CHUNG] createCatalogServer ====================
+// [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] createCatalogServer — Tạo API nội dung dùng chung giữa web và mobile.
 function createCatalogServer({
   now = Date.now,
   origins = [
@@ -94,6 +77,7 @@ function createCatalogServer({
   // TẠI SAO: Dùng lại nghiệp vụ duyệt/công bố nhưng không giữ dữ liệu chính trong RAM.
   const instance = randomUUID()
   // CHỨC NĂNG: Tách request chỉ đọc khỏi lệnh ghi, giữ khởi tạo seed trong khóa ghi.
+  // [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] run — Tách request chỉ đọc khỏi lệnh ghi, giữ khởi tạo seed trong khóa ghi.
   async function run(
     action,
     translateOverride = translator,
@@ -132,6 +116,7 @@ function createCatalogServer({
   // CHỨC NĂNG: Đọc body JSON của lệnh quản trị.
   // XỬ LÝ: Kiểm tra Content-Type và kích thước để body sai/quá lớn không làm đầy bộ nhớ.
 
+  // [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] json — Đọc body JSON của lệnh quản trị.
   async function json(req) {
     if (!String(req.headers['content-type'] || '').startsWith('application/json'))
       throw Error('invalid')
@@ -211,9 +196,11 @@ function createCatalogServer({
             storage: 'sqlserver',
           })
 
+        // [UC10 / UC11 / UC12] KHỐI API — Đọc document quản trị gồm bản nháp, trạng thái và revision.
         if (pathname === '/document')
           return reply(200, await run((service) => service.load(), translator, prepareAudio, true))
 
+        // [UC09] KHỐI API — Trả danh tính quản lý cấp sẵn cho ứng dụng quản trị.
         if (pathname === '/identity')
           return reply(
             200,
@@ -227,18 +214,21 @@ function createCatalogServer({
               .identity(),
           )
 
+        // [UC02 / UC04 / UC07] KHỐI API — Trả danh mục và văn bản/bản thu đã công bố cho du khách.
         if (pathname === '/published')
           return reply(
             200,
             await run((service) => service.published(), translator, prepareAudio, true),
           )
 
+        // [UC14] KHỐI API — Trả tổng lượt vào từ QR để hiển thị trang tổng quan.
         if (pathname === '/gate/statistics') {
           await importGate()
           return reply(200, await repository.gateStatistics())
         }
       }
 
+      // [UC10 / UC11 / UC12 / UC13] KHỐI API — Kiểm tra lệnh quản trị và chuyển đến nghiệp vụ lưu, dịch, tạo audio, duyệt hoặc công bố.
       if (req.method === 'POST' && pathname === '/commands') {
         const body = await json(req)
 
@@ -311,6 +301,7 @@ function createCatalogServer({
         return reply(200, { ok: true })
       }
 
+      // [UC05] KHỐI API — Nhận visitId của lượt vào cổng và ghi chống trùng trong SQL.
       if (req.method === 'POST' && pathname === '/gate/entry') {
         const body = await json(req)
 

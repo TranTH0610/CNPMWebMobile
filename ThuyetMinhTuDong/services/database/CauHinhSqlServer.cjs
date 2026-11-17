@@ -1,35 +1,25 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Đọc cấu hình SQL Server ở phía API; không đưa mật khẩu database vào web/mobile.
- *
- * VỊ TRÍ: services/database/CauHinhSqlServer.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/database/ChayNangCapDatabase.cjs
- * - services/database/HoTroKiemThuDatabase.cjs
- * - services/database/KetNoiSqlServer.cjs
- *
- * PHỤ THUỘC:
- * - ../config/DocCauHinhMoiTruong.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. databaseName
- * 2. driverConfig
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/CauHinhSqlServer.cjs
+ * FILE NÀY LÀM GÌ: Đọc cấu hình SQL Server ở phía API; không đưa mật khẩu database vào web/mobile.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { loadServerEnv } = require('../config/DocCauHinhMoiTruong.cjs')
 // CHỨC NĂNG: Chỉ BE nạp cấu hình SQL; đường dẫn không phụ thuộc thư mục terminal.
 loadServerEnv()
 
-// ==================== [DATABASE] databaseName ====================
-// CHỨC NĂNG: Thực hiện bước databaseName trong nhiệm vụ: Đọc cấu hình SQL Server ở phía API; không đưa mật khẩu database vào web/mobile.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function databaseName() {
   const name = process.env.SQL_DATABASE || 'HueGuideDemo'
   // Tên database là định danh SQL, không phải giá trị bind được; giới hạn ký tự trước khi dùng.
@@ -38,10 +28,6 @@ function databaseName() {
   return name
 }
 
-// ==================== [DATABASE] driverConfig ====================
-// CHỨC NĂNG: Thực hiện bước driverConfig trong nhiệm vụ: Đọc cấu hình SQL Server ở phía API; không đưa mật khẩu database vào web/mobile.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function driverConfig(database = databaseName()) {
   const windows = (process.env.SQL_AUTH || 'windows') === 'windows'
   const sql = require(windows ? 'mssql/msnodesqlv8' : 'mssql')

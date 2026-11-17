@@ -1,30 +1,13 @@
 /**
- * CHỨC NĂNG: [QUAN-LY-DI-TICH] [LUU-NHAP]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Trang danh sách địa điểm. Bản du khách đọc điều kiện route và dùng Catalogue; bản admin quản lý danh sách di tích.
- *
- * VỊ TRÍ: apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - @travelguide/visitor-core
- * - @travelguide/visitor-core/react
- * - @travelguide/admin-core/react
- * - ../../../shared/components/AnhDiTich
- * - ../shared/components/ThanhPhanQuanTri
- * - ../shared/components/BieuTuongQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. AdminPlacesPage
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx
+ * FILE NÀY LÀM GÌ: Trang danh sách địa điểm. Bản du khách đọc điều kiện route và dùng Catalogue; bản admin quản lý danh sách di tích.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -37,8 +20,7 @@ import { AdminIcon } from '../shared/components/BieuTuongQuanTri'
 // CHỨC NĂNG: Trang danh sách địa điểm.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [QUAN-LY-DI-TICH] [LUU-NHAP] AdminPlacesPage ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC10 / UC11 / UC12] AdminPlacesPage — Trang danh sách địa điểm.
 export function AdminPlacesPage() {
   // CHỨC NĂNG: Từ khóa người dùng đang gõ; giá trị lọc có thể được trì hoãn bằng debounce.
 

@@ -1,25 +1,16 @@
 /**
- * CHỨC NĂNG: [TAI-NGUYEN]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Chọn tệp từ thiết bị theo giới hạn của bản FE; không phải dịch vụ upload và lưu tệp trên máy chủ thật.
- *
- * VỊ TRÍ: apps/web/src/features/admin/shared/components/ChonTepTuThietBi.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- * - apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - @travelguide/admin-core/react
- *
- * CÁC KHỐI CHÍNH:
- * 1. LocalMediaPicker
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/shared/components/ChonTepTuThietBi.tsx
+ * FILE NÀY LÀM GÌ: Chọn tệp từ thiết bị theo giới hạn của bản FE; không phải dịch vụ upload và lưu tệp trên máy chủ thật.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useState } from 'react'
 import { useAdminText } from '@travelguide/admin-core/react'
@@ -27,8 +18,7 @@ import { useAdminText } from '@travelguide/admin-core/react'
 // trên máy chủ thật.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [TAI-NGUYEN] LocalMediaPicker ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] LocalMediaPicker — Chọn tệp từ thiết bị theo giới hạn của bản FE; không phải dịch vụ upload và lưu tệp
 export function LocalMediaPicker({
   kind,
   onPick,

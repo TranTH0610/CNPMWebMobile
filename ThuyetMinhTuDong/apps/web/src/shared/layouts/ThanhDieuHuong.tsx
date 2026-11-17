@@ -1,26 +1,10 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Thanh điều hướng website du khách; nối các mục menu với route và bộ chọn ngôn ngữ.
- *
- * VỊ TRÍ: apps/web/src/shared/layouts/ThanhDieuHuong.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/shared/layouts/BoCucDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - ../components/BieuTrungDiSan
- * - react-router-dom
- * - ../../features/language/i18n/CauHinhNgonNgu
- * - ../../features/language/components/ChonNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. Navbar
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/shared/layouts/ThanhDieuHuong.tsx
+ * FILE NÀY LÀM GÌ: Thanh điều hướng website du khách; nối các mục menu với route và bộ chọn ngôn ngữ.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { HeritageMark } from '../components/BieuTrungDiSan'
 
@@ -31,8 +15,7 @@ import { LanguagePicker } from '../../features/language/components/ChonNgonNgu'
 // CHỨC NĂNG: Thanh điều hướng website du khách; nối các mục menu với route và bộ chọn ngôn ngữ.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DIEU-HUONG] Navbar ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [HỖ TRỢ CHUNG] Navbar — Thanh điều hướng website du khách; nối các mục menu với route và bộ chọn ngôn ngữ.
 export function Navbar() {
   const t = useText()
   return (

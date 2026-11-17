@@ -1,37 +1,18 @@
 /**
- * CHỨC NĂNG: [KHOI-DONG] [CAU-HINH]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Entry web du khách: tạo root React, ghép provider và router rồi gắn ứng dụng vào HTML.
- *
- * VỊ TRÍ: apps/web/src/main.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - ./features/admin/shared/services/KetNoiDichVuQuanTri
- * - ./features/language/i18n/CauHinhNgonNgu
- * - @travelguide/visitor-core/journey/react
- * - ./features/journey/adapters/KetNoiAudioVaDinhVi
- * - react
- * - react-dom/client
- * - react-router-dom
- * - @travelguide/visitor-core/react
- * - ../../../packages/ui-tokens/MauVaKichThuoc
- * - ./shared/services/KetNoiNenTang
- * - ./app/App
- * - ./shared/styles/GiaoDienNen.css
- * - ./features/journey/styles/GiaoDienTrinhNghe.css
- * - ./features/explore/styles/GiaoDienDuKhach.css
- * - ./shared/styles/DiSanHue.css
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/main.tsx
+ * FILE NÀY LÀM GÌ: Entry web du khách: tạo root React, ghép provider và router rồi gắn ứng dụng vào HTML.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { publicCatalog } from './features/admin/shared/services/KetNoiDichVuQuanTri'
 import { boot } from './features/language/i18n/CauHinhNgonNgu'

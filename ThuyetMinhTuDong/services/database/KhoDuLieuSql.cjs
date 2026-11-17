@@ -1,39 +1,26 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Điều phối đọc/ghi SQL trong transaction; cung cấp dữ liệu di tích, QR và phiên hoạt động cho API.
- *
- * VỊ TRÍ: services/database/KhoDuLieuSql.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/MayChuApi.cjs
- * - services/database/HoTroKiemThuDatabase.cjs
- * - services/database/NhapDuLieuKhoiTao.cjs
- * - services/presence/KiemThuPhienHoatDong.test.cjs
- * - services/presence/MayChuApi.cjs
- *
- * PHỤ THUỘC:
- * - ./KetNoiSqlServer.cjs
- * - ./AnhXaMuoiMotBang.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. createSqlRepository
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/KhoDuLieuSql.cjs
+ * FILE NÀY LÀM GÌ: Cung cấp các thao tác SQL cho di tích, lượt QR và phiên hoạt động; điều phối transaction và khóa khi ghi.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { connect } = require('./KetNoiSqlServer.cjs')
 const { readDocument, writeDocument } = require('./AnhXaMuoiMotBang.cjs')
-// ==================== [DATABASE] createSqlRepository ====================
-// CHỨC NĂNG: Thực hiện bước createSqlRepository trong nhiệm vụ: Điều phối đọc/ghi SQL trong transaction; cung cấp dữ liệu di tích, QR và phiên hoạt động cho API.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
-// ==================== [DATABASE] createSqlRepository ====================
 // CHỨC NĂNG: Tạo bộ thao tác di tích, lượt QR và phiên hoạt động sử dụng SQL.
 // XỬ LÝ: Nhận scope, đồng hồ và giới hạn; trả các hàm mà API gọi.
 // TẠI SAO: Web và mobile cùng đọc/ghi một nguồn dữ liệu thông qua API.
+// [UC02 / UC04 / UC05 / UC10 / UC11 / UC12 / UC13 / UC14] createSqlRepository — Tạo các thao tác đọc/ghi SQL cho API; giao diện không gọi trực tiếp repository này.
 function createSqlRepository({
   scope = 'main',
   now = Date.now,
@@ -47,10 +34,10 @@ function createSqlRepository({
       month: '2-digit',
       day: '2-digit',
     }).format(new Date(now()))
-  // ==================== [DATABASE] query ====================
   // CHỨC NĂNG: Thực hiện truy vấn với kiểu tham số đang được repository sử dụng.
   // XỬ LÝ: Lấy driver từ kết nối; bind số và chuỗi bằng request.input trước khi query.
   // TẠI SAO: Không nối giá trị người dùng trực tiếp vào câu lệnh SQL.
+  // [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] query — Thực hiện truy vấn với kiểu tham số đang được repository sử dụng.
   async function query(executor, text, values = {}) {
     const { sql } = await connect(scope),
       request = executor.request()
@@ -58,10 +45,10 @@ function createSqlRepository({
       request.input(k, typeof v === 'number' ? sql.BigInt : sql.NVarChar(sql.MAX), v)
     return request.query(text)
   }
-  // ==================== [DATABASE] locked ====================
   // CHỨC NĂNG: Chạy một tác vụ dưới transaction và khóa tài nguyên SQL.
   // XỬ LÝ: Mở transaction, xin sp_getapplock, commit nếu thành công; rollback nếu lỗi.
   // TẠI SAO: Các thao tác cạnh tranh được điều phối để hạn chế ghi đè và ghi một phần dữ liệu.
+  // [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] locked — Chạy một tác vụ dưới transaction và khóa tài nguyên SQL.
   async function locked(resource, action, mode = 'Exclusive') {
     const { sql, pool } = await connect(scope),
       transaction = new sql.Transaction(pool)
@@ -86,6 +73,7 @@ function createSqlRepository({
   }
   // CHỨC NĂNG: Đọc dùng Shared, ghi dùng Exclusive trên cùng tài nguyên khóa.
   // TẠI SAO: Các lượt đọc chạy đồng thời, nhưng không nhìn thấy transaction ghi đang dở.
+  // [UC02 / UC04 / UC10 / UC11 / UC12 / UC13] catalog — Đọc/ghi document di tích trong transaction; bản chỉ đọc không được ghi dữ liệu.
   async function catalog(action, readOnly = false) {
     return locked(
       'catalog',
@@ -122,6 +110,7 @@ function createSqlRepository({
     )
   }
   return {
+    // [UC02 / UC04 / UC10 / UC11 / UC12 / UC13] catalog — Đọc/ghi document di tích trong transaction; bản chỉ đọc không được ghi dữ liệu.
     catalog: (action) => catalog(action),
     catalogRead: (action) => catalog(action, true),
     version: async () => {
@@ -138,10 +127,10 @@ function createSqlRepository({
       )
       return result.recordset[0].version
     },
-    // ==================== [THONG-KE] gateStatistics ====================
     // CHỨC NĂNG: Tính tổng lượt QR của ngày hiện tại.
     // XỬ LÝ: Cộng SoLuot của LuotTruyCapQR theo ngày do dayOf trả về.
     // TẠI SAO: Giữ cách tính theo ngày Việt Nam và đọc số liệu từ database chung.
+    // [UC14] gateStatistics — Cộng số lượt QR của ngày hiện tại theo múi giờ Việt Nam.
     gateStatistics: async () => {
       const { pool } = await connect(scope),
         day = dayOf()
@@ -152,10 +141,10 @@ function createSqlRepository({
       )
       return { today: Number(r.recordset[0].today), day }
     },
-    // ==================== [TRUY-CAP-QR] gateEntry ====================
     // CHỨC NĂNG: Ghi nhận lượt truy cập QR và bỏ qua lượt trùng trong ngày.
     // XỬ LÝ: Khóa tài nguyên gate, kiểm tra ngày + mã lượt; chưa có mới INSERT một lượt.
     // TẠI SAO: Nhiều request đồng thời hoặc mở lại cùng phiên không tự làm tăng trùng.
+    // [UC05] gateEntry — Kiểm tra ngày + visitId rồi ghi một lượt QR mới; request trùng không tăng số lượt.
     gateEntry: (visitId, platform) =>
       locked('gate', async (transaction) => {
         const day = dayOf(),
@@ -187,10 +176,10 @@ function createSqlRepository({
           { day: gate.day, total: gate.today },
         )
       }),
-    // ==================== [PHIEN-HOAT-DONG] heartbeat ====================
     // CHỨC NĂNG: Ghi tín hiệu hoạt động mới nhất của một phiên.
     // XỬ LÝ: Dọn phiên hết hạn, kiểm tra nền tảng/giới hạn rồi cập nhật hoặc thêm phiên.
     // TẠI SAO: Một phiên gửi nhiều heartbeat vẫn là một phiên đang hoạt động.
+    // [UC14] heartbeat — Thêm/cập nhật thời điểm hoạt động cuối của một phiên; nhiều heartbeat vẫn tính một phiên.
     heartbeat: ({ sessionId, platform }) =>
       locked('presence', async (transaction) => {
         const time = now(),
@@ -215,18 +204,18 @@ function createSqlRepository({
           { id: sessionId, platform, time: new Date(time).toISOString() },
         )
       }),
-    // ==================== [PHIEN-HOAT-DONG] end ====================
     // CHỨC NĂNG: Kết thúc một phiên đang được theo dõi.
     // XỬ LÝ: Xóa hàng có MaPhien tương ứng bằng tham số SQL.
     // TẠI SAO: Chỉ ảnh hưởng phiên được yêu cầu và có thể gọi lại an toàn.
+    // [UC14] end — Xóa phiên tương ứng khi khách kết thúc hoạt động.
     end: async (id) => {
       const { pool } = await connect(scope)
       await query(pool, 'DELETE dbo.PhienHoatDong WHERE MaPhien=@id', { id })
     },
-    // ==================== [PHIEN-HOAT-DONG] prune ====================
     // CHỨC NĂNG: Dọn các phiên đã quá hạn hoạt động.
     // XỬ LÝ: Xóa hàng có thời điểm hoạt động nhỏ hơn hoặc bằng mốc TTL.
     // TẠI SAO: Giữ bảng theo dõi gọn và tránh giữ phiên đã rời hệ thống.
+    // [UC14] prune — Dọn phiên đã quá hạn theo TTL.
     prune: async () => {
       const { pool } = await connect(scope)
       await query(
@@ -235,10 +224,10 @@ function createSqlRepository({
         { cutoff: new Date(now() - ttlMs).toISOString() },
       )
     },
-    // ==================== [THONG-KE] snapshot ====================
     // CHỨC NĂNG: Đếm phiên còn hoạt động, chia web và mobile.
     // XỬ LÝ: Chỉ COUNT các phiên có thời điểm hoạt động mới hơn mốc TTL.
     // TẠI SAO: Phiên đã quá hạn không tiếp tục được tính như du khách còn đang sử dụng.
+    // [UC14] snapshot — Đếm phiên còn hoạt động và chia theo Web/Mobile; loại phiên đã quá hạn.
     snapshot: async () => {
       const { pool } = await connect(scope),
         time = now()

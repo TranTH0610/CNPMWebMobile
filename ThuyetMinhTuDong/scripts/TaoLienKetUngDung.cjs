@@ -1,35 +1,18 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: CÔNG CỤ CHẠY DỰ ÁN
- *
- * FILE NÀY LÀM GÌ:
- * Sinh các tệp association Android/iOS từ cấu hình định danh và chứng thư cho liên kết mở ứng
- *
- * VỊ TRÍ: scripts/TaoLienKetUngDung.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - scripts/KiemThuLienKetUngDung.test.cjs
- *
- * PHỤ THUỘC:
- * - node:fs
- * - node:path
- *
- * CÁC KHỐI CHÍNH:
- * 1. associationFiles
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: scripts/TaoLienKetUngDung.cjs
+ * FILE NÀY LÀM GÌ: Sinh các tệp association Android/iOS từ cấu hình định danh và chứng thư cho liên kết mở ứng
+ * VAI TRÒ: Công cụ vận hành/khởi động; hỗ trợ UC, không phải màn hình nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// Khai báo fs: require nạp module 'node:fs' để dùng chức năng có sẵn thay vì chép lại.
 const fs = require('node:fs')
-// Khai báo path: require nạp module 'node:path' để dùng chức năng có sẵn thay vì chép lại.
 const path = require('node:path')
 
 // CHỨC NĂNG: Tạo dữ liệu xác minh từ cấu hình.
 // XỬ LÝ: Không phát hành file chứa ID hoặc chứng thư giả.
-// Khai báo associationFiles(env). Nhận đầu vào qua tham số.
-// ==================== [DIEU-HUONG] associationFiles ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC05] associationFiles — Tạo dữ liệu xác minh từ cấu hình.
 function associationFiles(env) {
   
   const origin = new URL(
@@ -53,12 +36,10 @@ function associationFiles(env) {
     )
   }
 
-  // Khai báo files: tạo object gồm.
   const files = {}
 
   // CHỨC NĂNG: Tạo assetlinks.json cho Android.
   // XỬ LÝ: Kiểm tra application ID và định dạng SHA-256.
-  // Rẽ nhánh nếu env.ANDROID_APPLICATION_ID.
   if (env.ANDROID_APPLICATION_ID) {
     
     const fingerprints = (
@@ -104,9 +85,7 @@ function associationFiles(env) {
           'delegate_permission/common.handle_all_urls',
         ],
 
-        // Gán thuộc tính target: tạo object gồm namespace, package_name, sha256_cert_fingerprints.
         target: {
-          // Gán thuộc tính namespace: chuỗi 'android_app'.
           namespace: 'android_app',
 
           
@@ -141,7 +120,6 @@ function associationFiles(env) {
           env.IOS_BUNDLE_IDENTIFIER || '',
         )
 
-    // Rẽ nhánh nếu !validTeam || !validBundle.
     if (!validTeam || !validBundle) {
       
       throw new Error(
@@ -149,11 +127,8 @@ function associationFiles(env) {
       )
     }
 
-    // Thực hiện tính biểu thức files['apple-app-site-association'] = { applinks: { apps: [], details: [ { appID: env.APPL.
     files['apple-app-site-association'] = {
-      // Gán thuộc tính applinks: tạo object gồm apps, details.
       applinks: {
-        // Gán thuộc tính apps: tạo mảng [].
         apps: [],
 
         
@@ -178,7 +153,6 @@ function associationFiles(env) {
     }
   }
 
-  // Rẽ nhánh nếu !Object.keys(files).length.
   if (!Object.keys(files).length) {
     
     throw new Error(
@@ -194,7 +168,6 @@ function associationFiles(env) {
 
 // CHỨC NĂNG: Chỉ thực thi ghi file khi chạy script trực tiếp.
 // XỬ LÝ: Khi test require file này, không tự ghi file vào dự án.
-// Rẽ nhánh nếu require.main === module.
 if (require.main === module) {
   
   const web = path.resolve(
@@ -213,10 +186,8 @@ if (require.main === module) {
       '.env',
     ]
   ) {
-    // Khai báo file: Gọi path.join(web, name).
     const file = path.join(web, name)
 
-    // Rẽ nhánh nếu fs.existsSync(file).
     if (fs.existsSync(file)) {
       
       process.loadEnvFile(file)
@@ -261,7 +232,6 @@ if (require.main === module) {
     '../apps/web/static/.well-known',
   )
 
-  // Thực hiện Gọi fs.mkdirSync(folder, { recursive: true, }).
   fs.mkdirSync(folder, {
     
     recursive: true,
@@ -276,10 +246,8 @@ if (require.main === module) {
       'apple-app-site-association',
     ]
   ) {
-    // Khai báo file: Gọi path.join(folder, name).
     const file = path.join(folder, name)
 
-    // Rẽ nhánh nếu files[name].
     if (files[name]) {
       
       fs.writeFileSync(
@@ -291,7 +259,6 @@ if (require.main === module) {
         ) + '\n',
       )
     } else {
-      // Thực hiện Gọi fs.rmSync(file, { force: true, }).
       fs.rmSync(file, {
         
         force: true,

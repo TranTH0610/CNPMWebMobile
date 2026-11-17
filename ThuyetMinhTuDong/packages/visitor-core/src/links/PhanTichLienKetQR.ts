@@ -1,30 +1,13 @@
 /**
- * CHỨC NĂNG: [TRUY-CAP-QR]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Kiểm tra và phân tích liên kết QR; nhận liên kết vào cổng chung và từ chối dữ liệu không hợp lệ.
- *
- * VỊ TRÍ: packages/visitor-core/src/links/PhanTichLienKetQR.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/visitor-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. validPlaceId
- * 2. parseQrTarget
- * 3. parsePlaceQr
- * 4. placeUrl
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/visitor-core/src/links/PhanTichLienKetQR.ts
+ * FILE NÀY LÀM GÌ: Kiểm tra và phân tích liên kết QR; nhận liên kết vào cổng chung và từ chối dữ liệu không hợp lệ.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// Đặt tên kiểu QrPolicy.
 export type QrPolicy = {
-  // Khai báo allowedOrigins, kiểu readonly string[].
   allowedOrigins: readonly string[]
   
   allowHttp: boolean
@@ -37,9 +20,7 @@ export type QrTarget =
 
 // CHỨC NĂNG: Kiểm tra định dạng mã địa điểm trong liên kết.
 // XỬ LÝ: Chặn ký tự hoặc độ dài ngoài quy tắc trước khi chuyển sang route/tìm dữ liệu.
-// Khai báo validPlaceId(id). Nhận đầu vào qua tham số.
-// ==================== [TRUY-CAP-QR] validPlaceId ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC05] validPlaceId — Kiểm tra định dạng mã địa điểm trong liên kết.
 export function validPlaceId(id: string): boolean {
   
   return id.length <= 80
@@ -51,12 +32,11 @@ export function validPlaceId(id: string): boolean {
 // CHỨC NĂNG: Kiểm tra payload trước khi điều hướng.
 // XỬ LÝ: Kiểm tra raw trước URL() để không bỏ qua đường dẫn /../.
 
-// ==================== [TRUY-CAP-QR] parseQrTarget ====================
+// [UC05] parseQrTarget — Phân tích và kiểm tra liên kết QR để xác định đích truy cập hợp lệ.
 export function parseQrTarget(
   raw: string,
   policy: QrPolicy,
 ): QrTarget {
-  // Khai báo value: raw.trim bỏ khoảng trắng đầu/cuối để kiểm tra dữ liệu nhập thực tế.
   const value = raw.trim()
 
   
@@ -73,10 +53,8 @@ export function parseQrTarget(
     throw new Error('invalidQr')
   }
 
-  // Khai báo url: không có giá trị khởi tạo.
   let url: URL
 
-  // Bắt đầu vùng try.
   try {
     
     url = new URL(value)
@@ -87,13 +65,11 @@ export function parseQrTarget(
 
   // CHỨC NĂNG: QR cổng được phép mang đúng dấu nguồn entry=gate ở trang chủ.
   // XỬ LÝ: Query khác và query trên địa điểm vẫn bị từ chối.
-  // Rẽ nhánh nếu url.username || url.password || (url.search && !(url.pathname === '/' && url.search === '?entry=gate')) || url.
   if (url.username || url.password || (url.search && !(url.pathname === '/' && url.search === '?entry=gate')) || url.hash) {
     
     throw new Error('invalidQr')
   }
 
-  // Khai báo path: không có giá trị khởi tạo.
   let path: string
 
   
@@ -139,7 +115,6 @@ export function parseQrTarget(
   const match =
     /^\/places\/([a-z0-9]+(?:-[a-z0-9]+)*)\/?$/.exec(path)
 
-  // Rẽ nhánh nếu !match || !validPlaceId(match[1]).
   if (!match || !validPlaceId(match[1])) {
     
     throw new Error('invalidQr')
@@ -147,7 +122,6 @@ export function parseQrTarget(
 
   // Trả kết quả: tạo object gồm kind, id.
   return {
-    // Gán thuộc tính kind: chuỗi 'place'.
     kind: 'place',
     
     id: match[1],
@@ -159,15 +133,13 @@ export function parseQrTarget(
 // CHỨC NĂNG: Giữ API cũ cho nơi chỉ nhận QR của một điểm.
 // XỬ LÝ: Chỗ cần nhận QR chung phải dùng parseQrTarget.
 
-// ==================== [TRUY-CAP-QR] parsePlaceQr ====================
+// [UC05] parsePlaceQr — Đọc mã di tích từ liên kết QR hợp lệ theo chính sách liên kết.
 export function parsePlaceQr(
   raw: string,
   policy: QrPolicy,
 ): string {
-  // Khai báo target: Gọi parseQrTarget(raw, policy).
   const target = parseQrTarget(raw, policy)
 
-  // Rẽ nhánh nếu target.kind !== 'place'.
   if (target.kind !== 'place') {
     
     throw new Error('invalidQr')
@@ -181,10 +153,8 @@ export function parsePlaceQr(
 
 // CHỨC NĂNG: Tạo URL để mã hóa thành QR.
 // XỬ LÝ: ID phải đúng định dạng trước khi ghép URL.
-// Khai báo placeUrl(origin, id). Nhận đầu vào qua tham số.
-// ==================== [TRUY-CAP-QR] placeUrl ====================
+// [UC05] placeUrl — Tạo URL để mã hóa thành QR.
 export function placeUrl(origin: string, id: string): string {
-  // Rẽ nhánh nếu !validPlaceId(id). | Ném new Error('invalidQr').
   if (!validPlaceId(id)) throw new Error('invalidQr')
 
   

@@ -1,27 +1,13 @@
 /**
- * CHỨC NĂNG: [DATABASE] [QUAN-LY-DI-TICH]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Tính các hàng cần thêm/sửa/xóa trước khi áp dụng thay đổi vào SQL.
- *
- * VỊ TRÍ: services/database/catalog/ChuanBiThayDoiDuLieu.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/database/catalog/GhiDiTichVaoSql.cjs
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. sameValue
- * 2. sameRow
- * 3. putRow
- * 4. deleteRow
- * 5. applyChanges
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/catalog/ChuanBiThayDoiDuLieu.cjs
+ * FILE NÀY LÀM GÌ: Tính các hàng cần thêm/sửa/xóa trước khi áp dụng thay đổi vào SQL.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const PRIMARY_KEYS = {
   DiTich: 'MaDiTich',
@@ -32,26 +18,18 @@ const PRIMARY_KEYS = {
   NguonThamKhao: 'MaNguon',
   LichSuKiemDuyet: 'MaLichSu',
 }
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] sameValue ====================
-// CHỨC NĂNG: Thực hiện bước sameValue trong nhiệm vụ: Tính các hàng cần thêm/sửa/xóa trước khi áp dụng thay đổi vào SQL.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function sameValue(a, b) {
   if (a == null || b == null) return a == null && b == null
   if (a instanceof Date || b instanceof Date) return new Date(a).getTime() === new Date(b).getTime()
   return a === b
 }
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] sameRow ====================
-// CHỨC NĂNG: Thực hiện bước sameRow trong nhiệm vụ: Tính các hàng cần thêm/sửa/xóa trước khi áp dụng thay đổi vào SQL.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function sameRow(old, next) {
   return Object.entries(next).every(([key, value]) => sameValue(old[key], value))
 }
 
 // CHỨC NĂNG: INSERT/UPDATE có tham số; UPDATE chỉ đặt các cột thật sự thay đổi.
 // TẠI SAO: Không cập nhật hàng không đổi và không kích hoạt trigger nếu không cần.
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] putRow ====================
+// [UC02 / UC03 / UC04] putRow — INSERT/UPDATE có tham số; UPDATE chỉ đặt các cột thật sự thay đổi.
 async function putRow(executor, sql, table, value, old) {
   const pk = PRIMARY_KEYS[table]
   if (!pk) throw Error('unknown_catalog_table')
@@ -75,10 +53,6 @@ async function putRow(executor, sql, table, value, old) {
       `INSERT dbo.${table}(${keys.map((k) => '[' + k + ']').join(',')}) VALUES(${keys.map((k) => '@' + k).join(',')})`,
     )
 }
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] deleteRow ====================
-// CHỨC NĂNG: Thực hiện bước deleteRow trong nhiệm vụ: Tính các hàng cần thêm/sửa/xóa trước khi áp dụng thay đổi vào SQL.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function deleteRow(executor, sql, table, row) {
   const pk = PRIMARY_KEYS[table]
   await executor
@@ -87,10 +61,6 @@ async function deleteRow(executor, sql, table, row) {
     .query(`DELETE dbo.${table} WHERE [${pk}]=@key`)
 }
 
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] applyChanges ====================
-// CHỨC NĂNG: Thực hiện bước applyChanges trong nhiệm vụ: Tính các hàng cần thêm/sửa/xóa trước khi áp dụng thay đổi vào SQL.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function applyChanges(
   executor,
   sql,

@@ -1,31 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị ảnh, tên và thông tin tóm tắt; nhận thao tác mở chi tiết di tích.
- *
- * VỊ TRÍ: apps/mobile/src/features/explore/components/TheDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - @expo/vector-icons
- * - @travelguide/visitor-core
- * - ../GiaoDienKhamPha
- * - ../../../shared/GiaoDienChung
- * - ../../../shared/components/AnhBia
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. PlaceCard
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/explore/components/TheDiTich.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị ảnh, tên và thông tin tóm tắt; nhận thao tác mở chi tiết di tích.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { Pressable, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -36,10 +17,8 @@ import { colors, spacing } from '../../../shared/GiaoDienChung'
 import { Cover } from '../../../shared/components/AnhBia'
 import { useText } from '../../language/i18n/CauHinhNgonNgu'
 import { useVisitor } from '../../language/hooks/useDuKhach'
-// ==================== [KHAM-PHA] PlaceCard ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceCard.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] PlaceCard — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceCard.
 export function PlaceCard({
   place,
   onOpen,

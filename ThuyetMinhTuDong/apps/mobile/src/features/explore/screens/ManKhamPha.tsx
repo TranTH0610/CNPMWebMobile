@@ -1,42 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Màn khám phá mobile: ảnh bìa, tìm kiếm, chip danh mục, điểm nổi bật và danh sách điểm tham quan.
- *
- * VỊ TRÍ: apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/screens/ManKetQuaTimKiem.tsx
- * - apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - ../components/KhoiChaoMung
- * - react
- * - react-native
- * - react-native-safe-area-context
- * - @react-navigation/native
- * - @react-navigation/native-stack
- * - @travelguide/visitor-core
- * - ../hooks/useDanhSachDiTich
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../../shared/components/NutThaoTac
- * - ../../../shared/components/TrangThaiDuLieu
- * - ../../../shared/GiaoDienChung
- * - ../components/NutLocDanhMuc
- * - ../components/TheDiTich
- * - ../components/OTimKiem
- * - ../components/ChonSapXep
- * - ../GiaoDienKhamPha
- * - ../../../shared/services/KetNoiNenTang
- * - ../../../navigation/KieuDieuHuongDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. HomeScreen
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/explore/screens/ManKhamPha.tsx
+ * FILE NÀY LÀM GÌ: Màn khám phá mobile: ảnh bìa, tìm kiếm, chip danh mục, điểm nổi bật và danh sách điểm tham quan.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { ExploreHero } from '../components/KhoiChaoMung'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -62,8 +32,7 @@ import type { VisitorStack } from '../../../navigation/KieuDieuHuongDuKhach'
 // CHỨC NĂNG: Ghép dữ liệu và điều kiện vào danh sách.
 // XỬ LÝ: Dùng một FlatList dọc; carousel cuộn ngang bên trong header.
 
-// ==================== [KHAM-PHA] HomeScreen ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] HomeScreen — Ghép dữ liệu và điều kiện vào danh sách.
 export default function HomeScreen({
   search = false,
   initial,
@@ -120,9 +89,7 @@ export default function HomeScreen({
   // CHỨC NĂNG: Đưa chỉ số carousel về 0; nếu có thẻ thì cuộn danh sách về đầu.
   // XỬ LÝ: featured hoặc cardWidth đổi sẽ làm effect đặt lại vị trí, không dùng animation
   // khi reset.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: featured,
   // cardWidth.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     // Cập nhật trạng thái qua setSlide(0).
     setSlide(0)
@@ -135,6 +102,7 @@ export default function HomeScreen({
   // CHỨC NĂNG: Đổi thứ tự và xin vị trí khi người dùng yêu cầu.
   // XỬ LÝ: Chọn theo tên không xin quyền GPS.
 
+  // [UC02 / UC03] onSort — Đổi thứ tự và xin vị trí khi người dùng yêu cầu.
   const onSort = (order: SortOrder) => {
     filters.setOrder(order)
 
@@ -148,6 +116,7 @@ export default function HomeScreen({
   // CHỨC NĂNG: Đồng nhất web: gửi rỗng báo lỗi, gửi có chữ mở kết quả cùng danh mục.
   // XỬ LÝ: Không chuyển màn ngay lúc chạm ô nhập; trim loại từ khóa chỉ có khoảng trắng.
 
+  // [UC02 / UC03] openSearch — Đồng nhất web: gửi rỗng báo lỗi, gửi có chữ mở kết quả cùng danh mục.
   const openSearch = () => {
     if (!query.trim()) {
       setSearchRequired(true)

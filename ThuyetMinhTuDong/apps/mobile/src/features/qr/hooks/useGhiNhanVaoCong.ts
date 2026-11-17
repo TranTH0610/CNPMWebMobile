@@ -1,27 +1,11 @@
 /**
- * CHỨC NĂNG: [TRUY-CAP-QR]
- * VAI TRÒ: HOOK XỬ LÝ VÀ VÒNG ĐỜI
- *
- * FILE NÀY LÀM GÌ:
- * Ghi lượt vào từ liên kết QR chung có dấu entry=gate; dùng mã lượt để hạn chế đếm lại khi tải trang.
- *
- * VỊ TRÍ: apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/presence/hooks/useBaoPhienHoatDong.ts
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - @travelguide/admin-core
- * - ../../admin/shared/services/KetNoiDichVuQuanTri
- * - ../../../shared/services/KetNoiNenTang
- *
- * CÁC KHỐI CHÍNH:
- * 1. useGateEntry
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts
+ * FILE NÀY LÀM GÌ: Ghi lượt vào từ liên kết QR chung có dấu entry=gate; dùng mã lượt để hạn chế đếm lại khi tải trang.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect } from 'react'
 import { Linking } from 'react-native'
@@ -38,14 +22,11 @@ const visitId =
 // CHỨC NĂNG: Ghi lượt mở liên kết QR tại cổng.
 // XỬ LÝ: Chỉ xử lý liên kết đúng dấu entry=gate và dùng mã lượt để hạn chế đếm lại.
 
-// ==================== [TRUY-CAP-QR] useGateEntry ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC05] useGateEntry — Nhận liên kết vào cổng và gửi lượt QR nền; giữ visitId để hạn chế ghi trùng.
 export function useGateEntry(enabled: boolean) {
   // CHỨC NĂNG: Nhận liên kết mở app ban đầu và các sự kiện URL mới trong lúc app đang chạy.
   // XỬ LÝ: Chỉ ghi lượt khi origin, đường dẫn và query đúng quy tắc cổng; cleanup hủy gửi
   // và gỡ subscription.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: enabled.
-  // Đăng ký useEffect để thực hiện tác vụ sau render. | Rẽ nhánh nếu !enabled. | Thoát hàm hiện tại ngay.
   useEffect(() => {
     if (!enabled) return
 

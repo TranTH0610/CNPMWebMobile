@@ -1,47 +1,23 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: API PHÍA MÁY CHỦ
- *
- * FILE NÀY LÀM GÌ:
- * Kiểm tra hình dạng lệnh quản trị trước khi API gọi service nghiệp vụ.
- *
- * VỊ TRÍ: services/catalog/KiemTraLenhQuanTri.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/KiemThuLenhQuanTri.test.cjs
- * - services/catalog/MayChuApi.cjs
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. isString
- * 2. isRevision
- * 3. hasStrings
- * 4. validTranslations
- * 5. validPlace
- * 6. validContent
- * 7. validateCommand
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: services/catalog/KiemTraLenhQuanTri.cjs
+ * FILE NÀY LÀM GÌ: Kiểm tra tên lệnh và đối số trước khi API gọi nghiệp vụ quản trị.
+ * VAI TRÒ: Máy chủ/API; nhận yêu cầu từ Web và Mobile.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const LANGUAGES = ['vi', 'en', 'cn', 'pt', 'ja']
 const CATEGORIES = ['palace', 'gate', 'temple', 'tomb', 'museum', 'monument']
 const TEXT_FIELDS = ['title', 'summary', 'address', 'body']
 const isString = (value) => typeof value === 'string'
 const isRevision = (value) => Number.isSafeInteger(value) && value >= 1
-// ==================== [DUNG-CHUNG] hasStrings ====================
-// CHỨC NĂNG: Thực hiện bước hasStrings trong nhiệm vụ: Kiểm tra hình dạng lệnh quản trị trước khi API gọi service nghiệp vụ.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function hasStrings(value, fields) {
   return value && fields.every((key) => isString(value[key]))
 }
-// ==================== [DUNG-CHUNG] validTranslations ====================
-// CHỨC NĂNG: Thực hiện bước validTranslations trong nhiệm vụ: Kiểm tra hình dạng lệnh quản trị trước khi API gọi service nghiệp vụ.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function validTranslations(content) {
   if (content === undefined) return true
   if (!content || typeof content !== 'object' || Array.isArray(content)) return false
@@ -53,10 +29,6 @@ function validTranslations(content) {
       (text.audioUrl === undefined || isString(text.audioUrl)),
   )
 }
-// ==================== [DUNG-CHUNG] validPlace ====================
-// CHỨC NĂNG: Thực hiện bước validPlace trong nhiệm vụ: Kiểm tra hình dạng lệnh quản trị trước khi API gọi service nghiệp vụ.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function validPlace(input) {
   return (
     hasStrings(input, ['title', 'period', 'lat', 'lng']) &&
@@ -69,10 +41,6 @@ function validPlace(input) {
     validTranslations(input.content)
   )
 }
-// ==================== [DUNG-CHUNG] validContent ====================
-// CHỨC NĂNG: Thực hiện bước validContent trong nhiệm vụ: Kiểm tra hình dạng lệnh quản trị trước khi API gọi service nghiệp vụ.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function validContent(input) {
   return (
     hasStrings(input, ['id', ...TEXT_FIELDS]) &&
@@ -82,8 +50,7 @@ function validContent(input) {
   )
 }
 // CHỨC NĂNG: Chỉ cho phép các lệnh trong hợp đồng, không gọi tùy ý phương thức từ JSON gửi lên.
-// ==================== [DUNG-CHUNG] validateCommand ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC10 / UC11 / UC12 / UC13] validateCommand — Chỉ cho phép các lệnh trong hợp đồng, không gọi tùy ý phương thức từ JSON gửi lên.
 function validateCommand(action, args) {
   if (!Array.isArray(args)) return false
   if (action === 'savePlace') return args.length === 1 && validPlace(args[0])

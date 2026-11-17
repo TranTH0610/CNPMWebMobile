@@ -1,34 +1,13 @@
 /**
- * CHỨC NĂNG: [QUAN-LY-DI-TICH] [LUU-NHAP]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị form thêm/sửa di tích; chuyển thao tác lưu, dịch, tạo audio và gửi duyệt cho hook.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/content/ManBienTapNoiDung.tsx
- * - apps/mobile/src/features/admin/places/ManThemSuaDiTich.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - @travelguide/visitor-core
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - ../../../language/i18n/CauHinhNgonNgu
- * - ../../../../shared/GiaoDienChung
- * - ../../../../shared/components/NutThaoTac
- * - ./ChinhSuaAnhDiTich
- * - ../../shared/components/ChonTepTuThietBi
- * - ../../shared/components/ThanhPhanQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. PlaceEditor
- * 2. EditorForm
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị form thêm/sửa di tích; chuyển thao tác lưu, dịch, tạo audio và gửi duyệt cho hook.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Switch, Text, View } from 'react-native'
 import { CATEGORIES } from '@travelguide/visitor-core'
@@ -68,8 +47,7 @@ type Props = {
 
 // CHỨC NĂNG: Đợi dữ liệu trước khi tạo vùng đang nhập của form.
 // XỬ LÝ: Không coi lỗi tải dữ liệu là một form thêm mới trống.
-// ==================== [QUAN-LY-DI-TICH] [LUU-NHAP] PlaceEditor ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC10 / UC11 / UC12] PlaceEditor — Đợi dữ liệu trước khi tạo vùng đang nhập của form.
 export function PlaceEditor(props: Props) {
   const state = useAdmin(),
     t = useAdminText()
@@ -89,10 +67,8 @@ export function PlaceEditor(props: Props) {
   return <EditorForm key={props.id ?? 'new'} {...props} initial={place} />
 }
 
-// ==================== [QUAN-LY-DI-TICH] [LUU-NHAP] EditorForm ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider EditorForm.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC10 / UC11 / UC12] EditorForm — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider EditorForm.
 function EditorForm({
   initial,
   onCreated,
@@ -135,6 +111,7 @@ function EditorForm({
 
   // CHỨC NĂNG: Chạy cùng tác vụ với web; nhận đúng mã SQL sau khi thêm mới.
   // TẠI SAO: Thử lại sau lỗi dịch/audio tiếp tục nháp cũ, không tạo thêm một di tích.
+  // [UC10 / UC11 / UC12] perform — Chạy cùng tác vụ với web; nhận đúng mã SQL sau khi thêm mới.
   async function perform(action: PlaceEditorAction) {
     const ok = await editor.perform(action)
     if (ok && action === 'submit') {

@@ -1,31 +1,13 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: KẾT NỐI API / THIẾT BỊ
- *
- * FILE NÀY LÀM GÌ:
- * Nối logic hành trình với API thiết bị: mobile dùng audio/GPS/bộ nhớ native, web dùng HTML Audio/Geolocation/localStorage.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/app/TrangThaiUngDung.tsx
- * - apps/mobile/src/features/admin/content/components/NgheThuBanThu.tsx
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- * - ../../../shared/services/NguonTepTaiNguyen
- * - @react-native-async-storage/async-storage
- * - react-native
- * - expo-location
- * - expo-audio
- * - @travelguide/visitor-core/journey/react
- * - @travelguide/visitor-core/journey
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+ * FILE: apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
+ * FILE NÀY LÀM GÌ: Nối logic hành trình với API thiết bị: mobile dùng audio/GPS/bộ nhớ native, web dùng HTML Audio/Geolocation/localStorage.
+ * VAI TRÒ: Lớp kết nối nền tảng; chuyển thao tác chung sang API/thiết bị cụ thể.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { playbackCoordinator } from '@travelguide/visitor-core'
 import { mediaSource } from '../../../shared/services/NguonTepTaiNguyen'
@@ -46,6 +28,7 @@ export const journeyAdapters: JourneyAdapters = {
   // CHỨC NĂNG: Theo dõi GPS của nền tảng cho hành trình.
   // XỬ LÝ: Kiểm tra quyền/khả năng hỗ trợ và trả hàm gỡ theo dõi để dọn khi rời luồng.
 
+  // [UC06.1] watch — Xin/kiểm tra quyền vị trí, đăng ký nhận GPS và trả hàm dừng theo dõi cho controller.
   async watch(next, fail) {
     const permission = await Location.requestForegroundPermissionsAsync()
 
@@ -107,6 +90,7 @@ export const journeyAdapters: JourneyAdapters = {
   // XỬ LÝ: Chờ metadata để có thời lượng, đồng thời trả các thao tác phát/dừng/tua/đóng cho
   // controller.
 
+  // [UC07] open — Mở nguồn audio của nền tảng và cung cấp play/pause/seek/rate/listen cho controller chung.
   async open(url, title): Promise<Track> {
     await setAudioModeAsync({
       playsInSilentMode: true,
@@ -162,6 +146,7 @@ export const journeyAdapters: JourneyAdapters = {
       duration: player.duration,
       // CHỨC NĂNG: Cả preview và bài du khách tranh quyền qua cùng coordinator.
 
+      // [UC07] play — Cả preview và bài du khách tranh quyền qua cùng coordinator.
       play: async () => {
         if (disposed) throw new Error('Audio closed')
 

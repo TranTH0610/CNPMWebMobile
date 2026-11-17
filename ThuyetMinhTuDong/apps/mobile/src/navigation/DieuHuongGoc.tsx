@@ -1,37 +1,18 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Ghép stack điều hướng du khách mobile, các tab, màn tìm kiếm, chi tiết và hành trình; cấu hình header/liên kết.
- *
- * VỊ TRÍ: apps/mobile/src/navigation/DieuHuongGoc.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/App.tsx
- *
- * PHỤ THUỘC:
- * - ../shared/GiaoDienChung
- * - ../features/presence/hooks/useBaoPhienHoatDong
- * - ../features/journey/hooks/useDieuHuongHanhTrinh
- * - ../features/explore/screens/ManKetQuaTimKiem
- * - ../features/journey/components/TrinhNgheThuyetMinh
- * - ../features/journey/screens/ManHanhTrinh
- * - ./ThanhDieuHuongDuKhach
- * - ../features/place-detail/screens/ManChiTietDiTich
- * - ./LienKetMoUngDung
- * - ./KieuDieuHuongDuKhach
- * - react-native
- * - @react-navigation/native
- * - @react-navigation/native-stack
- * - ../features/language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. openSuggested
- * 2. RootNavigator
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/navigation/DieuHuongGoc.tsx
+ * FILE NÀY LÀM GÌ: Ghép stack điều hướng du khách mobile, các tab, màn tìm kiếm, chi tiết và hành trình; cấu hình header/liên kết.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { colors } from '../shared/GiaoDienChung'
 
@@ -58,6 +39,7 @@ const Stack = createNativeStackNavigator<VisitorStack>()
 
 const navigationRef = createNavigationContainerRef<VisitorStack>()
 
+// [UC06] openSuggested — Mở chi tiết di tích được gợi ý; thao tác điều hướng này không tự phát âm thanh.
 const openSuggested = (id: string) => {
   if (navigationRef.isReady()) navigationRef.navigate('Detail', { placeId: id })
 }
@@ -69,7 +51,7 @@ const openSuggested = (id: string) => {
 // - linking xử lý liên kết mở app từ QR.
 // - Tiêu đề lấy qua i18n để cập nhật khi đổi ngôn ngữ.
 
-// ==================== [DIEU-HUONG] RootNavigator ====================
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] RootNavigator — Đăng ký các màn hình của ứng dụng.
 export default function RootNavigator() {
   const t = useText()
 

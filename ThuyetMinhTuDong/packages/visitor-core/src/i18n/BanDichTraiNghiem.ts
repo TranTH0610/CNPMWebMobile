@@ -1,23 +1,11 @@
 /**
- * CHỨC NĂNG: [NGON-NGU]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Nhãn giao diện Heritage cho đủ năm ngôn ngữ.
- *
- * VỊ TRÍ: packages/visitor-core/src/i18n/BanDichTraiNghiem.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/visitor-core/src/i18n/BanDichGiaoDien.ts
- *
- * PHỤ THUỘC:
- * - ../domain/KieuDuLieuDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/visitor-core/src/i18n/BanDichTraiNghiem.ts
+ * FILE NÀY LÀM GÌ: Nhãn giao diện Heritage cho đủ năm ngôn ngữ.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { Language } from '../domain/KieuDuLieuDuKhach'
 const vi = {

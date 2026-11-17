@@ -1,31 +1,16 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Provider/hook React quản trị; đọc service, phản hồi thao tác, cập nhật dữ liệu và hook thống kê
- *
- * VỊ TRÍ: packages/admin-core/src/react/TrangThaiReact.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/react/useBienTapDiTich.ts
- *
- * PHỤ THUỘC:
- * - react
- * - @travelguide/visitor-core/react
- * - ../domain/HopDongDichVu
- * - ../domain/KieuDuLieuQuanTri
- * - ../i18n/BanDichGiaoDien
- * - ./useBienTapDiTich
- *
- * CÁC KHỐI CHÍNH:
- * 1. AdminProvider
- * 2. useAdminText
- * 3. useAdmin
- * 4. useGateStatistics
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/react/TrangThaiReact.tsx
+ * FILE NÀY LÀM GÌ: Cung cấp danh tính quản lý, dữ liệu quản trị, trạng thái thao tác và thống kê lượt QR cho giao diện.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import {
   createContext,
@@ -48,10 +33,8 @@ import { adminMessages, type AdminTextKey } from '../i18n/BanDichGiaoDien'
 
 const Context = createContext<AdminService | null>(null)
 
-// ==================== [DUNG-CHUNG] AdminProvider ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider AdminProvider.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] AdminProvider — Cấp service quản trị chung cho các màn bên trong.
 export function AdminProvider({
   service,
   children,
@@ -66,7 +49,7 @@ export function AdminProvider({
 // CHỨC NĂNG: Lấy hàm dịch giao diện quản trị.
 // XỬ LÝ: Dùng chung tài nguyên ngôn ngữ để nhãn admin web/mobile có cùng nghĩa.
 
-// ==================== [DUNG-CHUNG] useAdminText ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] useAdminText — Lấy chữ giao diện quản trị theo ngôn ngữ hiện tại.
 export function useAdminText() {
   const { language } = useVisitor()
 
@@ -77,7 +60,7 @@ export function useAdminText() {
 // CHỨC NĂNG: Đọc trạng thái và thao tác quản trị từ context.
 // XỬ LÝ: Không tạo một service hoặc kho dữ liệu mới cho mỗi màn hình.
 
-// ==================== [DUNG-CHUNG] useAdmin ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] useAdmin — Tải danh tính/dữ liệu quản trị và quản lý trạng thái bận/lỗi của thao tác.
 export function useAdmin() {
   const service = useContext(Context)
 
@@ -133,9 +116,7 @@ export function useAdmin() {
   // XỬ LÝ: Đăng ký theo phụ thuộc của effect và dùng hàm hủy khi nguồn đổi hoặc rời màn.
   // CHỨC NĂNG: Đánh dấu component đang tồn tại; cleanup đổi alive.current thành false.
   // XỬ LÝ: Các callback chọn/đọc tệp kiểm tra cờ này trước khi trả kết quả về UI.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: service, reload,
   // invalidate.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     alive.current = true
     void reload()
@@ -154,6 +135,7 @@ export function useAdmin() {
   // component đã đóng.
   // CHỨC NĂNG: Một thao tác tại một thời điểm; lỗi giữ nguyên form/bản công khai.
 
+  // [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] run — Một thao tác tại một thời điểm; lỗi giữ nguyên form/bản công khai.
   const run = async (operation: () => Promise<unknown>): Promise<boolean> => {
     if (locked.current) return false
 
@@ -189,7 +171,7 @@ export function useAdmin() {
 // CHỨC NĂNG: Hai dashboard đọc cùng bộ đếm QR từ server RAM mỗi 5 giây.
 // XỬ LÝ: Lỗi để —, không báo 0; cleanup bỏ timer và kết quả đến muộn.
 
-// ==================== [DUNG-CHUNG] useGateStatistics ====================
+// [UC14] useGateStatistics — Đọc thống kê lượt QR và cấp trạng thái tải/lỗi cho màn tổng quan.
 export function useGateStatistics(client: import('../services/GoiApiQuanTri').GateClient) {
   // CHỨC NĂNG: Kết quả thống kê đã tải; null nghĩa là chưa có số liệu hợp lệ. Trạng thái lỗi để giao
   // diện hiển thị thông báo và cho thử lại.
@@ -203,8 +185,6 @@ export function useGateStatistics(client: import('../services/GoiApiQuanTri').Ga
   // giây.
   // XỬ LÝ: Chỉ cập nhật khi vòng effect còn hoạt động; cleanup tắt cờ và hủy timer đang
   // chờ.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: client, retryKey.
-  // Đăng ký useEffect để thực hiện tác vụ sau render. | Khai báo alive: sử dụng true làm giá trị của bước hiện tại. | Khai báo timer: không có giá trị khởi tạo.
   useEffect(() => {
     let alive = true
     let timer: ReturnType<typeof setTimeout> | undefined

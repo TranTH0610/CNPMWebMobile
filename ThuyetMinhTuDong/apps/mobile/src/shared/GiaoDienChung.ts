@@ -1,50 +1,10 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Màu và style nền tảng của mobile, dùng lại token chung để các màn có hình thức thống nhất.
- *
- * VỊ TRÍ: apps/mobile/src/shared/GiaoDienChung.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/content/components/NgheThuBanThu.tsx
- * - apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
- * - apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
- * - apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- * - apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx
- * - apps/mobile/src/features/admin/reviews/ManDanhSachKiemDuyet.tsx
- * - apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
- * - apps/mobile/src/features/explore/components/ChonSapXep.tsx
- * - apps/mobile/src/features/explore/components/KhoiChaoMung.tsx
- * - apps/mobile/src/features/explore/components/NutLocDanhMuc.tsx
- * - apps/mobile/src/features/explore/components/OTimKiem.tsx
- * - apps/mobile/src/features/explore/components/TheDiTich.tsx
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/features/journey/components/BanDoThamQuan.tsx
- * - apps/mobile/src/features/journey/components/TrangThaiDinhVi.tsx
- * - apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
- * - apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- * - apps/mobile/src/features/language/components/ThanhChonNgonNgu.tsx
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- * - apps/mobile/src/features/settings/screens/ManCaiDat.tsx
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- * - apps/mobile/src/navigation/DieuHuongQuanTri.tsx
- * - apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
- * - apps/mobile/src/shared/components/AnhBia.tsx
- * - apps/mobile/src/shared/components/AnhDiTich.tsx
- * - apps/mobile/src/shared/components/NutThaoTac.tsx
- * - apps/mobile/src/shared/components/TrangThaiDuLieu.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - ../../../../packages/ui-tokens/MauVaKichThuoc
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/shared/GiaoDienChung.ts
+ * FILE NÀY LÀM GÌ: Màu và style nền tảng của mobile, dùng lại token chung để các màn có hình thức thống nhất.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { StyleSheet } from 'react-native'
 import { colors, spacing, radii } from '../../../../packages/ui-tokens/MauVaKichThuoc'

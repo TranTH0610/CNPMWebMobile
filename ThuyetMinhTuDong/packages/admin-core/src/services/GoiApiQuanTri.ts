@@ -1,28 +1,19 @@
 /**
- * CHỨC NĂNG: [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Triển khai hợp đồng quản trị qua HTTP; gom xử lý request, phản hồi, lỗi và theo dõi cập nhật dữ
- *
- * VỊ TRÍ: packages/admin-core/src/services/GoiApiQuanTri.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/react/TrangThaiReact.tsx
- * - packages/admin-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - ../domain/HopDongDichVu
- * - ../domain/KieuDuLieuQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. transport
- * 2. createHttpAdminService
- * 3. createGateClient
- * 4. sendGateEntry
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/services/GoiApiQuanTri.ts
+ * FILE NÀY LÀM GÌ: Gọi HTTP API quản trị, danh mục đã công bố và ghi/đọc lượt QR; không trực tiếp kết nối SQL.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { AdminService } from '../domain/HopDongDichVu'
 import { AdminError, type AdminErrorCode, type AdminDocument } from '../domain/KieuDuLieuQuanTri'
@@ -51,8 +42,7 @@ const errors: readonly AdminErrorCode[] = [
 // CHỨC NĂNG: Gửi HTTP và chuẩn hóa lỗi của quản trị.
 // XỬ LÝ: Màn hình nhận mã lỗi nghiệp vụ thay vì phụ thuộc chi tiết response của fetch.
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] transport ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] transport — Gửi HTTP và chuẩn hóa lỗi của quản trị.
 function transport(base: string) {
   return async <T>(path: string, body?: unknown, timeoutMs = 8000): Promise<T> => {
     if (!base) throw new AdminError('loadError')
@@ -97,7 +87,7 @@ function transport(base: string) {
 // CHỨC NĂNG: Poll một số phiên bản nhỏ, không tải toàn bộ ảnh base64 mỗi 3 giây.
 // XỬ LÝ: Chỉ một timer cho mọi subscriber; hết người nghe thì hủy, không chồng request.
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] createHttpAdminService ====================
+// [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] createHttpAdminService — Tạo service gọi các endpoint quản trị và thông báo khi dữ liệu thay đổi.
 export function createHttpAdminService(base: string, pollMs = 3000): AdminService {
   // CHỨC NĂNG: Các callback nhận thay đổi; dùng Set để không đăng ký trùng cùng tham chiếu.
 
@@ -167,6 +157,7 @@ export function createHttpAdminService(base: string, pollMs = 3000): AdminServic
   // CHỨC NĂNG: Gửi một thao tác quản trị đến mock API.
   // XỬ LÝ: Tên lệnh và đối số theo hợp đồng; kiểm tra dữ liệu và revision vẫn do nơi nhận thực hiện.
 
+  // [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] command — Gửi một thao tác quản trị đến mock API.
   async function command(action: string, args: unknown[]) {
     await request(
       '/commands',
@@ -181,10 +172,12 @@ export function createHttpAdminService(base: string, pollMs = 3000): AdminServic
   // ghi tùy ý cả document từ giao diện.
 
   return {
+    // [UC09] identity — Gửi yêu cầu HTTP cho thao tác identity; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     identity: () => request('/identity'),
     load: loadDocument,
     published: loadPublished,
 
+    // [UC10] savePlace — Gửi yêu cầu HTTP cho thao tác savePlace; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     savePlace: async (input) => {
       const result = await request<{ id: string }>('/commands', {
         action: 'savePlace',
@@ -196,19 +189,28 @@ export function createHttpAdminService(base: string, pollMs = 3000): AdminServic
       if (typeof result.id !== 'string') throw new AdminError('saveError')
       return result.id
     },
+    // [UC11] saveContent — Gửi yêu cầu HTTP cho thao tác saveContent; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     saveContent: (input) => command('saveContent', [input]),
 
+    // [UC11] translate — Gửi yêu cầu HTTP cho thao tác translate; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     translate: (...args) => command('translate', args),
+    // [UC11] generateAudio — Gửi yêu cầu HTTP cho thao tác generateAudio; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     generateAudio: (...args) => command('generateAudio', args),
 
+    // [UC12] submit — Gửi yêu cầu HTTP cho thao tác submit; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     submit: (...args) => command('submit', args),
+    // [UC12] review — Gửi yêu cầu HTTP cho thao tác review; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     review: (...args) => command('review', args),
+    // [UC13] publish — Gửi yêu cầu HTTP cho thao tác publish; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     publish: (...args) => command('publish', args),
 
+    // [UC10] archive — Gửi yêu cầu HTTP cho thao tác archive; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     archive: (...args) => command('archive', args),
+    // [UC10] deletePlace — Gửi yêu cầu HTTP cho thao tác deletePlace; quy tắc nghiệp vụ được kiểm tra tại máy chủ.
     deletePlace: (...args) => command('deletePlace', args),
     // CHỨC NĂNG: Không cung cấp reset/số phiên giả qua API dùng chung.
 
+    // [UC02 / UC04 / UC05 / UC09 / UC10 / UC11 / UC12 / UC13 / UC14] reset — Không cung cấp reset/số phiên giả qua API dùng chung.
     reset: async () => {
       throw new AdminError('invalid')
     },
@@ -247,7 +249,7 @@ export function createHttpAdminService(base: string, pollMs = 3000): AdminServic
 // XỬ LÝ: Dùng hợp đồng riêng với thống kê phiên vì lượt QR và phiên hoạt động có ý nghĩa khác
 // nhau.
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] createGateClient ====================
+// [UC05 / UC14] createGateClient — Tạo client HTTP ghi lượt QR và đọc thống kê QR.
 export function createGateClient(base: string): GateClient {
   const request = transport(base)
 
@@ -272,7 +274,7 @@ export function createGateClient(base: string): GateClient {
 // CHỨC NĂNG: Gửi lượt mở QR với cùng ID khi retry; server loại lượt lặp.
 // XỬ LÝ: Không chặn giao diện du khách; dừng retry khi rời app hoặc sau ba lần lỗi.
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] sendGateEntry ====================
+// [UC05] sendGateEntry — Gửi lượt vào cổng, thử lại có giới hạn và dùng cùng visitId.
 export function sendGateEntry(client: GateClient, visitId: string, platform: 'web' | 'mobile-app') {
   // CHỨC NĂNG: Cờ dừng tác vụ lặp; không lên lịch hoặc xử lý tiếp khi đã cleanup.
 

@@ -1,27 +1,11 @@
 /**
- * CHỨC NĂNG: [TRUY-CAP-QR]
- * VAI TRÒ: HOOK XỬ LÝ VÀ VÒNG ĐỜI
- *
- * FILE NÀY LÀM GÌ:
- * Ghi lượt vào từ liên kết QR chung có dấu entry=gate; dùng mã lượt để hạn chế đếm lại khi tải trang.
- *
- * VỊ TRÍ: apps/web/src/features/qr/hooks/useGhiNhanVaoCong.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/presence/hooks/useBaoPhienHoatDong.ts
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - @travelguide/admin-core
- * - ../../admin/shared/services/KetNoiDichVuQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. id
- * 2. useGateEntry
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: apps/web/src/features/qr/hooks/useGhiNhanVaoCong.ts
+ * FILE NÀY LÀM GÌ: Ghi lượt vào từ liên kết QR chung có dấu entry=gate; dùng mã lượt để hạn chế đếm lại khi tải trang.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -30,10 +14,6 @@ import { visitorGateClient } from '../../admin/shared/services/KetNoiDichVuQuanT
 
 let visitId: string | undefined
 
-// ==================== [TRUY-CAP-QR] id ====================
-// CHỨC NĂNG: Thực hiện bước id trong nhiệm vụ: Ghi lượt vào từ liên kết QR chung có dấu entry=gate; dùng mã lượt để hạn chế đếm lại khi tải trang.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function id() {
   if (visitId) return visitId
 
@@ -59,14 +39,12 @@ function id() {
 // CHỨC NĂNG: Ghi lượt mở liên kết QR tại cổng.
 // XỬ LÝ: Chỉ xử lý liên kết đúng dấu entry=gate và dùng mã lượt để hạn chế đếm lại.
 
-// ==================== [TRUY-CAP-QR] useGateEntry ====================
+// [UC05] useGateEntry — Nhận liên kết vào cổng và gửi lượt QR nền; giữ visitId để hạn chế ghi trùng.
 export function useGateEntry() {
   const { pathname, search } = useLocation()
   // CHỨC NĂNG: Chỉ gửi lượt QR khi pathname là / và search đúng ?entry=gate.
   // XỬ LÝ: Trả hàm dừng của sendGateEntry để cleanup dùng khi route đổi hoặc component
   // rời.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: pathname, search.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     // CHỨC NĂNG: Chỉ QR do nhân viên cấp có entry=gate mới được ghi nhận.
     // XỬ LÝ: Mở web thường hoặc mở Admin không tăng; API lỗi retry không làm đếm lặp.

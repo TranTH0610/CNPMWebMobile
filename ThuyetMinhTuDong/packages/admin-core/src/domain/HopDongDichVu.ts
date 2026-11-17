@@ -1,27 +1,16 @@
 /**
- * CHỨC NĂNG: [KIEU-DU-LIEU]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Hợp đồng AdminService và StoragePort; cho phép thay mock/API lưu trữ mà không viết lại màn hình.
- *
- * VỊ TRÍ: packages/admin-core/src/domain/HopDongDichVu.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/react/TrangThaiReact.tsx
- * - packages/admin-core/src/services/GoiApiQuanTri.ts
- * - packages/admin-core/src/services/XuLyNghiepVuQuanTri.ts
- * - packages/admin-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- * - ./KieuDuLieuQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/domain/HopDongDichVu.ts
+ * FILE NÀY LÀM GÌ: Hợp đồng AdminService và StoragePort; cho phép thay mock/API lưu trữ mà không viết lại màn hình.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { Language, PlaceRecord } from '@travelguide/visitor-core'
 import type { AdminDocument, AdminIdentity, PlaceInput, ContentInput } from './KieuDuLieuQuanTri'

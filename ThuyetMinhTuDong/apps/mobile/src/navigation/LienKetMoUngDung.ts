@@ -1,26 +1,11 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Cấu hình nhận liên kết mở ứng dụng mobile và phân tích đường dẫn theo quy tắc QR/liên kết chung.
- *
- * VỊ TRÍ: apps/mobile/src/navigation/LienKetMoUngDung.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- *
- * PHỤ THUỘC:
- * - @react-navigation/native
- * - @travelguide/visitor-core
- * - ../shared/services/KetNoiNenTang
- * - ./KieuDieuHuongDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/navigation/LienKetMoUngDung.ts
+ * FILE NÀY LÀM GÌ: Cấu hình nhận liên kết mở ứng dụng mobile và phân tích đường dẫn theo quy tắc QR/liên kết chung.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { LinkingOptions } from '@react-navigation/native'
 import { parseQrTarget } from '@travelguide/visitor-core'
@@ -41,6 +26,7 @@ export const linking: LinkingOptions<VisitorStack> = {
   // - QR chung mở Places.
   // - Link chi tiết mở Detail và giữ Places trong lịch sử quay lại.
 
+  // [UC05] getStateFromPath — Chuyển đường dẫn thành màn hình và tham số.
   getStateFromPath(path) {
     try {
       const origin = webOrigin ?? 'https://hue-guide.example'

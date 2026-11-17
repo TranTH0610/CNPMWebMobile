@@ -1,37 +1,16 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Entry riêng của web quản trị; ghép provider/route admin mà không dùng entry du khách.
- *
- * VỊ TRÍ: apps/web/src/main-admin.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - @travelguide/admin-core/react
- * - ./features/admin/shared/services/KetNoiDichVuQuanTri
- * - ./features/language/i18n/CauHinhNgonNgu
- * - @travelguide/visitor-core/journey/react
- * - ./features/journey/adapters/KetNoiAudioVaDinhVi
- * - react
- * - react-dom/client
- * - react-router-dom
- * - @travelguide/visitor-core/react
- * - ../../../packages/ui-tokens/MauVaKichThuoc
- * - ./shared/services/KetNoiNenTang
- * - ./app/UngDungQuanTri
- * - ./shared/styles/GiaoDienNen.css
- * - ./features/journey/styles/GiaoDienTrinhNghe.css
- * - ./shared/styles/DiSanHue.css
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/main-admin.tsx
+ * FILE NÀY LÀM GÌ: Entry riêng của web quản trị; ghép provider/route admin mà không dùng entry du khách.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { AdminProvider } from '@travelguide/admin-core/react'
 import { adminService, publicCatalog } from './features/admin/shared/services/KetNoiDichVuQuanTri'

@@ -1,31 +1,23 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Điểm chạy nâng cấp database từ lệnh npm run db:init; không chạy tự động khi chỉ đọc file.
- *
- * VỊ TRÍ: services/database/ChayNangCapDatabase.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - ./CauHinhSqlServer.cjs
- * - ./ChuyenSangMuoiMotBang.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. migrate
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/ChayNangCapDatabase.cjs
+ * FILE NÀY LÀM GÌ: Điểm chạy nâng cấp database từ lệnh npm run db:init; không chạy tự động khi chỉ đọc file.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { databaseName, driverConfig } = require('./CauHinhSqlServer.cjs')
 const { migrate11 } = require('./ChuyenSangMuoiMotBang.cjs')
-// ==================== [DATABASE] migrate ====================
-// CHỨC NĂNG: Thực hiện bước migrate trong nhiệm vụ: Điểm chạy nâng cấp database từ lệnh npm run db:init; không chạy tự động khi chỉ đọc file.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function migrate() {
   const name = databaseName(),
     m = driverConfig('master'),

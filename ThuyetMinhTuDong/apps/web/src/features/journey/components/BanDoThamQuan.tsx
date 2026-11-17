@@ -1,31 +1,11 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Trình bày các điểm tham quan trên bản đồ và nối thao tác chọn điểm với luồng hành trình của nền tảng.
- *
- * VỊ TRÍ: apps/web/src/features/journey/components/BanDoThamQuan.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/journey/pages/TrangHanhTrinh.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - leaflet
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../hooks/useHanhTrinh
- * - @travelguide/visitor-core/journey/data
- * - leaflet/dist/leaflet.css
- *
- * CÁC KHỐI CHÍNH:
- * 1. VisitorMap
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/journey/components/BanDoThamQuan.tsx
+ * FILE NÀY LÀM GÌ: Trình bày các điểm tham quan trên bản đồ và nối thao tác chọn điểm với luồng hành trình của nền tảng.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -41,8 +21,7 @@ import 'leaflet/dist/leaflet.css'
 // trình của nền tảng.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] VisitorMap ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC08] VisitorMap — Hiển thị marker, vị trí và các thao tác chọn di tích/mở bản đồ ngoài.
 export function VisitorMap({ selected }: { selected: string | null }) {
   const element = useRef<HTMLDivElement>(null)
 
@@ -65,11 +44,9 @@ export function VisitorMap({ selected }: { selected: string | null }) {
   // CHỨC NĂNG: Tạo bản đồ Leaflet, lớp nền và các marker của danh mục hiện tại.
   // XỬ LÝ: Tên marker dùng textContent; click gọi open(place.id). Cleanup gỡ bản đồ của
   // lần tạo trước.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: state.places,
   // selected, language, open.
   // LƯU Ý VỀ open: So sánh tham chiếu hàm; nếu cha tạo hàm mới, effect có thể chạy lại dù ID chưa
   // đổi.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     if (!element.current) return
 
@@ -137,11 +114,9 @@ export function VisitorMap({ selected }: { selected: string | null }) {
   // listener thừa.
   // CHỨC NĂNG: Xóa marker vị trí khách cũ; nếu có state.fix thì vẽ lại marker ở tọa độ mới.
   // XỬ LÝ: Dùng userLayer riêng để không xóa marker của các di tích.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: state.fix,
   // state.places, selected, language, open.
   // LƯU Ý VỀ open: So sánh tham chiếu hàm; nếu cha tạo hàm mới, effect có thể chạy lại dù ID chưa
   // đổi.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     userLayer.current?.clearLayers()
 

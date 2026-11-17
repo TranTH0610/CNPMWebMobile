@@ -1,29 +1,17 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Tập biểu tượng dùng trong giao diện quản trị web để các trang dùng thống nhất.
- *
- * VỊ TRÍ: apps/web/src/features/admin/shared/components/BieuTuongQuanTri.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
- * - apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx
- * - apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
- * - apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
- * - apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. AdminIcon
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/shared/components/BieuTuongQuanTri.tsx
+ * FILE NÀY LÀM GÌ: Tập biểu tượng dùng trong giao diện quản trị web để các trang dùng thống nhất.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// Đặt tên kiểu AdminIconName.
 export type AdminIconName =
   | 'dashboard'
   | 'places'
@@ -42,8 +30,7 @@ export type AdminIconName =
 // CHỨC NĂNG: Vẽ icon bằng một hệ nét và kích thước thống nhất.
 // XỬ LÝ: SVG dùng currentColor để tự đổi theo nút đang chọn hoặc nền xanh.
 
-// ==================== [GIAO-DIEN] AdminIcon ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] AdminIcon — Vẽ icon bằng một hệ nét và kích thước thống nhất.
 export function AdminIcon({ name }: { name: AdminIconName }) {
   const paths = {
     dashboard: (

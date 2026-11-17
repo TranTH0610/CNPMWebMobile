@@ -1,34 +1,18 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Điểm export công khai của package; nơi dùng import tên package thay vì truy cập sâu vào file nội
- *
- * VỊ TRÍ: packages/visitor-core/src/XuatCongKhai.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - ./domain/KieuDuLieuDuKhach
- * - ./catalog/DanhMucDiTich
- * - ./catalog/TimKiemVaBoLoc
- * - ./links/PhanTichLienKetQR
- * - ./links/DiaChiWebsite
- * - ./data/DuLieuKhoiTao
- * - ./i18n/BanDichGiaoDien
- * - ./catalog/DuLieuHienThi
- * - ./data/DanhMucAnh
- * - ./data/DiSanHue
- * - ./audio/DieuPhoiPhatAmThanh
- * - ./audio/DieuKhienNgheThu
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/visitor-core/src/XuatCongKhai.ts
+ * FILE NÀY LÀM GÌ: Xuất các kiểu/hàm để module khác sử dụng qua một đầu mối; không phải màn hình thực hiện UC độc lập.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 // CHỨC NĂNG: Công khai phần logic không phụ thuộc giao diện.
 // XỬ LÝ: Mobile và web import bằng tên package thay vì đường dẫn sâu.

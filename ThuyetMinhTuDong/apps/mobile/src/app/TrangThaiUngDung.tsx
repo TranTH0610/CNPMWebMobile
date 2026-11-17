@@ -1,33 +1,18 @@
 /**
- * CHỨC NĂNG: [KHOI-DONG] [CAU-HINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Khởi tạo và ghép provider du khách, i18n và hành trình; các màn con dùng chung cùng trạng thái.
- *
- * VỊ TRÍ: apps/mobile/src/app/TrangThaiUngDung.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/App.tsx
- *
- * PHỤ THUỘC:
- * - @travelguide/admin-core/react
- * - ../features/admin/shared/services/KetNoiDichVuQuanTri
- * - react
- * - react-native
- * - react-native-safe-area-context
- * - expo-localization
- * - @travelguide/visitor-core/react
- * - @travelguide/visitor-core/journey/react
- * - ../features/language/i18n/CauHinhNgonNgu
- * - ../shared/services/KetNoiNenTang
- * - ../features/journey/adapters/KetNoiAudioVaDinhVi
- *
- * CÁC KHỐI CHÍNH:
- * 1. AppProviders
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/app/TrangThaiUngDung.tsx
+ * FILE NÀY LÀM GÌ: Khởi tạo và ghép provider du khách, i18n và hành trình; các màn con dùng chung cùng trạng thái.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { AdminProvider } from '@travelguide/admin-core/react'
 import { adminService, publicCatalog } from '../features/admin/shared/services/KetNoiDichVuQuanTri'
@@ -45,8 +30,7 @@ import { journeyAdapters } from '../features/journey/adapters/KetNoiAudioVaDinhV
 const deviceLanguage = getLocales()[0]?.languageTag ?? null
 // CHỨC NĂNG: Giữ thứ tự provider để điều hướng, ngôn ngữ và phiên nghe dùng chung trạng thái.
 
-// ==================== [KHOI-DONG] [CAU-HINH] AppProviders ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] AppProviders — Giữ thứ tự provider để điều hướng, ngôn ngữ và phiên nghe dùng chung trạng thái.
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <SafeAreaProvider>

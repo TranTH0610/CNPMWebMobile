@@ -1,41 +1,10 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Nút bấm dùng lại trên mobile; thống nhất màu, biểu tượng, vùng nhấn và trạng thái khóa/được chọn.
- *
- * VỊ TRÍ: apps/mobile/src/shared/components/NutThaoTac.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
- * - apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
- * - apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- * - apps/mobile/src/features/admin/places/ManDanhSachDiTich.tsx
- * - apps/mobile/src/features/admin/reviews/ManChiTietKiemDuyet.tsx
- * - apps/mobile/src/features/admin/shared/components/ChonTepTuThietBi.tsx
- * - apps/mobile/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
- * - apps/mobile/src/features/explore/components/KhoiChaoMung.tsx
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/features/journey/components/BanDoThamQuan.tsx
- * - apps/mobile/src/features/journey/components/NutNgheThuyetMinh.tsx
- * - apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
- * - apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- * - apps/mobile/src/features/language/components/ThanhChonNgonNgu.tsx
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- * - apps/mobile/src/shared/components/TrangThaiDuLieu.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - @expo/vector-icons
- * - ../GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. Action
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/shared/components/NutThaoTac.tsx
+ * FILE NÀY LÀM GÌ: Nút bấm dùng lại trên mobile; thống nhất màu, biểu tượng, vùng nhấn và trạng thái khóa/được chọn.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { ComponentProps } from 'react'
 import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from 'react-native'
@@ -46,8 +15,7 @@ import { colors, spacing } from '../GiaoDienChung'
 // khóa/được chọn.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DUNG-CHUNG] Action ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [HỖ TRỢ CHUNG] Action — Nút bấm dùng lại trên mobile; thống nhất màu, biểu tượng, vùng nhấn và trạng thái
 export function Action({
   title,
   onPress,

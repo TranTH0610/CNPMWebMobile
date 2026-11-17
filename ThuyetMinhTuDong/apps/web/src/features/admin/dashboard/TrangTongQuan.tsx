@@ -1,31 +1,11 @@
 /**
- * CHỨC NĂNG: [THONG-KE]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Tổng quan admin web; đọc nội dung, lượt QR và thống kê phiên từ các client tương ứng để hiển thị bốn chỉ số.
- *
- * VỊ TRÍ: apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - @travelguide/visitor-core/presence/react
- * - ../../presence/services/PhienHoatDong
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - ../shared/components/ThanhPhanQuanTri
- * - ../shared/services/KetNoiDichVuQuanTri
- * - ../shared/components/BieuTuongQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. DashboardPage
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
+ * FILE NÀY LÀM GÌ: Tổng quan admin web; đọc nội dung, lượt QR và thống kê phiên từ các client tương ứng để hiển thị bốn chỉ số.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -40,8 +20,7 @@ import { AdminIcon, type AdminIconName } from '../shared/components/BieuTuongQua
 // để hiển thị bốn chỉ số.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [THONG-KE] DashboardPage ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC14] DashboardPage — Tổng quan admin web; đọc nội dung, lượt QR và thống kê phiên từ các client tương ứng
 export function DashboardPage() {
   const state = useAdmin(),
     t = useAdminText(),

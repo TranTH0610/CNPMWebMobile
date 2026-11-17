@@ -1,31 +1,20 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Chuyển đổi mã SQL và mã sử dụng trong API theo quy ước hiện tại.
- *
- * VỊ TRÍ: services/database/ChuyenDoiMaDuLieu.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/database/catalog/DocDiTichTuSql.cjs
- * - services/database/catalog/GhiDiTichVaoSql.cjs
- * - services/database/catalog/TruyVanVaCapMa.cjs
- * - services/database/ChuyenSangMuoiMotBang.cjs
- * - services/database/LuuVaDocTepSql.cjs
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. code
- * 2. sqlPlaceId
- * 3. apiPlaceId
- * 4. categoryCode
- * 5. zoneCode
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/ChuyenDoiMaDuLieu.cjs
+ * FILE NÀY LÀM GÌ: Chuyển đổi mã SQL và mã sử dụng trong API theo quy ước hiện tại.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const LEGACY = [
   'ky-dai',
@@ -38,18 +27,10 @@ const LEGACY = [
   'hien-lam-cac',
 ]
 const code = (prefix, number) => prefix + String(number).padStart(3, '0')
-// ==================== [DATABASE] sqlPlaceId ====================
-// CHỨC NĂNG: Thực hiện bước sqlPlaceId trong nhiệm vụ: Chuyển đổi mã SQL và mã sử dụng trong API theo quy ước hiện tại.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function sqlPlaceId(id) {
   const index = LEGACY.indexOf(id)
   return index < 0 ? id : code('DT', index + 1)
 }
-// ==================== [DATABASE] apiPlaceId ====================
-// CHỨC NĂNG: Thực hiện bước apiPlaceId trong nhiệm vụ: Chuyển đổi mã SQL và mã sử dụng trong API theo quy ước hiện tại.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 function apiPlaceId(id) {
   const match = /^DT(\d+)$/.exec(id)
   return (match && LEGACY[Number(match[1]) - 1]) || id

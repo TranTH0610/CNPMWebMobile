@@ -1,26 +1,11 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Nút bắt đầu nghe bài của địa điểm theo ngôn ngữ hiện tại; gọi luồng thuyết minh chung.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/components/NutNgheThuyetMinh.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- *
- * PHỤ THUỘC:
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../hooks/useHanhTrinh
- * - ../../../shared/components/NutThaoTac
- *
- * CÁC KHỐI CHÍNH:
- * 1. ListenButton
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/journey/components/NutNgheThuyetMinh.tsx
+ * FILE NÀY LÀM GÌ: Nút bắt đầu nghe bài của địa điểm theo ngôn ngữ hiện tại; gọi luồng thuyết minh chung.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useText } from '../../language/i18n/CauHinhNgonNgu'
 import { useVisitor } from '../../language/hooks/useDuKhach'
@@ -31,8 +16,7 @@ import { Action } from '../../../shared/components/NutThaoTac'
 // chung.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] ListenButton ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC07] ListenButton — Nút bắt đầu nghe bài của địa điểm theo ngôn ngữ hiện tại; gọi luồng thuyết minh
 export function ListenButton({ id }: { id: string }) {
   const { engine, state } = useJourney(),
     { language } = useVisitor(),
@@ -49,6 +33,7 @@ export function ListenButton({ id }: { id: string }) {
   const label = t(busy ? 'jPreparing' : playing ? 'jPause' : paused ? 'jResume' : 'jPlay')
   // CHỨC NĂNG: Bấm lại cùng bài thì pause/resume, không tự phát lại từ đầu.
 
+  // [UC07] toggle — Bấm lại cùng bài thì pause/resume, không tự phát lại từ đầu.
   const toggle = () => {
     if (playing) engine.pause()
     else if (paused) void engine.resume()

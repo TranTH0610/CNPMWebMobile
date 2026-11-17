@@ -1,31 +1,18 @@
 /**
- * CHỨC NĂNG: [TAI-NGUYEN]
- * VAI TRÒ: API PHÍA MÁY CHỦ
- *
- * FILE NÀY LÀM GÌ:
- * Trả ảnh/âm thanh từ SQL, có HEAD và HTTP Range để tua trên iOS/web.
- *
- * VỊ TRÍ: services/catalog/XuLyTepTaiNguyen.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/MayChuApi.cjs
- * - services/database/KiemThuTepTaiNguyen.test.cjs
- *
- * PHỤ THUỘC:
- * - ../database/LuuVaDocTepSql.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. rangeOf
- * 2. sendMedia
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: services/catalog/XuLyTepTaiNguyen.cjs
+ * FILE NÀY LÀM GÌ: Đọc và trả ảnh/audio từ kho tài nguyên, phân biệt bản nghe thử với bản đã công bố.
+ * VAI TRÒ: Máy chủ/API; nhận yêu cầu từ Web và Mobile.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const store = require('../database/LuuVaDocTepSql.cjs')
-// ==================== [TAI-NGUYEN] rangeOf ====================
-// CHỨC NĂNG: Thực hiện bước rangeOf trong nhiệm vụ: Trả ảnh/âm thanh từ SQL, có HEAD và HTTP Range để tua trên iOS/web.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function rangeOf(value, size) {
   if (!value) return { start: 0, end: size - 1, partial: false }
   const match = /^bytes=(\d*)-(\d*)$/.exec(value)
@@ -42,10 +29,6 @@ function rangeOf(value, size) {
     return null
   return { start, end, partial: true }
 }
-// ==================== [TAI-NGUYEN] sendMedia ====================
-// CHỨC NĂNG: Thực hiện bước sendMedia trong nhiệm vụ: Trả ảnh/âm thanh từ SQL, có HEAD và HTTP Range để tua trên iOS/web.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 async function sendMedia(req, res, { id, scope = 'main', preview = false }) {
   if (!id || !(await store.allowed(id, scope, preview))) {
     res.statusCode = 404

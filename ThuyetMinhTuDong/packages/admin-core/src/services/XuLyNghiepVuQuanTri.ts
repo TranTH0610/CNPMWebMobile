@@ -1,30 +1,16 @@
 /**
- * CHỨC NĂNG: [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Nghiệp vụ tạo/sửa, gửi duyệt, kiểm duyệt và công bố nội dung quản trị.
- *
- * VỊ TRÍ: packages/admin-core/src/services/XuLyNghiepVuQuanTri.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- * - ../domain/HopDongDichVu
- * - ../domain/KieuDuLieuQuanTri
- * - ../domain/KiemTraDuLieu
- *
- * CÁC KHỐI CHÍNH:
- * 1. clone
- * 2. stamp
- * 3. seed
- * 4. readDocument
- * 5. createAdminService
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/services/XuLyNghiepVuQuanTri.ts
+ * FILE NÀY LÀM GÌ: Thực hiện quy tắc quản trị: danh tính cấp sẵn, lưu nháp, dịch, tạo audio, kiểm duyệt và công bố theo revision.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { MOCK_PLACES, LANGUAGES, bundledNarration } from '@travelguide/visitor-core'
 import type { Language, PlaceRecord, PublishedText } from '@travelguide/visitor-core'
@@ -63,7 +49,7 @@ const seed = (): AdminDocument => ({
 // CHỨC NĂNG: Kiểm tra dữ liệu quản trị đọc từ kho.
 // XỬ LÝ: Chỉ nhận schema và cấu trúc hợp lệ; JSON hỏng không được âm thầm coi là dữ liệu mới.
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] readDocument ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] readDocument — Kiểm tra dữ liệu quản trị đọc từ kho.
 function readDocument(raw: string): AdminDocument {
   // CHỨC NĂNG: Kiểm tra dữ liệu cục bộ trước khi coi là AdminDocument.
   // XỬ LÝ: JSON hỏng/khác schema phải báo lỗi; không tự ghi đè dữ liệu đã có bằng seed.
@@ -109,7 +95,7 @@ function readDocument(raw: string): AdminDocument {
 // CHỨC NĂNG: Nhận bộ tạo MP3 từ server; logic FE không giữ khóa dịch vụ TTS.
 // XỬ LÝ: Test có thể dùng bài đã đóng gói; bài mới cần adapter tạo giọng thật.
 
-// ==================== [LUU-NHAP] [KIEM-DUYET] [TU-DONG-DICH] [THUYET-MINH] createAdminService ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] createAdminService — Tạo bộ quy tắc quản trị dùng tại API, bao gồm kiểm tra trạng thái và revision.
 export function createAdminService(
   storage: StoragePort,
   prepareAudio?: (body: string, language: Language) => Promise<string>,
@@ -157,6 +143,7 @@ export function createAdminService(
   // XỬ LÝ: Lỗi lưu giữ bản công khai cũ, không giả hiển thị đã lưu. BE sau này
   // phải làm giao dịch và kiểm tra revision tương tự trên máy chủ.
 
+  // [UC10 / UC11 / UC12 / UC13] mutate — Xếp hàng thay đổi document, lưu thành công rồi mới thông báo trạng thái mới.
   function mutate(action: (doc: AdminDocument) => void): Promise<void> {
     const task = queue.then(async () => {
       const next = await load()
@@ -181,6 +168,7 @@ export function createAdminService(
   // CHỨC NĂNG: Lấy bản ghi đủ điều kiện chỉnh sửa.
   // XỬ LÝ: Kiểm tra ID, revision và trạng thái; tránh ghi đè bản vừa bị nơi khác sửa.
 
+  // [UC10 / UC11 / UC12 / UC13] item — Tìm đúng hồ sơ và kiểm tra revision trước khi thao tác để tránh ghi đè bản mới hơn.
   function item(doc: AdminDocument, id: string, revision: number) {
     const place = doc.places.find((p) => p.id === id)
 
@@ -197,6 +185,7 @@ export function createAdminService(
   // CHỨC NĂNG: Đánh dấu bản ghi vừa bị sửa.
   // XỬ LÝ: Tăng revision và đưa về nháp, vì lần duyệt cũ không còn áp dụng cho nội dung mới.
 
+  // [UC10 / UC11] touch — Tăng revision và đưa bản đang sửa về nháp, hủy dấu duyệt cũ sau thay đổi.
   function touch(place: ManagedPlace) {
     place.revision++
     place.workflow = 'draft'
@@ -217,6 +206,7 @@ export function createAdminService(
   // CHỨC NĂNG: Thay nội dung một ngôn ngữ của di tích.
   // XỬ LÝ: Bản vừa sửa là nháp và cần đi lại các bước duyệt trước khi công bố.
 
+  // [UC11] replaceText — Thay bản ngôn ngữ trong bản nháp, cập nhật phiên bản và trạng thái văn bản/audio.
   function replaceText(place: ManagedPlace, language: Language, text: PublishedText) {
     // CHỨC NĂNG: Bài viết đổi thì bản thu đi kèm cũng phải trở về nháp.
     // TẠI SAO: Không để âm thanh mang trạng thái công bố cho nội dung chưa duyệt.
@@ -236,6 +226,7 @@ export function createAdminService(
   // nội dung cũ.
 
   const service: AdminService = {
+    // [UC09] identity — Trả danh tính và quyền quản lý được cấp sẵn; đây không phải xác thực tài khoản/mật khẩu.
     identity: async () => ({
       id: 'provided-demo-manager',
       displayName: 'HueGuide',
@@ -252,6 +243,7 @@ export function createAdminService(
 
     // CHỨC NĂNG: Lưu metadata và các bản ngôn ngữ trong cùng lần ghi.
     // TẠI SAO: Không tạo di tích thành công nhưng mất bài thuyết minh vì lần ghi thứ hai lỗi.
+    // [UC10] savePlace — Kiểm tra và lưu hồ sơ di tích, tăng revision và đưa bản đang sửa về nháp; giữ bản công bố cũ.
     savePlace: async (input) => {
       let savedId = ''
       await mutate((doc) => {
@@ -350,6 +342,7 @@ export function createAdminService(
       return savedId
     },
 
+    // [UC11] saveContent — Lưu văn bản/bản thu của ngôn ngữ đang biên tập và cập nhật revision bản nháp.
     saveContent: (input: ContentInput) =>
       mutate((doc) => {
         const place = item(doc, input.id, input.expectedRevision)
@@ -397,6 +390,7 @@ export function createAdminService(
 
     // CHỨC NĂNG: Dịch thật cả tên, mô tả, địa chỉ và bài đọc từ bản Việt đã lưu.
     // XỬ LÝ: Chỉ ghi khi cả bốn trường dịch xong; revision chặn kết quả cũ ghi đè bài mới.
+    // [UC11] translate — Dịch từ nội dung nguồn đã lưu sang ngôn ngữ đích, kiểm tra revision để tránh ghi đè tác vụ mới.
     translate: async (id, language, revision) => {
       const place = item(await load(), id, revision),
         source = place.record.content.vi
@@ -417,6 +411,7 @@ export function createAdminService(
       })
     },
     // CHỨC NĂNG: Tạo audio từ đúng bài đã lưu; bản nháp vẫn chưa công khai.
+    // [UC11] generateAudio — Tạo bản thu theo văn bản và ngôn ngữ đã lưu, gắn kết quả vào đúng phiên bản nội dung.
     generateAudio: async (id, language, revision) => {
       // CHỨC NĂNG: Tạo giọng từ đúng body đã lưu, không gắn MP3 mẫu vào bài khác.
       // XỬ LÝ: Kiểm tra revision trước/sau tác vụ mạng; không khóa hàng đợi ghi
@@ -456,6 +451,7 @@ export function createAdminService(
       })
     },
 
+    // [UC12] submit — Kiểm tra điều kiện gửi duyệt và revision, rồi chuyển bản nháp sang trạng thái chờ duyệt.
     submit: (id, revision) =>
       mutate((doc) => {
         const place = item(doc, id, revision)
@@ -467,6 +463,7 @@ export function createAdminService(
         log(doc, place, 'submit')
       }),
 
+    // [UC12] review — Ghi quyết định duyệt hoặc yêu cầu sửa; kiểm tra revision và yêu cầu ghi chú khi trả sửa.
     review: (id, revision, approved, note) =>
       mutate((doc) => {
         const place = item(doc, id, revision)
@@ -483,6 +480,7 @@ export function createAdminService(
         log(doc, place, approved ? 'approve' : 'requestChanges')
       }),
 
+    // [UC13] publish — Chỉ công bố revision đã được duyệt; sao chép văn bản/audio thành ảnh chụp dữ liệu published.
     publish: (id, revision) =>
       mutate((doc) => {
         const place = item(doc, id, revision)
@@ -518,6 +516,7 @@ export function createAdminService(
         log(doc, place, 'publish')
       }),
 
+    // [UC10] archive — Lưu trữ di tích và ngừng cung cấp bản công bố cho du khách.
     archive: (id, revision) =>
       mutate((doc) => {
         const place = item(doc, id, revision)
@@ -530,6 +529,7 @@ export function createAdminService(
     // Chỉ sửa document này, không xóa ảnh asset dùng chung hay các điểm khác.
     // mutate giữ nguyên dữ liệu nếu ghi storage thất bại; UI phải hỏi xác nhận.
 
+    // [UC10] deletePlace — Xóa hồ sơ di tích theo các điều kiện nghiệp vụ hiện có và ghi lại thay đổi.
     deletePlace: (id, revision) =>
       mutate((doc) => {
         const place = doc.places.find((p) => p.id === id)
@@ -584,6 +584,7 @@ export function createAdminService(
       return task
     },
 
+    // [UC02 / UC04 / UC07] published — Chỉ trả bản công bố của các di tích chưa bị lưu trữ cho phía du khách.
     published: async (): Promise<PlaceRecord[]> =>
       (await load()).places.flatMap((p) =>
         p.workflow !== 'archived' && p.published ? [p.published] : [],

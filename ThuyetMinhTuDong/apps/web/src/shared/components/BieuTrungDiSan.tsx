@@ -1,26 +1,12 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Dấu hiệu cổng cung đình bằng SVG, dùng tại Navbar và AdminLayout. TẠI SAO: Logo vector sắc nét ở mọi kích thước, không phụ thuộc emoji/font của thiết bị.
- *
- * VỊ TRÍ: apps/web/src/shared/components/BieuTrungDiSan.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/admin/shared/layouts/BoCucQuanTri.tsx
- * - apps/web/src/shared/layouts/ThanhDieuHuong.tsx
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. HeritageMark
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/shared/components/BieuTrungDiSan.tsx
+ * FILE NÀY LÀM GÌ: Dấu hiệu cổng cung đình bằng SVG, dùng tại Navbar và AdminLayout. TẠI SAO: Logo vector sắc nét ở mọi kích thước, không phụ thuộc emoji/font của thiết bị.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// ==================== [DUNG-CHUNG] HeritageMark ====================
+// [HỖ TRỢ CHUNG] HeritageMark — Dấu hiệu cổng cung đình bằng SVG, dùng tại Navbar và AdminLayout. TẠI SAO: Logo vector sắc nét ở mọi kích thước, không phụ thuộc emoji/font của thiết bị.
 export function HeritageMark() {
   return (
     <svg className="heritage-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">

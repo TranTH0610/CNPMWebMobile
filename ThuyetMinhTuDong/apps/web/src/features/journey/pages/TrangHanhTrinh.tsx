@@ -1,35 +1,13 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Trang hành trình/bản đồ web; chọn địa điểm, hiển thị các điểm tham quan và tuyến tham khảo.
- *
- * VỊ TRÍ: apps/web/src/features/journey/pages/TrangHanhTrinh.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - ../components/TrangThaiDinhVi
- * - react
- * - react-router-dom
- * - @travelguide/visitor-core
- * - @travelguide/visitor-core/journey/data
- * - @travelguide/visitor-core/journey
- * - ../components/BanDoThamQuan
- * - ../../../shared/components/AnhDiTich
- * - ../../../shared/components/BieuTuong
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../hooks/useHanhTrinh
- * - ../styles/HanhTrinh.css
- *
- * CÁC KHỐI CHÍNH:
- * 1. JourneyPage
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/journey/pages/TrangHanhTrinh.tsx
+ * FILE NÀY LÀM GÌ: Trang hành trình/bản đồ web; chọn địa điểm, hiển thị các điểm tham quan và tuyến tham khảo.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { GpsStatus } from '../components/TrangThaiDinhVi'
 
@@ -50,8 +28,7 @@ import '../styles/HanhTrinh.css'
 // khảo.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] JourneyPage ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC06 / UC07 / UC08] JourneyPage — Trang hành trình/bản đồ web; chọn địa điểm, hiển thị các điểm tham quan và tuyến tham
 export function JourneyPage() {
   const { engine, state } = useJourney()
 
@@ -69,6 +46,7 @@ export function JourneyPage() {
   // XỬ LÝ: Chỉ đổi placeId, giữ query khác và không cần GPS điện thoại.
   // VisitorMap theo dõi selected để phóng đúng marker; cuộn giúp thấy kết quả.
 
+  // [UC06 / UC07 / UC08] locate — Định vị công trình ngay trên bản đồ trong trang.
   function locate(id: string) {
     // Cập nhật trạng thái qua setParams(previous => { const next = new URLSearchParams(previous) next.set('placeId', id) return next }, { replace: tru.
     setParams(

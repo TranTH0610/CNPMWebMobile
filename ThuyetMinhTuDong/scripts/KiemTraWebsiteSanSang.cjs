@@ -1,27 +1,12 @@
 /**
- * CHỨC NĂNG: [KHOI-DONG] [CAU-HINH]
- * VAI TRÒ: CÔNG CỤ CHẠY DỰ ÁN
- *
- * FILE NÀY LÀM GÌ:
- * Xác minh danh sách và ảnh SQL đi được qua cùng URL website của QR.
- *
- * VỊ TRÍ: scripts/KiemTraWebsiteSanSang.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - scripts/ChayDemoCongKhai.cjs
- * - scripts/KiemThuQRCongKhai.test.cjs
- * - scripts/TaoMaQRCongKhai.cjs
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. visitorDataReady
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: scripts/KiemTraWebsiteSanSang.cjs
+ * FILE NÀY LÀM GÌ: Xác minh danh sách và ảnh SQL đi được qua cùng URL website của QR.
+ * VAI TRÒ: Công cụ vận hành/khởi động; hỗ trợ UC, không phải màn hình nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// ==================== [KHOI-DONG] [CAU-HINH] visitorDataReady ====================
 async function visitorDataReady(origin, request = fetch) {
   try {
     const response = await request(origin + '/api/catalog/published', {

@@ -1,37 +1,18 @@
 /**
- * CHỨC NĂNG: [CHI-TIET]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Trang chi tiết du khách với ảnh, bài đọc và hai thao tác nghe/bản đồ. AppRoutes gọi; dùng usePublishedPlace, useVisitor và ListenButton hiện có. TẠI SAO: Phần trình bày tách khỏi service; đổi bố cục không đổi nội dung SQL hay bộ phát audio.
- *
- * VỊ TRÍ: apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - react-router-dom
- * - @travelguide/visitor-core
- * - ../../explore/hooks/useDanhSachDiTich
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../../journey/components/NutNgheThuyetMinh
- * - ../../../shared/components/AnhDiTich
- * - ../../../shared/components/TrangThaiDuLieu
- * - ../../../shared/components/BieuTuong
- *
- * CÁC KHỐI CHÍNH:
- * 1. DetailPage
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/place-detail/pages/TrangChiTietDiTich.tsx
+ * FILE NÀY LÀM GÌ: Trang chi tiết du khách với ảnh, bài đọc và hai thao tác nghe/bản đồ. AppRoutes gọi; dùng usePublishedPlace, useVisitor và ListenButton hiện có. TẠI SAO: Phần trình bày tách khỏi service; đổi bố cục không đổi nội dung SQL hay bộ phát audio.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { Link, useParams } from 'react-router-dom'
 import {
   availableLanguages,
   categoryOf,
-  LANGUAGES,
   PLACE_PHOTOS,
   publishedText,
 } from '@travelguide/visitor-core'
@@ -42,10 +23,8 @@ import { ListenButton } from '../../journey/components/NutNgheThuyetMinh'
 import { PlaceImage } from '../../../shared/components/AnhDiTich'
 import { State } from '../../../shared/components/TrangThaiDuLieu'
 import { Icon } from '../../../shared/components/BieuTuong'
-// ==================== [CHI-TIET] DetailPage ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider DetailPage.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC04 / UC07 / UC08] DetailPage — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider DetailPage.
 export function DetailPage() {
   const { id = '' } = useParams()
   const data = usePublishedPlace(id)
@@ -111,7 +90,7 @@ export function DetailPage() {
                   void changeLanguage(code)
                 }}
               >
-                {LANGUAGES.find((item) => item.code === code)?.label ?? code}
+                {t(`language_${code}`)}
               </button>
             ))}
           </div>

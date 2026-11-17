@@ -1,34 +1,13 @@
 /**
- * CHỨC NĂNG: [QUAN-LY-DI-TICH] [LUU-NHAP]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Form quản trị web để thêm, sửa và biên tập di tích. AdminRoutes/ContentEditorPage gọi; usePlaceEditor giữ cùng nghiệp vụ với mobile. TẠI SAO: File này chỉ dựng HTML, chọn tệp và điều hướng; dữ liệu vẫn qua API chung.
- *
- * VỊ TRÍ: apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenQuanTri.tsx
- * - apps/web/src/features/admin/content/TrangBienTapNoiDung.tsx
- *
- * PHỤ THUỘC:
- * - react-router-dom
- * - @travelguide/visitor-core
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../shared/components/ThanhPhanQuanTri
- * - ../shared/components/BieuTuongQuanTri
- * - ./components/ChinhSuaAnhDiTich
- * - ../shared/components/ChonTepTuThietBi
- * - ../content/components/NgheThuBanThu
- *
- * CÁC KHỐI CHÍNH:
- * 1. PlaceFormPage
- * 2. PlaceForm
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
+ * FILE NÀY LÀM GÌ: Form quản trị web để thêm, sửa và biên tập di tích. AdminRoutes/ContentEditorPage gọi; usePlaceEditor giữ cùng nghiệp vụ với mobile. TẠI SAO: File này chỉ dựng HTML, chọn tệp và điều hướng; dữ liệu vẫn qua API chung.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { CATEGORIES, LANGUAGES, type Category } from '@travelguide/visitor-core'
@@ -52,10 +31,8 @@ import { PlaceImagesEditor } from './components/ChinhSuaAnhDiTich'
 import { LocalMediaPicker } from '../shared/components/ChonTepTuThietBi'
 import { AudioPreview } from '../content/components/NgheThuBanThu'
 
-// ==================== [QUAN-LY-DI-TICH] [LUU-NHAP] PlaceFormPage ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceFormPage.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC10 / UC11 / UC12] PlaceFormPage — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceFormPage.
 export function PlaceFormPage() {
   const state = useAdmin(),
     t = useAdminText(),
@@ -66,10 +43,8 @@ export function PlaceFormPage() {
   return <PlaceForm key={id ?? 'new'} initial={place} />
 }
 
-// ==================== [QUAN-LY-DI-TICH] [LUU-NHAP] PlaceForm ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceForm.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC10 / UC11 / UC12] PlaceForm — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceForm.
 function PlaceForm({ initial }: { initial?: ManagedPlace }) {
   const state = useAdmin(),
     t = useAdminText(),
@@ -110,6 +85,7 @@ function PlaceForm({ initial }: { initial?: ManagedPlace }) {
 
   // CHỨC NĂNG: Sau khi tạo thành công, URL trỏ vào đúng bản nháp vừa lưu.
   // TẠI SAO: Tải lại trang sẽ mở tiếp bản này, không quay về form trống.
+  // [UC10 / UC11 / UC12] perform — Sau khi tạo thành công, URL trỏ vào đúng bản nháp vừa lưu.
   async function perform(action: PlaceEditorAction) {
     const ok = await editor.perform(action)
     if (ok && action === 'submit') {
@@ -167,7 +143,7 @@ function PlaceForm({ initial }: { initial?: ManagedPlace }) {
             aria-pressed={language === item.code}
             onClick={() => setLanguage(item.code)}
           >
-            {item.label}
+            {visitorText(`language_${item.code}`)}
           </button>
         ))}
       </div>

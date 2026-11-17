@@ -1,41 +1,17 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Trình nghe thuyết minh: trạng thái phát, tạm dừng, tua, tốc độ và nút đóng; thao tác được chuyển đến controller chung.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - @expo/vector-icons
- * - @react-native-community/slider
- * - react-native-safe-area-context
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../hooks/useHanhTrinh
- * - ../../../shared/components/NutThaoTac
- * - ../../../shared/components/AnhBia
- * - ../../../shared/GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. clock
- * 2. JourneyPlayer
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/journey/components/TrinhNgheThuyetMinh.tsx
+ * FILE NÀY LÀM GÌ: Trình nghe thuyết minh: trạng thái phát, tạm dừng, tua, tốc độ và nút đóng; thao tác được chuyển đến controller chung.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Slider from '@react-native-community/slider'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LANGUAGES } from '@travelguide/visitor-core'
 import { useText } from '../../language/i18n/CauHinhNgonNgu'
 import { useJourney } from '../hooks/useHanhTrinh'
 import { Action } from '../../../shared/components/NutThaoTac'
@@ -50,7 +26,7 @@ const clock = (value: number) =>
 // được chuyển đến controller chung.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [DINH-VI] [THUYET-MINH] JourneyPlayer ====================
+// [UC07] JourneyPlayer — Trình nghe thuyết minh: trạng thái phát, tạm dừng, tua, tốc độ và nút đóng; thao tác
 export function JourneyPlayer() {
   const { engine, state, resumeSaved } = useJourney()
 
@@ -69,9 +45,7 @@ export function JourneyPlayer() {
     state.error === 'gpsFailed' || state.error === 'gpsWeak' ? undefined : state.error
   // CHỨC NĂNG: Xóa giá trị kéo thanh tua tạm thời khi bài hoặc ngôn ngữ được thay.
   // XỬ LÝ: Sau khi xóa draft, thanh tua hiển thị vị trí thật của session mới.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: session?.audioId,
   // session?.placeId, session?.language.
-  // Đăng ký useEffect để thực hiện tác vụ sau render. | Cập nhật trạng thái qua setDraft(undefined).
   useEffect(() => {
     setDraft(undefined)
   }, [session?.audioId, session?.placeId, session?.language])
@@ -117,7 +91,7 @@ export function JourneyPlayer() {
             {session && (
               <View style={styles.subtitle}>
                 <Text style={styles.language}>
-                  {LANGUAGES.find((item) => item.code === session.language)?.label}
+                  {t(`language_${session.language}`)}
                 </Text>
                 <View style={[styles.dot, playing && { backgroundColor: colors.playerAccent }]} />
                 <Text style={styles.status}>

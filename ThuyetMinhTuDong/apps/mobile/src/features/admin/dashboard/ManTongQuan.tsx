@@ -1,35 +1,11 @@
 /**
- * CHỨC NĂNG: [THONG-KE]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Tổng quan admin mobile với phiên hoạt động, lượt QR, di tích và chờ duyệt; có liên kết đến thao tác quản lý.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - @expo/vector-icons
- * - @react-navigation/native-stack
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - @travelguide/visitor-core/presence/react
- * - ../../../navigation/KieuDieuHuongQuanTri
- * - ../shared/services/KetNoiDichVuQuanTri
- * - ../../presence/services/PhienHoatDong
- * - ../../../shared/components/NutThaoTac
- * - ../shared/components/ThanhPhanQuanTri
- * - ../../../shared/GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. DashboardScreen
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
+ * FILE NÀY LÀM GÌ: Tổng quan admin mobile với phiên hoạt động, lượt QR, di tích và chờ duyệt; có liên kết đến thao tác quản lý.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useMemo, type ComponentProps } from 'react'
 import { Text, View } from 'react-native'
@@ -55,8 +31,7 @@ import { colors } from '../../../shared/GiaoDienChung'
 // kết đến thao tác quản lý.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [THONG-KE] DashboardScreen ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC14] DashboardScreen — Tổng quan admin mobile với phiên hoạt động, lượt QR, di tích và chờ duyệt; có liên
 export function DashboardScreen({ navigation }: NativeStackScreenProps<AdminStack, 'Dashboard'>) {
   const state = useAdmin(),
     t = useAdminText(),

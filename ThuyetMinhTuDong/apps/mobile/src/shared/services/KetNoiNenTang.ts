@@ -1,29 +1,10 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: KẾT NỐI API / THIẾT BỊ
- *
- * FILE NÀY LÀM GÌ:
- * Tạo adapter/bộ nhớ và nguồn danh mục riêng nền tảng; nhận cấu hình API để UI không tự ghép URL dịch vụ.
- *
- * VỊ TRÍ: apps/mobile/src/shared/services/KetNoiNenTang.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/app/TrangThaiUngDung.tsx
- * - apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts
- * - apps/mobile/src/navigation/LienKetMoUngDung.ts
- *
- * PHỤ THUỘC:
- * - @react-native-async-storage/async-storage
- * - expo-location
- * - @travelguide/visitor-core
- *
- * CÁC KHỐI CHÍNH:
- * 1. getPosition
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+ * FILE: apps/mobile/src/shared/services/KetNoiNenTang.ts
+ * FILE NÀY LÀM GÌ: Tạo adapter/bộ nhớ và nguồn danh mục riêng nền tảng; nhận cấu hình API để UI không tự ghép URL dịch vụ.
+ * VAI TRÒ: Lớp kết nối nền tảng; chuyển thao tác chung sang API/thiết bị cụ thể.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Location from 'expo-location'
@@ -76,8 +57,7 @@ export const qrPolicy: QrPolicy = {
 // - Chờ tối đa 12 giây để UI không chờ GPS vô hạn.
 // - Dọn timer dù lấy vị trí thành công hay thất bại.
 
-// ==================== [DUNG-CHUNG] getPosition ====================
-// TẠI SAO: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+// [HỖ TRỢ CHUNG] getPosition — Xin vị trí để phục vụ sắp xếp gần nhất.
 export async function getPosition(): Promise<Point> {
   const permission = await Location.requestForegroundPermissionsAsync()
 

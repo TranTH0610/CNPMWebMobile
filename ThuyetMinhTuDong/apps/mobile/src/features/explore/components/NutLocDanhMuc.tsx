@@ -1,28 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị các nút danh mục và trạng thái đang chọn; gửi lựa chọn về màn cha để cập nhật bộ lọc.
- *
- * VỊ TRÍ: apps/mobile/src/features/explore/components/NutLocDanhMuc.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- *
- * PHỤ THUỘC:
- * - ../GiaoDienKhamPha
- * - ../../../shared/GiaoDienChung
- * - react-native
- * - @expo/vector-icons
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. CategoryChips
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/explore/components/NutLocDanhMuc.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị các nút danh mục và trạng thái đang chọn; gửi lựa chọn về màn cha để cập nhật bộ lọc.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { explore } from '../GiaoDienKhamPha'
 import { colors, spacing } from '../../../shared/GiaoDienChung'
@@ -34,8 +18,7 @@ import { useText } from '../../language/i18n/CauHinhNgonNgu'
 // CHỨC NĂNG: Dãy chip cuộn ngang.
 // XỬ LÝ: Chỉ hiện khi có ít nhất hai danh mục, key dùng mã ổn định.
 
-// ==================== [KHAM-PHA] CategoryChips ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] CategoryChips — Dãy chip cuộn ngang.
 export function CategoryChips({
   categories,
   selected,

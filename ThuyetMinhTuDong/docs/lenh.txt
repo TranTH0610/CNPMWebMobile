@@ -11,3 +11,15 @@ cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
 npm run start --workspace=mobile -- --lan --port 8081
 cd "D:\3.HTML\Đồ án CNPM\ThuyetMinhTuDong"
 npm run start:admin --workspace=mobile -- --lan
+
+Tôi đang bảo vệ đồ án và bị hỏi:
+“[Dán nguyên câu hỏi của giảng viên]”
+
+Tôi chỉ có 2–5 phút. Dựa trên code hiện tại của tôi, hãy:
+1. Cho câu trả lời ngắn để nói với giảng viên.
+2. Chỉ chính xác file và tên hàm cần sửa.
+3. Đưa code để sao chép; ghi rõ thêm ở đâu hoặc thay đoạn nào.
+4. Đưa cách test nhanh để chứng minh yêu cầu chạy được.
+
+Ưu tiên sửa tối thiểu, dùng lại code có sẵn.
+Chỉ hướng dẫn, chưa tự sửa file.

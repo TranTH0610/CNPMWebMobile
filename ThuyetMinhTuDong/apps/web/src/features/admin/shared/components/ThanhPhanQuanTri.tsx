@@ -1,33 +1,16 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Các khối giao diện quản trị dùng lại như khung trang, phản hồi thao tác, biểu mẫu, thẻ và nút hành động.
- *
- * VỊ TRÍ: apps/web/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/admin/dashboard/TrangTongQuan.tsx
- * - apps/web/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- * - apps/web/src/features/admin/places/TrangDanhSachDiTich.tsx
- * - apps/web/src/features/admin/places/TrangThemSuaDiTich.tsx
- * - apps/web/src/features/admin/reviews/TrangKiemDuyet.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - @travelguide/admin-core/react
- * - @travelguide/admin-core
- *
- * CÁC KHỐI CHÍNH:
- * 1. Status
- * 2. Feedback
- * 3. Field
- * 4. useUnsaved
- * 5. useConfirmation
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/admin/shared/components/ThanhPhanQuanTri.tsx
+ * FILE NÀY LÀM GÌ: Các khối giao diện quản trị dùng lại như khung trang, phản hồi thao tác, biểu mẫu, thẻ và nút hành động.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect, useState, type ReactNode } from 'react'
 import { useAdminText } from '@travelguide/admin-core/react'
@@ -36,8 +19,7 @@ import { useAdmin } from '@travelguide/admin-core/react'
 // CHỨC NĂNG: Hiển thị nhãn trạng thái nội dung.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] Status ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] Status — Hiển thị nhãn trạng thái nội dung.
 export function Status({ value }: { value: Workflow }) {
   const t = useAdminText()
   return <span className={'admin-badge state-' + value}>{t(`status_${value}`)}</span>
@@ -47,7 +29,7 @@ export function Status({ value }: { value: Workflow }) {
 // CHỨC NĂNG: Hiển thị kết quả tải/lưu hoặc lỗi của thao tác quản trị.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] Feedback ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] Feedback — Hiển thị kết quả tải/lưu hoặc lỗi của thao tác quản trị.
 export function Feedback({ state }: { state: ReturnType<typeof useAdmin> }) {
   const t = useAdminText()
   return (
@@ -79,7 +61,7 @@ export function Feedback({ state }: { state: ReturnType<typeof useAdmin> }) {
 // CHỨC NĂNG: Ghép nhãn, ô nhập và giá trị của một trường form.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [GIAO-DIEN] Field ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] Field — Ghép nhãn, ô nhập và giá trị của một trường form.
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="admin-field">
@@ -93,7 +75,7 @@ export function Field({ label, children }: { label: string; children: ReactNode 
 // CHỨC NĂNG: Bảo vệ thay đổi khi đóng/tải lại tab và bấm liên kết rời form.
 // XỬ LÝ: Gỡ đúng listener; không chặn nút lưu hoặc điều hướng sau lưu thành công.
 
-// ==================== [GIAO-DIEN] useUnsaved ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] useUnsaved — Bảo vệ thay đổi khi đóng/tải lại tab và bấm liên kết rời form.
 export function useUnsaved(dirty: boolean) {
   const t = useAdminText(),
     message = t('unsaved')
@@ -103,8 +85,6 @@ export function useUnsaved(dirty: boolean) {
   // kết rời trang.
   // XỬ LÝ: Tạo các listener dùng message hiện tại; cleanup gỡ đúng callback và capture
   // của lần đăng ký đó.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: dirty, message.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     if (!dirty) return
 
@@ -148,7 +128,7 @@ export function useUnsaved(dirty: boolean) {
 
 // CHỨC NĂNG: Hộp xác nhận trong app, không dùng hộp modal chặn của trình duyệt.
 
-// ==================== [GIAO-DIEN] useConfirmation ====================
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] useConfirmation — Hộp xác nhận trong app, không dùng hộp modal chặn của trình duyệt.
 export function useConfirmation() {
   // CHỨC NĂNG: Đang chờ tác vụ chuẩn bị/phát; hạn chế tạo nguồn hoặc gửi thao tác trùng.
 

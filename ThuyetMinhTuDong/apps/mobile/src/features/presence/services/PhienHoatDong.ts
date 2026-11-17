@@ -1,24 +1,11 @@
 /**
- * CHỨC NĂNG: [PHIEN-HOAT-DONG] [THONG-KE]
- * VAI TRÒ: KẾT NỐI API / THIẾT BỊ
- *
- * FILE NÀY LÀM GÌ:
- * Tạo HTTP client thống kê phiên cho nền tảng, gồm client du khách và đường đọc thống kê của admin.
- *
- * VỊ TRÍ: apps/mobile/src/features/presence/services/PhienHoatDong.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
- * - apps/mobile/src/features/presence/hooks/useBaoPhienHoatDong.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core/presence
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+ * FILE: apps/mobile/src/features/presence/services/PhienHoatDong.ts
+ * FILE NÀY LÀM GÌ: Tạo HTTP client thống kê phiên cho nền tảng, gồm client du khách và đường đọc thống kê của admin.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { createPresenceClient } from '@travelguide/visitor-core/presence'
 

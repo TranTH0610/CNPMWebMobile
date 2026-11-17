@@ -1,32 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Danh mục web gồm tìm kiếm, danh mục/khu vực, sắp xếp, chế độ lưới/danh sách và phân trang.
- *
- * VỊ TRÍ: apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/explore/pages/TrangChu.tsx
- * - apps/web/src/features/explore/pages/TrangDanhSachDiTich.tsx
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- * - ../../../shared/components/TrangThaiDuLieu
- * - ./TheDiTich
- * - react
- * - ../hooks/useDanhSachDiTich
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- * - ../../../shared/components/BieuTuong
- * - ../../../shared/services/KetNoiNenTang
- *
- * CÁC KHỐI CHÍNH:
- * 1. Catalogue
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx
+ * FILE NÀY LÀM GÌ: Danh mục web gồm tìm kiếm, danh mục/khu vực, sắp xếp, chế độ lưới/danh sách và phân trang.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { categoryOf, distanceTo, paginate, publishedText } from '@travelguide/visitor-core'
 import { State } from '../../../shared/components/TrangThaiDuLieu'
@@ -39,13 +19,11 @@ import { useVisitor } from '../../language/hooks/useDuKhach'
 import { Icon } from '../../../shared/components/BieuTuong'
 import { getPosition } from '../../../shared/services/KetNoiNenTang'
 
-// Đặt tên kiểu Data.
 type Data = ReturnType<typeof usePublishedCatalog>
 // CHỨC NĂNG: Sidebar lọc, kết quả, đổi bố cục và phân trang.
 // XỬ LÝ: Hook chịu nghiệp vụ; component chỉ quản lý trạng thái hiển thị.
 
-// ==================== [KHAM-PHA] Catalogue ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] Catalogue — Sidebar lọc, kết quả, đổi bố cục và phân trang.
 export function Catalogue({
   data,
   initial,
@@ -75,9 +53,7 @@ export function Catalogue({
   // Catalogue.
   // XỬ LÝ: Không đồng bộ khi prop là undefined; mảng sao chép không dùng chung tham chiếu
   // để sửa trực tiếp prop.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi:
   // categorySelection, setCategories.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     if (categorySelection !== undefined) setCategories([...categorySelection])
   }, [categorySelection, setCategories])
@@ -87,6 +63,7 @@ export function Catalogue({
   // CHỨC NĂNG: Checkbox và chip hero luôn thể hiện cùng một lựa chọn.
   // XỬ LÝ: Cập nhật cha qua callback chỉ khi người dùng thao tác, tránh vòng lặp effect.
 
+  // [UC02 / UC03] changeCategories — Checkbox và chip hero luôn thể hiện cùng một lựa chọn.
   const changeCategories = (value: Category[]) => {
     filters.setCategories(value)
 
@@ -121,9 +98,7 @@ export function Catalogue({
   // XỬ LÝ: paginate vẫn giới hạn trang ngay trước khi effect chạy.
   // CHỨC NĂNG: Đưa phân trang về trang 1 khi điều kiện tìm/lọc/sắp xếp hoặc ngôn ngữ đổi.
   // XỬ LÝ: Không giữ trang cũ khi tập kết quả đã thay đổi.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: filters.query,
   // filters.categories, filters.zones, filters.order, language.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     setPage(1)
   }, [filters.query, filters.categories, filters.zones, filters.order, language])

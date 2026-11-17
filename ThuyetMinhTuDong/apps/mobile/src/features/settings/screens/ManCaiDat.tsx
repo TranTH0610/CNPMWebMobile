@@ -1,28 +1,11 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Màn chọn ngôn ngữ trong nhận diện Heritage. MainTabs dùng; vẫn gọi LanguageBar/provider hiện có để lưu lựa chọn.
- *
- * VỊ TRÍ: apps/mobile/src/features/settings/screens/ManCaiDat.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/ThanhDieuHuongDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - react-native-safe-area-context
- * - @expo/vector-icons
- * - ../../language/components/ThanhChonNgonNgu
- * - ../../../shared/GiaoDienChung
- * - ../../language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. SettingsScreen
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/settings/screens/ManCaiDat.tsx
+ * FILE NÀY LÀM GÌ: Màn chọn ngôn ngữ trong nhận diện Heritage. MainTabs dùng; vẫn gọi LanguageBar/provider hiện có để lưu lựa chọn.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -31,10 +14,8 @@ import { LanguageBar } from '../../language/components/ThanhChonNgonNgu'
 import { ui } from '../../../shared/GiaoDienChung'
 import { colors, spacing, radii } from '../../../shared/GiaoDienChung'
 import { useText } from '../../language/i18n/CauHinhNgonNgu'
-// ==================== [DUNG-CHUNG] SettingsScreen ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider SettingsScreen.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC01] SettingsScreen — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider SettingsScreen.
 export default function SettingsScreen() {
   const t = useText()
   return (

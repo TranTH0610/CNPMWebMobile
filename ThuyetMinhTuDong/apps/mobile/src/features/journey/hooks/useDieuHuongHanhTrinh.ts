@@ -1,34 +1,19 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: HOOK XỬ LÝ VÀ VÒNG ĐỜI
- *
- * FILE NÀY LÀM GÌ:
- * Nối trạng thái hành trình/GPS với điều hướng riêng nền tảng; các thay đổi màn không tự tạo kho hành trình khác.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/hooks/useDieuHuongHanhTrinh.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - ./useHanhTrinh
- *
- * CÁC KHỐI CHÍNH:
- * 1. useJourneyNavigation
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: apps/mobile/src/features/journey/hooks/useDieuHuongHanhTrinh.ts
+ * FILE NÀY LÀM GÌ: Nối trạng thái hành trình/GPS với điều hướng riêng nền tảng; các thay đổi màn không tự tạo kho hành trình khác.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect } from 'react'
 import { AppState } from 'react-native'
 import { useJourney } from './useHanhTrinh'
 
-// ==================== [DINH-VI] [THUYET-MINH] useJourneyNavigation ====================
 // CHỨC NĂNG: Nối mã di tích gợi ý với điều hướng và lưu tiến độ khi ứng dụng đổi trạng thái.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC06] useJourneyNavigation — Theo dõi gợi ý để điều hướng tới chi tiết di tích phù hợp.
 export function useJourneyNavigation({ open }: { open: (id: string) => void }) {
   const { engine, state } = useJourney()
   // CHỨC NĂNG: Mở trang chi tiết khi hành trình đề xuất một di tích.
@@ -44,7 +29,6 @@ export function useJourneyNavigation({ open }: { open: (id: string) => void }) {
   // Effect này không tự phát audio.
   // CHỨC NĂNG: Đăng ký sự kiện đổi AppState; mỗi sự kiện gọi engine.checkpoint().
   // XỬ LÝ: Callback yêu cầu lưu tiến độ. Hàm return gỡ các listener đã đăng ký.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: engine.
 
   useEffect(() => {
     // Khi ứng dụng đổi trạng thái, yêu cầu engine lưu tiến độ đang nghe.

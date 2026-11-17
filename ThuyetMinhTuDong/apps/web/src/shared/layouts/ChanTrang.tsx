@@ -1,29 +1,14 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Chân trang du khách gọn, chỉ giữ tên ứng dụng. AppLayout dùng; phụ thuộc useText để tên hiển thị đúng ngôn ngữ. CHỨC NĂNG: Không đưa thông báo tài khoản, dữ liệu mẫu hoặc thông tin kỹ thuật vào chân trang.
- *
- * VỊ TRÍ: apps/web/src/shared/layouts/ChanTrang.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/shared/layouts/BoCucDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - ../../features/language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. Footer
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/shared/layouts/ChanTrang.tsx
+ * FILE NÀY LÀM GÌ: Chân trang du khách gọn, chỉ giữ tên ứng dụng. AppLayout dùng; phụ thuộc useText để tên hiển thị đúng ngôn ngữ. CHỨC NĂNG: Không đưa thông báo tài khoản, dữ liệu mẫu hoặc thông tin kỹ thuật vào chân trang.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useText } from '../../features/language/i18n/CauHinhNgonNgu'
-// ==================== [DUNG-CHUNG] Footer ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider Footer.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [HỖ TRỢ CHUNG] Footer — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider Footer.
 export function Footer() {
   const t = useText()
   return (

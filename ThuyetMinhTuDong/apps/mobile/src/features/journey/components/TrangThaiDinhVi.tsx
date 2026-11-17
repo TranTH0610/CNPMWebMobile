@@ -1,30 +1,12 @@
 /**
- * CHỨC NĂNG: [DINH-VI] [THUYET-MINH]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Trạng thái GPS native có icon và chữ, không chỉ dựa vào màu. JourneyScreen dùng; không thay watch, bán kính, gợi ý hoặc auto-play của engine.
- *
- * VỊ TRÍ: apps/mobile/src/features/journey/components/TrangThaiDinhVi.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - @expo/vector-icons
- * - @travelguide/visitor-core
- * - ../../../../../../packages/ui-tokens/HienThiDinhVi
- * - ../hooks/useHanhTrinh
- * - ../../language/hooks/useDuKhach
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../../shared/GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. GpsStatus
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/journey/components/TrangThaiDinhVi.tsx
+ * FILE NÀY LÀM GÌ: Trạng thái GPS native có icon và chữ, không chỉ dựa vào màu. JourneyScreen dùng; không thay watch, bán kính, gợi ý hoặc auto-play của engine.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC06.1: Xin quyền, lấy và theo dõi vị trí.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { StyleSheet, Text, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -34,10 +16,8 @@ import { useJourney } from '../hooks/useHanhTrinh'
 import { useVisitor } from '../../language/hooks/useDuKhach'
 import { useText } from '../../language/i18n/CauHinhNgonNgu'
 import { colors, radii, spacing } from '../../../shared/GiaoDienChung'
-// ==================== [DINH-VI] [THUYET-MINH] GpsStatus ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider GpsStatus.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC06 / UC06.1] GpsStatus — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider GpsStatus.
 export function GpsStatus() {
   const { state } = useJourney(),
     { language } = useVisitor(),

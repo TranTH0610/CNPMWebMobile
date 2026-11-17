@@ -1,26 +1,13 @@
 /**
- * CHỨC NĂNG: [DATABASE] [QUAN-LY-DI-TICH]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Ghép các hàng SQL thành dữ liệu di tích mà API đang sử dụng.
- *
- * VỊ TRÍ: services/database/catalog/DocDiTichTuSql.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/database/AnhXaMuoiMotBang.cjs
- *
- * PHỤ THUỘC:
- * - ../ChuyenDoiMaDuLieu.cjs
- * - ./TruyVanVaCapMa.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. stamp
- * 2. optional
- * 3. readDocument
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/catalog/DocDiTichTuSql.cjs
+ * FILE NÀY LÀM GÌ: Ghép các hàng SQL thành dữ liệu di tích mà API đang sử dụng.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { apiPlaceId, CATEGORIES, ZONES } = require('../ChuyenDoiMaDuLieu.cjs')
 const { rows } = require('./TruyVanVaCapMa.cjs')
@@ -28,10 +15,6 @@ const stamp = (value) => (value == null ? undefined : new Date(value).toISOStrin
 const optional = (o, k, v) => {
   if (v !== null && v !== undefined) o[k] = v
 }
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] readDocument ====================
-// CHỨC NĂNG: Thực hiện bước readDocument trong nhiệm vụ: Ghép các hàng SQL thành dữ liệu di tích mà API đang sử dụng.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function readDocument(executor) {
   const r = await rows(
     executor,

@@ -1,29 +1,10 @@
 /**
- * CHỨC NĂNG: [GIAO-DIEN]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Khung website du khách ghép thanh điều hướng, nội dung route và các thành phần dùng chung của trang.
- *
- * VỊ TRÍ: apps/web/src/shared/layouts/BoCucDuKhach.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/app/DinhTuyenDuKhach.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-router-dom
- * - ../../features/language/i18n/CauHinhNgonNgu
- * - ../../features/language/hooks/useDuKhach
- * - ./ThanhDieuHuong
- * - ./ChanTrang
- * - ../../features/journey/components/TrinhNgheThuyetMinh
- *
- * CÁC KHỐI CHÍNH:
- * 1. AppLayout
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/shared/layouts/BoCucDuKhach.tsx
+ * FILE NÀY LÀM GÌ: Khung website du khách ghép thanh điều hướng, nội dung route và các thành phần dùng chung của trang.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
@@ -35,8 +16,7 @@ import { JourneyPlayer } from '../../features/journey/components/TrinhNgheThuyet
 
 // CHỨC NĂNG: Giữ layout/player khi route con đổi; chỉ nội dung Outlet thay đổi.
 
-// ==================== [GIAO-DIEN] AppLayout ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [HỖ TRỢ CHUNG] AppLayout — Giữ layout/player khi route con đổi; chỉ nội dung Outlet thay đổi.
 export function AppLayout() {
   const t = useText()
   const { pathname, search } = useLocation()
@@ -50,8 +30,6 @@ export function AppLayout() {
 
   // CHỨC NĂNG: Đồng bộ tiêu đề tab và thuộc tính ngôn ngữ HTML theo ngôn ngữ giao diện.
   // XỬ LÝ: Mã nội bộ cn đổi sang zh-CN khi ghi thuộc tính lang của tài liệu.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: language, t.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     document.documentElement.lang = language === 'cn' ? 'zh-CN' : language
 

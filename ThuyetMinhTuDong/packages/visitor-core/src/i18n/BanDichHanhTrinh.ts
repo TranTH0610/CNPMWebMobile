@@ -1,34 +1,19 @@
 /**
- * CHỨC NĂNG: [NGON-NGU]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Tài nguyên chuỗi bài nghe và hành trình theo ngôn ngữ; i18n tra khóa để các nền tảng hiển thị
- *
- * VỊ TRÍ: packages/visitor-core/src/i18n/BanDichHanhTrinh.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/visitor-core/src/i18n/BanDichGiaoDien.ts
- *
- * PHỤ THUỘC:
- * - ../domain/KieuDuLieuDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/visitor-core/src/i18n/BanDichHanhTrinh.ts
+ * FILE NÀY LÀM GÌ: Tài nguyên chuỗi bài nghe và hành trình theo ngôn ngữ; i18n tra khóa để các nền tảng hiển thị
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// Nhập kiểu dữ liệu từ '../domain/KieuDuLieuDuKhach'.
 import type { Language } from '../domain/KieuDuLieuDuKhach'
 
 const keys = ['jTitle','jPlay','jPause','jResume','jReplay','jBack','jForward','jSpeed','jSeek','jGpsOn','jGpsOff',
   'jReference','jNoNearby','gpsWeak','gpsFailed','audioMissing','audioFailed','saveFailed','savedInvalid',
   'jContinue','jDiscard','jVersionChanged','jMap','jRoutes','jPreview','jRouteInvalid','jUseRoute','jSkipRoute',
   'jOpenPlace','jSource','jWalkingPending','jPreparing','jEnded','jPaused','jPlaying','jExternalMap','jMyLocation','jRetry','jMapLoading','jMapFailed','jMapHelp'] as const
-// Đặt tên kiểu Key.
 type Key = typeof keys[number]
-// Khai báo rows: tạo object gồm vi, en, cn, pt, ja.
 const rows: Record<Language, readonly string[]> = {
   
   vi: ['Hành trình & thuyết minh','Nghe thuyết minh','Tạm dừng','Tiếp tục','Nghe lại','Lùi 10 giây','Tiến 10 giây','Tốc độ','Thời điểm nghe','Bật gợi ý GPS','Tắt gợi ý GPS',
@@ -51,9 +36,7 @@ const rows: Record<Language, readonly string[]> = {
     'OpenStreetMapの参考座標です。GPS到着地点は未調査で、100m以内の候補は入場を保証しません。','100m以内に適切なスポットがないか、現在地を取得できません。','位置情報が古いか不正確です。更新を待っています。','GPSを取得できません。リストと地図は利用できます。','この言語の公開音声はありません。','音声を再生できません。再試行するか文章をお読みください。','端末に進捗を保存できません。','保存記録が無効か、コンテンツの公開が終了しました。',
     '保存した解説を再開','スキップ','バージョンが更新されました。新しい音声を最初から再生します。','地図','見学順序','参考順序です。歩行経路は未承認です。','順序内のスポットを利用できません。','この順序を見る','自由に見学','スポットを見る','座標の出典','通路は未確認です。城壁を横切る直線経路は表示しません。','音声を準備中…','終了','一時停止中','再生中','外部地図で位置を開く','現在地','再試行','地図を読み込んでいます…','地図を読み込めません。接続を確認して再試行してください。','地図が空白または正しく表示されない場合は、再試行するか外部地図を開いてください。'],
 }
-// Khai báo journeyMessages: Gọi Object.fromEntries(Object.entries(rows).map(([language, values]) => { if (values.length !=.
 export const journeyMessages = Object.fromEntries(Object.entries(rows).map(([language, values]) => {
-  // Rẽ nhánh nếu values.length !== keys.length. | Ném new Error('Missing journey text: ' + language).
   if (values.length !== keys.length) throw new Error('Missing journey text: ' + language)
   
   return [language, Object.fromEntries(keys.map((key, index) => [key, values[index]]))]

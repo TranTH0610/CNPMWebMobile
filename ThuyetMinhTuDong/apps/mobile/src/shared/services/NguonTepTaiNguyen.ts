@@ -1,26 +1,15 @@
 /**
- * CHỨC NĂNG: [TAI-NGUYEN]
- * VAI TRÒ: KẾT NỐI API / THIẾT BỊ
- *
- * FILE NÀY LÀM GÌ:
- * Tạo URL ảnh/âm thanh SQL theo host API do lệnh khởi động Expo cấp. XuLyAnhDiTich.ts/KetNoiAudioVaDinhVi.ts dùng. Không dùng localhost của điện thoại hoặc asset thay SQL.
- *
- * VỊ TRÍ: apps/mobile/src/shared/services/NguonTepTaiNguyen.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/journey/adapters/KetNoiAudioVaDinhVi.ts
- * - apps/mobile/src/shared/services/XuLyAnhDiTich.ts
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. mediaSource
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+ * FILE: apps/mobile/src/shared/services/NguonTepTaiNguyen.ts
+ * FILE NÀY LÀM GÌ: Tạo URL ảnh/âm thanh SQL theo host API do lệnh khởi động Expo cấp. XuLyAnhDiTich.ts/KetNoiAudioVaDinhVi.ts dùng. Không dùng localhost của điện thoại hoặc asset thay SQL.
+ * VAI TRÒ: Lớp kết nối nền tảng; chuyển thao tác chung sang API/thiết bị cụ thể.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// ==================== [TAI-NGUYEN] mediaSource ====================
 export function mediaSource(value: string): string {
   const admin = process.env.EXPO_PUBLIC_APP_TARGET === 'admin'
   const base = admin

@@ -1,25 +1,19 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Trì hoãn giá trị sau lần thay đổi cuối, mặc định 300 ms; hủy timer cũ khi gõ tiếp hoặc rời
- *
- * VỊ TRÍ: packages/place-core/src/hooks/useChoNgungNhap.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - Điểm vào/cấu hình/bộ test hoặc nơi dùng qua package; xem docs/BanDoChucNang.md.
- *
- * PHỤ THUỘC:
- * - react
- *
- * CÁC KHỐI CHÍNH:
- * 1. useDebounce
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/place-core/src/hooks/useChoNgungNhap.ts
+ * FILE NÀY LÀM GÌ: Trì hoãn giá trị sau lần thay đổi cuối, mặc định 300 ms; hủy timer cũ khi gõ tiếp hoặc rời
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// Nhập các thành phần từ 'react'.
 import { useEffect, useState } from 'react'
 
 // CHỨC NĂNG: trì hoãn cập nhật một giá trị.
@@ -28,13 +22,11 @@ import { useEffect, useState } from 'react'
 // - Giá trị ban đầu được trả ngay.
 // - Các lần thay đổi tiếp theo phải đợi delay.
 
-// ==================== [DUNG-CHUNG] useDebounce ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC01 / UC02 / UC03 / UC04 / UC05 / UC06 / UC07 / UC08] useDebounce — trì hoãn cập nhật một giá trị.
 export function useDebounce<T>(
   value: T,
   delay = 300,
 ): T {
-  // Khai báo [debounced, setDebounced]: useState(value) giữ trạng thái qua các lần render.
   const [debounced, setDebounced] = useState<T>(value)
 
   // CHỨC NĂNG: Chờ lần gõ cuối trước khi áp dụng giá trị tìm kiếm.
@@ -42,12 +34,9 @@ export function useDebounce<T>(
   // CHỨC NĂNG: Đặt timer để cập nhật giá trị đã debounce sau delay mili giây.
   // XỬ LÝ: Hàm return clearTimeout của lịch vừa tạo trước khi effect chạy lại hoặc
   // component rời.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: value, delay.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     // CHỨC NĂNG: đặt lịch cập nhật giá trị sau khoảng chờ.
     // XỬ LÝ: Math.max bảo đảm delay không âm.
-    // Khai báo timer: setTimeout lên lịch tác vụ một lần.
     const timer = setTimeout(() => {
       
       setDebounced(value)

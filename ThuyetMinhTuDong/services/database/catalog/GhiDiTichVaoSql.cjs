@@ -1,36 +1,18 @@
 /**
- * CHỨC NĂNG: [DATABASE] [QUAN-LY-DI-TICH]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Ghi dữ liệu di tích và các thay đổi liên quan trong transaction hiện có.
- *
- * VỊ TRÍ: services/database/catalog/GhiDiTichVaoSql.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/database/AnhXaMuoiMotBang.cjs
- *
- * PHỤ THUỘC:
- * - ../ChuyenDoiMaDuLieu.cjs
- * - ./TruyVanVaCapMa.cjs
- * - ./ChuanBiThayDoiDuLieu.cjs
- * - ../LuuVaDocTepSql.cjs
- *
- * CÁC KHỐI CHÍNH:
- * 1. stamp
- * 2. writeDocument
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/catalog/GhiDiTichVaoSql.cjs
+ * FILE NÀY LÀM GÌ: Ghi dữ liệu di tích và các thay đổi liên quan trong transaction hiện có.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const { sqlPlaceId, categoryCode, zoneCode } = require('../ChuyenDoiMaDuLieu.cjs')
 const { rows, nextCode } = require('./TruyVanVaCapMa.cjs')
 const { applyChanges, putRow } = require('./ChuanBiThayDoiDuLieu.cjs')
 const stamp = (value) => (value == null ? undefined : new Date(value).toISOString())
-// ==================== [DATABASE] [QUAN-LY-DI-TICH] writeDocument ====================
-// CHỨC NĂNG: Thực hiện bước writeDocument trong nhiệm vụ: Ghi dữ liệu di tích và các thay đổi liên quan trong transaction hiện có.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
 async function writeDocument(executor, sql, scope, document) {
   if (
     document.schema !== 1 ||

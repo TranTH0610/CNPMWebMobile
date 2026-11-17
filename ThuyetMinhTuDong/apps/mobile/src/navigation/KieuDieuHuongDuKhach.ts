@@ -1,34 +1,23 @@
 /**
- * CHỨC NĂNG: [DIEU-HUONG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Kiểu route và tham số của stack du khách mobile, dùng khi mở màn chi tiết/tìm kiếm/hành trình.
- *
- * VỊ TRÍ: apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/screens/ManKetQuaTimKiem.tsx
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/features/journey/screens/ManHanhTrinh.tsx
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- * - apps/mobile/src/navigation/DieuHuongGoc.tsx
- * - apps/mobile/src/navigation/LienKetMoUngDung.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/navigation/KieuDieuHuongDuKhach.ts
+ * FILE NÀY LÀM GÌ: Kiểu route và tham số của stack du khách mobile, dùng khi mở màn chi tiết/tìm kiếm/hành trình.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC08: Xem bản đồ, tuyến tham quan và tìm đường.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { Category } from '@travelguide/visitor-core'
 
 // CHỨC NĂNG: Kiểm tra tham số điều hướng.
 // XỬ LÝ: Detail bắt buộc placeId; Search nhận điều kiện ban đầu.
-// Đặt tên kiểu VisitorStack.
 export type VisitorStack = {
   Places: undefined
 

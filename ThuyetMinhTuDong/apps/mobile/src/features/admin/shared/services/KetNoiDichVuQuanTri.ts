@@ -1,27 +1,16 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: KẾT NỐI API / THIẾT BỊ
- *
- * FILE NÀY LÀM GÌ:
- * Tạo các client quản trị, danh mục công bố và lượt QR theo cấu hình nền tảng; dùng lại hợp đồng admin-core.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/app/TrangThaiUngDung.tsx
- * - apps/mobile/src/features/admin/dashboard/ManTongQuan.tsx
- * - apps/mobile/src/features/qr/hooks/useGhiNhanVaoCong.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/admin-core
- * - @travelguide/visitor-core
- * - ../../../../shared/services/KetNoiNenTang
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Đóng gói chi tiết API/thiết bị để nơi gọi sử dụng một hợp đồng ổn định.
+ * FILE: apps/mobile/src/features/admin/shared/services/KetNoiDichVuQuanTri.ts
+ * FILE NÀY LÀM GÌ: Tạo các client quản trị, danh mục công bố và lượt QR theo cấu hình nền tảng; dùng lại hợp đồng admin-core.
+ * VAI TRÒ: Lớp kết nối nền tảng; chuyển thao tác chung sang API/thiết bị cụ thể.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { createHttpAdminService, createGateClient } from '@travelguide/admin-core'
 import { createCatalog } from '@travelguide/visitor-core'

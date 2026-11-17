@@ -1,23 +1,11 @@
 /**
- * CHỨC NĂNG: [TRUY-CAP-QR]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Chuẩn hóa/cấu hình địa chỉ website dùng cho liên kết chung theo quy tắc của dự án.
- *
- * VỊ TRÍ: packages/visitor-core/src/links/DiaChiWebsite.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/visitor-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. siteOrigin
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/visitor-core/src/links/DiaChiWebsite.ts
+ * FILE NÀY LÀM GÌ: Chuẩn hóa/cấu hình địa chỉ website dùng cho liên kết chung theo quy tắc của dự án.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC05: Bắt đầu tham quan bằng QR chung tại cổng.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 // CHỨC NĂNG: Chuẩn hóa và kiểm tra origin của website.
 // XỬ LÝ:
@@ -26,15 +14,13 @@
 // - Từ chối localhost vì trên điện thoại, localhost là chính điện thoại.
 // - Từ chối domain ví dụ và URL chứa tài khoản, query hoặc đường dẫn con.
 
-// ==================== [TRUY-CAP-QR] siteOrigin ====================
+// [UC05] siteOrigin — Chuẩn hóa và kiểm tra origin của website.
 export function siteOrigin(
   value: string,
   allowHttp = false,
 ): string {
-  // Khai báo url: URL phân tích địa chỉ theo thành phần protocol/host/path thay vì tự cắt chuỗi.
   const url = new URL(value)
 
-  // Khai báo host: Gọi url.hostname.toLowerCase().
   const host = url.hostname.toLowerCase()
 
   

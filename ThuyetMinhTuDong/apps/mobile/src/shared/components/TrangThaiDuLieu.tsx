@@ -1,28 +1,10 @@
 /**
- * CHỨC NĂNG: [DUNG-CHUNG]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Thành phần hiển thị đang tải, thông báo lỗi hoặc rỗng và thao tác thử lại tùy props.
- *
- * VỊ TRÍ: apps/mobile/src/shared/components/TrangThaiDuLieu.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- *
- * PHỤ THUỘC:
- * - ../GiaoDienChung
- * - ./NutThaoTac
- * - react-native
- * - @travelguide/visitor-core
- * - ../../features/language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. State
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/shared/components/TrangThaiDuLieu.tsx
+ * FILE NÀY LÀM GÌ: Thành phần hiển thị đang tải, thông báo lỗi hoặc rỗng và thao tác thử lại tùy props.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC: Hỗ trợ chung; không thực hiện một UC độc lập.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { ui, colors } from '../GiaoDienChung'
 import { Action } from './NutThaoTac'
@@ -33,8 +15,7 @@ import { useText } from '../../features/language/i18n/CauHinhNgonNgu'
 // CHỨC NĂNG: Hiển thị loading, thông báo và thao tác khôi phục.
 // XỬ LÝ: Chỉ nhận key dịch; không hiện lỗi kỹ thuật từ API.
 
-// ==================== [DUNG-CHUNG] State ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [HỖ TRỢ CHUNG] State — Hiển thị loading, thông báo và thao tác khôi phục.
 export function State({
   message,
   busy = false,

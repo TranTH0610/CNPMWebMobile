@@ -1,29 +1,22 @@
 /**
- * CHỨC NĂNG: [DATABASE]
- * VAI TRÒ: TRUY CẬP SQL SERVER
- *
- * FILE NÀY LÀM GÌ:
- * Đọc dữ liệu cũ phục vụ migration, không phải nguồn dữ liệu thay thế cho ứng dụng.
- *
- * VỊ TRÍ: services/database/DocDuLieuPhienBanCu.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/database/ChuyenSangMuoiMotBang.cjs
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. query
- * 2. optional
- * 3. key
- * 4. readDocument
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+ * FILE: services/database/DocDuLieuPhienBanCu.cjs
+ * FILE NÀY LÀM GÌ: Đọc dữ liệu cũ phục vụ migration, không phải nguồn dữ liệu thay thế cho ứng dụng.
+ * VAI TRÒ: Hạ tầng lưu trữ SQL Server; hỗ trợ UC qua API.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * - UC07: Nghe, điều khiển và tiếp tục phiên nghe.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 /** Chỉ đọc schema tiếng Anh để chuyển đổi; không còn được runtime sử dụng. */
-// ==================== [DATABASE] query ====================
 async function query(executor, sql, scope, text, rows) {
   const request = executor.request().input('scope', sql.NVarChar(100), scope)
   if (rows !== undefined) request.input('rows', sql.NVarChar(sql.MAX), JSON.stringify(rows))
@@ -35,8 +28,7 @@ const optional = (target, key, value) => {
 const key = (...parts) => JSON.stringify(parts)
 
 // CHỨC NĂNG: Đọc từng bảng và ghép đúng bản nháp/bản công bố của mỗi di tích.
-// ==================== [DATABASE] readDocument ====================
-// TẠI SAO: Tách truy vấn và lưu trữ khỏi giao diện, dùng chung dữ liệu cho web/mobile.
+// [UC02 / UC03 / UC04 / UC06 / UC07 / UC10 / UC11 / UC12 / UC13 / UC14] readDocument — Đọc từng bảng và ghép đúng bản nháp/bản công bố của mỗi di tích.
 async function readDocument(executor, sql, scope) {
   const result = await query(
     executor,

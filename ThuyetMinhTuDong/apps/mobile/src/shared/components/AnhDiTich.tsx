@@ -1,27 +1,14 @@
 /**
- * CHỨC NĂNG: [TAI-NGUYEN]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị ảnh địa điểm qua bộ phân giải của nền tảng và xử lý trạng thái ảnh không tải được.
- *
- * VỊ TRÍ: apps/mobile/src/shared/components/AnhDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- *
- * PHỤ THUỘC:
- * - ../GiaoDienChung
- * - react
- * - react-native
- * - ../services/XuLyAnhDiTich
- * - ../../features/language/i18n/CauHinhNgonNgu
- *
- * CÁC KHỐI CHÍNH:
- * 1. PlaceImage
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/shared/components/AnhDiTich.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị ảnh địa điểm qua bộ phân giải của nền tảng và xử lý trạng thái ảnh không tải được.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC04: Xem chi tiết và đọc thuyết minh.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { ui, radii } from '../GiaoDienChung'
 import { useEffect, useState } from 'react'
@@ -32,8 +19,7 @@ import { useText } from '../../features/language/i18n/CauHinhNgonNgu'
 // CHỨC NĂNG: Hiển thị ảnh hoặc placeholder khi ảnh thiếu/hỏng.
 // XỬ LÝ: URL thay đổi thì reset lỗi để thử tải URL mới.
 
-// ==================== [TAI-NGUYEN] PlaceImage ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC04 / UC10 / UC11] PlaceImage — Hiển thị ảnh hoặc placeholder khi ảnh thiếu/hỏng.
 export function PlaceImage({
   uri,
   title,
@@ -48,8 +34,6 @@ export function PlaceImage({
 
   // CHỨC NĂNG: Đặt lại cờ ảnh lỗi về false khi uri thay đổi.
   // XỬ LÝ: Nguồn ảnh mới được thử tải lại, dù ảnh trước đó đã thất bại.
-  // KHI NÀO CHẠY: Sau lần render đầu; chạy lại khi React thấy một phụ thuộc đổi: uri.
-  // Đăng ký useEffect để thực hiện tác vụ sau render.
   useEffect(() => {
     setFailed(false)
   }, [uri])

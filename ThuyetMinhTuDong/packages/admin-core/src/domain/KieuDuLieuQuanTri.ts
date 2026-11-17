@@ -1,41 +1,25 @@
 /**
- * CHỨC NĂNG: [KIEU-DU-LIEU]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Kiểu bản ghi quản trị, phiên bản, quy trình, danh tính mô phỏng và mã lỗi dùng chung.
- *
- * VỊ TRÍ: packages/admin-core/src/domain/KieuDuLieuQuanTri.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/admin-core/src/domain/HopDongDichVu.ts
- * - packages/admin-core/src/domain/KiemTraDuLieu.ts
- * - packages/admin-core/src/react/TrangThaiReact.tsx
- * - packages/admin-core/src/react/useBienTapDiTich.ts
- * - packages/admin-core/src/services/GoiApiQuanTri.ts
- * - packages/admin-core/src/services/XuLyNghiepVuQuanTri.ts
- * - packages/admin-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - @travelguide/visitor-core
- *
- * CÁC KHỐI CHÍNH:
- * 1. AdminError
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/admin-core/src/domain/KieuDuLieuQuanTri.ts
+ * FILE NÀY LÀM GÌ: Kiểu bản ghi quản trị, phiên bản, quy trình, danh tính mô phỏng và mã lỗi dùng chung.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import type { PlaceRecord, Language, Category, PublishedText } from '@travelguide/visitor-core'
-// Đặt tên kiểu Workflow.
 export type Workflow = 'draft' | 'submitted' | 'changes' | 'approved' | 'published' | 'archived'
-// Đặt tên kiểu AdminIdentity. | Khai báo id, kiểu string. Mã ổn định giúp tìm đúng bản ghi và làm key danh sách khi thứ tự thay đổi. | Khai báo displayName, kiểu string. | Khai báo mode, kiểu 'demo' | 'api'. | Khai báo permissions, kiểu readonly ['manage-content', 'review', 'publish'].
 export type AdminIdentity = {
   id: string
   displayName: string
   mode: 'demo' | 'api'
   permissions: readonly ['manage-content', 'review', 'publish']
 }
-// Đặt tên kiểu ManagedPlace. | Khai báo id, kiểu string. Mã ổn định giúp tìm đúng bản ghi và làm key danh sách khi thứ tự thay đổi. | Khai báo record, kiểu PlaceRecord. | Khai báo period, kiểu string. | Khai báo revision, kiểu number. Phiên bản phục vụ kiểm tra xung đột khi nhiều giao diện sửa cùng bản ghi. | Khai báo workflow, kiểu Workflow. Giữ bước nháp/gửi duyệt/công bố của bản quản trị tách khỏi nội dung đang công khai. | Khai báo reviewNote, kiểu string. | Khai báo approvedRevision không bắt buộc, kiểu number. Ghi phiên bản đã duyệt để nội dung sửa mới không được công bố theo lần duyệt cũ. | Khai báo published không bắt buộc, kiểu PlaceRecord. Giữ ảnh chụp nội dung công bố để sửa bản nháp không làm đổi ngay trang du khách. | Khai báo updatedAt, kiểu string.
 export type ManagedPlace = {
   id: string
   record: PlaceRecord
@@ -47,7 +31,6 @@ export type ManagedPlace = {
   published?: PlaceRecord
   updatedAt: string
 }
-// Đặt tên kiểu PlaceInput. | Khai báo id không bắt buộc, kiểu string. Mã ổn định giúp tìm đúng bản ghi và làm key danh sách khi thứ tự thay đổi. | Khai báo expectedRevision không bắt buộc, kiểu number. Gửi phiên bản đã đọc để service phát hiện bản ghi bị nơi khác sửa trước đó. | Khai báo title, kiểu string. | Khai báo category, kiểu Category. | Khai báo period, kiểu string. | Khai báo lat, kiểu string. | Khai báo lng, kiểu string. | Khai báo verified, kiểu boolean. Tách tọa độ tham khảo với tọa độ đã xác nhận; không biến dữ liệu mẫu thành kết quả khảo sát. | Khai báo images, kiểu string[]. Giữ danh sách nguồn ảnh để UI có thể xử lý từng nguồn và ảnh lỗi.
 export type PlaceInput = {
   id?: string
   expectedRevision?: number
@@ -69,7 +52,6 @@ export type DraftText = {
   body: string
   audioUrl?: string
 }
-// Đặt tên kiểu ContentInput. | Khai báo id, kiểu string. Mã ổn định giúp tìm đúng bản ghi và làm key danh sách khi thứ tự thay đổi. | Khai báo language, kiểu Language. Chọn đúng bản nội dung/âm thanh, tránh đọc văn bản một thứ tiếng bằng giọng thứ tiếng khác. | Khai báo expectedRevision, kiểu number. Gửi phiên bản đã đọc để service phát hiện bản ghi bị nơi khác sửa trước đó. | Khai báo title, kiểu string. | Khai báo summary, kiểu string. | Khai báo address, kiểu string. | Khai báo body, kiểu string. | Khai báo audioUrl không bắt buộc, kiểu string.
 export type ContentInput = {
   id: string
   language: Language
@@ -80,7 +62,6 @@ export type ContentInput = {
   body: string
   audioUrl?: string
 }
-// Đặt tên kiểu DemoSession. | Khai báo id, kiểu string. Mã ổn định giúp tìm đúng bản ghi và làm key danh sách khi thứ tự thay đổi. | Khai báo platform, kiểu 'web' | 'mobile-app'. Phân nhóm web và mobile-app trong cùng kho thống kê. | Khai báo lastSeen, kiểu number. Dùng thời gian của server để tính phiên hết hạn, không tin đồng hồ client. | Khai báo startedAt, kiểu number. | Khai báo playing, kiểu boolean.
 export type DemoSession = {
   id: string
   platform: 'web' | 'mobile-app'
@@ -88,14 +69,12 @@ export type DemoSession = {
   startedAt: number
   playing: boolean
 }
-// Đặt tên kiểu AdminDocument. | Khai báo schema, kiểu 1. | Khai báo places, kiểu ManagedPlace[]. | Khai báo sessions, kiểu DemoSession[]. | Khai báo audit, kiểu { at: string; action: string; placeId: string; revision: number }[]. | Khai báo at, kiểu string. | Khai báo action, kiểu string. | Khai báo placeId, kiểu string. | Khai báo revision, kiểu number. Phiên bản phục vụ kiểm tra xung đột khi nhiều giao diện sửa cùng bản ghi.
 export type AdminDocument = {
   schema: 1
   places: ManagedPlace[]
   sessions: DemoSession[]
   audit: { at: string; action: string; placeId: string; revision: number }[]
 }
-// Đặt tên kiểu Dashboard. | Khai báo active, kiểu number. Biểu diễn số phiên hoạt động; không suy ra số người hoặc số vé từ số này. | Khai báo web, kiểu number. | Khai báo mobile, kiểu number. | Khai báo listening, kiểu number. | Khai báo gateToday, kiểu number. | Khai báo places, kiểu number. | Khai báo pending, kiểu number. | Khai báo published, kiểu number. Giữ ảnh chụp nội dung công bố để sửa bản nháp không làm đổi ngay trang du khách.
 export type Dashboard = {
   active: number
   web: number
@@ -106,7 +85,6 @@ export type Dashboard = {
   pending: number
   published: number
 }
-// Đặt tên kiểu AdminErrorCode.
 export type AdminErrorCode =
   | 'loadError'
   | 'saveError'
@@ -118,16 +96,11 @@ export type AdminErrorCode =
   | 'staleJob'
   | 'translationError'
 
-// ==================== [KIEU-DU-LIEU] AdminError ====================
-// CHỨC NĂNG: Thực hiện bước AdminError trong nhiệm vụ: Kiểu bản ghi quản trị, phiên bản, quy trình, danh tính mô phỏng và mã lỗi dùng chung.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 export class AdminError extends Error {
   constructor(public readonly code: AdminErrorCode) {
     super(code)
     this.name = 'AdminError'
   }
 }
-// Đặt tên kiểu PreparedText.
 export type PreparedText = PublishedText
 /* CÁCH KIỂM TRA: TypeScript phải chặn workflow/ngôn ngữ lạ; published và record là hai bản riêng. */

@@ -1,39 +1,16 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: LOGIC / DỮ LIỆU DÙNG CHUNG
- *
- * FILE NÀY LÀM GÌ:
- * Hàm thuần tìm kiếm, danh mục, sắp xếp và khoảng cách; dùng chung để web/mobile xử lý nhất quán.
- *
- * VỊ TRÍ: packages/visitor-core/src/catalog/TimKiemVaBoLoc.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - packages/visitor-core/src/journey/DuLieuHanhTrinh.ts
- * - packages/visitor-core/src/journey/HanhTrinh.ts
- * - packages/visitor-core/src/react/TrangThaiReact.tsx
- * - packages/visitor-core/src/XuatCongKhai.ts
- *
- * PHỤ THUỘC:
- * - ./DanhMucDiTich
- * - ../domain/KieuDuLieuDuKhach
- * - ../i18n/BanDichThanhPhan
- *
- * CÁC KHỐI CHÍNH:
- * 1. normalize
- * 2. validPoint
- * 3. distanceMeters
- * 4. distanceTo
- * 5. selectPlaces
- * 6. paginate
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: packages/visitor-core/src/catalog/TimKiemVaBoLoc.ts
+ * FILE NÀY LÀM GÌ: Chuẩn hóa từ khóa, tính khoảng cách, tìm/lọc/sắp xếp và chia trang kết quả.
+ * VAI TRÒ: Module dùng chung; được giao diện hoặc máy chủ gọi tùy chức năng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * - UC06: Nhận diện di tích gần nhất bằng GPS.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-// Nhập các thành phần từ './DanhMucDiTich'.
 import { publishedText } from './DanhMucDiTich'
-// Nhập các thành phần từ '../domain/KieuDuLieuDuKhach'.
 import { categoryOf, type Category } from '../domain/KieuDuLieuDuKhach'
-// Nhập các thành phần từ '../i18n/BanDichThanhPhan'.
 import { uiMessages } from '../i18n/BanDichThanhPhan'
 
 
@@ -47,9 +24,7 @@ import type {
 
 // CHỨC NĂNG: Chuẩn hóa từ khóa và nội dung.
 // XỬ LÝ: NFD bỏ dấu kết hợp; xử lý riêng đ/Đ và khoảng trắng.
-// Khai báo normalize(value). Chuẩn hóa chữ để so sánh/tìm kiếm.
-// ==================== [KHAM-PHA] normalize ====================
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+// [UC02 / UC03 / UC06] normalize — Chuẩn hóa chữ hoa/thường và dấu để tìm từ khóa nhất quán.
 export function normalize(value: string): string {
   
   return value
@@ -65,8 +40,7 @@ export function normalize(value: string): string {
 
 // CHỨC NĂNG: Kiểm tra tọa độ trước khi tính khoảng cách.
 // XỬ LÝ: Loại số không hữu hạn hoặc ngoài miền hợp lệ để GPS lỗi không làm hỏng kết quả.
-// Khai báo validPoint(point). Nhận đầu vào qua tham số.
-// ==================== [KHAM-PHA] validPoint ====================
+// [UC02 / UC03 / UC06] validPoint — Kiểm tra tọa độ có nằm trong miền giá trị hợp lệ.
 export function validPoint(point: Point): boolean {
   
   return Number.isFinite(point.lat)
@@ -79,10 +53,8 @@ export function validPoint(point: Point): boolean {
 
 // CHỨC NĂNG: Tính khoảng cách đường chim bay bằng haversine.
 // XỬ LÝ: Trả mét; giới hạn sai số trước căn/arcsin.
-// Khai báo distanceMeters(a, b). Đổi hai tọa độ sang khoảng cách mét.
-// ==================== [KHAM-PHA] distanceMeters ====================
+// [UC02 / UC03 / UC06] distanceMeters — Tính khoảng cách giữa hai tọa độ bằng công thức Haversine, trả đơn vị mét.
 export function distanceMeters(a: Point, b: Point): number {
-  // Khai báo rad: khai báo callback (value: number) => value * Math.PI / 180.
   const rad = (value: number) => value * Math.PI / 180
   // TẠI SAO (rad): Tập trung trách nhiệm của module giúp nơi sử dụng có một đầu mối nhất quán và
   // dễ bảo trì.
@@ -105,7 +77,7 @@ export function distanceMeters(a: Point, b: Point): number {
 // CHỨC NĂNG: Chỉ tính khoảng cách khi dữ liệu đủ tin cậy.
 // XỬ LÝ: Không dùng tọa độ chưa xác nhận hoặc vị trí không hợp lệ.
 
-// ==================== [KHAM-PHA] distanceTo ====================
+// [UC02 / UC03 / UC06] distanceTo — Lấy tọa độ phù hợp của di tích để tính khoảng cách từ vị trí khách.
 export function distanceTo(
   place: PlaceRecord,
   origin?: Point,
@@ -134,21 +106,15 @@ export function distanceTo(
 // - Chỉ tìm trong bản công bố đúng ngôn ngữ.
 // - Không sửa mảng dữ liệu nguồn.
 
-// ==================== [KHAM-PHA] selectPlaces ====================
+// [UC02 / UC03 / UC06] selectPlaces — Lọc và sắp xếp danh sách theo điều kiện người dùng chọn.
 export function selectPlaces(
   places: readonly PlaceRecord[],
   options: {
-    // Khai báo language, kiểu Language. Chọn đúng bản nội dung/âm thanh, tránh đọc văn bản một thứ tiếng bằng giọng thứ tiếng khác.
     language: Language
-    // Khai báo query, kiểu string.
     query: string
-    // Khai báo zone, kiểu Zone | null.
     zone: Zone | null
-    // Khai báo order, kiểu SortOrder.
     order: SortOrder
-    // Khai báo origin không bắt buộc, kiểu Point.
     origin?: Point
-    // Khai báo categories không bắt buộc, kiểu readonly Category[].
     categories?: readonly Category[]
     
     zones?: readonly Zone[]
@@ -159,9 +125,7 @@ export function selectPlaces(
     .split(' ')
     .filter(Boolean)
 
-  // Khai báo selected: places.filter tạo mảng chỉ giữ phần tử đạt điều kiện.
   const selected = places.filter((place) => {
-    // Rẽ nhánh nếu options.zone && place.zone !== options.zone. | Trả kết quả: sử dụng false làm giá trị của bước hiện tại.
     if (options.zone && place.zone !== options.zone) return false
 
     
@@ -184,12 +148,9 @@ export function selectPlaces(
 
     // CHỨC NĂNG: Khi chưa tìm, vẫn cho thấy điểm thiếu bản ngôn ngữ.
     // XỬ LÝ: Card thông báo thiếu; không coi tên định danh là bản dịch.
-    // Rẽ nhánh nếu !words.length. | Trả kết quả: sử dụng true làm giá trị của bước hiện tại.
     if (!words.length) return true
 
-    // Khai báo content: publishedText lấy bản đã công bố đúng ngôn ngữ.
     const content = publishedText(place, options.language)
-    // Rẽ nhánh nếu !content. | Trả kết quả: sử dụng false làm giá trị của bước hiện tại.
     if (!content) return false
 
     
@@ -257,7 +218,7 @@ export function selectPlaces(
 // CHỨC NĂNG: Chia trang cho web.
 // XỬ LÝ: Chặn NaN, pageSize <= 0 và trang vượt giới hạn sau khi lọc.
 
-// ==================== [KHAM-PHA] paginate ====================
+// [UC02 / UC03 / UC06] paginate — Cắt danh sách thành trang theo số trang và kích thước trang.
 export function paginate<T>(
   items: readonly T[],
   requestedPage: number,
@@ -268,7 +229,6 @@ export function paginate<T>(
     ? Math.max(1, Math.floor(pageSize))
     : 1
 
-  // Khai báo pages: Gọi Math.max(1, Math.ceil(items.length / size)).
   const pages = Math.max(1, Math.ceil(items.length / size))
 
   
@@ -276,7 +236,6 @@ export function paginate<T>(
     ? Math.floor(requestedPage)
     : 1
 
-  // Khai báo page: Gọi Math.max(1, Math.min(requested, pages)).
   const page = Math.max(1, Math.min(requested, pages))
 
   

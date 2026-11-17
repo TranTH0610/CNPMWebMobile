@@ -1,29 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN WEB
- *
- * FILE NÀY LÀM GÌ:
- * Hiển thị thẻ di tích có toàn bộ vùng bấm mở trang chi tiết và phần nghe thuyết minh.
- *
- * VỊ TRÍ: apps/web/src/features/explore/components/TheDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/web/src/features/explore/components/DanhSachVaBoLoc.tsx
- * - apps/web/src/features/explore/pages/TrangChu.tsx
- *
- * PHỤ THUỘC:
- * - ../../../shared/components/BieuTuong
- * - ../../../shared/components/AnhDiTich
- * - react-router-dom
- * - @travelguide/visitor-core
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../language/hooks/useDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. PlaceCard
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/web/src/features/explore/components/TheDiTich.tsx
+ * FILE NÀY LÀM GÌ: Hiển thị thẻ di tích có toàn bộ vùng bấm mở trang chi tiết và phần nghe thuyết minh.
+ * VAI TRÒ: Giao diện Web; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { Icon } from '../../../shared/components/BieuTuong'
 import { PlaceImage } from '../../../shared/components/AnhDiTich'
@@ -37,8 +20,7 @@ import { useVisitor } from '../../language/hooks/useDuKhach'
 // XỬ LÝ: Một Link bao toàn bộ thẻ, nên ảnh, chữ, nhãn và khoảng trống đều mở cùng di tích.
 // TẠI SAO: Một liên kết hỗ trợ chạm, bàn phím và mở tab mới; không lồng Link vào nhau.
 
-// ==================== [KHAM-PHA] PlaceCard ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC02 / UC03] PlaceCard — Card địa điểm trong carousel/lưới/danh sách.
 export function PlaceCard({
   place,
   distance,

@@ -1,29 +1,11 @@
 /**
- * CHỨC NĂNG: [NGON-NGU]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Chọn ngôn ngữ du khách từ provider hiện có. SettingsScreen dùng kiểu mặc định; DetailScreen dùng compact để không che nội dung. TẠI SAO: Cùng một trạng thái ngôn ngữ cho tiêu đề, bài đọc và thuyết minh trên ứng dụng.
- *
- * VỊ TRÍ: apps/mobile/src/features/language/components/ThanhChonNgonNgu.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/place-detail/screens/ManChiTietDiTich.tsx
- * - apps/mobile/src/features/settings/screens/ManCaiDat.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - @travelguide/visitor-core
- * - ../../../shared/GiaoDienChung
- * - ../../../shared/components/NutThaoTac
- * - ../i18n/CauHinhNgonNgu
- * - ../hooks/useDuKhach
- *
- * CÁC KHỐI CHÍNH:
- * 1. LanguageBar
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/language/components/ThanhChonNgonNgu.tsx
+ * FILE NÀY LÀM GÌ: Chọn ngôn ngữ du khách từ provider hiện có. SettingsScreen dùng kiểu mặc định; DetailScreen dùng compact để không che nội dung. TẠI SAO: Cùng một trạng thái ngôn ngữ cho tiêu đề, bài đọc và thuyết minh trên ứng dụng.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC01: Thiết lập và thay đổi ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { FlatList, Text, View } from 'react-native'
 import { LANGUAGES } from '@travelguide/visitor-core'
@@ -31,17 +13,17 @@ import { ui, spacing } from '../../../shared/GiaoDienChung'
 import { Action } from '../../../shared/components/NutThaoTac'
 import { useText } from '../i18n/CauHinhNgonNgu'
 import { useVisitor } from '../hooks/useDuKhach'
-// ==================== [NGON-NGU] LanguageBar ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider LanguageBar.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC01] LanguageBar — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider LanguageBar.
 export function LanguageBar({ compact = false }: { compact?: boolean }) {
   const { language, changeLanguage, saving, persistenceError } = useVisitor()
   const t = useText()
+  // CHỨC NĂNG: Dịch tên ngôn ngữ cho cả thanh ngang và các nút trong Cài đặt.
+  // [UC01] button — Dịch tên ngôn ngữ cho cả thanh ngang và các nút trong Cài đặt.
   const button = (item: (typeof LANGUAGES)[number]) => (
     <Action
       key={item.code}
-      title={item.label}
+      title={t(`language_${item.code}`)}
       selected={item.code === language}
       disabled={saving}
       onPress={() => {
@@ -58,6 +40,7 @@ export function LanguageBar({ compact = false }: { compact?: boolean }) {
           style={{ flexGrow: 0 }}
           horizontal
           data={LANGUAGES}
+          extraData={language}
           keyExtractor={(item) => item.code}
           showsHorizontalScrollIndicator
           contentContainerStyle={{ gap: spacing.sm, paddingBottom: spacing.xs }}

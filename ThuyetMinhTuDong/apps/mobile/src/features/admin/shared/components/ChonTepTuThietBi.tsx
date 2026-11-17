@@ -1,30 +1,16 @@
 /**
- * CHỨC NĂNG: [TAI-NGUYEN]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Chọn tệp từ thiết bị theo giới hạn của bản FE; không phải dịch vụ upload và lưu tệp trên máy chủ thật.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/shared/components/ChonTepTuThietBi.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
- * - apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - expo-document-picker
- * - expo-file-system/legacy
- * - @travelguide/admin-core/react
- * - ../../../../shared/components/NutThaoTac
- * - ./ThanhPhanQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. LocalMediaPicker
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/shared/components/ChonTepTuThietBi.tsx
+ * FILE NÀY LÀM GÌ: Chọn tệp từ thiết bị theo giới hạn của bản FE; không phải dịch vụ upload và lưu tệp trên máy chủ thật.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC09: Truy cập khu vực quản lý được cấp sẵn.
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * - UC14: Theo dõi hoạt động và lượt vào từ QR.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useEffect, useRef, useState } from 'react'
 import { Text, View } from 'react-native'
@@ -37,8 +23,7 @@ import { styles } from './ThanhPhanQuanTri'
 // trên máy chủ thật.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
 
-// ==================== [TAI-NGUYEN] LocalMediaPicker ====================
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC09 / UC10 / UC11 / UC12 / UC13 / UC14] LocalMediaPicker — Chọn tệp từ thiết bị theo giới hạn của bản FE; không phải dịch vụ upload và lưu tệp
 export function LocalMediaPicker({
   kind,
   onPick,
@@ -57,9 +42,7 @@ export function LocalMediaPicker({
     alive = useRef(true)
   // CHỨC NĂNG: Đánh dấu component đang tồn tại; cleanup đổi alive.current thành false.
   // XỬ LÝ: Các callback chọn/đọc tệp kiểm tra cờ này trước khi trả kết quả về UI.
-  // KHI NÀO CHẠY: Theo vòng mount của component; mảng [] không theo dõi props/state. Cleanup chạy
   // khi rời component.
-  // Đăng ký useEffect để thực hiện tác vụ sau render. | Thực hiện tính biểu thức alive.current=true. | Trả kết quả: khai báo callback ()=>{alive.current=false}. | Thực hiện tính biểu thức alive.current=false.
   useEffect(() => {
     alive.current = true
     return () => {

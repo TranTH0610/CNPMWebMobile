@@ -1,30 +1,13 @@
 /**
- * CHỨC NĂNG: [QUAN-LY-DI-TICH] [LUU-NHAP]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Chọn/xóa ảnh và đặt ảnh đại diện của form quản trị native. PlaceEditor gọi cho cả thêm và biên tập; dùng cùng thao tác ảnh với web qua admin-core. TẠI SAO: Hiện từng ảnh có vùng chạm rõ, không buộc người dùng xóa chuỗi data URI dài.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/admin/places/components/BieuMauDiTich.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - ../../../../shared/components/AnhBia
- * - ../../../../shared/components/NutThaoTac
- * - ../../shared/components/ThanhPhanQuanTri
- * - ../../shared/components/ChonTepTuThietBi
- * - ../../../../shared/GiaoDienChung
- *
- * CÁC KHỐI CHÍNH:
- * 1. PlaceImagesEditor
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/places/components/ChinhSuaAnhDiTich.tsx
+ * FILE NÀY LÀM GÌ: Chọn/xóa ảnh và đặt ảnh đại diện của form quản trị native. PlaceEditor gọi cho cả thêm và biên tập; dùng cùng thao tác ảnh với web qua admin-core. TẠI SAO: Hiện từng ảnh có vùng chạm rõ, không buộc người dùng xóa chuỗi data URI dài.
+ * VAI TRÒ: Giao diện Mobile; gọi hook/service để xử lý nghiệp vụ.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC10: Quản lý di tích.
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { StyleSheet, Text, View } from 'react-native'
 import {
@@ -39,10 +22,8 @@ import { Action } from '../../../../shared/components/NutThaoTac'
 import { Field } from '../../shared/components/ThanhPhanQuanTri'
 import { LocalMediaPicker } from '../../shared/components/ChonTepTuThietBi'
 import { colors, spacing } from '../../../../shared/GiaoDienChung'
-// ==================== [QUAN-LY-DI-TICH] [LUU-NHAP] PlaceImagesEditor ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceImagesEditor.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC10 / UC11 / UC12] PlaceImagesEditor — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider PlaceImagesEditor.
 export function PlaceImagesEditor({
   value,
   disabled,

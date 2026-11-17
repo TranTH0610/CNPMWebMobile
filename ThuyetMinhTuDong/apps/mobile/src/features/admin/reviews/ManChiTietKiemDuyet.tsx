@@ -1,34 +1,12 @@
 /**
- * CHỨC NĂNG: [KIEM-DUYET]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Xem đầy đủ một hồ sơ rồi duyệt, yêu cầu sửa hoặc công bố. ReviewsScreen mở qua mã id; dùng cùng API/revision với web, không tự công bố khi xem.
- *
- * VỊ TRÍ: apps/mobile/src/features/admin/reviews/ManChiTietKiemDuyet.tsx
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/navigation/DieuHuongQuanTri.tsx
- *
- * PHỤ THUỘC:
- * - react
- * - react-native
- * - @react-navigation/native-stack
- * - @travelguide/visitor-core
- * - @travelguide/admin-core
- * - @travelguide/admin-core/react
- * - ../../../navigation/KieuDieuHuongQuanTri
- * - ../../language/i18n/CauHinhNgonNgu
- * - ../../../shared/components/AnhBia
- * - ../../../shared/components/NutThaoTac
- * - ../shared/components/ThanhPhanQuanTri
- *
- * CÁC KHỐI CHÍNH:
- * 1. ReviewDetailScreen
- * 2. Details
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/admin/reviews/ManChiTietKiemDuyet.tsx
+ * FILE NÀY LÀM GÌ: Xem đầy đủ một hồ sơ rồi duyệt, yêu cầu sửa hoặc công bố. ReviewsScreen mở qua mã id; dùng cùng API/revision với web, không tự công bố khi xem.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC12: Kiểm duyệt nội dung và âm thanh.
+ * - UC13: Công bố phiên bản đã duyệt.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { useState } from 'react'
 import { Alert, Text, View } from 'react-native'
@@ -52,10 +30,8 @@ import {
   styles,
 } from '../shared/components/ThanhPhanQuanTri'
 
-// ==================== [KIEM-DUYET] ReviewDetailScreen ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ReviewDetailScreen.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC12 / UC13] ReviewDetailScreen — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider ReviewDetailScreen.
 export function ReviewDetailScreen({
   route,
   navigation,
@@ -79,10 +55,8 @@ export function ReviewDetailScreen({
   )
 }
 
-// ==================== [KIEM-DUYET] Details ====================
 // CHỨC NĂNG: Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider Details.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+// [UC12 / UC13] Details — Nhận dữ liệu từ props/hook và dựng phần giao diện hoặc provider Details.
 function Details({ place, edit }: { place: ManagedPlace; edit: () => void }) {
   const state = useAdmin(),
     t = useAdminText(),

@@ -1,29 +1,12 @@
 /**
- * CHỨC NĂNG: [KHAM-PHA]
- * VAI TRÒ: GIAO DIỆN MOBILE
- *
- * FILE NÀY LÀM GÌ:
- * Style riêng cho màn khám phá, tìm kiếm và thẻ địa điểm mobile. HomeScreen, SearchBar, CategoryChips, PlaceCard dùng; phụ thuộc ui-tokens. TẠI SAO: Một nơi quản lý khoảng cách/màu, không thay style quản trị hoặc logic tìm kiếm.
- *
- * VỊ TRÍ: apps/mobile/src/features/explore/GiaoDienKhamPha.ts
- *
- * ĐƯỢC DÙNG BỞI:
- * - apps/mobile/src/features/explore/components/ChonSapXep.tsx
- * - apps/mobile/src/features/explore/components/NutLocDanhMuc.tsx
- * - apps/mobile/src/features/explore/components/OTimKiem.tsx
- * - apps/mobile/src/features/explore/components/TheDiTich.tsx
- * - apps/mobile/src/features/explore/screens/ManKhamPha.tsx
- * - apps/mobile/src/shared/components/AnhBia.tsx
- *
- * PHỤ THUỘC:
- * - react-native
- * - ../../../../../packages/ui-tokens/MauVaKichThuoc
- *
- * CÁC KHỐI CHÍNH:
- * 1. Khai báo kiểu/dữ liệu, ghép cấu hình hoặc xuất module.
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Giữ phần hiển thị riêng nền tảng; nghiệp vụ dùng hook/service để tránh lặp xử lý.
+ * FILE: apps/mobile/src/features/explore/GiaoDienKhamPha.ts
+ * FILE NÀY LÀM GÌ: Style riêng cho màn khám phá, tìm kiếm và thẻ địa điểm mobile. HomeScreen, SearchBar, CategoryChips, PlaceCard dùng; phụ thuộc ui-tokens. TẠI SAO: Một nơi quản lý khoảng cách/màu, không thay style quản trị hoặc logic tìm kiếm.
+ * VAI TRÒ: Khởi tạo, điều hướng hoặc thành phần hỗ trợ ứng dụng.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC02: Xem danh sách di tích.
+ * - UC03: Tìm kiếm, lọc và sắp xếp.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 import { StyleSheet } from 'react-native'
 import { colors, radii, spacing } from '../../../../../packages/ui-tokens/MauVaKichThuoc'

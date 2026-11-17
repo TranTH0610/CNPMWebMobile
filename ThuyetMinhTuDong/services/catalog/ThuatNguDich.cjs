@@ -1,24 +1,11 @@
 /**
- * CHỨC NĂNG: [TU-DONG-DICH]
- * VAI TRÒ: API PHÍA MÁY CHỦ
- *
- * FILE NÀY LÀM GÌ:
- * Bảo vệ tên di tích, địa danh, vua và con số trước khi gửi dịch.
- *
- * VỊ TRÍ: services/catalog/ThuatNguDich.cjs
- *
- * ĐƯỢC DÙNG BỞI:
- * - services/catalog/TuDongDich.cjs
- *
- * PHỤ THUỘC:
- * - Không import module khác.
- *
- * CÁC KHỐI CHÍNH:
- * 1. escape
- * 2. protect
- *
- * MUỐN TÌM CODE: Ctrl+Shift+F tìm mã chức năng; Ctrl+Shift+O tìm hàm.
- * TẠI SAO TÁCH FILE: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
+ * FILE: services/catalog/ThuatNguDich.cjs
+ * FILE NÀY LÀM GÌ: Cung cấp thuật ngữ để giữ tên di tích và thuật ngữ lịch sử nhất quán khi dịch nội dung.
+ * VAI TRÒ: Máy chủ/API; nhận yêu cầu từ Web và Mobile.
+ * UC LIÊN QUAN (bộ UC01–UC14 đã gộp):
+ * - UC11: Soạn nội dung thuyết minh đa ngôn ngữ.
+ * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
+ * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
 const terms = [
   [
@@ -106,10 +93,6 @@ const terms = [
 ]
 const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-// ==================== [TU-DONG-DICH] protect ====================
-// CHỨC NĂNG: Thực hiện bước protect trong nhiệm vụ: Bảo vệ tên di tích, địa danh, vua và con số trước khi gửi dịch.
-// XỬ LÝ: Các nhánh kiểm tra, giá trị trả về và tác vụ nằm trong thân hàm dưới đây.
-// TẠI SAO: Tập trung trách nhiệm của module để nơi gọi có một đầu mối dễ tìm và bảo trì.
 function protect(text, language, context = {}) {
   if (/ZXQ\d+QXZ/u.test(text)) throw Error('Reserved translation marker')
   const entries = [...terms]
