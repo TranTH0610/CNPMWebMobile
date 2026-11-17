@@ -98,7 +98,11 @@ export class PreviewController {
       if (ended) await current.seek(0)
       if (generation !== this.generation || !this.wantsPlay) return
       await current.play()
-      if (generation !== this.generation) return
+      // [UC11 / UC12] Lệnh phát hoàn tất sau khi thoát không được bật tiếng trở lại.
+      if (generation !== this.generation) {
+        try { current.pause() } catch { /* Nguồn có thể đã được giải phóng. */ }
+        return
+      }
       
       if (!this.wantsPlay) current.pause()
     } catch {
@@ -166,9 +170,13 @@ export class PreviewController {
   // TẠI SAO (setVolume): Giới hạn âm lượng tránh truyền giá trị ngoài miền hợp lệ xuống thiết bị
   // hoặc trình duyệt.
   close = (): void => {
+    // [UC11 / UC12] Dừng tiếng trước; lỗi dọn một tài nguyên không bỏ qua tài nguyên khác.
     this.generation++; this.wantsPlay = false; this.pending = false
-    this.unlisten?.(); this.unlisten = undefined; this.track?.dispose(); this.track = undefined
-    
+    const current = this.track, unlisten = this.unlisten
+    this.track = undefined; this.unlisten = undefined
+    try { unlisten?.() } catch { /* Listener có thể đã được gỡ khi đổi màn. */ }
+    try { current?.pause() } catch { /* Vẫn tiếp tục giải phóng nguồn nếu pause lỗi. */ }
+    try { current?.dispose() } catch { /* Không để lỗi native chặn thao tác thoát màn. */ }
     this.set({ status: 'idle', position: 0, duration: 0, rate: 1, volume: 1 })
   }
 }

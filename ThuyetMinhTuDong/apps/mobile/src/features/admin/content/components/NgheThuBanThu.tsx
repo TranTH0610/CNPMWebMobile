@@ -8,8 +8,8 @@
  * CÁCH ĐỌC: Tìm chú thích [UCxx] ngay trước hàm/khối để biết đoạn đó làm việc gì.
  * TRA CỨU ĐOẠN CODE: Xem docs/BanDoUCVaCode.md để mở đúng file và dòng.
  */
-import { useCallback, useMemo, useState, useSyncExternalStore } from 'react'
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { ActivityIndicator, AppState, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import Slider from '@react-native-community/slider'
 import { Ionicons } from '@expo/vector-icons'
@@ -63,6 +63,17 @@ export function AudioPreview({ url, title }: { url: string; title: string }) {
   )
   // TẠI SAO: Mở form cần biết thời lượng nhưng không tự phát; rời màn phải đóng nguồn để không còn
   // âm thanh cũ.
+
+  // [UC11 / UC12] Nghe thử Admin phải dừng khi rời ứng dụng hoặc component bị tháo.
+  useEffect(() => {
+    const listener = AppState.addEventListener('change', (next) => {
+      if (next !== 'active') controller.close()
+    })
+    return () => {
+      listener.remove()
+      controller.close()
+    }
+  }, [controller])
 
   const busy = state.status === 'loading',
     playing = state.status === 'playing'

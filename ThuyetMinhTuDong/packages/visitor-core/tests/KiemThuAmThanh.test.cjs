@@ -186,3 +186,32 @@ test('Preview đóng lúc nạp metadata không để lại nguồn âm thanh',a
  
  assert.equal(t.disposed,true);assert.equal(t.plays,0);assert.equal(p.snapshot().duration,0)
 })
+
+// UC11/UC12: không để lỗi native khi đóng nguồn làm audio tiếp tục phát.
+test('Preview close dừng tiếng dù dispose hoặc gỡ listener báo lỗi', async () => {
+  const source = track()
+  source.listen = () => () => { throw Error('listener already removed') }
+  source.dispose = () => { throw Error('native lockscreen failure') }
+  const preview = new PreviewController(async () => source)
+  await preview.play()
+  assert.equal(source.playing, true)
+  assert.doesNotThrow(() => preview.close())
+  assert.equal(source.playing, false)
+  assert.equal(preview.snapshot().status, 'idle')
+})
+
+test('Preview không phát lại nếu lệnh play hoàn tất sau khi thoát', async () => {
+  const source = track()
+  let finishPlay
+  source.play = () => new Promise(resolve => {
+    finishPlay = () => { source.playing = true; resolve() }
+  })
+  const preview = new PreviewController(async () => source)
+  const pending = preview.play()
+  await new Promise(resolve => setImmediate(resolve))
+  preview.close()
+  finishPlay()
+  await pending
+  assert.equal(source.playing, false)
+  assert.equal(preview.snapshot().status, 'idle')
+})

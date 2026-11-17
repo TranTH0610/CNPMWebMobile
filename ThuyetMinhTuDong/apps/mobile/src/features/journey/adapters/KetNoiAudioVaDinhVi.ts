@@ -191,9 +191,16 @@ export const journeyAdapters: JourneyAdapters = {
           disposed = true
           playbackCoordinator.release(owner)
 
-          if (owns) player.setActiveForLockScreen(false)
-
-          player.remove()
+          // [UC07 / UC11 / UC12] Luôn dừng và remove player, kể cả khi màn hình khóa báo lỗi.
+          try {
+            player.pause()
+          } finally {
+            try {
+              if (owns) player.setActiveForLockScreen(false)
+            } finally {
+              player.remove()
+            }
+          }
         }
       },
     }
