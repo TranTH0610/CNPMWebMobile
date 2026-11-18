@@ -17,6 +17,20 @@ import { useJourney } from '../hooks/useHanhTrinh'
 import { mapPointFor } from '@travelguide/visitor-core/journey/data'
 import 'leaflet/dist/leaflet.css'
 
+type MapPoint = { lat: number; lng: number }
+
+function distanceKm(a: MapPoint, b: MapPoint) {
+  const toRad = (degrees: number) => (degrees * Math.PI) / 180
+  const dLat = toRad(b.lat - a.lat)
+  const dLng = toRad(b.lng - a.lng)
+  const lat1 = toRad(a.lat)
+  const lat2 = toRad(b.lat)
+  const value =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2
+  return 6371 * 2 * Math.asin(Math.sqrt(value))
+}
+
 // CHỨC NĂNG: Trình bày các điểm tham quan trên bản đồ và nối thao tác chọn điểm với luồng hành
 // trình của nền tảng.
 // XỬ LÝ: Nhận dữ liệu và callback qua props/hook; nơi sở hữu dữ liệu quyết định thao tác cập nhật.
@@ -27,6 +41,8 @@ export function VisitorMap({ selected }: { selected: string | null }) {
 
   const [failed, setFailed] = useState(false)
   const [attempt, setAttempt] = useState(0)
+  const [measurePoints, setMeasurePoints] = useState<MapPoint[]>([])
+  const [measuring, setMeasuring] = useState(false)
 
   const t = useText()
 
@@ -57,6 +73,12 @@ export function VisitorMap({ selected }: { selected: string | null }) {
     mapRef.current = map
 
     userLayer.current = L.layerGroup().addTo(map)
+
+    map.on('click', (event: L.LeafletMouseEvent) => {
+      if (!measuring) return
+      const point = { lat: event.latlng.lat, lng: event.latlng.lng }
+      setMeasurePoints((previous) => previous.length >= 2 ? [point] : [...previous, point])
+    })
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
@@ -109,7 +131,7 @@ export function VisitorMap({ selected }: { selected: string | null }) {
       mapRef.current = null
       userLayer.current = null
     }
-  }, [state.places, selected, language, open, attempt])
+  }, [state.places, selected, language, open, attempt, measuring])
   // TẠI SAO: Marker phải khớp dữ liệu/ngôn ngữ/điểm chọn; tạo mới mà không gỡ map cũ sẽ giữ DOM và
   // listener thừa.
   // CHỨC NĂNG: Xóa marker vị trí khách cũ; nếu có state.fix thì vẽ lại marker ở tọa độ mới.
@@ -125,10 +147,43 @@ export function VisitorMap({ selected }: { selected: string | null }) {
         userLayer.current,
       )
   }, [state.fix, state.places, selected, language, open, attempt])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+    const layer = L.layerGroup().addTo(map)
+    measurePoints.forEach((point, index) => {
+      L.marker([point.lat, point.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: `<span style="display:block;background:#b42318;color:white;border:2px solid white;border-radius:50%;width:28px;height:28px;text-align:center;line-height:24px;font-weight:bold">${index + 1}</span>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
+        }),
+      }).addTo(layer)
+    })
+    if (measurePoints.length === 2) {
+      L.polyline(measurePoints.map(point => [point.lat, point.lng]), {
+        color: '#b42318',
+        weight: 4,
+        dashArray: '8 8',
+      }).addTo(layer)
+    }
+    return () => { layer.remove() }
+  }, [measurePoints, attempt])
   // TẠI SAO: Vị trí khách di chuyển cần cập nhật, không để nhiều dấu vị trí cũ tồn tại đồng thời.
 
   return (
     <>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
+        <button type="button" onClick={() => { setMeasurePoints([]); setMeasuring(value => !value) }}>
+          {measuring ? 'Đang chọn điểm — bấm để dừng' : 'Đo khoảng cách'}
+        </button>
+        {measuring && <span>Nhấp 2 vị trí trên bản đồ. Điểm thứ 3 sẽ bắt đầu lượt đo mới.</span>}
+        {measurePoints.length === 1 && <span>Đã chọn điểm 1, hãy chọn điểm 2.</span>}
+        {measurePoints.length === 2 && <strong>Khoảng cách đường chim bay: {distanceKm(measurePoints[0], measurePoints[1]).toFixed(2)} km</strong>}
+        {measurePoints.length > 0 && <button type="button" onClick={() => setMeasurePoints([])}>Xóa điểm đo</button>}
+      </div>
       {failed && (
         <div role="alert">
           <p>{t('jMapFailed')}</p>
